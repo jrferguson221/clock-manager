@@ -9,4 +9,10 @@ describe("App", () => {
     expect(html).toContain("You can&#x27;t run it out");
     expect(html).toContain("<table>");
   });
+
+  it("renders next-call advice in trailing mode", () => {
+    const html = renderToString(<App initialMode="trailing" />);
+    expect(html).toContain("Next call");
+    expect(html).toContain("Plays to field-goal range");
+  });
 });
