@@ -2,6 +2,7 @@
 // Pure functions, no React or DOM access. All times are in whole seconds.
 
 import { NFL_RULES, type Down, type Rules, type TimelineEvent } from "./engine";
+import { formatClock } from "./time";
 
 export type ScoreNeeded = "td" | "fg";
 
@@ -230,3 +231,109 @@ export function adviseNextCall(
   return { call: "hurry", headline: "Hurry up and get out of bounds",
     detail: "You have no way left to stop the clock, so throw to the sideline. " + budget + longShot };
 }
+
+// ---------------------------------------------------------------------------
+// Live drive tracking: apply an entered play result to the situation.
+
+export type PlayOutcome = "inbounds" | "out-of-bounds" | "incomplete" | "spike" | "timeout";
+
+export const PLAY_OUTCOMES: Readonly<Record<PlayOutcome, { label: string; hasYards: boolean }>> = Object.freeze({
+  inbounds: { label: "In bounds", hasYards: true },
+  "out-of-bounds": { label: "Out of bounds", hasYards: true },
+  incomplete: { label: "Incomplete pass", hasYards: false },
+  spike: { label: "Spike", hasYards: false },
+  timeout: { label: "Timeout", hasYards: false },
+});
+
+/** A drive situation plus the yards needed for a first down. */
+export interface DriveState extends DriveSituation {
+  toGo: number;
+}
+
+export interface PlayEntry {
+  outcome: PlayOutcome;
+  /** Yards gained (negative for a loss). Ignored for outcomes without yards. */
+  yards: number;
+  /** Game clock when the play ended, or when the timeout was called. */
+  clockAfter: number;
+}
+
+export type DriveEnd = "touchdown" | "turnover-on-downs" | "time-expired";
+
+export interface PlayUpdate {
+  state: DriveState;
+  summary: string;
+  ended?: DriveEnd;
+}
+
+/** Returns why an entry can't be applied, or null if it's fine. */
+export function checkPlay(s: DriveState, p: PlayEntry): string | null {
+  if (p.clockAfter > s.gameClock) return "The clock after the play can't be later than the clock now.";
+  if (p.outcome === "timeout" && s.timeouts === 0) return "You have no timeouts left.";
+  if (p.outcome === "spike" && s.down === 4) return "Spiking on 4th down turns the ball over.";
+  if (PLAY_OUTCOMES[p.outcome].hasYards && !Number.isFinite(p.yards)) return "Enter the yards gained.";
+  return null;
+}
+
+/** "own 25", "opp 40", or "midfield" for a distance from the opponent's goal line. */
+export function describeSpot(yardsToGoal: number): string {
+  if (yardsToGoal === 50) return "midfield";
+  return yardsToGoal > 50 ? `own ${100 - yardsToGoal}` : `opp ${yardsToGoal}`;
+}
+
+function downAndDistance(s: DriveState): string {
+  const down = ["1st", "2nd", "3rd", "4th"][s.down - 1];
+  const dist = s.toGo >= s.yardsToGoal ? "goal" : String(s.toGo);
+  return `${down} & ${dist} at ${describeSpot(s.yardsToGoal)}`;
+}
+
+/**
+ * Apply a play's result (NFL rules, late in the 4th quarter): an in-bounds play keeps the
+ * clock running; out of bounds, incompletions, spikes and timeouts stop it, and so does a
+ * play that runs through the two-minute warning.
+ */
+export function applyPlay(s: DriveState, p: PlayEntry, rules: Rules = NFL_RULES): PlayUpdate {
+  const problem = checkPlay(s, p);
+  if (problem) throw new RangeError(problem);
+
+  const t = Math.max(0, p.clockAfter);
+  const clock = formatClock(t);
+
+  if (p.outcome === "timeout") {
+    const state = { ...s, gameClock: t, clockRunning: false, timeouts: s.timeouts - 1 };
+    return { state, summary: `Timeout at ${clock}, ${state.timeouts} left. ${downAndDistance(state)}.` };
+  }
+
+  const warnAt = rules.twoMinuteWarning;
+  const crossedWarning = warnAt != null && s.gameClock > warnAt && t <= warnAt;
+  const yards = PLAY_OUTCOMES[p.outcome].hasYards ? Math.round(p.yards) : 0;
+  const what = PLAY_OUTCOMES[p.outcome].hasYards
+    ? `${yards >= 0 ? "+" : ""}${yards} yd${p.outcome === "out-of-bounds" ? ", out of bounds" : ", in bounds"}`
+    : PLAY_OUTCOMES[p.outcome].label;
+
+  if (yards >= s.yardsToGoal) {
+    return { state: { ...s, gameClock: t, clockRunning: false }, summary: `${what} at ${clock}: touchdown!`, ended: "touchdown" };
+  }
+
+  // The ball can't go back past your own 1 without a safety, which this doesn't model.
+  const yardsToGoal = Math.min(99, s.yardsToGoal - yards);
+  const firstDown = yards >= s.toGo;
+  const state: DriveState = {
+    ...s,
+    gameClock: t,
+    yardsToGoal,
+    clockRunning: p.outcome === "inbounds" && !crossedWarning && t > 0,
+    down: firstDown ? 1 : (Math.min(4, s.down + 1) as Down),
+    toGo: firstDown ? Math.min(10, yardsToGoal) : s.toGo - yards,
+  };
+
+  if (!firstDown && s.down === 4) {
+    return { state, summary: `${what} at ${clock}: turnover on downs.`, ended: "turnover-on-downs" };
+  }
+  if (t <= 0) {
+    return { state, summary: `${what}: time expired.`, ended: "time-expired" };
+  }
+  const extra = crossedWarning ? " Two-minute warning." : "";
+  return { state, summary: `${what} at ${clock}.${extra} ${firstDown ? "First down! " : ""}${downAndDistance(state)}.` };
+}
+

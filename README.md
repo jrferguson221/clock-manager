@@ -7,6 +7,8 @@ It has two modes:
 - **Leading: run out the clock.** Enter the game clock, the down, the defense's timeouts and whether the clock is running. The app tells you whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
 - **Trailing: drive to score.** Enter the clock, your timeouts, the down, the ball spot and whether you need a touchdown or a field goal. The app tells you what to call next (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick). It also shows how many plays you need and how many you have time for: in the worst case, a typical case and the best case.
 
+  To track a live drive, log each play below the advice: in bounds or out of bounds with the yards gained, an incomplete pass, a spike or a timeout, plus the clock after it. The clock, down, distance, ball spot and timeouts update, and so does the advice. You can undo the last play or start a new drive.
+
 Built with Vite, React, TypeScript and Vitest.
 
 ## Commands
@@ -44,11 +46,11 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 - The offense gains 7 yards a play by default (you can change this in the app), and moves the chains without running out of downs.
 - Field-goal range is the opponent's 35, a 52-yard try. When you need a field goal, one timeout is held back for the kick.
 - A typical drive has half its plays stop the clock (incompletions or out of bounds).
+- Logged plays follow late-4th-quarter NFL clock rules: an in-bounds play keeps the clock running, and anything else, or a play that runs through the two-minute warning, stops it. Penalties and safeties aren't modeled.
 - The advice says to stop the clock when the typical budget leaves less than one spare play. It spikes on 1st or 2nd down to save the last timeout, and never spikes on 4th down.
 
 ## Ideas for next features
 
-- Live drive tracking: enter each play's result and get updated advice.
 - Make field-goal range and the other trailing assumptions adjustable in the app.
 - Whether to take a safety or punt on 4th down.
 - College and high-school rule sets.

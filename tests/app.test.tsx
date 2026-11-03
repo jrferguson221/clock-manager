@@ -14,5 +14,6 @@ describe("App", () => {
     const html = renderToString(<App initialMode="trailing" />);
     expect(html).toContain("Next call");
     expect(html).toContain("Plays to field-goal range");
+    expect(html).toContain("Log the play");
   });
 });

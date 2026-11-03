@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { adviseNextCall, driveBudget, fgDistance, playsNeeded, type DriveSituation } from "../src/trailing";
+import {
+  adviseNextCall, applyPlay, checkPlay, describeSpot, driveBudget, fgDistance, playsNeeded,
+  type DriveSituation, type DriveState,
+} from "../src/trailing";
 
 const base: DriveSituation = {
   gameClock: 60, clockRunning: false, timeouts: 0, down: 1, yardsToGoal: 75, need: "td",
@@ -90,5 +93,59 @@ describe("adviseNextCall", () => {
   it("in field-goal range, drains the clock before the kick", () => {
     expect(adviseNextCall({ ...base, need: "fg", gameClock: 40, clockRunning: true, timeouts: 1, yardsToGoal: 25 }).call)
       .toBe("burn-then-kick");
+  });
+});
+
+describe("applyPlay", () => {
+  const start: DriveState = { ...base, gameClock: 100, clockRunning: true, timeouts: 2, toGo: 10, yardsToGoal: 75 };
+
+  it("moves the chains on a first down and keeps the clock running in bounds", () => {
+    const r = applyPlay(start, { outcome: "inbounds", yards: 12, clockAfter: 76 });
+    expect(r.state).toMatchObject({ gameClock: 76, down: 1, toGo: 10, yardsToGoal: 63, clockRunning: true });
+    expect(r.summary).toContain("First down");
+  });
+
+  it("advances the down and stops the clock out of bounds", () => {
+    const r = applyPlay(start, { outcome: "out-of-bounds", yards: 4, clockAfter: 80 });
+    expect(r.state).toMatchObject({ down: 2, toGo: 6, yardsToGoal: 71, clockRunning: false });
+  });
+
+  it("an incomplete pass gains nothing and stops the clock", () => {
+    const r = applyPlay(start, { outcome: "incomplete", yards: 30, clockAfter: 90 });
+    expect(r.state).toMatchObject({ down: 2, toGo: 10, yardsToGoal: 75, clockRunning: false });
+  });
+
+  it("a timeout uses one up and keeps the down", () => {
+    const r = applyPlay(start, { outcome: "timeout", yards: 0, clockAfter: 95 });
+    expect(r.state).toMatchObject({ gameClock: 95, timeouts: 1, down: 1, clockRunning: false });
+  });
+
+  it("a play through the two-minute warning stops the clock", () => {
+    const r = applyPlay({ ...start, gameClock: 125 }, { outcome: "inbounds", yards: 3, clockAfter: 118 });
+    expect(r.state.clockRunning).toBe(false);
+    expect(r.summary).toContain("Two-minute warning");
+  });
+
+  it("goal to go after a first down inside the 10", () => {
+    const r = applyPlay({ ...start, yardsToGoal: 15 }, { outcome: "out-of-bounds", yards: 10, clockAfter: 90 });
+    expect(r.state).toMatchObject({ down: 1, toGo: 5, yardsToGoal: 5 });
+    expect(r.summary).toContain("1st & goal at opp 5");
+  });
+
+  it("ends the drive on a touchdown, a 4th-down stop, or time running out", () => {
+    expect(applyPlay({ ...start, yardsToGoal: 8 }, { outcome: "inbounds", yards: 8, clockAfter: 90 }).ended).toBe("touchdown");
+    expect(applyPlay({ ...start, down: 4, toGo: 5 }, { outcome: "inbounds", yards: 3, clockAfter: 90 }).ended)
+      .toBe("turnover-on-downs");
+    expect(applyPlay(start, { outcome: "inbounds", yards: 3, clockAfter: 0 }).ended).toBe("time-expired");
+  });
+
+  it("rejects impossible entries", () => {
+    expect(checkPlay(start, { outcome: "inbounds", yards: 5, clockAfter: 110 })).toMatch(/can't be later/);
+    expect(checkPlay({ ...start, timeouts: 0 }, { outcome: "timeout", yards: 0, clockAfter: 90 })).toMatch(/no timeouts/);
+    expect(checkPlay({ ...start, down: 4 }, { outcome: "spike", yards: 0, clockAfter: 90 })).toMatch(/4th down/);
+  });
+
+  it("names spots on the field", () => {
+    expect([describeSpot(75), describeSpot(50), describeSpot(30)]).toEqual(["own 25", "midfield", "opp 30"]);
   });
 });
