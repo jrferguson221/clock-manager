@@ -467,6 +467,8 @@ export interface Explanation {
 
 /** Calls within this many win-probability points of the best count as about as good. */
 export const CLOSE = 0.015;
+/** Calls at least this far below the best are worth warning against. */
+export const AVOID = 0.03;
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -511,7 +513,11 @@ function whyNot(g: GameState, call: PlayCall): string | null {
   if ((call === "pass-middle" || call === "pass-sideline") && m > 0)
     return "A pass risks an incompletion that stops the clock for them, and an interception.";
   if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20) return "Kicking now leaves them time to answer. Drain the clock first.";
-  if (call === "punt") return "Punting gives the ball back when you still had a good chance to keep it.";
+  if (call === "punt") {
+    return m <= 0
+      ? "Punting gives the ball back when you need to score."
+      : "Punting gives the ball back when you still had a good chance to keep it.";
+  }
   if ((call === "run" || call === "kneel") && m < 0 && !fgPlay(g) && g.clock <= 120)
     return "A play that ends in bounds keeps the clock running when you're short on time.";
   return null;
@@ -565,4 +571,32 @@ export function biggestSwing(before: number[], final: number): Swing | null {
     if (!biggest || Math.abs(added) > Math.abs(biggest.added)) biggest = { index: i, before: b, after, added };
   });
   return biggest;
+}
+
+// ---------------------------------------------------------------------------
+// Recommending a call without playing it
+
+export interface Recommendation {
+  best: PlayCall;
+  /** Your win probability with the best call. */
+  wp: number;
+  /** Why the best call is best. */
+  reason: string;
+  /** The next-best call, and whether it's close enough to be a coin flip. */
+  runnerUp: { call: PlayCall; wp: number; close: boolean } | null;
+  /** Calls to avoid here, with why, worst first. */
+  avoid: { call: PlayCall; wp: number; reason: string }[];
+}
+
+export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEFAULT_SIM): Recommendation {
+  const best = bestCall(values);
+  const wp = values[best]!;
+  const others = (Object.entries(values) as [PlayCall, number][]).filter(([c]) => c !== best).sort((a, b) => b[1] - a[1]);
+  const runnerUp = others.length ? { call: others[0][0], wp: others[0][1], close: wp - others[0][1] <= CLOSE } : null;
+  const avoid = others
+    .filter(([, v]) => wp - v >= AVOID)
+    .map(([call, v]) => ({ call, wp: v, reason: whyNot(g, call) }))
+    .filter((a): a is { call: PlayCall; wp: number; reason: string } => a.reason != null)
+    .sort((a, b) => a.wp - b.wp);
+  return { best, wp, reason: whyBest(g, best, cfg), runnerUp, avoid };
 }

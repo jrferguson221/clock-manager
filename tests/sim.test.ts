@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  availableCalls, bestCall, biggestSwing, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, biggestSwing, recommend, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -90,5 +90,22 @@ describe("biggestSwing", () => {
     expect(biggestSwing([0.3, 0.35, 0.2], 0.3)).toMatchObject({ index: 1, before: 0.35, after: 0.2 });
     expect(biggestSwing([0.3, 0.35, 0.2], 0.9)).toMatchObject({ index: 2, after: 0.9 });
     expect(biggestSwing([], 1)).toBeNull();
+  });
+});
+
+describe("recommend", () => {
+  it("recommends kneeling when kneel-downs end the game, and flags a pass to avoid", () => {
+    const g: GameState = { ...base, clock: 110, margin: 3, timeouts: { you: 3, opp: 0 } };
+    const r = recommend(g, evaluateCalls(g, 300));
+    expect(r.best).toBe("kneel");
+    expect(r.wp).toBe(1);
+    expect(r.reason).toContain("run out the clock");
+  });
+
+  it("lists clearly worse calls to avoid, with reasons", () => {
+    const g: GameState = { ...base, clock: 10, ytg: 20, toGo: 10, down: 2, margin: -1, timeouts: { you: 1, opp: 3 } };
+    const r = recommend(g, evaluateCalls(g, 300));
+    expect(r.best).toBe("timeout");
+    expect(r.avoid.map((a) => a.call)).toContain("kneel");
   });
 });

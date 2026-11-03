@@ -128,11 +128,11 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
   );
 }
 
-function tempoNote(g: GameState, cfg: SimConfig): string {
+export function tempoNote(g: GameState, cfg: SimConfig): string {
   if (!g.running) return "The clock is stopped. The next snap comes right away.";
   return g.margin > 0
     ? "The clock is running. Plays drain the play clock to 1 before the snap; a timeout stops the clock right now."
-    : `The clock is running. Plays use a ${cfg.hurryUp}-second hurry-up (${cfg.spikeLineup}s for a spike), except when a field goal is enough and you're in range, when they drain the clock. A timeout stops it right now.`;
+    : `The clock is running. Plays use a hurry-up of ${cfg.hurryUp} seconds (${cfg.spikeLineup} for a spike), except when a field goal is enough and you're in range, when they drain the clock. A timeout stops it right now.`;
 }
 
 function WinMeter({ wp, delta }: { wp: number; delta: number | null }) {
@@ -155,31 +155,38 @@ function WinMeter({ wp, delta }: { wp: number; delta: number | null }) {
 
 function Explainer({ entry }: { entry: Entry }) {
   const { explanation: x, values, call } = entry;
-  const best = bestCall(values);
-  const ranked = (Object.entries(values) as [PlayCall, number][]).sort((a, b) => b[1] - a[1]);
   return (
     <div className={`advice explainer ${x.verdict}`}>
       <p className="advice-label">Last play</p>
       <p>{entry.text}</p>
       <p className="verdict">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</p>
       <ul className="reasons">{x.reasons.map((r, i) => <li key={i}>{r}</li>)}</ul>
-      <table className="call-values">
-        <caption className="muted small">Win probability by call, before the play</caption>
-        <tbody>
-          {ranked.map(([c, v]) => (
-            <tr key={c}>
-              <th scope="row">
-                {PLAY_CALLS[c]}
-                {c === best && <span className="tag">best</span>}
-                {c === call && <span className="tag">your call</span>}
-              </th>
-              <td className="bar-cell"><div className="bar" style={{ width: pct(v) }} title={`${PLAY_CALLS[c]}: ${pct(v)}`} /></td>
-              <td className="num">{pct(v)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CallTable values={values} chosen={call} caption="Win probability by call, before the play" />
     </div>
+  );
+}
+
+/** Every call's win probability as a ranked bar list, tagging the best call and (optionally) yours. */
+export function CallTable({ values, chosen, caption }: { values: CallValues; chosen?: PlayCall; caption: string }) {
+  const best = bestCall(values);
+  const ranked = (Object.entries(values) as [PlayCall, number][]).sort((a, b) => b[1] - a[1]);
+  return (
+    <table className="call-values">
+      <caption className="muted small">{caption}</caption>
+      <tbody>
+        {ranked.map(([c, v]) => (
+          <tr key={c}>
+            <th scope="row">
+              {PLAY_CALLS[c]}
+              {c === best && <span className="tag">best</span>}
+              {c === chosen && <span className="tag">your call</span>}
+            </th>
+            <td className="bar-cell"><div className="bar" style={{ width: pct(v) }} title={`${PLAY_CALLS[c]}: ${pct(v)}`} /></td>
+            <td className="num">{pct(v)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 

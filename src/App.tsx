@@ -1,10 +1,12 @@
 import { useState } from "react";
 import RunOutPanel from "./RunOutPanel";
 import TrailingPanel from "./TrailingPanel";
+import AdvisorPanel from "./AdvisorPanel";
 
 const MODES = [
   { id: "leading", label: "Leading: run out the clock", Panel: RunOutPanel },
   { id: "trailing", label: "Trailing: drive to score", Panel: TrailingPanel },
+  { id: "advisor", label: "Best call", Panel: AdvisorPanel },
 ] as const;
 
 type ModeId = (typeof MODES)[number]["id"];

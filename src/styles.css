@@ -165,3 +165,6 @@ h2 { font-size: 1.125rem; margin: 32px 0 12px; }
 .recap.best { border-left-color: var(--win); }
 .recap.worse { border-left-color: var(--lose); }
 .recap p + p { margin-top: 6px; }
+.best-call { border-left-color: var(--win); }
+.verdict.big { font-size: 1.75rem; }
+.avoid-label { margin-top: 16px !important; }

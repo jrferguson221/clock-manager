@@ -19,4 +19,10 @@ describe("App", () => {
     expect(html).toContain("Win probability");
     expect(html).toContain("Call the play");
   });
+
+  it("renders the best call in the informational mode", () => {
+    const html = renderToString(<App initialMode="advisor" />);
+    expect(html).toContain("Best call");
+    expect(html).toContain("Every option");
+  });
 });

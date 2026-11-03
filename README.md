@@ -4,7 +4,9 @@ A web app for end-of-game clock decisions in American football.
 
 Both modes are a play-calling trainer. Enter the situation (clock, score, timeouts for both teams, down, distance and ball spot), then call each play: timeout, run, pass to the sideline, pass over the middle, spike, kneel, field goal or punt. The app simulates the result and updates the situation. A win-probability meter shows your chances. After each call, it explains what the best call was, why, and the win probability for every option. When the drive ends, you can play out the rest of the game to see one way it could go. Once the game is over, a recap shows the final result and the call with the biggest win-probability swing, added or lost, and says whether the call itself was right or the result was luck. You can undo a call to try another.
 
-Each mode also has its own calculator:
+The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
+
+The leading and trailing modes also have their own calculators:
 
 - **Leading: run out the clock.** Whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
 - **Trailing: drive to score.** A rule-of-thumb next call (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick), and how many plays you need versus how many you have time for.
@@ -31,7 +33,7 @@ npm run build      # type-check and build into dist/
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
 | `src/time.ts` | Parses and formats `M:SS` clock strings. |
 | `src/App.tsx` | The mode tabs. |
-| `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx` | One UI panel per mode. |
+| `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx`, `src/AdvisorPanel.tsx` | One UI panel per mode. |
 | `src/fields.tsx` | Form inputs and the timeline table, shared by both panels. |
 | `tests/` | Tests for both engines, plus tests that each mode renders. |
 
