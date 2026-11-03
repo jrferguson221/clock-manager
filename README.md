@@ -2,12 +2,12 @@
 
 A web app for end-of-game clock decisions in American football.
 
-It has two modes:
+Both modes are a play-calling trainer. Enter the situation (clock, score, timeouts for both teams, down, distance and ball spot), then call each play: timeout, run, pass to the sideline, pass over the middle, spike, kneel, field goal or punt. The app simulates the result and updates the situation. A win-probability meter shows your chances. After each call, it explains what the best call was, why, and the win probability for every option. When the drive ends, you can play out the rest of the game to see one way it could go. Once the game is over, a recap shows the final result and the call with the biggest win-probability swing, added or lost, and says whether the call itself was right or the result was luck. You can undo a call to try another.
 
-- **Leading: run out the clock.** Enter the game clock, the down, the defense's timeouts and whether the clock is running. The app tells you whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
-- **Trailing: drive to score.** Enter the clock, your timeouts, the down, the ball spot and whether you need a touchdown or a field goal. The app tells you what to call next (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick). It also shows how many plays you need and how many you have time for: in the worst case, a typical case and the best case.
+Each mode also has its own calculator:
 
-  To track a live drive, log each play below the advice: in bounds or out of bounds with the yards gained, an incomplete pass, a spike or a timeout, plus the clock after it. The clock, down, distance, ball spot and timeouts update, and so does the advice. You can undo the last play or start a new drive.
+- **Leading: run out the clock.** Whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
+- **Trailing: drive to score.** A rule-of-thumb next call (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick), and how many plays you need versus how many you have time for.
 
 Built with Vite, React, TypeScript and Vitest.
 
@@ -26,6 +26,8 @@ npm run build      # type-check and build into dist/
 | Path | What it holds |
 | --- | --- |
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
+| `src/sim.ts` | Play simulator, win probability and the best-call explainer. Pure functions. |
+| `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
 | `src/time.ts` | Parses and formats `M:SS` clock strings. |
 | `src/App.tsx` | The mode tabs. |
@@ -37,16 +39,23 @@ npm run build      # type-check and build into dist/
 
 Both modes use NFL rules: a 40-second play clock and a two-minute warning, with no penalties and no 10-second runoffs.
 
-**Leading mode**
+**Win probability and best calls** (`src/sim.ts`). This is a simple Monte Carlo model, not one fitted to NFL play-by-play data.
+- Each call has a fixed outcome distribution. Runs average about 4 yards and rarely go out of bounds. Sideline passes complete about half the time and usually go out of bounds. Passes over the middle complete about 60% of the time and gain a little more. Passes carry sack and interception risk, and runs a small fumble risk.
+- Tempo is automatic. A team that's ahead drains the play clock. A team that only needs a field goal and is in range drains it too, but leaves time for a timeout or a rushed kick. Everyone else uses the hurry-up time (18 seconds by default). A timeout stops the clock right away.
+- A defense that's behind calls timeout after in-bounds plays in the last 4 minutes, unless the two-minute warning is about to stop the clock for free.
+- Field goals are good about 90% of the time from 35 yards and about 65% from 52, with 62 yards the longest try. Punts net 40 yards. Kickoffs are touchbacks to the 30, and a team that's still behind late tries an onside kick (12% recovered).
+- After your call, both teams follow a rule-of-thumb policy for the rest of the game. A tie at 0:00 is a coin flip in overtime.
+- Each call is scored over 500 simulated games, so differences of a point or two are within the noise. The explainer calls those "close".
+
+**Leading-mode run-out calculator**
 - The offense snaps with 1 second left on the play clock and never gets a first down.
 - The defense calls a timeout right after every play while it has any left.
 
-**Trailing mode.** These are rules of thumb, not a full win-probability model.
+**Trailing-mode rules of thumb**
 - Plays take 6 seconds, a no-huddle snap after an in-bounds play takes 18 seconds (you can change this in the app), and a spike takes about 12 seconds.
 - The offense gains 7 yards a play by default (you can change this in the app), and moves the chains without running out of downs.
 - Field-goal range is the opponent's 35, a 52-yard try. When you need a field goal, one timeout is held back for the kick.
 - A typical drive has half its plays stop the clock (incompletions or out of bounds).
-- Logged plays follow late-4th-quarter NFL clock rules: an in-bounds play keeps the clock running, and anything else, or a play that runs through the two-minute warning, stops it. Penalties and safeties aren't modeled.
 - The advice says to stop the clock when the typical budget leaves less than one spare play. It spikes on 1st or 2nd down to save the last timeout, and never spikes on 4th down.
 
 ## Ideas for next features
@@ -54,4 +63,5 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 - Make field-goal range and the other trailing assumptions adjustable in the app.
 - Whether to take a safety or punt on 4th down.
 - College and high-school rule sets.
-- Using the offense's own timeouts, and a first-down conversion.
+- Fit the play outcomes and win probability to real NFL play-by-play data.
+- Let you choose the tempo (hurry up or drain the clock) separately from the call.

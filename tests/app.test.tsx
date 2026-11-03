@@ -8,12 +8,15 @@ describe("App", () => {
     // Default: 2:30, 1st down, 3 defensive timeouts, clock running → can't run it out
     expect(html).toContain("You can&#x27;t run it out");
     expect(html).toContain("<table>");
+    expect(html).toContain("Win probability");
+    expect(html).toContain("Call the play");
   });
 
   it("renders next-call advice in trailing mode", () => {
     const html = renderToString(<App initialMode="trailing" />);
     expect(html).toContain("Next call");
     expect(html).toContain("Plays to field-goal range");
-    expect(html).toContain("Log the play");
+    expect(html).toContain("Win probability");
+    expect(html).toContain("Call the play");
   });
 });
