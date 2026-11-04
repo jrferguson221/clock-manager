@@ -183,3 +183,13 @@ body {
   & li { padding-left: 1em; }
   & .drive-head { padding-left: 0; margin-top: rem(6px); font-weight: 600; }
 }
+
+/* Strategy guide */
+.guide-title { font-size: rem(40px); text-transform: uppercase; letter-spacing: 0.01em; }
+.guide-section { scroll-margin-top: rem(16px); }
+.guide-section h3 { text-transform: uppercase; letter-spacing: 0.02em; }
+.guide-caption { font-weight: 600; font-size: var(--mantine-font-size-sm); color: var(--mantine-color-dimmed); margin-bottom: rem(6px); }
+.read-more { font-size: 0.9em; white-space: nowrap; }
+@media (min-width: $mantine-breakpoint-md) {
+  .guide-toc { position: sticky; top: rem(16px); }
+}

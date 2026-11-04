@@ -3,10 +3,10 @@
 // history: links look like .../clock-manager/#/trailing?clock=0:58&trail=7.
 
 import {
-  createHashHistory, createRootRoute, createRoute, createRouter, stripSearchParams, type RouterHistory,
+  createHashHistory, createRootRoute, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
 } from "@tanstack/react-router";
 import {
-  bestCallSearchSchema, leadingSearchSchema, trailingSearchSchema, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
+  bestCallSearchSchema, guideSearchSchema, leadingSearchSchema, trailingSearchSchema, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
 } from "@clock-manager/schemas";
 import Layout, { NotFound } from "./Layout";
 import RunOutPanel from "./RunOutPanel";
@@ -39,7 +39,15 @@ const bestCallRoute = createRoute({
   component: AdvisorPanel,
 });
 
-const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute]);
+// The guide is long and only some visitors read it, so it's a separate download, fetched when opened.
+const guideRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/guide",
+  validateSearch: guideSearchSchema,
+  component: lazyRouteComponent(() => import("./Guide")),
+});
+
+const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, guideRoute]);
 
 /** The app's router. Tests pass a memory history; the browser uses the URL hash. */
 export function createAppRouter(history: RouterHistory = createHashHistory()) {

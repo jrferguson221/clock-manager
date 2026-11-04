@@ -8,6 +8,7 @@ import {
   DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
 } from "./sim";
 import { PLAY_CALL_IDS } from "@clock-manager/schemas";
+import { ReasonText } from "./ReadMore";
 import { PlayLog } from "./fields";
 
 interface Entry {
@@ -179,7 +180,7 @@ function Explainer({ entry }: { entry: Entry }) {
     <Alert color={VERDICT_COLOR[x.verdict]} variant="outline" className="explainer" title={<span className="eyebrow">Last play</span>}>
       <Text>{entry.text}</Text>
       <Text className="verdict" mt="xs">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</Text>
-      <List size="sm" spacing={2} mb="sm">{x.reasons.map((r, i) => <List.Item key={i}>{r}</List.Item>)}</List>
+      <List size="sm" spacing={2} mb="sm">{x.reasons.map((r, i) => <List.Item key={i}><ReasonText reason={r} /></List.Item>)}</List>
       <CallTable values={values} chosen={call} caption="Win probability by call, before the play" />
     </Alert>
   );

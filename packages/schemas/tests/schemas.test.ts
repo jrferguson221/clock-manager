@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  bestCallSearchSchema, clockTextSchema, firstError, gameStateSchema, leadingSearchSchema, rangeSchema, trailingSearchSchema,
+  bestCallSearchSchema, clockTextSchema, guideSearchSchema, GUIDE_SECTIONS, firstError, gameStateSchema, leadingSearchSchema, rangeSchema, trailingSearchSchema,
   BEST_CALL_DEFAULTS, CLOCK_HINT, LEADING_DEFAULTS, LIMITS, TRAILING_DEFAULTS, type GameState,
 } from "../src";
 
@@ -84,5 +84,14 @@ describe("gameStateSchema", () => {
     expect(gameStateSchema.safeParse({ ...g, timeouts: { you: 4, opp: 3 } }).success).toBe(false);
     expect(gameStateSchema.safeParse({ ...g, ytg: 101 }).success).toBe(false);
     expect(gameStateSchema.safeParse({ ...g, clock: -1 }).success).toBe(false);
+  });
+});
+
+describe("guideSearchSchema", () => {
+  it("accepts any guide section, and drops a missing or unknown one", () => {
+    for (const section of GUIDE_SECTIONS) expect(guideSearchSchema.parse({ section })).toEqual({ section });
+    expect(guideSearchSchema.parse({}).section).toBeUndefined();
+    expect(guideSearchSchema.parse({ section: "nonsense" }).section).toBeUndefined();
+    expect(guideSearchSchema.parse({ section: 7 }).section).toBeUndefined();
   });
 });

@@ -6,7 +6,7 @@
 
 import { NFL_RULES, PLAY_TYPES, simulateRunOut, type Down } from "./engine";
 import { formatClock } from "./time";
-import type { GameState, PlayCall, Team } from "@clock-manager/schemas";
+import type { GameState, GuideSection, PlayCall, Team } from "@clock-manager/schemas";
 
 // The game state and call types come from the schemas package, which validates them too.
 export type { GameState, PlayCall, Team };
@@ -36,10 +36,14 @@ export const DEFAULT_SIM: SimConfig = Object.freeze({ hurryUp: 18, spikeLineup: 
 
 const WARNING = NFL_RULES.twoMinuteWarning;
 const BURN = NFL_RULES.playClock - 1; // snap with 1 second on the play clock
-const FG_MAX_YTG = 45; // a 62-yard try
-const PUNT_MIN_YTG = 40;
+/** The longest field-goal try: from the opponent's 45, a 62-yarder. */
+export const FG_MAX_YTG = 45;
+/** Punting is an option from 40 or more yards out. */
+export const PUNT_MIN_YTG = 40;
+/** A defense that's behind uses its timeouts after in-bounds plays in the last 4 minutes. */
+export const DEFENSE_TIMEOUT_WINDOW = 240;
 /** Fewest seconds from the end of an in-bounds play to the next snap, even when rushing. */
-const MIN_SNAP = 8;
+export const MIN_SNAP = 8;
 
 // ---------------------------------------------------------------------------
 // Random numbers
@@ -330,6 +334,22 @@ function changePossession(g: GameState, clock: number, theirYtg: number): GameSt
   };
 }
 
+/** Kicking-game and try odds. The strategy guide reads these, so it always matches the model. */
+export const SPECIAL_TEAMS = Object.freeze({
+  /** Extra point success. */
+  extraPoint: 0.95,
+  /** Two-point try success. A team goes for two only when down 2 after the touchdown. */
+  twoPoint: 0.48,
+  /** Onside kick recovery by the kicking team. */
+  onsideRecovery: 0.12,
+  /** A team still behind after scoring tries an onside kick with this many seconds left or fewer. */
+  onsideWindow: 300,
+  /** Kickoffs are touchbacks to the receiving team's 30. */
+  touchbackYardLine: 30,
+  /** Net punt distance. */
+  puntNet: 40,
+});
+
 /** Points, the try after a touchdown, then the kickoff (onside if the kicking team is still behind late). */
 function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: GameState; text: string } {
   const scorer = g.poss;
@@ -339,11 +359,11 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
   if (points === 6) {
     const after = marginFor({ ...g, margin }, scorer);
     if (after === -2) {
-      const good = r() < 0.48;
+      const good = r() < SPECIAL_TEAMS.twoPoint;
       if (good) margin += sign * 2;
       text += good ? ", 2-point try good" : ", 2-point try fails";
     } else {
-      const good = r() < 0.95;
+      const good = r() < SPECIAL_TEAMS.extraPoint;
       if (good) margin += sign;
       text += good ? ", extra point good" : ", extra point missed";
     }
@@ -352,16 +372,16 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
   if (clock <= 0) return { state: { ...scored, clock: 0, running: false, over: true }, text: `${text}.` };
 
   const kickerMargin = marginFor(scored, scorer);
-  if (kickerMargin < 0 && clock <= 300) {
+  if (kickerMargin < 0 && clock <= SPECIAL_TEAMS.onsideWindow) {
     const t = Math.max(0, clock - 3);
-    if (r() < 0.12) {
+    if (r() < SPECIAL_TEAMS.onsideRecovery) {
       // The kicking team recovers around its own 45 and keeps the ball.
       const kept: GameState = { ...scored, clock: t, running: false, down: 1, toGo: 10, ytg: 55 };
       return { state: kept, text: `${text}. Onside kick recovered by the kicking team.` };
     }
     return { state: changePossession(scored, t, 45), text: `${text}. Onside kick fails.` };
   }
-  return { state: changePossession(scored, clock, 70), text: `${text}. Kickoff, touchback.` };
+  return { state: changePossession(scored, clock, 100 - SPECIAL_TEAMS.touchbackYardLine), text: `${text}. Kickoff, touchback.` };
 }
 
 /**
@@ -414,7 +434,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   if (call === "punt") {
     const end = Math.max(0, t - 7);
-    const landing = g.ytg - 40;
+    const landing = g.ytg - SPECIAL_TEAMS.puntNet;
     const theirYtg = landing < 8 ? 80 : 100 - landing;
     return {
       state: changePossession(g, end, theirYtg),
@@ -462,7 +482,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
   // A defense that's behind stops the clock, unless the two-minute warning is about to do it for free.
   const defenseBehind = marginFor(next, def) < 0;
   const warningComing = t > WARNING && t - preSnapBurn(next, "run", cfg) <= WARNING;
-  if (next.running && defenseBehind && next.timeouts[def] > 0 && t <= 240 && !warningComing) {
+  if (next.running && defenseBehind && next.timeouts[def] > 0 && t <= DEFENSE_TIMEOUT_WINDOW && !warningComing) {
     const timeouts = { ...next.timeouts, [def]: next.timeouts[def] - 1 };
     next = { ...next, running: false, timeouts };
     text += ` ${who(def)} call timeout (${timeouts[def]} left).`;
@@ -632,7 +652,7 @@ export interface Explanation {
   verdict: "best" | "close" | "worse";
   headline: string;
   /** Why the best call was best, and what was wrong with yours if it wasn't. */
-  reasons: string[];
+  reasons: Reason[];
 }
 
 /** Calls within this many win-probability points of the best count as about as good. */
@@ -642,75 +662,90 @@ export const AVOID = 0.03;
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
-function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): string {
+/** One reason in an explanation, and the guide section that explains it further. */
+export interface Reason {
+  readonly text: string;
+  readonly section: GuideSection;
+}
+
+const reason = (text: string, section: GuideSection): Reason => ({ text, section });
+
+function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
   const m = marginFor(g, g.poss);
   switch (call) {
     case "kneel":
-      if (m > 0 && canKneelOut(g)) return "Kneel-downs run out the clock from here, so the opponent never gets the ball back.";
-      if (m > 0) return "A kneel keeps the clock running with no risk of a fumble.";
-      return "With little time and a long field, taking a tie to overtime beats risking a turnover.";
+      if (m > 0 && canKneelOut(g))
+        return reason("Kneel-downs run out the clock from here, so the opponent never gets the ball back.", "running-out-the-clock");
+      if (m > 0) return reason("A kneel keeps the clock running with no risk of a fumble.", "running-out-the-clock");
+      return reason("With little time and a long field, taking a tie to overtime beats risking a turnover.", "limitations");
     case "run":
-      if (m > 0) return "A run keeps the clock moving and rarely turns the ball over.";
-      if (fgPlay(g)) return "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.";
+      if (m > 0) return reason("A run keeps the clock moving and rarely turns the ball over.", "running-out-the-clock");
+      if (fgPlay(g))
+        return reason("A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.", "field-goal-endgame");
       if (g.ytg <= 5)
-        return `At the ${g.ytg}, the defense packs the line, but a run still scores about ${pct(goalLineRunChance(g.ytg))} of the time from here, with little risk of a turnover.`;
-      if (g.toGo <= 2) return `On ${ordinal(g.down)} & ${g.toGo}, a run is the surest way to move the chains.`;
-      return g.clock > 120 || !g.running
-        ? "A run gains steady yards with little risk, and you have time to spare."
-        : "A run gains steady yards with little risk of a turnover.";
+        return reason(`At the ${g.ytg}, the defense packs the line, but a run still scores about ${pct(goalLineRunChance(g.ytg))} of the time from here, with little risk of a turnover.`, "red-zone");
+      if (g.toGo <= 2) return reason(`On ${ordinal(g.down)} & ${g.toGo}, a run is the surest way to move the chains.`, "play-model");
+      return reason(
+        g.clock > 120 || !g.running
+          ? "A run gains steady yards with little risk, and you have time to spare."
+          : "A run gains steady yards with little risk of a turnover.",
+        "play-model",
+      );
     case "timeout":
-      if (fgPlay(g)) return `Stop the clock now so there's time to get the kick off.`;
-      return `The clock was running with ${formatClock(g.clock)} left. A timeout saves the ${cfg.hurryUp} seconds a hurry-up snap would burn.`;
+      if (fgPlay(g)) return reason("Stop the clock now so there's time to get the kick off.", "field-goal-endgame");
+      return reason(`The clock was running with ${formatClock(g.clock)} left. A timeout saves the ${cfg.hurryUp} seconds a hurry-up snap would burn.`, "timeouts");
     case "spike":
-      return `A spike stops the clock about ${cfg.spikeLineup} seconds after the play and saves a timeout, at the cost of a down.`;
+      return reason(`A spike stops the clock about ${cfg.spikeLineup} seconds after the play and saves a timeout, at the cost of a down.`, "spike");
     case "pass-sideline":
-      return "A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.";
+      return reason("A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.", "clock-rules");
     case "pass-middle":
       if (g.ytg <= RED_ZONE)
-        return `Coverage tightens in the red zone, but a quick throw over the middle still completes about ${pct(passOdds("normal", "pass-middle", g.ytg).complete)} of the time from the ${g.ytg}.`;
+        return reason(`Coverage tightens in the red zone, but a quick throw over the middle still completes about ${pct(passOdds("normal", "pass-middle", g.ytg).complete)} of the time from the ${g.ytg}.`, "red-zone");
       return coverageFor(g, g.clock) === "prevent"
-        ? `They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about ${pct(PASS_ODDS.prevent["pass-middle"].complete)} of the time against it.`
-        : "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.";
+        ? reason(`They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about ${pct(PASS_ODDS.prevent["pass-middle"].complete)} of the time against it.`, "prevent-defense")
+        : reason("A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.", "play-model");
     case "pass-deep":
-      return g.clock <= 12
-        ? `With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.${g.ytg <= HAIL_MARY.maxYtg ? ` A heave from here scores about ${pct(hailMaryChance(g.ytg))} of the time.` : ""}`
-        : g.ytg <= RED_ZONE
-          ? `From the ${g.ytg} there's no deep field: a deep pass is a throw into the end zone, and it scores about ${pct(passOdds("normal", "pass-deep", g.ytg).complete)} of the time.`
-          : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(passOdds(coverageFor(g, g.clock), "pass-deep", g.ytg).complete)} of the time, for 20+ yards.`;
+      if (g.clock <= 12)
+        return reason(`With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.${g.ytg <= HAIL_MARY.maxYtg ? ` A heave from here scores about ${pct(hailMaryChance(g.ytg))} of the time.` : ""}`, "hail-mary");
+      if (g.ytg <= RED_ZONE)
+        return reason(`From the ${g.ytg} there's no deep field: a deep pass is a throw into the end zone, and it scores about ${pct(passOdds("normal", "pass-deep", g.ytg).complete)} of the time.`, "red-zone");
+      return reason(`You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(passOdds(coverageFor(g, g.clock), "pass-deep", g.ytg).complete)} of the time, for 20+ yards.`, coverageFor(g, g.clock) === "prevent" ? "prevent-defense" : "play-model");
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
-      return `A ${g.ytg + 17}-yard try is good about ${pct(fgMakeChance(g.ytg))} of the time, and it ${effect}.`;
+      return reason(`A ${g.ytg + 17}-yard try is good about ${pct(fgMakeChance(g.ytg))} of the time, and it ${effect}.`, "field-goal-endgame");
     }
     case "punt":
-      return "Punting pins them deep. Failing on 4th down here would hand them a short field.";
+      return reason("Punting pins them deep. Failing on 4th down here would hand them a short field.", "fourth-down");
   }
 }
 
-function whyNot(g: GameState, call: PlayCall): string | null {
+function whyNot(g: GameState, call: PlayCall): Reason | null {
   const m = marginFor(g, g.poss);
-  if (call === "timeout" && !g.running) return "Your timeout was wasted: the clock was already stopped.";
-  if (call === "spike" && !g.running) return "Spiking with the clock already stopped throws away a down.";
-  if (call === "kneel" && m <= 0) return "Kneeling gives up a down and time you need.";
+  if (call === "timeout" && !g.running) return reason("Your timeout was wasted: the clock was already stopped.", "timeouts");
+  if (call === "spike" && !g.running) return reason("Spiking with the clock already stopped throws away a down.", "spike");
+  if (call === "kneel" && m <= 0) return reason("Kneeling gives up a down and time you need.", "clock-rules");
   if (call === "pass-deep" && m <= 0) {
     const coverage = coverageFor(g, g.clock);
     const odds = passOdds(coverage, "pass-deep", g.ytg);
     if (g.ytg <= RED_ZONE)
-      return `From the ${g.ytg} there's no room to throw deep: an end-zone throw scores only about ${pct(odds.complete)} of the time. Shorter throws and runs were the better bet.`;
+      return reason(`From the ${g.ytg} there's no room to throw deep: an end-zone throw scores only about ${pct(odds.complete)} of the time. Shorter throws and runs were the better bet.`, "red-zone");
     return coverage === "prevent"
-      ? `They're ahead late and playing prevent, with safeties deep: a deep pass completes only about ${pct(odds.complete)} of the time and is picked off about ${pct(odds.interception)}. Shorter throws were the better bet.`
-      : `A deep pass completes only about ${pct(odds.complete)} of the time and risks a sack or an interception; shorter throws were the better bet here.`;
+      ? reason(`They're ahead late and playing prevent, with safeties deep: a deep pass completes only about ${pct(odds.complete)} of the time and is picked off about ${pct(odds.interception)}. Shorter throws were the better bet.`, "prevent-defense")
+      : reason(`A deep pass completes only about ${pct(odds.complete)} of the time and risks a sack or an interception; shorter throws were the better bet here.`, "play-model");
   }
   if ((call === "pass-middle" || call === "pass-sideline" || call === "pass-deep") && m > 0)
-    return "A pass risks an incompletion that stops the clock for them, and an interception.";
-  if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20) return "Kicking now leaves them time to answer. Drain the clock first.";
+    return reason("A pass risks an incompletion that stops the clock for them, and an interception.", "running-out-the-clock");
+  if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20)
+    return reason("Kicking now leaves them time to answer. Drain the clock first.", "field-goal-endgame");
   if (call === "punt") {
-    return m <= 0
-      ? "Punting gives the ball back when you need to score."
-      : "Punting gives the ball back when you still had a good chance to keep it.";
+    return reason(
+      m <= 0 ? "Punting gives the ball back when you need to score." : "Punting gives the ball back when you still had a good chance to keep it.",
+      "fourth-down",
+    );
   }
   if ((call === "run" || call === "kneel") && m < 0 && !fgPlay(g) && g.clock <= 120)
-    return "A play that ends in bounds keeps the clock running when you're short on time.";
+    return reason("A play that ends in bounds keeps the clock running when you're short on time.", "clock-rules");
   return null;
 }
 
@@ -788,7 +823,7 @@ export interface Recommendation {
   /** Your win probability with the best call. */
   wp: number;
   /** Why the best call is best. */
-  reason: string;
+  reason: Reason;
   /** The next-best call, and whether it's close enough to be a coin flip. */
   runnerUp: { call: PlayCall; wp: number; close: boolean } | null;
   /** Calls to avoid here, with why, worst first. */
@@ -798,7 +833,7 @@ export interface Recommendation {
 export interface Avoid {
   call: PlayCall;
   wp: number;
-  reason: string;
+  reason: Reason;
 }
 
 export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEFAULT_SIM): Recommendation {
@@ -810,8 +845,8 @@ export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEF
   const avoid = others
     .filter((v) => wp - v.wp >= AVOID || (wastesResource(g, v.call) && wp - v.wp > TIE))
     .flatMap((v): Avoid[] => {
-      const reason = whyNot(g, v.call);
-      return reason === null ? [] : [{ call: v.call, wp: v.wp, reason }];
+      const why = whyNot(g, v.call);
+      return why === null ? [] : [{ call: v.call, wp: v.wp, reason: why }];
     })
     .sort((a, b) => a.wp - b.wp);
   return { best, wp, reason: whyBest(g, best, cfg), runnerUp, avoid };

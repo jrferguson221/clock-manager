@@ -8,6 +8,7 @@ import { evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } fro
 import { ChoiceSelect, NumberField, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout } from "./SituationForm";
 import { CallTable, WinMeter, tempoNote } from "./Trainer";
+import { GuideLink, ReasonText } from "./ReadMore";
 
 const route = getRouteApi("/best-call");
 
@@ -60,7 +61,7 @@ export default function AdvisorPanel() {
           <Card className="accent-card best">
             <Text className="eyebrow">Best call</Text>
             <Text className="verdict big">{PLAY_CALLS[analysis.rec.best]}</Text>
-            <Text>{analysis.rec.reason}</Text>
+            <Text><ReasonText reason={analysis.rec.reason} /></Text>
             {analysis.rec.runnerUp?.close && (
               <Text c="dimmed" mt="xs">
                 {PLAY_CALLS[analysis.rec.runnerUp.call]} is about as good ({pct(analysis.rec.runnerUp.wp)}). The
@@ -79,7 +80,7 @@ export default function AdvisorPanel() {
                 <Text className="eyebrow" c="red" mt="md">Avoid</Text>
                 <List spacing={4} mt={4}>
                   {analysis.rec.avoid.map((a) => (
-                    <List.Item key={a.call}><strong>{PLAY_CALLS[a.call]}</strong> ({pct(a.wp)}): {a.reason}</List.Item>
+                    <List.Item key={a.call}><strong>{PLAY_CALLS[a.call]}</strong> ({pct(a.wp)}): <ReasonText reason={a.reason} /></List.Item>
                   ))}
                 </List>
               </>
@@ -88,7 +89,8 @@ export default function AdvisorPanel() {
 
           <Text size="xs" c="dimmed">
             {tempoNote(analysis.game, analysis.cfg)} Each option is scored over 1,500 simulated games in which both teams then
-            follow rule-of-thumb play-calling, using the same model as the trainer. See the README for its assumptions.
+            follow rule-of-thumb play-calling, using the same model as the trainer.{" "}
+            <GuideLink section="win-probability">How win probability works</GuideLink>
           </Text>
         </Stack>
       )}

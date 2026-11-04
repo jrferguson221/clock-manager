@@ -6,6 +6,8 @@ Both modes are a play-calling trainer. Enter the situation (clock, score, timeou
 
 The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
 
+The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
+
 The leading and trailing modes also have their own calculators:
 
 - **Leading: run out the clock.** Whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
@@ -36,6 +38,8 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
 | `src/sim.ts` | Play simulator, win probability and the best-call explainer. Pure functions. |
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
+| `src/Guide.tsx` | The strategy guide page. Its tables are computed from `src/sim.ts` and `src/engine.ts`. |
+| `src/ReadMore.tsx` | Typed links into the guide (a Mantine `Anchor` wrapped with TanStack Router's `createLink`). |
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
 | `src/time.ts` | Parses and formats `M:SS` clock strings. |
 | `src/router.tsx` | The routes, one per mode, with their search-param schemas. Uses hash history, so deep links work on GitHub Pages. |
@@ -43,7 +47,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/theme.ts`, `src/styles.css` | The "Sideline" Mantine theme (pylon orange, turf green, night navy, Barlow fonts), and the CSS the theme can't express. `src/mantine-styles.ts` imports Mantine's styles for just the components used. |
 | `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx`, `src/AdvisorPanel.tsx` | One UI panel per mode. |
 | `src/SituationForm.tsx`, `src/fields.tsx` | The situation form all modes share, its inputs, and the timeline table. |
-| `packages/schemas` | `@clock-manager/schemas`, a Bun workspace package: Zod schemas for the game state, URL search params and form fields, and the types inferred from them. The engines take their `GameState`, `Down` and `PlayCall` types from it. |
+| `packages/schemas` | `@clock-manager/schemas`, a Bun workspace package: Zod schemas for the game state, URL search params (including the guide's section names) and form fields, and the types inferred from them. The engines take their `GameState`, `Down` and `PlayCall` types from it. |
 | `tests/` | Tests for the engines and the simulator. `tests/app/` renders each route (one file per mode). `packages/schemas/tests/` tests the schemas. |
 
 The repo is a Bun workspace: `bun install` at the root links `packages/schemas`, and `bun run test` runs every package's tests.

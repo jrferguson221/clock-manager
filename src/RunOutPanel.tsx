@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Alert, Card, Stack, Text, Title } from "@mantine/core";
+import { Alert, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { LeadingSearch } from "@clock-manager/schemas";
 import { simulateRunOut, runOutThreshold, PLAY_TYPE_IDS, PLAY_TYPES, type RunOutResult } from "./engine";
@@ -7,6 +7,7 @@ import type { GameState } from "./sim";
 import { formatClock } from "./time";
 import { ChoiceSelect, Timeline, clampTo, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout, sharedFromGame } from "./SituationForm";
+import { GuideLink } from "./ReadMore";
 import Trainer from "./Trainer";
 
 const route = getRouteApi("/");
@@ -51,7 +52,10 @@ export default function RunOutPanel() {
       ) : (
         <Stack gap="lg">
           <Trainer game={sim.value} pending={sim.pending} onChange={(g) => set({ ...sharedFromGame(g), lead: clampTo("lead", g.margin) })} />
-          <Title order={2}>Can you run it out?</Title>
+          <Group justify="space-between" align="baseline">
+            <Title order={2}>Can you run it out?</Title>
+            <GuideLink section="running-out-the-clock">How this works</GuideLink>
+          </Group>
           <Result {...analysis} />
         </Stack>
       )}

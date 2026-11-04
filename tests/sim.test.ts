@@ -80,7 +80,7 @@ describe("explain", () => {
   it("calls out a timeout wasted with the clock already stopped", () => {
     const g = { ...base, running: false, clock: 300, margin: 7 };
     const x = explain(g, "timeout", evaluateCalls(g, 200));
-    expect(x.reasons.join(" ")).toContain("already stopped");
+    expect(x.reasons.map((r) => r.text).join(" ")).toContain("already stopped");
   });
 });
 
@@ -100,7 +100,8 @@ describe("recommend", () => {
     const r = recommend(g, evaluateCalls(g, 300));
     expect(r.best).toBe("kneel");
     expect(r.wp).toBe(1);
-    expect(r.reason).toContain("run out the clock");
+    expect(r.reason.text).toContain("run out the clock");
+    expect(r.reason.section).toBe("running-out-the-clock");
   });
 
   it("lists clearly worse calls to avoid, with reasons", () => {
@@ -117,7 +118,8 @@ describe("deep pass", () => {
     const g: GameState = { ...base, clock: 3, running: false, ytg: 45, toGo: 10, margin: -5, timeouts: { you: 0, opp: 3 } };
     const values = evaluateCalls(g, 1000);
     expect(bestCall(values)).toBe("pass-deep");
-    expect(explain(g, "pass-deep", values).reasons[0]).toContain("one shot");
+    expect(explain(g, "pass-deep", values).reasons[0]?.text).toContain("one shot");
+    expect(explain(g, "pass-deep", values).reasons[0]?.section).toBe("hail-mary");
     expect(["timeout", "spike"]).not.toContain(recommend(g, values).runnerUp?.call);
   });
 
@@ -189,7 +191,7 @@ describe("timeouts", () => {
     const values = evaluateCalls(trailing, 500);
     const x = explain(trailing, "timeout", values);
     expect(x.verdict).toBe("worse");
-    expect(x.reasons.join(" ")).toContain("already stopped");
+    expect(x.reasons.map((r) => r.text).join(" ")).toContain("already stopped");
     expect(recommend(trailing, values).avoid.map((a) => a.call)).toContain("timeout");
   });
 });

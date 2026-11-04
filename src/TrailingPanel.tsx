@@ -6,6 +6,7 @@ import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIO
 import { DEFAULT_SIM, type GameState } from "./sim";
 import { ChoiceSelect, NumberField, clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout, sharedFromGame } from "./SituationForm";
+import { GuideLink } from "./ReadMore";
 import Trainer from "./Trainer";
 
 const route = getRouteApi("/trailing");
@@ -64,7 +65,10 @@ export default function TrailingPanel() {
         <Stack gap="lg">
           <Trainer game={sim.value} pending={sim.pending} onChange={(g) => set({ ...sharedFromGame(g), trail: clampTo("trail", -g.margin) })} cfg={cfg} />
 
-          <Title order={2}>Rules of thumb</Title>
+          <Group justify="space-between" align="baseline">
+            <Title order={2}>Rules of thumb</Title>
+            <GuideLink section="drive-budget">How these work</GuideLink>
+          </Group>
           <Card className="accent-card">
             <Text className="eyebrow">Next call</Text>
             <Text className="verdict">{analysis.advice.headline}</Text>
