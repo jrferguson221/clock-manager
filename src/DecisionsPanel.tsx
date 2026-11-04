@@ -8,6 +8,7 @@ import { PLAY_CALLS } from "./sim";
 import { formatClock } from "./time";
 import { ChoiceSelect, spotFrom } from "./fields";
 import { AnchorLink, GuideLink, ReasonText } from "./ReadMore";
+import { teamName, teamStyle } from "./teamPalette";
 
 const route = getRouteApi("/decisions");
 
@@ -137,11 +138,18 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
   const s = d.situation;
   const sameCall = d.call === d.best || d.cost < 0.005;
   return (
-    <Card className={kind === "worst" ? "accent-card" : undefined} aria-label={`${d.offense} versus ${d.defense}, ${formatClock(s.clock)} left`}>
-      <Group justify="space-between" align="baseline" wrap="wrap" gap="xs">
-        <Text className="eyebrow">
-          {rank !== undefined ? `#${rank} · ` : ""}{d.offense} vs {d.defense} · {d.date}
-        </Text>
+    <Card
+      className={`team-card team-colors${kind === "worst" ? " costly" : ""}`} style={teamStyle(d.offense)}
+      aria-label={`${teamName(d.offense)} versus ${teamName(d.defense)}, ${formatClock(d.snapClock)} left`}
+    >
+      <Group justify="space-between" align="center" wrap="wrap" gap="xs">
+        <Group gap={6} align="center" wrap="nowrap">
+          {rank !== undefined && <Text className="eyebrow">#{rank}</Text>}
+          <TeamChip team={d.offense} />
+          <Text className="eyebrow">vs</Text>
+          <TeamChip team={d.defense} />
+          <Text className="eyebrow">· {d.date}</Text>
+        </Group>
         {d.lowConfidence && <Badge color="gray" variant="light">Models disagree: less certain</Badge>}
       </Group>
       <Title order={4} mt={4}>
@@ -184,5 +192,14 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
         Try this situation in Best call
       </AnchorLink>
     </Card>
+  );
+}
+
+/** A team's abbreviation on its color, with the full name for screen readers and on hover. */
+function TeamChip({ team }: { team: string }) {
+  return (
+    <abbr className="team-chip team-colors" style={teamStyle(team)} title={teamName(team)}>
+      {team}
+    </abbr>
   );
 }

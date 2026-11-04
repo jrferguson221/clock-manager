@@ -36,3 +36,9 @@ it("shows an error, not a crash, when the data can't be loaded", async () => {
   const { html } = await renderAt("/decisions", broken);
   expect(html).toContain("couldn&#x27;t be loaded");
 });
+
+it("shows each team's abbreviation on its own colors, with the full name", async () => {
+  const { html } = await renderAt("/decisions?week=8");
+  expect(html).toMatch(/<abbr class="team-chip team-colors" style="--team-accent-light:#[0-9a-f]{6};--team-on-accent-light:#[0-9a-f]{6};--team-accent-dark:#[0-9a-f]{6};--team-on-accent-dark:#[0-9a-f]{6}" title="Minnesota Vikings">MIN<\/abbr>/);
+  expect(html).toContain("team-card team-colors costly");
+});

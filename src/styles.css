@@ -200,3 +200,31 @@ body {
   padding-left: rem(10px);
   border-left: 3px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
+
+/* Team colors (Decisions of the week). Each element carries its team's light- and dark-scheme colors as
+   custom properties, already checked for contrast; these rules pick the pair for the current scheme. */
+.team-colors {
+  --team-accent: var(--team-accent-light);
+  --team-on-accent: var(--team-on-accent-light);
+}
+[data-mantine-color-scheme="dark"] .team-colors {
+  --team-accent: var(--team-accent-dark);
+  --team-on-accent: var(--team-on-accent-dark);
+}
+.team-card { border-left: 5px solid var(--team-accent); }
+.team-card.costly { border-left-width: 8px; }
+.team-chip {
+  display: inline-block;
+  min-width: 2.6em;
+  padding: rem(1px) rem(6px);
+  border-radius: var(--mantine-radius-xs);
+  background: var(--team-accent);
+  color: var(--team-on-accent);
+  font-family: var(--mantine-font-family-headings);
+  font-weight: 700;
+  font-size: var(--mantine-font-size-sm);
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-decoration: none;
+  cursor: help;
+}

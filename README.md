@@ -22,6 +22,7 @@ The **Decisions of the week** tab (`#/decisions`) shows the costliest late-game 
   - **Passes:** all passes are judged as one decision, "throw it", credited with the best kind of pass, since the target and play design depend on things the data can't show.
   - **Running clock:** when the clock was running, a call is judged from the end of the play before, so each option pays its own time to the snap.
   - **Disagreement:** every situation is compared with nflverse's independent win-probability model. Where the two disagree by more than 15 points, the decision stays off the list.
+- **Team colors:** each card has the offense's color as a stripe, and both teams' abbreviations on their own colors. The colors are from nflverse's teams table (`src/teamColors.ts`); no logos are used. `src/teamPalette.ts` uses a team's color only where it passes WCAG contrast on the card in each color scheme: 3:1 for the stripe and chip, and 4.5:1 for the chip's text. It falls back to the same hue lightened or darkened, or to the team's other colors. Tests check every team in both schemes.
 - **Updates:** `scripts/decisions/build.ts` builds the files: `bun scripts/decisions/build.ts --season 2026`. The *Update weekly decisions* GitHub Action runs it every Tuesday at 13:17 UTC, after Monday night's game. It runs the tests against the new data, commits it, and the site redeploys.
 
 The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
@@ -59,6 +60,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/scenarios.ts` | The player-decision scenarios: their options, verdicts and flip points. Pure functions. |
 | `src/ScenarioPanel.tsx` | The Player decisions page. |
 | `src/DecisionsPanel.tsx`, `src/decisionsData.ts` | The Decisions of the week page, and where its data is fetched from (validated with the schemas package). |
+| `src/teamColors.ts`, `src/teamPalette.ts` | Team colors from nflverse, and the contrast rules that make them readable in both color schemes. |
 | `scripts/decisions/` | The data pipeline: CSV reading, turning play-by-play into decisions, and scoring them. |
 | `public/data/decisions/` | The generated weekly files (CC-BY-SA 4.0). |
 | `src/Guide.tsx` | The strategy guide page. Its tables are computed from `src/sim.ts` and `src/engine.ts`. |
