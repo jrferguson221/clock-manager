@@ -149,7 +149,69 @@ interface PlayOutcome {
   sack?: boolean;
 }
 
-function rollPlay(call: PlayCall, r: Rng): PlayOutcome {
+/** How the defense is playing. A defense that leads late plays "prevent": deep and soft. */
+export type Coverage = "normal" | "prevent";
+
+/** A defense that's ahead plays prevent in the last 4 minutes. */
+export const PREVENT_WINDOW = 240;
+
+export function coverageFor(g: GameState, clock: number): Coverage {
+  return marginFor(g, other(g.poss)) > 0 && clock <= PREVENT_WINDOW ? "prevent" : "normal";
+}
+
+type PassCall = "pass-sideline" | "pass-middle" | "pass-deep";
+
+interface PassOdds {
+  readonly sack: number;
+  readonly interception: number;
+  readonly complete: number;
+  /** Completions gain at least this many yards… */
+  readonly minYards: number;
+  /** …plus an exponential with this mean. */
+  readonly extraYards: number;
+  /** Share of completions that end out of bounds. */
+  readonly outOfBounds: number;
+}
+
+/**
+ * Pass odds by coverage. Against prevent, safeties play deep and fewer rushers come: deep throws
+ * complete less and get picked more, while short and middle throws complete more often but are
+ * tackled sooner, and there are fewer sacks.
+ */
+export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, PassOdds>>>> = Object.freeze({
+  normal: {
+    "pass-sideline": { sack: 0.06, interception: 0.025, complete: 0.52, minYards: 4, extraYards: 6, outOfBounds: 0.7 },
+    "pass-middle": { sack: 0.06, interception: 0.03, complete: 0.6, minYards: 4, extraYards: 7, outOfBounds: 0.08 },
+    "pass-deep": { sack: 0.08, interception: 0.05, complete: 0.35, minYards: 20, extraYards: 12, outOfBounds: 0.25 },
+  },
+  prevent: {
+    "pass-sideline": { sack: 0.04, interception: 0.025, complete: 0.55, minYards: 4, extraYards: 5, outOfBounds: 0.7 },
+    "pass-middle": { sack: 0.04, interception: 0.025, complete: 0.68, minYards: 4, extraYards: 5, outOfBounds: 0.08 },
+    "pass-deep": { sack: 0.06, interception: 0.08, complete: 0.2, minYards: 20, extraYards: 10, outOfBounds: 0.25 },
+  },
+});
+
+/** Average run gain by coverage: prevent gives up a little more on the ground. */
+const RUN_MEAN: Readonly<Record<Coverage, number>> = Object.freeze({ normal: 3.6, prevent: 4.3 });
+
+/** A last-play deep pass from this close is a heave into the end zone rather than a normal deep throw. */
+export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12 });
+
+/** Touchdown chance of an end-zone heave from this far out: about 20% from 25 yards, 10% from 45, 4% from 60. */
+export function hailMaryChance(ytg: number): number {
+  return Math.min(0.22, Math.max(0.04, 0.32 - 0.005 * ytg));
+}
+
+function rollHailMary(ytg: number, r: Rng): PlayOutcome {
+  const base = { outOfBounds: false, incomplete: false, seconds: 6 };
+  const u = r();
+  // A pick in the end zone is a touchback.
+  if (u < HAIL_MARY.interception) return { ...base, yards: ytg, turnover: "interception" };
+  if (u < HAIL_MARY.interception + hailMaryChance(ytg)) return { ...base, yards: ytg };
+  return { ...base, yards: 0, incomplete: true };
+}
+
+function rollPlay(call: PlayCall, r: Rng, coverage: Coverage): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false };
   switch (call) {
     case "kneel":
@@ -158,37 +220,30 @@ function rollPlay(call: PlayCall, r: Rng): PlayOutcome {
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
       if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
-      let yards = Math.round(3.6 + 3.2 * gauss(r));
+      let yards = Math.round(RUN_MEAN[coverage] + 3.2 * gauss(r));
       if (r() < 0.1) yards += Math.round(6 + expo(r, 9));
       yards = Math.max(-6, yards);
       return { ...base, yards, seconds: Math.round(4 + Math.max(0, yards) / 7), outOfBounds: r() < 0.07 };
     }
     case "pass-sideline":
-    case "pass-middle": {
-      const sideline = call === "pass-sideline";
-      const u = r();
-      const intAt = 0.06 + (sideline ? 0.025 : 0.03);
-      const completeAt = intAt + (sideline ? 0.52 : 0.6);
-      if (u < 0.06) return { ...base, yards: -7, seconds: 5, sack: true };
-      if (u < intAt) return { ...base, yards: 12, seconds: 5, turnover: "interception" };
-      if (u < completeAt) {
-        const yards = Math.round(4 + expo(r, sideline ? 6 : 7));
-        return { ...base, yards, seconds: Math.round(4 + yards / 10), outOfBounds: r() < (sideline ? 0.7 : 0.08) };
-      }
-      return { ...base, yards: 0, seconds: 5, incomplete: true };
-    }
+    case "pass-middle":
     case "pass-deep": {
-      // A long-developing throw 20+ yards downfield: more sacks and picks, fewer completions.
+      const odds = PASS_ODDS[coverage][call];
+      // A deep throw takes longer to develop, and a pick comes farther downfield.
+      const deep = call === "pass-deep";
+      const slow = deep ? 1 : 0;
       const u = r();
-      if (u < 0.08) return { ...base, yards: -8, seconds: 6, sack: true };
-      if (u < 0.13) return { ...base, yards: 25, seconds: 6, turnover: "interception" };
-      if (u < 0.48) {
-        const yards = Math.round(20 + expo(r, 12));
-        return { ...base, yards, seconds: Math.round(5 + yards / 10), outOfBounds: r() < 0.25 };
+      if (u < odds.sack) return { ...base, yards: deep ? -8 : -7, seconds: 5 + slow, sack: true };
+      if (u < odds.sack + odds.interception) return { ...base, yards: deep ? 25 : 12, seconds: 5 + slow, turnover: "interception" };
+      if (u < odds.sack + odds.interception + odds.complete) {
+        const yards = Math.round(odds.minYards + expo(r, odds.extraYards));
+        return { ...base, yards, seconds: Math.round(4 + slow + yards / 10), outOfBounds: r() < odds.outOfBounds };
       }
-      return { ...base, yards: 0, seconds: 6, incomplete: true };
+      return { ...base, yards: 0, seconds: 5 + slow, incomplete: true };
     }
-    default:
+    case "timeout":
+    case "fg":
+    case "punt":
       throw new RangeError(`not a scrimmage play: ${call}`);
   }
 }
@@ -322,7 +377,9 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
     };
   }
 
-  const play = rollPlay(call, r);
+  const play = call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
+    ? rollHailMary(g.ytg, r)
+    : rollPlay(call, r, coverageFor(g, snapClock));
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 
@@ -426,19 +483,19 @@ export function playOut(
 // ---------------------------------------------------------------------------
 // Win probability
 
-function seedFor(g: GameState): number {
-  const key = [g.clock, +g.running, g.poss, g.down, g.toGo, g.ytg, g.margin, g.timeouts.you, g.timeouts.opp].join("|");
-  let h = 2166136261;
-  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
-  return h >>> 0;
-}
+/**
+ * Every situation is simulated on the same random streams (common random numbers), so comparing two
+ * situations, e.g. with and without a timeout, compares like with like instead of two independent
+ * samples. Estimates stay deterministic.
+ */
+const SEED = 0x5eed;
+const streamFor = (i: number) => seededRng(SEED + i * 7919);
 
 /** Your chance of winning from here, with both teams following the policy. */
 export function winProbability(g: GameState, n = 1500, cfg: SimConfig = DEFAULT_SIM): number {
   if (g.over) return g.margin > 0 ? 1 : g.margin < 0 ? 0 : 0.5;
-  const seed = seedFor(g);
   let sum = 0;
-  for (let i = 0; i < n; i++) sum += playOut(g, seededRng(seed + i * 7919), cfg);
+  for (let i = 0; i < n; i++) sum += playOut(g, streamFor(i), cfg);
   return sum / n;
 }
 
@@ -456,18 +513,37 @@ export type CallValues = NonEmpty<ScoredCall>;
  * Every call is scored on the same random streams, so differences between calls are less noisy.
  */
 export function evaluateCalls(g: GameState, n = 500, cfg: SimConfig = DEFAULT_SIM): CallValues {
-  const seed = seedFor(g);
-  const score = (call: PlayCall): ScoredCall => {
+  return scoreCalls(g, availableCalls(g), n, cfg);
+}
+
+function scoreCalls(g: GameState, calls: readonly PlayCall[], n: number, cfg: SimConfig): CallValues {
+  const scorePlay = (state: GameState, call: PlayCall): number => {
     let sum = 0;
     for (let i = 0; i < n; i++) {
-      const r = seededRng(seed + i * 7919);
-      sum += playOut(step(g, call, r, cfg).state, r, cfg);
+      const r = streamFor(i);
+      sum += playOut(step(state, call, r, cfg).state, r, cfg);
     }
-    return { call, wp: sum / n };
+    return sum / n;
   };
-  const [first, ...rest] = availableCalls(g);
-  if (first === undefined) throw new RangeError("the game is over: there are no calls to score");
-  return [score(first), ...rest.map(score)];
+
+  const plays = calls.filter((c) => c !== "timeout").map((call): ScoredCall => ({ call, wp: scorePlay(g, call) }));
+  const [firstPlay, ...otherPlays] = plays;
+  if (firstPlay === undefined) throw new RangeError("the game is over: there are no calls to score");
+  const scoredPlays: CallValues = [firstPlay, ...otherPlays];
+  if (!calls.includes("timeout")) return scoredPlays;
+
+  // A timeout isn't a play: it stops the clock and spends the timeout, then you run a play.
+  const after = step(g, "timeout", streamFor(0), cfg).state;
+  const timeoutWp = g.running
+    // Stopping the clock changes the situation, so look ahead: the best play from there. This is
+    // what the win-probability meter shows after you call it.
+    ? bestScored(scoreCalls(after, availableCalls(after).filter((c) => c !== "timeout"), n, cfg)).wp
+    // With the clock already stopped, nothing changes but the timeout count. Score the same best
+    // play with one fewer timeout, on the same random streams, so the difference is what the timeout
+    // was worth (taking the best of several noisy estimates would overstate it). It can't beat that
+    // play outright: you could always run it and keep the timeout for later.
+    : Math.min(scorePlay(after, bestScored(scoredPlays).call), bestScored(scoredPlays).wp);
+  return [{ call: "timeout", wp: timeoutWp }, ...scoredPlays];
 }
 
 /** Your win probability with a call that was scored. */
@@ -542,11 +618,13 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): string {
     case "pass-sideline":
       return "A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.";
     case "pass-middle":
-      return "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.";
+      return coverageFor(g, g.clock) === "prevent"
+        ? `They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about ${pct(PASS_ODDS.prevent["pass-middle"].complete)} of the time against it.`
+        : "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.";
     case "pass-deep":
       return g.clock <= 12
-        ? `With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.`
-        : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about a third of the time, for 20+ yards.`;
+        ? `With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.${g.ytg <= HAIL_MARY.maxYtg ? ` A heave from here scores about ${pct(hailMaryChance(g.ytg))} of the time.` : ""}`
+        : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(PASS_ODDS[coverageFor(g, g.clock)]["pass-deep"].complete)} of the time, for 20+ yards.`;
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
@@ -562,8 +640,13 @@ function whyNot(g: GameState, call: PlayCall): string | null {
   if (call === "timeout" && !g.running) return "Your timeout was wasted: the clock was already stopped.";
   if (call === "spike" && !g.running) return "Spiking with the clock already stopped throws away a down.";
   if (call === "kneel" && m <= 0) return "Kneeling gives up a down and time you need.";
-  if (call === "pass-deep" && m <= 0)
-    return "A deep pass completes only about a third of the time and risks a sack or an interception; shorter throws were the better bet here.";
+  if (call === "pass-deep" && m <= 0) {
+    const coverage = coverageFor(g, g.clock);
+    const odds = PASS_ODDS[coverage]["pass-deep"];
+    return coverage === "prevent"
+      ? `They're ahead late and playing prevent, with safeties deep: a deep pass completes only about ${pct(odds.complete)} of the time and is picked off about ${pct(odds.interception)}. Shorter throws were the better bet.`
+      : `A deep pass completes only about ${pct(odds.complete)} of the time and risks a sack or an interception; shorter throws were the better bet here.`;
+  }
   if ((call === "pass-middle" || call === "pass-sideline" || call === "pass-deep") && m > 0)
     return "A pass risks an incompletion that stops the clock for them, and an interception.";
   if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20) return "Kicking now leaves them time to answer. Drain the clock first.";
@@ -577,15 +660,30 @@ function whyNot(g: GameState, call: PlayCall): string | null {
   return null;
 }
 
+/**
+ * With the clock already stopped, a timeout spends a timeout and a spike spends a down, and neither
+ * gains anything. Any cost at all makes them a mistake, even one too small to otherwise count.
+ */
+const wastesResource = (g: GameState, call: PlayCall) => !g.running && (call === "timeout" || call === "spike");
+
 export function explain(g: GameState, chosen: PlayCall, values: CallValues, cfg: SimConfig = DEFAULT_SIM): Explanation {
   const { call: best, wp: top } = bestScored(values);
   const mine = wpOf(values, chosen);
-  if (chosen === best || top - mine <= TIE) {
+  const wasted = wastesResource(g, chosen);
+  if (chosen === best || (top - mine <= TIE && !wasted)) {
     return { verdict: "best", headline: `Best call: ${PLAY_CALLS[chosen]} (${pct(mine)})`, reasons: [whyBest(g, chosen, cfg)] };
   }
   const reasons = [whyBest(g, best, cfg)];
   const not = whyNot(g, chosen);
   if (not) reasons.push(not);
+  if (wasted) {
+    const what = chosen === "timeout" ? "Your timeout" : "Your spike";
+    return {
+      verdict: "worse",
+      headline: `Better call: ${PLAY_CALLS[best]} (${pct(top)}). ${what} gained nothing: the clock was already stopped.`,
+      reasons,
+    };
+  }
   if (top - mine <= CLOSE) {
     return {
       verdict: "close",
@@ -656,7 +754,7 @@ export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEF
   const next = others.find((v) => g.running || (v.call !== "timeout" && v.call !== "spike"));
   const runnerUp = next === undefined ? null : { call: next.call, wp: next.wp, close: wp - next.wp <= CLOSE };
   const avoid = others
-    .filter((v) => wp - v.wp >= AVOID)
+    .filter((v) => wp - v.wp >= AVOID || (wastesResource(g, v.call) && wp - v.wp > TIE))
     .flatMap((v): Avoid[] => {
       const reason = whyNot(g, v.call);
       return reason === null ? [] : [{ call: v.call, wp: v.wp, reason }];

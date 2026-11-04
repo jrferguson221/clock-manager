@@ -85,7 +85,7 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
 
   return (
     <section className="trainer" aria-label="Play caller">
-      <WinMeter wp={wp} delta={prevWp == null ? null : wp - prevWp} />
+      <WinMeter wp={wp} prev={prevWp} />
 
       {last && <Explainer entry={last} />}
 
@@ -136,8 +136,10 @@ export function tempoNote(g: GameState, cfg: SimConfig): string {
     : `The clock is running. Plays use a hurry-up of ${cfg.hurryUp} seconds (${cfg.spikeLineup} for a spike), except when a field goal is enough and you're in range, when they drain the clock. A timeout stops it right now.`;
 }
 
-function WinMeter({ wp, delta }: { wp: number; delta: number | null }) {
-  const points = delta == null ? 0 : Math.round(delta * 100);
+function WinMeter({ wp, prev }: { wp: number; prev: number | null }) {
+  // The change between the two percentages as shown, so "26% → 24%" always reads as -2.
+  const delta = prev === null ? null : Math.round(wp * 100) - Math.round(prev * 100);
+  const points = delta ?? 0;
   return (
     <div className="wp" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(wp * 100)} aria-label="Win probability">
       <div className="wp-head">

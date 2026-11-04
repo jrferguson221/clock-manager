@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, biggestSwing, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, biggestSwing, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -121,17 +121,27 @@ describe("deep pass", () => {
     expect(["timeout", "spike"]).not.toContain(recommend(g, values).runnerUp?.call);
   });
 
-  it("completes about a third of the time and gains 20+ yards when it does", () => {
+  const completionRate = (g: GameState) => {
     let completions = 0;
-    let yards = 0;
     for (let i = 0; i < 4000; i++) {
-      const r = step({ ...base, running: false, ytg: 99, toGo: 10 }, "pass-deep", seededRng(i));
-      const gained = 99 - r.state.ytg;
-      if (r.state.poss === "you" && gained >= 20) { completions++; yards += gained; }
+      const r = step({ ...g, running: false, ytg: 99, toGo: 10 }, "pass-deep", seededRng(i));
+      if (r.state.poss === "you" && 99 - r.state.ytg >= 20) completions++;
     }
-    expect(completions / 4000).toBeGreaterThan(0.3);
-    expect(completions / 4000).toBeLessThan(0.4);
-    expect(yards / completions).toBeGreaterThan(25);
+    return completions / 4000;
+  };
+
+  it("completes about a third of the time against a normal defense", () => {
+    const rate = completionRate({ ...base, clock: 600 });
+    expect(rate).toBeGreaterThan(0.3);
+    expect(rate).toBeLessThan(0.4);
+  });
+
+  it("completes far less against a prevent defense: the defense leads in the last 4 minutes", () => {
+    const rate = completionRate({ ...base, clock: 200, margin: -3 });
+    expect(rate).toBeGreaterThan(0.15);
+    expect(rate).toBeLessThan(0.25);
+    // When you're the one ahead, the defense is chasing the game and doesn't play prevent.
+    expect(completionRate({ ...base, clock: 200, margin: 3 })).toBeGreaterThan(0.3);
   });
 });
 
@@ -154,5 +164,49 @@ describe("tie-breaking", () => {
 
   it("still picks a clearly better call over a preferred one", () => {
     expect(bestCall([{ call: "kneel", wp: 0.5 }, { call: "pass-deep", wp: 0.6 }])).toBe("pass-deep");
+  });
+});
+
+describe("timeouts", () => {
+  const trailing: GameState = { ...base, running: false, clock: 105, ytg: 75, margin: -3, timeouts: { you: 2, opp: 3 } };
+
+  it("are worth something when trailing: more timeouts never means a lower win probability", () => {
+    const wp = (you: number) => bestScored(evaluateCalls({ ...trailing, timeouts: { you, opp: 3 } }, 500)).wp;
+    const [three, two, one, zero] = [wp(3), wp(2), wp(1), wp(0)];
+    expect(three).toBeGreaterThanOrEqual(two);
+    expect(two).toBeGreaterThanOrEqual(one);
+    expect(one).toBeGreaterThan(zero);
+  });
+
+  it("taking one with the clock stopped costs exactly a timeout: it scores what the situation with one fewer is worth", () => {
+    const values = evaluateCalls(trailing, 500);
+    const oneFewer = bestScored(evaluateCalls({ ...trailing, timeouts: { you: 1, opp: 3 } }, 500)).wp;
+    expect(wpOf(values, "timeout")).toBeCloseTo(oneFewer, 10);
+    expect(wpOf(values, "timeout")).toBeLessThan(bestScored(values).wp);
+  });
+
+  it("a wasted timeout is called out as a mistake, even when it only costs a point or two", () => {
+    const values = evaluateCalls(trailing, 500);
+    const x = explain(trailing, "timeout", values);
+    expect(x.verdict).toBe("worse");
+    expect(x.reasons.join(" ")).toContain("already stopped");
+    expect(recommend(trailing, values).avoid.map((a) => a.call)).toContain("timeout");
+  });
+});
+
+describe("Hail Mary", () => {
+  it("a last-play heave scores about 1 in 10 from 45 yards and about 1 in 5 from 25", () => {
+    const rate = (ytg: number) => {
+      let tds = 0;
+      for (let i = 0; i < 4000; i++) {
+        const r = step({ ...base, clock: 3, running: false, ytg, toGo: 10, margin: -5 }, "pass-deep", seededRng(i));
+        if (r.driveEnded === "Touchdown") tds++;
+      }
+      return tds / 4000;
+    };
+    expect(rate(45)).toBeGreaterThan(0.07);
+    expect(rate(45)).toBeLessThan(0.13);
+    expect(rate(25)).toBeGreaterThan(0.16);
+    expect(rate(25)).toBeLessThan(0.24);
   });
 });
