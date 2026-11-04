@@ -8,13 +8,14 @@ import { NFL_RULES, PLAY_TYPES, simulateRunOut, type Down } from "./engine";
 import { formatClock } from "./time";
 
 export type Team = "you" | "opp";
-export type PlayCall = "timeout" | "run" | "pass-sideline" | "pass-middle" | "spike" | "kneel" | "fg" | "punt";
+export type PlayCall = "timeout" | "run" | "pass-sideline" | "pass-middle" | "pass-deep" | "spike" | "kneel" | "fg" | "punt";
 
 export const PLAY_CALLS: Readonly<Record<PlayCall, string>> = Object.freeze({
   timeout: "Timeout",
   run: "Run",
   "pass-sideline": "Pass to the sideline",
   "pass-middle": "Pass over the middle",
+  "pass-deep": "Deep pass",
   spike: "Spike",
   kneel: "Kneel",
   fg: "Field goal",
@@ -117,7 +118,7 @@ export function availableCalls(g: GameState): PlayCall[] {
   if (g.over) return [];
   const calls: PlayCall[] = [];
   if (g.timeouts[g.poss] > 0) calls.push("timeout");
-  calls.push("run", "pass-sideline", "pass-middle");
+  calls.push("run", "pass-sideline", "pass-middle", "pass-deep");
   if (g.down <= 3) calls.push("spike");
   calls.push("kneel");
   if (g.ytg <= FG_MAX_YTG) calls.push("fg");
@@ -172,6 +173,17 @@ function rollPlay(call: PlayCall, r: Rng): PlayOutcome {
         return { ...base, yards, seconds: Math.round(4 + yards / 10), outOfBounds: r() < (sideline ? 0.7 : 0.08) };
       }
       return { ...base, yards: 0, seconds: 5, incomplete: true };
+    }
+    case "pass-deep": {
+      // A long-developing throw 20+ yards downfield: more sacks and picks, fewer completions.
+      const u = r();
+      if (u < 0.08) return { ...base, yards: -8, seconds: 6, sack: true };
+      if (u < 0.13) return { ...base, yards: 25, seconds: 6, turnover: "interception" };
+      if (u < 0.48) {
+        const yards = Math.round(20 + expo(r, 12));
+        return { ...base, yards, seconds: Math.round(5 + yards / 10), outOfBounds: r() < 0.25 };
+      }
+      return { ...base, yards: 0, seconds: 6, incomplete: true };
     }
     default:
       throw new RangeError(`not a scrimmage play: ${call}`);
@@ -378,10 +390,13 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     return "run";
   }
 
+  // Last play, or close to it, and a field goal won't do: take a shot at the end zone.
+  if (t <= 12 && (m < -3 || g.ytg > 42)) return "pass-deep";
+
   if (g.down === 4) {
     if (m >= -3 && g.ytg <= 42) return "fg";
     if (t > 300 && g.ytg >= 50) return "punt";
-    return g.toGo <= 2 ? "run" : "pass-middle";
+    return g.toGo <= 2 ? "run" : g.toGo >= 15 ? "pass-deep" : "pass-middle";
   }
   if (g.running && t <= 120 && to > 0) return "timeout";
   if (g.running && t <= 40 && g.down <= 2) return "spike";
@@ -445,7 +460,7 @@ export function evaluateCalls(g: GameState, n = 500, cfg: SimConfig = DEFAULT_SI
 export const TIE = 0.005;
 
 /** Among tied calls, prefer the one that spends the least: no timeout, no down, no risk. */
-const TIE_ORDER: PlayCall[] = ["kneel", "run", "pass-middle", "pass-sideline", "fg", "punt", "spike", "timeout"];
+const TIE_ORDER: PlayCall[] = ["kneel", "run", "pass-middle", "pass-sideline", "pass-deep", "fg", "punt", "spike", "timeout"];
 
 export function bestCall(values: CallValues): PlayCall {
   const entries = Object.entries(values) as [PlayCall, number][];
@@ -494,7 +509,11 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): string {
     case "pass-sideline":
       return "A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.";
     case "pass-middle":
-      return "A pass over the middle gains the most yards per play, and the clock isn't the main problem yet.";
+      return "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.";
+    case "pass-deep":
+      return g.clock <= 12
+        ? `With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.`
+        : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about a third of the time, for 20+ yards.`;
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
@@ -510,7 +529,9 @@ function whyNot(g: GameState, call: PlayCall): string | null {
   if (call === "timeout" && !g.running) return "Your timeout was wasted: the clock was already stopped.";
   if (call === "spike" && !g.running) return "Spiking with the clock already stopped throws away a down.";
   if (call === "kneel" && m <= 0) return "Kneeling gives up a down and time you need.";
-  if ((call === "pass-middle" || call === "pass-sideline") && m > 0)
+  if (call === "pass-deep" && m <= 0)
+    return "A deep pass completes only about a third of the time and risks a sack or an interception; shorter throws were the better bet here.";
+  if ((call === "pass-middle" || call === "pass-sideline" || call === "pass-deep") && m > 0)
     return "A pass risks an incompletion that stops the clock for them, and an interception.";
   if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20) return "Kicking now leaves them time to answer. Drain the clock first.";
   if (call === "punt") {
@@ -592,7 +613,11 @@ export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEF
   const best = bestCall(values);
   const wp = values[best]!;
   const others = (Object.entries(values) as [PlayCall, number][]).filter(([c]) => c !== best).sort((a, b) => b[1] - a[1]);
-  const runnerUp = others.length ? { call: others[0][0], wp: others[0][1], close: wp - others[0][1] <= CLOSE } : null;
+  // With the clock already stopped, a timeout or a spike only postpones the decision, so neither is a real alternative.
+  const alternatives = others.filter(([c]) => g.running || (c !== "timeout" && c !== "spike"));
+  const runnerUp = alternatives.length
+    ? { call: alternatives[0][0], wp: alternatives[0][1], close: wp - alternatives[0][1] <= CLOSE }
+    : null;
   const avoid = others
     .filter(([, v]) => wp - v >= AVOID)
     .map(([call, v]) => ({ call, wp: v, reason: whyNot(g, call) }))

@@ -39,7 +39,7 @@ describe("step", () => {
 
 describe("availableCalls", () => {
   it("offers a timeout only with one left, a spike only before 4th down, and kicks only from sensible spots", () => {
-    expect(availableCalls({ ...base, timeouts: { you: 0, opp: 3 }, down: 4 })).toEqual(["run", "pass-sideline", "pass-middle", "kneel", "punt"]);
+    expect(availableCalls({ ...base, timeouts: { you: 0, opp: 3 }, down: 4 })).toEqual(["run", "pass-sideline", "pass-middle", "pass-deep", "kneel", "punt"]);
     expect(availableCalls({ ...base, ytg: 20 })).toContain("fg");
     expect(availableCalls({ ...base, ytg: 20 })).not.toContain("punt");
   });
@@ -107,5 +107,29 @@ describe("recommend", () => {
     const r = recommend(g, evaluateCalls(g, 300));
     expect(r.best).toBe("timeout");
     expect(r.avoid.map((a) => a.call)).toContain("kneel");
+  });
+});
+
+describe("deep pass", () => {
+  it("is the best call on the last play when you need a touchdown from far out", () => {
+    // With 3 seconds there's no time for a sideline throw to set up another play.
+    const g: GameState = { ...base, clock: 3, running: false, ytg: 45, toGo: 10, margin: -5, timeouts: { you: 0, opp: 3 } };
+    const values = evaluateCalls(g, 1000);
+    expect(bestCall(values)).toBe("pass-deep");
+    expect(explain(g, "pass-deep", values).reasons[0]).toContain("one shot");
+    expect(["timeout", "spike"]).not.toContain(recommend(g, values).runnerUp?.call);
+  });
+
+  it("completes about a third of the time and gains 20+ yards when it does", () => {
+    let completions = 0;
+    let yards = 0;
+    for (let i = 0; i < 4000; i++) {
+      const r = step({ ...base, running: false, ytg: 99, toGo: 10 }, "pass-deep", seededRng(i));
+      const gained = 99 - r.state.ytg;
+      if (r.state.poss === "you" && gained >= 20) { completions++; yards += gained; }
+    }
+    expect(completions / 4000).toBeGreaterThan(0.3);
+    expect(completions / 4000).toBeLessThan(0.4);
+    expect(yards / completions).toBeGreaterThan(25);
   });
 });

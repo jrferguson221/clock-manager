@@ -18,7 +18,7 @@ interface Entry {
   driveEnded?: string;
 }
 
-const CALL_ORDER: PlayCall[] = ["timeout", "run", "pass-sideline", "pass-middle", "spike", "kneel", "fg", "punt"];
+const CALL_ORDER: PlayCall[] = ["timeout", "run", "pass-sideline", "pass-middle", "pass-deep", "spike", "kneel", "fg", "punt"];
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
