@@ -1,7 +1,7 @@
 // Trailing-team drive planning: how many plays fit in the time left, and what to call next.
 // Pure functions, no React or DOM access. All times are in whole seconds.
 
-import { NFL_RULES, type Down, type Rules, type TimelineEvent } from "./engine";
+import { NFL_RULES, warningCrossed, type Down, type Rules, type TimelineEvent } from "./engine";
 
 export type ScoreNeeded = "td" | "fg";
 
@@ -96,8 +96,7 @@ export function driveBudget(
   const reserve = s.need === "fg" && to > 0 ? 1 : 0;
   const timeline: TimelineEvent[] = [];
   const log = (event: string, note: string) => timeline.push({ event, clock: t, note });
-  const crossesWarning = (before: number, after: number) =>
-    !warningUsed && warnAt != null && before > warnAt && after <= warnAt;
+  const crossesWarning = (before: number, after: number) => warningCrossed(rules, warningUsed, before, after);
 
   // A kick fits if the clock is stopped, a timeout can stop it, or there's time to spike first.
   const canKick = () => t > 0 && (!running || to > 0 || t > a.spikeLineup + 1);
@@ -109,8 +108,9 @@ export function driveBudget(
     // Before the snap: stop the clock if it's running and you can.
     if (running) {
       const afterHurry = t - a.hurryUp;
-      if (crossesWarning(t, afterHurry)) {
-        t = warnAt!;
+      const warning = crossesWarning(t, afterHurry);
+      if (warning !== null) {
+        t = warning;
         warningUsed = true;
         log("Two-minute warning", "free stop: no timeout needed");
       } else if (to > reserve) {
@@ -133,7 +133,7 @@ export function driveBudget(
     if (t <= 0) break;
 
     running = !stops;
-    if (crossesWarning(before, t)) {
+    if (crossesWarning(before, t) !== null) {
       warningUsed = true;
       running = false;
       log("Two-minute warning", "clock stops after the play");
@@ -198,7 +198,7 @@ export function adviseNextCall(
   if (!s.clockRunning) {
     return { call: "run-play", headline: "The clock is stopped: run your play", detail: budget + longShot };
   }
-  if (!warningUsed && t > warnAt! && t - a.hurryUp <= warnAt!) {
+  if (warningCrossed(rules, warningUsed, t, t - a.hurryUp) !== null) {
     return { call: "let-warning-hit", headline: "Don't call timeout",
       detail: "The two-minute warning will stop the clock at 2:00 for free. " + budget };
   }

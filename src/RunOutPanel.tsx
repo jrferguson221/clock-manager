@@ -1,9 +1,13 @@
 import { useMemo, useState } from "react";
-import { simulateRunOut, runOutThreshold, PLAY_TYPES, type Down, type PlayType, type RunOutResult } from "./engine";
+import {
+  simulateRunOut, runOutThreshold, DOWNS, PLAY_TYPE_IDS, PLAY_TYPES, type Down, type PlayType, type RunOutResult,
+} from "./engine";
 import type { GameState } from "./sim";
 import { parseClock, formatClock } from "./time";
-import { BallOnInput, ClockInput, NumberSelect, Timeline, ToGoInput, spotFrom, yardsToGoalFrom, type Side } from "./fields";
+import { BallOnInput, ClockInput, NumberSelect, OptionSelect, Timeline, ToGoInput, spotFrom, yardsToGoalFrom, type Side } from "./fields";
 import Trainer from "./Trainer";
+
+const PLAY_TYPE_OPTIONS = PLAY_TYPE_IDS.map((k) => ({ value: k, label: `${PLAY_TYPES[k].label} (${PLAY_TYPES[k].duration}s)` }));
 
 const LEAD_OPTIONS = Array.from({ length: 16 }, (_, i) => i + 1);
 
@@ -54,16 +58,12 @@ export default function RunOutPanel() {
         <NumberSelect label="You lead by" value={leadBy} options={LEAD_OPTIONS} onChange={setLeadBy} />
         <NumberSelect label="Your timeouts" value={timeouts} options={[0, 1, 2, 3]} onChange={setTimeouts} />
         <NumberSelect label="Defense timeouts" value={defTimeouts} options={[0, 1, 2, 3]} onChange={setDefTimeouts} />
-        <NumberSelect label="Down" value={down} options={[1, 2, 3, 4]} onChange={(n) => setDown(n as Down)} />
+        <NumberSelect label="Down" value={down} options={DOWNS} onChange={setDown} />
         <ToGoInput value={toGo} onChange={setToGo} />
         <BallOnInput side={side} yardLine={yardLine} onChange={(s, y) => { setSide(s); setYardLine(y); }} />
         <label>
           Run-out play type
-          <select value={playType} onChange={(e) => setPlayType(e.target.value as PlayType)}>
-            {(Object.keys(PLAY_TYPES) as PlayType[]).map((k) => (
-              <option key={k} value={k}>{PLAY_TYPES[k].label} ({PLAY_TYPES[k].duration}s)</option>
-            ))}
-          </select>
+          <OptionSelect value={playType} options={PLAY_TYPE_OPTIONS} onChange={setPlayType} />
         </label>
         <label className="check">
           <input type="checkbox" checked={clockRunning} onChange={(e) => setClockRunning(e.target.checked)} />

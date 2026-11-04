@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { Down } from "./engine";
+import { DOWNS, type Down } from "./engine";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
 import { formatClock, parseClock } from "./time";
@@ -70,7 +70,7 @@ export default function TrailingPanel() {
         </label>
         <NumberSelect label="Your timeouts" value={timeouts} options={[0, 1, 2, 3]} onChange={setTimeouts} />
         <NumberSelect label="Their timeouts" value={oppTimeouts} options={[0, 1, 2, 3]} onChange={setOppTimeouts} />
-        <NumberSelect label="Down" value={down} options={[1, 2, 3, 4]} onChange={(n) => setDown(n as Down)} />
+        <NumberSelect label="Down" value={down} options={DOWNS} onChange={setDown} />
         <ToGoInput value={toGo} onChange={setToGo} />
         <BallOnInput side={side} yardLine={yardLine} onChange={(s, y) => { setSide(s); setYardLine(y); }} />
         <label>

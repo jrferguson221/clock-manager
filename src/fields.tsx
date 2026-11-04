@@ -15,16 +15,39 @@ export function ClockInput({ value, onChange, valid }: { value: string; onChange
   );
 }
 
-export function NumberSelect({ label, value, options, onChange }: {
-  label: string; value: number; options: number[]; onChange: (n: number) => void;
+/** A select over a fixed list of numbers. `onChange` only ever receives one of `options`. */
+export function NumberSelect<T extends number>({ label, value, options, onChange }: {
+  label: string; value: T; options: readonly T[]; onChange: (n: T) => void;
 }) {
   return (
     <label>
       {label}
-      <select value={value} onChange={(e) => onChange(Number(e.target.value))}>
+      <select value={value} onChange={(e) => {
+        const picked = options.find((n) => n === Number(e.target.value));
+        if (picked !== undefined) onChange(picked);
+      }}>
         {options.map((n) => <option key={n} value={n}>{n}</option>)}
       </select>
     </label>
+  );
+}
+
+export interface Option<T extends string> {
+  readonly value: T;
+  readonly label: string;
+}
+
+/** A select over a fixed set of string values. `onChange` only ever receives one of their values. */
+export function OptionSelect<T extends string>({ value, options, onChange, ...rest }: {
+  value: T; options: readonly Option<T>[]; onChange: (v: T) => void; "aria-label"?: string;
+}) {
+  return (
+    <select {...rest} value={value} onChange={(e) => {
+      const picked = options.find((o) => o.value === e.target.value);
+      if (picked !== undefined) onChange(picked.value);
+    }}>
+      {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+    </select>
   );
 }
 
@@ -91,7 +114,11 @@ export function NumberInput({ value, min, max, onChange, ...rest }: {
   );
 }
 
-export type Side = "own" | "opp";
+const SIDES = [
+  { value: "own", label: "Own" },
+  { value: "opp", label: "Opponent" },
+] as const satisfies readonly Option<string>[];
+export type Side = (typeof SIDES)[number]["value"];
 
 export const yardsToGoalFrom = (side: Side, yardLine: number) => (side === "own" ? 100 - yardLine : yardLine);
 export const spotFrom = (ytg: number): { side: Side; yardLine: number } =>
@@ -104,10 +131,7 @@ export function BallOnInput({ side, yardLine, onChange }: {
     <label>
       Ball on
       <span className="pair">
-        <select value={side} onChange={(e) => onChange(e.target.value as Side, yardLine)} aria-label="Side of the field">
-          <option value="own">Own</option>
-          <option value="opp">Opponent</option>
-        </select>
+        <OptionSelect value={side} options={SIDES} onChange={(v) => onChange(v, yardLine)} aria-label="Side of the field" />
         <NumberInput value={yardLine} min={1} max={50} aria-label="Yard line" onChange={(y) => onChange(side, y)} />
       </span>
     </label>

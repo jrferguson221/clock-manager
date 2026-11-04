@@ -2,27 +2,40 @@
 // All times are in whole seconds.
 
 export interface Rules {
-  name: string;
+  readonly name: string;
   /** Play clock after a play ends with the game clock running. */
-  playClock: number;
+  readonly playClock: number;
   /** Game-clock time of the two-minute warning, or null for none. */
-  twoMinuteWarning: number | null;
+  readonly twoMinuteWarning: number | null;
 }
 
-export const NFL_RULES: Rules = Object.freeze({
+/** NFL rules. Typed as its literal values, so code written only for the NFL knows the warning exists. */
+export const NFL_RULES = Object.freeze({
   name: "NFL",
   playClock: 40,
   twoMinuteWarning: 120,
-});
+} as const satisfies Rules);
 
-export type PlayType = "kneel" | "run";
+export const PLAY_TYPE_IDS = ["kneel", "run"] as const;
+export type PlayType = (typeof PLAY_TYPE_IDS)[number];
 
-export const PLAY_TYPES: Readonly<Record<PlayType, { label: string; duration: number }>> = Object.freeze({
+export const PLAY_TYPES: Readonly<Record<PlayType, { readonly label: string; readonly duration: number }>> = Object.freeze({
   kneel: { label: "Kneel down", duration: 2 },
   run: { label: "Run, stays in bounds", duration: 6 },
 });
 
-export type Down = 1 | 2 | 3 | 4;
+export const DOWNS = [1, 2, 3, 4] as const;
+
+/**
+ * If the clock going from `before` to `after` runs through the two-minute warning (and it hasn't
+ * happened yet), the warning's game-clock time; otherwise null.
+ */
+export function warningCrossed(rules: Rules, warningUsed: boolean, before: number, after: number): number | null {
+  const w = rules.twoMinuteWarning;
+  return !warningUsed && w !== null && before > w && after <= w ? w : null;
+}
+
+export type Down = (typeof DOWNS)[number];
 
 export interface Situation {
   /** Seconds left in the game. */
@@ -78,8 +91,7 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
   const log = (event: string, note: string) => timeline.push({ event, clock: t, note });
   const result = (endsGame: boolean): RunOutResult => ({ endsGame, timeLeft: t, snaps, timeoutsUsed, timeline });
 
-  const crossesWarning = (before: number, after: number) =>
-    !warningUsed && warningAt != null && before > warningAt && after <= warningAt;
+  const crossesWarning = (before: number, after: number) => warningCrossed(rules, warningUsed, before, after);
 
   for (let down = s.down; down <= 4; down++) {
     // Pre-snap: let the play clock run down if the game clock is running.
@@ -87,8 +99,9 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
       const burn = Math.max(0, playClock - snapAt);
       const before = t;
       t = Math.max(0, t - burn);
-      if (crossesWarning(before, t)) {
-        t = warningAt!;
+      const warning = crossesWarning(before, t);
+      if (warning !== null) {
+        t = warning;
         warningUsed = true;
         running = false;
         log("Two-minute warning", "clock stops before the snap");
@@ -117,7 +130,7 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
 
     // After the play: the clock keeps running unless something stops it.
     playClock = rules.playClock;
-    if (crossesWarning(before, t)) {
+    if (crossesWarning(before, t) !== null) {
       warningUsed = true;
       running = false;
       log("Two-minute warning", "clock stops after the play");
@@ -138,10 +151,13 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
  * The largest game clock from which the offense is guaranteed to run out the clock,
  * meaning every smaller clock value works too. Returns -1 if even 0:01 doesn't work.
  */
-export function runOutThreshold(s: Omit<Situation, "gameClock">, rules: Rules = NFL_RULES, max = 15 * 60): number {
+export function runOutThreshold(
+  s: Omit<Situation, "gameClock" | "warningUsed">, rules: Rules = NFL_RULES, max = 15 * 60,
+): number {
   let best = -1;
   for (let t = 1; t <= max; t++) {
-    if (!simulateRunOut({ ...s, gameClock: t, warningUsed: undefined }, rules).endsGame) break;
+    // No warningUsed: it's worked out from each clock value.
+    if (!simulateRunOut({ ...s, gameClock: t }, rules).endsGame) break;
     best = t;
   }
   return best;

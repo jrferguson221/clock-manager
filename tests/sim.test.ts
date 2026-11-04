@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, biggestSwing, recommend, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, biggestSwing, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -50,7 +50,7 @@ describe("win probability", () => {
     const g = { ...base, clock: 110, margin: 3, timeouts: { you: 3, opp: 0 } };
     const values = evaluateCalls(g, 200);
     expect(bestCall(values)).toBe("kneel");
-    expect(values.kneel).toBe(1);
+    expect(wpOf(values, "kneel")).toBe(1);
   });
 
   it("is low for a two-score deficit with seconds left", () => {
@@ -86,9 +86,10 @@ describe("explain", () => {
 
 describe("biggestSwing", () => {
   it("finds the call with the largest gain or loss, counting the last call to the end of the drive", () => {
-    // Calls: 0.30 → 0.35 (+5), 0.35 → 0.20 (-15), 0.20 → 0.30 (+10)
-    expect(biggestSwing([0.3, 0.35, 0.2], 0.3)).toMatchObject({ index: 1, before: 0.35, after: 0.2 });
-    expect(biggestSwing([0.3, 0.35, 0.2], 0.9)).toMatchObject({ index: 2, after: 0.9 });
+    // Calls: a 0.30 → 0.35 (+5), b 0.35 → 0.20 (-15), c 0.20 → 0.30 (+10)
+    const steps = [{ item: "a", before: 0.3 }, { item: "b", before: 0.35 }, { item: "c", before: 0.2 }];
+    expect(biggestSwing(steps, 0.3)).toMatchObject({ item: "b", index: 1, before: 0.35, after: 0.2 });
+    expect(biggestSwing(steps, 0.9)).toMatchObject({ item: "c", index: 2, after: 0.9 });
     expect(biggestSwing([], 1)).toBeNull();
   });
 });
@@ -131,5 +132,27 @@ describe("deep pass", () => {
     expect(completions / 4000).toBeGreaterThan(0.3);
     expect(completions / 4000).toBeLessThan(0.4);
     expect(yards / completions).toBeGreaterThan(25);
+  });
+});
+
+describe("call values", () => {
+  it("are never empty while the game is on, and evaluating a finished game is an error", () => {
+    expect(evaluateCalls(base, 10).length).toBeGreaterThan(0);
+    expect(() => evaluateCalls({ ...base, over: true }, 10)).toThrow(RangeError);
+  });
+
+  it("can't look up a call that wasn't available", () => {
+    const values = evaluateCalls({ ...base, timeouts: { you: 0, opp: 3 } }, 10);
+    expect(() => wpOf(values, "timeout")).toThrow(RangeError);
+  });
+});
+
+describe("tie-breaking", () => {
+  it("prefers a punt to going for it when they're tied", () => {
+    expect(bestCall([{ call: "pass-middle", wp: 0.766 }, { call: "punt", wp: 0.7663 }, { call: "run", wp: 0.7 }])).toBe("punt");
+  });
+
+  it("still picks a clearly better call over a preferred one", () => {
+    expect(bestCall([{ call: "kneel", wp: 0.5 }, { call: "pass-deep", wp: 0.6 }])).toBe("pass-deep");
   });
 });

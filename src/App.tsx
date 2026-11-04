@@ -1,32 +1,33 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import RunOutPanel from "./RunOutPanel";
 import TrailingPanel from "./TrailingPanel";
 import AdvisorPanel from "./AdvisorPanel";
 
-const MODES = [
-  { id: "leading", label: "Leading: run out the clock", Panel: RunOutPanel },
-  { id: "trailing", label: "Trailing: drive to score", Panel: TrailingPanel },
-  { id: "advisor", label: "Best call", Panel: AdvisorPanel },
-] as const;
+const MODE_IDS = ["leading", "trailing", "advisor"] as const;
+type ModeId = (typeof MODE_IDS)[number];
 
-type ModeId = (typeof MODES)[number]["id"];
+const MODES = {
+  leading: { label: "Leading: run out the clock", Panel: RunOutPanel },
+  trailing: { label: "Trailing: drive to score", Panel: TrailingPanel },
+  advisor: { label: "Best call", Panel: AdvisorPanel },
+} as const satisfies Record<ModeId, { label: string; Panel: () => JSX.Element }>;
 
 export default function App({ initialMode = "leading" }: { initialMode?: ModeId }) {
   const [mode, setMode] = useState<ModeId>(initialMode);
-  const { Panel } = MODES.find((m) => m.id === mode)!;
+  const { Panel } = MODES[mode];
 
   return (
     <>
       <header>
         <h1>Clock Manager</h1>
         <div className="tabs" role="tablist">
-          {MODES.map((m) => (
+          {MODE_IDS.map((id) => (
             <button
-              key={m.id} role="tab" type="button"
-              aria-selected={mode === m.id}
-              onClick={() => setMode(m.id)}
+              key={id} role="tab" type="button"
+              aria-selected={mode === id}
+              onClick={() => setMode(id)}
             >
-              {m.label}
+              {MODES[id].label}
             </button>
           ))}
         </div>

@@ -1,7 +1,7 @@
 // Informational mode: enter any situation and get the best call, with no play simulated.
 
 import { useMemo, useState } from "react";
-import type { Down } from "./engine";
+import { DOWNS, type Down } from "./engine";
 import { evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } from "./sim";
 import { parseClock } from "./time";
 import { BallOnInput, ClockInput, NumberInput, NumberSelect, ToGoInput, yardsToGoalFrom, type Side } from "./fields";
@@ -55,7 +55,7 @@ export default function AdvisorPanel() {
         </label>
         <NumberSelect label="Your timeouts" value={timeouts} options={[0, 1, 2, 3]} onChange={setTimeouts} />
         <NumberSelect label="Their timeouts" value={oppTimeouts} options={[0, 1, 2, 3]} onChange={setOppTimeouts} />
-        <NumberSelect label="Down" value={down} options={[1, 2, 3, 4]} onChange={(n) => setDown(n as Down)} />
+        <NumberSelect label="Down" value={down} options={DOWNS} onChange={setDown} />
         <ToGoInput value={toGo} onChange={setToGo} />
         <BallOnInput side={side} yardLine={yardLine} onChange={(s, y) => { setSide(s); setYardLine(y); }} />
         <label>

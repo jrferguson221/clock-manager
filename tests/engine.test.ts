@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { simulateRunOut, runOutThreshold, PLAY_TYPES } from "../src/engine";
 import { parseClock, formatClock, formatClockDigits } from "../src/time";
 
@@ -42,7 +42,7 @@ describe("simulateRunOut", () => {
       gameClock: 124, down: 1, defTimeouts: 1, clockRunning: false,
       playDuration: PLAY_TYPES.run.duration,
     });
-    expect(r.timeline[1].event).toBe("Two-minute warning");
+    expect(r.timeline[1]?.event).toBe("Two-minute warning");
     expect(r.timeoutsUsed).toBe(1); // the timeout is saved for the next play, not wasted
   });
 });

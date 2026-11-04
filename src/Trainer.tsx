@@ -3,7 +3,7 @@
 
 import { useMemo, useState } from "react";
 import {
-  availableCalls, bestCall, biggestSwing, evaluateCalls, explain, playOut, seededRng, step, winProbability,
+  availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
   DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
 } from "./sim";
 import { PlayLog } from "./fields";
@@ -15,10 +15,11 @@ interface Entry {
   text: string;
   values: CallValues;
   explanation: Explanation;
-  driveEnded?: string;
+  /** Set when this call ended the drive, e.g. "Touchdown". */
+  driveEnded: string | null;
 }
 
-const CALL_ORDER: PlayCall[] = ["timeout", "run", "pass-sideline", "pass-middle", "pass-deep", "spike", "kneel", "fg", "punt"];
+const CALL_ORDER: readonly PlayCall[] = ["timeout", "run", "pass-sideline", "pass-middle", "pass-deep", "spike", "kneel", "fg", "punt"];
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -28,7 +29,7 @@ function useWinProbability(g: GameState, cfg: SimConfig) {
   return useMemo(() => {
     if (g.over || g.poss !== "you") return { wp: winProbability(g, 1500, cfg), values: null };
     const values = evaluateCalls(g, 500, cfg);
-    return { wp: values[bestCall(values)]!, values };
+    return { wp: bestScored(values).wp, values };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 }
@@ -42,10 +43,10 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
 }) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const last = entries.at(-1);
-  const ended = last && (last.driveEnded || last.after.over) ? last : null;
+  const ended = last !== undefined && (last.driveEnded !== null || last.after.over) ? last : null;
   const current = ended ? ended.after : game;
   const { wp, values } = useWinProbability(current, cfg);
-  const prevWp = last ? last.values[bestCall(last.values)]! : null;
+  const prevWp = last ? bestScored(last.values).wp : null;
   const available = availableCalls(game);
   const [finish, setFinish] = useState<{ lines: string[]; result: number } | null>(null);
   const gameOver = ended != null && (ended.after.over || finish != null);
@@ -56,7 +57,7 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
     const res = step(game, c, seededRng((Math.random() * 2 ** 32) >>> 0), cfg);
     const entry: Entry = {
       before: game, after: res.state, call: c, text: res.text, values,
-      explanation: explain(game, c, values, cfg), driveEnded: res.driveEnded,
+      explanation: explain(game, c, values, cfg), driveEnded: res.driveEnded ?? null,
     };
     setEntries([...entries, entry]);
     setFinish(null);
@@ -120,7 +121,7 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
       {gameOver && <Recap entries={entries} driveEndWp={wp} result={finalResult} />}
 
       <PlayLog
-        summaries={entries.map((e) => `${e.text} (${e.explanation.verdict === "worse" ? "better: " + PLAY_CALLS[bestCall(e.values)] : "good call"})`)}
+        summaries={entries.map((e) => `${e.text} (${e.explanation.verdict === "worse" ? "better: " + PLAY_CALLS[bestScored(e.values).call] : "good call"})`)}
         onUndo={undo}
         onReset={() => { setEntries([]); setFinish(null); }}
       />
@@ -168,13 +169,12 @@ function Explainer({ entry }: { entry: Entry }) {
 
 /** Every call's win probability as a ranked bar list, tagging the best call and (optionally) yours. */
 export function CallTable({ values, chosen, caption }: { values: CallValues; chosen?: PlayCall; caption: string }) {
-  const best = bestCall(values);
-  const ranked = (Object.entries(values) as [PlayCall, number][]).sort((a, b) => b[1] - a[1]);
+  const best = bestScored(values).call;
   return (
     <table className="call-values">
       <caption className="muted small">{caption}</caption>
       <tbody>
-        {ranked.map(([c, v]) => (
+        {ranked(values).map(({ call: c, wp: v }) => (
           <tr key={c}>
             <th scope="row">
               {PLAY_CALLS[c]}
@@ -194,14 +194,12 @@ const resultText = (r: number) => (r === 1 ? "You win" : r === 0 ? "You lose" : 
 
 /** After the game: the call with the biggest win-probability swing, and whether the call itself was right. */
 function Recap({ entries, driveEndWp, result }: { entries: Entry[]; driveEndWp: number; result: number }) {
-  const before = entries.map((e) => e.values[bestCall(e.values)]!);
-  const swing = biggestSwing(before, driveEndWp);
-  if (!swing) return null;
-  const e = entries[swing.index];
+  const swing = biggestSwing(entries.map((e) => ({ item: e, before: bestScored(e.values).wp })), driveEndWp);
+  if (swing === null) return null;
+  const e = swing.item;
   const points = Math.round(swing.added * 100);
-  const best = bestCall(e.values);
-  const mine = e.values[e.call]!;
-  const top = e.values[best]!;
+  const { call: best, wp: top } = bestScored(e.values);
+  const mine = wpOf(e.values, e.call);
   const cost = Math.round((top - mine) * 100);
 
   let judgment: string;

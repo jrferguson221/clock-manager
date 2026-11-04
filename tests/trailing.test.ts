@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, type DriveSituation } from "../src/trailing";
 
 const base: DriveSituation = {

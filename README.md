@@ -18,12 +18,14 @@ Built with Vite, React, TypeScript and Vitest, using Bun.
 ```sh
 bun install        # first time only
 bun run dev        # dev server with hot reload at http://localhost:5173
-bun run test       # run the tests once
+bun run test       # run the tests once, test files in parallel across CPU cores
 bun run test:watch # rerun tests on save
 bun run build      # type-check and build into dist/
 ```
 
-The project uses [Bun](https://bun.sh) to install packages and run scripts. `bunfig.toml` makes `bun run` use Bun's runtime rather than Node's.
+The project uses [Bun](https://bun.sh) to install packages and run scripts. `bunfig.toml` makes `bun run` use Bun's runtime rather than Node's. Tests use Bun's test runner (`bun:test`) with `--parallel`, which runs test files on separate CPU cores. Every test is a pure function of its inputs, so the files are independent. Each mode's render test has its own file in `tests/app/`, because rendering a mode runs its win-probability simulations. Within a file, `test.concurrent` wouldn't help: it only overlaps `async` tests while they wait, and these tests are all synchronous.
+
+TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and the other strict-family checks (see `tsconfig.json`). The code and tests use no `any`, type casts or non-null assertions. Selects only hand back values from their option lists, and lists that can't be empty are typed that way.
 
 ## Layout
 
@@ -37,7 +39,7 @@ The project uses [Bun](https://bun.sh) to install packages and run scripts. `bun
 | `src/App.tsx` | The mode tabs. |
 | `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx`, `src/AdvisorPanel.tsx` | One UI panel per mode. |
 | `src/fields.tsx` | Form inputs and the timeline table, shared by both panels. |
-| `tests/` | Tests for both engines, plus tests that each mode renders. |
+| `tests/` | Tests for the engines and the simulator. `tests/app/` has one render test per mode. |
 
 ## Current assumptions
 

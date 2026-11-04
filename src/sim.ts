@@ -49,7 +49,7 @@ export interface SimConfig {
 
 export const DEFAULT_SIM: SimConfig = Object.freeze({ hurryUp: 18, spikeLineup: 12, fgRush: 15 });
 
-const WARNING = NFL_RULES.twoMinuteWarning!;
+const WARNING = NFL_RULES.twoMinuteWarning;
 const BURN = NFL_RULES.playClock - 1; // snap with 1 second on the play clock
 const FG_MAX_YTG = 45; // a 62-yard try
 const PUNT_MIN_YTG = 40;
@@ -114,7 +114,10 @@ function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig): number {
  */
 const kickFloor = (g: GameState, cfg: SimConfig) => (g.timeouts[g.poss] > 0 ? 20 : cfg.fgRush + 15);
 
-export function availableCalls(g: GameState): PlayCall[] {
+/** A list with at least one element, so reading its first element can't be undefined. */
+export type NonEmpty<T> = readonly [T, ...T[]];
+
+export function availableCalls(g: GameState): readonly PlayCall[] {
   if (g.over) return [];
   const calls: PlayCall[] = [];
   if (g.timeouts[g.poss] > 0) calls.push("timeout");
@@ -201,7 +204,10 @@ function describePlay(call: PlayCall, p: PlayOutcome): string {
   return `${PLAY_CALLS[call]}: ${gain}${p.outOfBounds ? ", out of bounds" : ", in bounds"}`;
 }
 
-function ordinal(n: number) {
+/** The down after a play that doesn't convert. 4th down never gets here: it's a turnover on downs. */
+const NEXT_DOWN = { 1: 2, 2: 3, 3: 4, 4: 4 } as const satisfies Record<Down, Down>;
+
+function ordinal(n: Down) {
   return ["1st", "2nd", "3rd", "4th"][n - 1];
 }
 
@@ -341,7 +347,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
     ...g,
     clock: t,
     ytg,
-    down: firstDown ? 1 : ((g.down + 1) as Down),
+    down: firstDown ? 1 : NEXT_DOWN[g.down],
     toGo: firstDown ? Math.min(10, ytg) : g.toGo - play.yards,
     running: !play.outOfBounds && !play.incomplete && !crossed(t) && t > 0,
     over: t <= 0,
@@ -436,7 +442,14 @@ export function winProbability(g: GameState, n = 1500, cfg: SimConfig = DEFAULT_
   return sum / n;
 }
 
-export type CallValues = Partial<Record<PlayCall, number>>;
+/** A call and your win probability if you make it. */
+export interface ScoredCall {
+  readonly call: PlayCall;
+  readonly wp: number;
+}
+
+/** Every call available in a situation, scored. Never empty: there's always a play to run. */
+export type CallValues = NonEmpty<ScoredCall>;
 
 /**
  * Your win probability for each call available now, followed by the policy afterward.
@@ -444,30 +457,50 @@ export type CallValues = Partial<Record<PlayCall, number>>;
  */
 export function evaluateCalls(g: GameState, n = 500, cfg: SimConfig = DEFAULT_SIM): CallValues {
   const seed = seedFor(g);
-  const values: CallValues = {};
-  for (const call of availableCalls(g)) {
+  const score = (call: PlayCall): ScoredCall => {
     let sum = 0;
     for (let i = 0; i < n; i++) {
       const r = seededRng(seed + i * 7919);
       sum += playOut(step(g, call, r, cfg).state, r, cfg);
     }
-    values[call] = sum / n;
-  }
-  return values;
+    return { call, wp: sum / n };
+  };
+  const [first, ...rest] = availableCalls(g);
+  if (first === undefined) throw new RangeError("the game is over: there are no calls to score");
+  return [score(first), ...rest.map(score)];
+}
+
+/** Your win probability with a call that was scored. */
+export function wpOf(values: CallValues, call: PlayCall): number {
+  const found = values.find((v) => v.call === call);
+  if (found === undefined) throw new RangeError(`${call} wasn't available, so it wasn't scored`);
+  return found.wp;
+}
+
+/** The calls sorted from best to worst win probability. */
+export function ranked(values: CallValues): ScoredCall[] {
+  return [...values].sort((a, b) => b.wp - a.wp);
 }
 
 /** When calls are this close, they count as tied. */
 export const TIE = 0.005;
 
-/** Among tied calls, prefer the one that spends the least: no timeout, no down, no risk. */
-const TIE_ORDER: PlayCall[] = ["kneel", "run", "pass-middle", "pass-sideline", "pass-deep", "fg", "punt", "spike", "timeout"];
+/**
+ * Among tied calls, prefer the one that spends the least: no timeout, no down, no risk. On 4th down,
+ * a kick counts as less risky than going for it.
+ */
+const TIE_ORDER: readonly PlayCall[] = ["kneel", "run", "punt", "fg", "pass-middle", "pass-sideline", "pass-deep", "spike", "timeout"];
+
+/** The best call and its win probability. */
+export function bestScored(values: CallValues): ScoredCall {
+  const top = Math.max(...values.map((v) => v.wp));
+  const preference = (v: ScoredCall) => TIE_ORDER.indexOf(v.call);
+  return values.reduce((best, v) =>
+    v.wp >= top - TIE && (best.wp < top - TIE || preference(v) < preference(best)) ? v : best);
+}
 
 export function bestCall(values: CallValues): PlayCall {
-  const entries = Object.entries(values) as [PlayCall, number][];
-  const top = Math.max(...entries.map(([, v]) => v));
-  return entries
-    .filter(([, v]) => v >= top - TIE)
-    .sort((a, b) => TIE_ORDER.indexOf(a[0]) - TIE_ORDER.indexOf(b[0]))[0][0];
+  return bestScored(values).call;
 }
 
 // ---------------------------------------------------------------------------
@@ -545,9 +578,8 @@ function whyNot(g: GameState, call: PlayCall): string | null {
 }
 
 export function explain(g: GameState, chosen: PlayCall, values: CallValues, cfg: SimConfig = DEFAULT_SIM): Explanation {
-  const best = bestCall(values);
-  const mine = values[chosen] ?? 0;
-  const top = values[best] ?? 0;
+  const { call: best, wp: top } = bestScored(values);
+  const mine = wpOf(values, chosen);
   if (chosen === best || top - mine <= TIE) {
     return { verdict: "best", headline: `Best call: ${PLAY_CALLS[chosen]} (${pct(mine)})`, reasons: [whyBest(g, chosen, cfg)] };
   }
@@ -571,8 +603,10 @@ export function explain(g: GameState, chosen: PlayCall, values: CallValues, cfg:
 // ---------------------------------------------------------------------------
 // Game recap
 
-export interface Swing {
-  /** Index of the call in the drive. */
+export interface Swing<T> {
+  /** The step, e.g. a call in the play log. */
+  item: T;
+  /** Its position in the drive, from 0. */
   index: number;
   before: number;
   after: number;
@@ -581,15 +615,15 @@ export interface Swing {
 }
 
 /**
- * The call with the largest win probability added or lost.
- * `before[i]` is your win probability before call i; `final` is your win probability after the last call.
+ * The step with the largest win probability added or lost. Each step runs from its own `before` to
+ * the next step's, and the last one runs to `final`.
  */
-export function biggestSwing(before: number[], final: number): Swing | null {
-  let biggest: Swing | null = null;
-  before.forEach((b, i) => {
-    const after = i + 1 < before.length ? before[i + 1] : final;
-    const added = after - b;
-    if (!biggest || Math.abs(added) > Math.abs(biggest.added)) biggest = { index: i, before: b, after, added };
+export function biggestSwing<T>(steps: readonly { item: T; before: number }[], final: number): Swing<T> | null {
+  let biggest: Swing<T> | null = null;
+  steps.forEach(({ item, before }, index) => {
+    const after = steps[index + 1]?.before ?? final;
+    const added = after - before;
+    if (biggest === null || Math.abs(added) > Math.abs(biggest.added)) biggest = { item, index, before, after, added };
   });
   return biggest;
 }
@@ -606,22 +640,27 @@ export interface Recommendation {
   /** The next-best call, and whether it's close enough to be a coin flip. */
   runnerUp: { call: PlayCall; wp: number; close: boolean } | null;
   /** Calls to avoid here, with why, worst first. */
-  avoid: { call: PlayCall; wp: number; reason: string }[];
+  avoid: Avoid[];
+}
+
+export interface Avoid {
+  call: PlayCall;
+  wp: number;
+  reason: string;
 }
 
 export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEFAULT_SIM): Recommendation {
-  const best = bestCall(values);
-  const wp = values[best]!;
-  const others = (Object.entries(values) as [PlayCall, number][]).filter(([c]) => c !== best).sort((a, b) => b[1] - a[1]);
+  const { call: best, wp } = bestScored(values);
+  const others = ranked(values).filter((v) => v.call !== best);
   // With the clock already stopped, a timeout or a spike only postpones the decision, so neither is a real alternative.
-  const alternatives = others.filter(([c]) => g.running || (c !== "timeout" && c !== "spike"));
-  const runnerUp = alternatives.length
-    ? { call: alternatives[0][0], wp: alternatives[0][1], close: wp - alternatives[0][1] <= CLOSE }
-    : null;
+  const next = others.find((v) => g.running || (v.call !== "timeout" && v.call !== "spike"));
+  const runnerUp = next === undefined ? null : { call: next.call, wp: next.wp, close: wp - next.wp <= CLOSE };
   const avoid = others
-    .filter(([, v]) => wp - v >= AVOID)
-    .map(([call, v]) => ({ call, wp: v, reason: whyNot(g, call) }))
-    .filter((a): a is { call: PlayCall; wp: number; reason: string } => a.reason != null)
+    .filter((v) => wp - v.wp >= AVOID)
+    .flatMap((v): Avoid[] => {
+      const reason = whyNot(g, v.call);
+      return reason === null ? [] : [{ call: v.call, wp: v.wp, reason }];
+    })
     .sort((a, b) => a.wp - b.wp);
   return { best, wp, reason: whyBest(g, best, cfg), runnerUp, avoid };
 }
