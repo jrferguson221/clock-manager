@@ -15,7 +15,8 @@ describe("App", () => {
   it("renders next-call advice in trailing mode", () => {
     const html = renderToString(<App initialMode="trailing" />);
     expect(html).toContain("Next call");
-    expect(html).toContain("Plays to field-goal range");
+    expect(html).toContain("Plays to reach field-goal range");
+    expect(html).toContain("Plays you can run and still kick, if every play ends in bounds");
     expect(html).toContain("Win probability");
     expect(html).toContain("Call the play");
   });

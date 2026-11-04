@@ -105,19 +105,28 @@ export default function TrailingPanel() {
 
             <dl className="stats">
               <div>
-                <dt>{need === "fg" ? "Plays to field-goal range" : "Plays to the end zone"}</dt>
+                <dt>
+                  {need === "fg" ? "Plays to reach field-goal range" : "Plays to reach the end zone"} at {yardsPerPlay}{" "}
+                  yard{yardsPerPlay === 1 ? "" : "s"} a play
+                </dt>
                 <dd>{analysis.needed}</dd>
               </div>
               {([
-                ["Time for: all in bounds", analysis.inbounds.plays],
-                ["Time for: typical (half stop the clock)", analysis.typical],
-                ["Time for: every play stops the clock", analysis.best],
-              ] as const).map(([label, plays]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd className={plays < analysis.needed ? "lose" : "win"}>{Math.max(0, plays)}</dd>
-                </div>
-              ))}
+                ["if every play ends in bounds", analysis.inbounds.plays],
+                ["if about half your plays stop the clock", analysis.typical],
+                ["if every play stops the clock", analysis.best],
+              ] as const).map(([when, plays]) => {
+                const n = Math.max(0, plays);
+                const short = analysis.needed - n;
+                return (
+                  <div key={when}>
+                    <dt>{need === "fg" ? `Plays you can run and still kick, ${when}` : `Plays you can run before 0:00, ${when}`}</dt>
+                    <dd className={short > 0 ? "lose" : "win"}>
+                      {n} <span className="fit">{short > 0 ? `${short} short` : "enough time"}</span>
+                    </dd>
+                  </div>
+                );
+              })}
             </dl>
             {need === "fg" && (
               <p className="muted small">
