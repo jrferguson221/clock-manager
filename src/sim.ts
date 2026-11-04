@@ -155,8 +155,20 @@ export type Coverage = "normal" | "prevent";
 /** A defense that's ahead plays prevent in the last 4 minutes. */
 export const PREVENT_WINDOW = 240;
 
+/** Inside the opponent's 20 the field is compressed: less room to defend, and to throw into. */
+export const RED_ZONE = 20;
+
 export function coverageFor(g: GameState, clock: number): Coverage {
-  return marginFor(g, other(g.poss)) > 0 && clock <= PREVENT_WINDOW ? "prevent" : "normal";
+  // Prevent protects the deep field, and in the red zone there isn't one.
+  return marginFor(g, other(g.poss)) > 0 && clock <= PREVENT_WINDOW && g.ytg > RED_ZONE ? "prevent" : "normal";
+}
+
+/**
+ * How much of a pass's normal completion rate survives at this distance from the goal line:
+ * 1 outside the red zone, shrinking to 0.6 at the 1 as coverage tightens.
+ */
+export function compression(ytg: number): number {
+  return ytg >= RED_ZONE ? 1 : 0.6 + (0.4 * Math.max(0, ytg - 1)) / (RED_ZONE - 1);
 }
 
 type PassCall = "pass-sideline" | "pass-middle" | "pass-deep";
@@ -191,8 +203,56 @@ export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, Pass
   },
 });
 
+/** Completion rate of a throw into the end zone from the 20, before compression. */
+const END_ZONE_SHOT = 0.25;
+
+/** Pass odds for a throw from this spot: completions get harder in the red zone. */
+export function passOdds(coverage: Coverage, call: PassCall, ytg: number): PassOdds {
+  const odds = PASS_ODDS[coverage][call];
+  if (ytg > RED_ZONE) return odds;
+  const c = compression(ytg);
+  // From the 20 in there's no deep field: a "deep" pass is a throw into the end zone, complete
+  // about 25% of the time at the 20 and less closer in.
+  return call === "pass-deep" ? { ...odds, complete: END_ZONE_SHOT * c, interception: 0.06 } : { ...odds, complete: odds.complete * c };
+}
+
 /** Average run gain by coverage: prevent gives up a little more on the ground. */
 const RUN_MEAN: Readonly<Record<Coverage, number>> = Object.freeze({ normal: 3.6, prevent: 4.3 });
+
+/** Standard normal CDF (Abramowitz–Stegun 7.1.26, error under 1.5e-7). */
+function normalCdf(z: number): number {
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const erf = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return z >= 0 ? (1 + erf) / 2 : (1 - erf) / 2;
+}
+
+/** Chance a run from inside the 5 reaches the end zone (ignoring the rare fumble). */
+export function goalLineRunChance(ytg: number): number {
+  const shape = runShape("normal", ytg);
+  // Gains are rounded to whole yards, so reaching the goal line means a raw gain of ytg - 0.5.
+  return 1 - normalCdf((ytg - 0.5 - shape.mean) / shape.sd);
+}
+
+interface RunShape {
+  /** Typical gain, before the occasional breakaway. */
+  readonly mean: number;
+  readonly sd: number;
+  /** Chance of a breakaway adding extra yards. */
+  readonly breakaway: number;
+}
+
+/**
+ * Runs by field position. Inside the 5 the defense packs the line: short gains, no breakaways. From
+ * there runs blend back to the open-field shape by the 12.
+ */
+export function runShape(coverage: Coverage, ytg: number): RunShape {
+  const open: RunShape = { mean: RUN_MEAN[coverage], sd: 3.2, breakaway: 0.1 };
+  if (ytg <= 5) return { mean: 0.7 + 0.3 * ytg, sd: 2.2, breakaway: 0 };
+  const t = Math.min(1, (ytg - 5) / 7);
+  const lerp = (goalLine: number, field: number) => goalLine + (field - goalLine) * t;
+  return { mean: lerp(2.2, open.mean), sd: lerp(2.2, open.sd), breakaway: lerp(0, open.breakaway) };
+}
 
 /** A last-play deep pass from this close is a heave into the end zone rather than a normal deep throw. */
 export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12 });
@@ -211,7 +271,7 @@ function rollHailMary(ytg: number, r: Rng): PlayOutcome {
   return { ...base, yards: 0, incomplete: true };
 }
 
-function rollPlay(call: PlayCall, r: Rng, coverage: Coverage): PlayOutcome {
+function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false };
   switch (call) {
     case "kneel":
@@ -220,15 +280,16 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage): PlayOutcome {
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
       if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
-      let yards = Math.round(RUN_MEAN[coverage] + 3.2 * gauss(r));
-      if (r() < 0.1) yards += Math.round(6 + expo(r, 9));
+      const shape = runShape(coverage, ytg);
+      let yards = Math.round(shape.mean + shape.sd * gauss(r));
+      if (r() < shape.breakaway) yards += Math.round(6 + expo(r, 9));
       yards = Math.max(-6, yards);
       return { ...base, yards, seconds: Math.round(4 + Math.max(0, yards) / 7), outOfBounds: r() < 0.07 };
     }
     case "pass-sideline":
     case "pass-middle":
     case "pass-deep": {
-      const odds = PASS_ODDS[coverage][call];
+      const odds = passOdds(coverage, call, ytg);
       // A deep throw takes longer to develop, and a pick comes farther downfield.
       const deep = call === "pass-deep";
       const slow = deep ? 1 : 0;
@@ -379,7 +440,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   const play = call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
     ? rollHailMary(g.ytg, r)
-    : rollPlay(call, r, coverageFor(g, snapClock));
+    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg);
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 
@@ -606,6 +667,8 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): string {
     case "run":
       if (m > 0) return "A run keeps the clock moving and rarely turns the ball over.";
       if (fgPlay(g)) return "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.";
+      if (g.ytg <= 5)
+        return `At the ${g.ytg}, the defense packs the line, but a run still scores about ${pct(goalLineRunChance(g.ytg))} of the time from here, with little risk of a turnover.`;
       if (g.toGo <= 2) return `On ${ordinal(g.down)} & ${g.toGo}, a run is the surest way to move the chains.`;
       return g.clock > 120 || !g.running
         ? "A run gains steady yards with little risk, and you have time to spare."
@@ -618,13 +681,17 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): string {
     case "pass-sideline":
       return "A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.";
     case "pass-middle":
+      if (g.ytg <= RED_ZONE)
+        return `Coverage tightens in the red zone, but a quick throw over the middle still completes about ${pct(passOdds("normal", "pass-middle", g.ytg).complete)} of the time from the ${g.ytg}.`;
       return coverageFor(g, g.clock) === "prevent"
         ? `They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about ${pct(PASS_ODDS.prevent["pass-middle"].complete)} of the time against it.`
         : "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.";
     case "pass-deep":
       return g.clock <= 12
         ? `With ${formatClock(g.clock)} left and ${g.ytg} yards to go, there's time for one shot: throw it to the end zone.${g.ytg <= HAIL_MARY.maxYtg ? ` A heave from here scores about ${pct(hailMaryChance(g.ytg))} of the time.` : ""}`
-        : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(PASS_ODDS[coverageFor(g, g.clock)]["pass-deep"].complete)} of the time, for 20+ yards.`;
+        : g.ytg <= RED_ZONE
+          ? `From the ${g.ytg} there's no deep field: a deep pass is a throw into the end zone, and it scores about ${pct(passOdds("normal", "pass-deep", g.ytg).complete)} of the time.`
+          : `You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(passOdds(coverageFor(g, g.clock), "pass-deep", g.ytg).complete)} of the time, for 20+ yards.`;
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
@@ -642,7 +709,9 @@ function whyNot(g: GameState, call: PlayCall): string | null {
   if (call === "kneel" && m <= 0) return "Kneeling gives up a down and time you need.";
   if (call === "pass-deep" && m <= 0) {
     const coverage = coverageFor(g, g.clock);
-    const odds = PASS_ODDS[coverage]["pass-deep"];
+    const odds = passOdds(coverage, "pass-deep", g.ytg);
+    if (g.ytg <= RED_ZONE)
+      return `From the ${g.ytg} there's no room to throw deep: an end-zone throw scores only about ${pct(odds.complete)} of the time. Shorter throws and runs were the better bet.`;
     return coverage === "prevent"
       ? `They're ahead late and playing prevent, with safeties deep: a deep pass completes only about ${pct(odds.complete)} of the time and is picked off about ${pct(odds.interception)}. Shorter throws were the better bet.`
       : `A deep pass completes only about ${pct(odds.complete)} of the time and risks a sack or an interception; shorter throws were the better bet here.`;

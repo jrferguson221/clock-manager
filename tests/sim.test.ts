@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, biggestSwing, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, biggestSwing, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -208,5 +208,40 @@ describe("Hail Mary", () => {
     expect(rate(45)).toBeLessThan(0.13);
     expect(rate(25)).toBeGreaterThan(0.16);
     expect(rate(25)).toBeLessThan(0.24);
+  });
+});
+
+describe("field position", () => {
+  const goalToGo = (ytg: number): GameState => ({ ...base, clock: 600, running: false, down: 1, toGo: Math.min(10, ytg), ytg, margin: 0 });
+  const tdRate = (ytg: number, call: "run" | "pass-middle" | "pass-deep") => {
+    let tds = 0;
+    for (let i = 0; i < 6000; i++) if (step(goalToGo(ytg), call, seededRng(i)).driveEnded === "Touchdown") tds++;
+    return tds / 6000;
+  };
+
+  it("runs near the goal line score about as often as in the NFL: ~60% from the 1, ~35% from the 3", () => {
+    expect(tdRate(1, "run")).toBeGreaterThan(0.5);
+    expect(tdRate(1, "run")).toBeLessThan(0.66);
+    expect(tdRate(3, "run")).toBeGreaterThan(0.28);
+    expect(tdRate(3, "run")).toBeLessThan(0.4);
+  });
+
+  it("the explainer's goal-line run chance matches the simulation", () => {
+    for (const ytg of [1, 3, 5]) expect(Math.abs(goalLineRunChance(ytg) - tdRate(ytg, "run"))).toBeLessThan(0.03);
+  });
+
+  it("pass completions get harder the closer you get, and deep passes become end-zone throws", () => {
+    expect(compression(45)).toBe(1);
+    expect(compression(10)).toBeLessThan(compression(15));
+    expect(compression(1)).toBeCloseTo(0.6, 10);
+    expect(passOdds("normal", "pass-middle", 3).complete).toBeLessThan(passOdds("normal", "pass-middle", 45).complete);
+    expect(passOdds("normal", "pass-deep", 20).complete).toBeCloseTo(0.25, 10);
+    expect(tdRate(3, "pass-deep")).toBeLessThan(tdRate(3, "pass-middle"));
+  });
+
+  it("a defense doesn't play prevent in the red zone: there's no deep field to protect", () => {
+    const late: GameState = { ...base, clock: 100, margin: -3 };
+    expect(coverageFor({ ...late, ytg: 40 }, 100)).toBe("prevent");
+    expect(coverageFor({ ...late, ytg: 15 }, 100)).toBe("normal");
   });
 });
