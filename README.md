@@ -11,7 +11,9 @@ The leading and trailing modes also have their own calculators:
 - **Leading: run out the clock.** Whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
 - **Trailing: drive to score.** A rule-of-thumb next call (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick), and how many plays you need versus how many you have time for.
 
-Built with Vite, React, TypeScript and Vitest, using Bun.
+Each mode has its own URL, and the situation you enter is kept in the URL too, so you can bookmark or share it: for example `#/trailing?clock=0:58&trail=7&side=opp&yardLine=40`. Settings left at their defaults are left out of the URL, and anything invalid in a shared link falls back to its default.
+
+Built with Vite, React, TypeScript, [Mantine](https://mantine.dev) (UI components, with a custom theme), [TanStack Router](https://tanstack.com/router) and [Zod](https://zod.dev), using Bun. The page follows your system's light or dark setting until you pick one with the sun/moon button.
 
 ## Commands
 
@@ -25,7 +27,7 @@ bun run build      # type-check and build into dist/
 
 The project uses [Bun](https://bun.sh) to install packages and run scripts. `bunfig.toml` makes `bun run` use Bun's runtime rather than Node's. Tests use Bun's test runner (`bun:test`) with `--parallel`, which runs test files on separate CPU cores. Every test is a pure function of its inputs, so the files are independent. Each mode's render test has its own file in `tests/app/`, because rendering a mode runs its win-probability simulations. Within a file, `test.concurrent` wouldn't help: it only overlaps `async` tests while they wait, and these tests are all synchronous.
 
-TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and the other strict-family checks (see `tsconfig.json`). The code and tests use no `any`, type casts or non-null assertions. Selects only hand back values from their option lists, and lists that can't be empty are typed that way.
+TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and the other strict-family checks (see `tsconfig.json`). The code and tests use no `any`, type casts or non-null assertions. Selects only hand back values from their option lists, lists that can't be empty are typed that way, and URL search params are parsed by Zod schemas rather than trusted.
 
 ## Layout
 
@@ -36,10 +38,15 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
 | `src/time.ts` | Parses and formats `M:SS` clock strings. |
-| `src/App.tsx` | The mode tabs. |
+| `src/router.tsx` | The routes, one per mode, with their search-param schemas. Uses hash history, so deep links work on GitHub Pages. |
+| `src/App.tsx`, `src/Layout.tsx` | Mantine and router providers; the header, mode tabs and color-scheme toggle. |
+| `src/theme.ts`, `src/styles.css` | The "Sideline" Mantine theme (pylon orange, turf green, night navy, Barlow fonts), and the CSS the theme can't express. `src/mantine-styles.ts` imports Mantine's styles for just the components used. |
 | `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx`, `src/AdvisorPanel.tsx` | One UI panel per mode. |
-| `src/fields.tsx` | Form inputs and the timeline table, shared by both panels. |
-| `tests/` | Tests for the engines and the simulator. `tests/app/` has one render test per mode. |
+| `src/SituationForm.tsx`, `src/fields.tsx` | The situation form all modes share, its inputs, and the timeline table. |
+| `packages/schemas` | `@clock-manager/schemas`, a Bun workspace package: Zod schemas for the game state, URL search params and form fields, and the types inferred from them. The engines take their `GameState`, `Down` and `PlayCall` types from it. |
+| `tests/` | Tests for the engines and the simulator. `tests/app/` renders each route (one file per mode). `packages/schemas/tests/` tests the schemas. |
+
+The repo is a Bun workspace: `bun install` at the root links `packages/schemas`, and `bun run test` runs every package's tests.
 
 ## Current assumptions
 

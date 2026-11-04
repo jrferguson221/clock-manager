@@ -4,6 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Clock Manager</title>
+  <meta name="theme-color" content="#0f6837">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%230f6837%22/%3E%3Cpath d=%22M16 7v9l6 4%22 stroke=%22%23fff%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2211%22 stroke=%22%23ff7214%22 stroke-width=%222.5%22 fill=%22none%22/%3E%3C/svg%3E">
+  <!-- Mantine's ColorSchemeScript, inlined: set the color scheme before the first paint so dark mode doesn't flash light. -->
+  <script>
+    try {
+      var stored = window.localStorage.getItem("mantine-color-scheme-value");
+      var scheme = stored === "light" || stored === "dark" ? stored
+        : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-mantine-color-scheme", scheme);
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <div id="root"></div>

@@ -22,5 +22,5 @@
     "noEmit": true,
     "types": ["vite/client", "bun"]
   },
-  "include": ["src", "tests", "vite.config.ts"]
+  "include": ["src", "tests", "packages/*/src", "packages/*/tests", "vite.config.ts"]
 }

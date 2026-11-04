@@ -1,0 +1,69 @@
+// URL search params for each mode. A shared or bookmarked link carries the whole situation.
+//
+// Search params are untrusted input: every field falls back to its default when it's missing or
+// invalid, so any URL parses to a usable situation. Defaults are left out of the URL.
+
+import * as z from "zod/mini";
+import { downSchema, type Down } from "./game";
+import { clockTextSchema, playTypeSchema, rangeSchema, sideSchema, type LimitedField, type PlayType, type Side } from "./fields";
+
+/** A schema that fills in `fallback` when the value is missing, and when it's invalid. */
+const withFallback = <T extends z.ZodMiniType>(schema: T, fallback: Exclude<z.output<T>, undefined>) => z.catch(z._default(schema, fallback), fallback);
+const int = (field: LimitedField, fallback: number) => withFallback(rangeSchema(field), fallback);
+
+/** Fields every mode shares: the clock, timeouts, down and distance, and the ball's spot. */
+const situationShape = (d: {
+  clock: string; timeouts: number; oppTimeouts: number; down: Down; toGo: number; side: Side; yardLine: number;
+}) => ({
+  /** Game clock, M:SS. */
+  clock: withFallback(clockTextSchema, d.clock),
+  /** Whether the game clock is running. */
+  running: withFallback(z.boolean(), true),
+  /** Your timeouts. */
+  timeouts: int("timeouts", d.timeouts),
+  /** The opponent's timeouts. */
+  oppTimeouts: int("timeouts", d.oppTimeouts),
+  down: withFallback(downSchema, d.down),
+  toGo: int("toGo", d.toGo),
+  /** Which half of the field the ball is in. */
+  side: withFallback(sideSchema, d.side),
+  yardLine: int("yardLine", d.yardLine),
+});
+
+const DEFAULT_HURRY_UP = 18;
+const DEFAULT_YARDS_PER_PLAY = 7;
+const DEFAULT_PLAY_TYPE: PlayType = "kneel";
+
+export const leadingSearchSchema = z.object({
+  ...situationShape({ clock: "2:30", timeouts: 3, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 30 }),
+  /** Points you lead by. */
+  lead: int("lead", 3),
+  /** How you run out the clock. */
+  playType: withFallback(playTypeSchema, DEFAULT_PLAY_TYPE),
+});
+
+export const trailingSearchSchema = z.object({
+  ...situationShape({ clock: "1:45", timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 25 }),
+  /** Points you trail by; 0 is tied. */
+  trail: int("trail", 3),
+  /** Average yards a play, for the rules of thumb. */
+  ypp: int("yardsPerPlay", DEFAULT_YARDS_PER_PLAY),
+  /** Seconds from an in-bounds play to a no-huddle snap. */
+  hurryUp: int("hurryUp", DEFAULT_HURRY_UP),
+});
+
+export const bestCallSearchSchema = z.object({
+  ...situationShape({ clock: "1:45", timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 25 }),
+  /** Your points minus the opponent's, from -16 to 16. */
+  margin: int("margin", -3),
+  hurryUp: int("hurryUp", DEFAULT_HURRY_UP),
+});
+
+export type LeadingSearch = z.output<typeof leadingSearchSchema>;
+export type TrailingSearch = z.output<typeof trailingSearchSchema>;
+export type BestCallSearch = z.output<typeof bestCallSearchSchema>;
+
+/** Each mode's situation with nothing in the URL. */
+export const LEADING_DEFAULTS: LeadingSearch = leadingSearchSchema.parse({});
+export const TRAILING_DEFAULTS: TrailingSearch = trailingSearchSchema.parse({});
+export const BEST_CALL_DEFAULTS: BestCallSearch = bestCallSearchSchema.parse({});

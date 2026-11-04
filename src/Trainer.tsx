@@ -2,10 +2,12 @@
 // explanation after each call of what the best decision would have been.
 
 import { useMemo, useState } from "react";
+import { Alert, Badge, Button, Card, Group, List, Progress, SimpleGrid, Stack, Table, Text } from "@mantine/core";
 import {
   availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
   DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
 } from "./sim";
+import { PLAY_CALL_IDS } from "@clock-manager/schemas";
 import { PlayLog } from "./fields";
 
 interface Entry {
@@ -19,7 +21,8 @@ interface Entry {
   driveEnded: string | null;
 }
 
-const CALL_ORDER: readonly PlayCall[] = ["timeout", "run", "pass-sideline", "pass-middle", "pass-deep", "spike", "kneel", "fg", "punt"];
+/** Call buttons in the order the schema lists the calls. */
+const CALL_ORDER: readonly PlayCall[] = PLAY_CALL_IDS;
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -34,9 +37,11 @@ function useWinProbability(g: GameState, cfg: SimConfig) {
   }, [key]);
 }
 
-export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
+export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT_SIM }: {
   /** The situation from the form. You have the ball. */
   game: GameState;
+  /** True while the form has changed and `game` hasn't caught up yet: calls wait until it has. */
+  pending?: boolean;
   /** Called with the new situation after a play, or the old one on undo. */
   onChange: (g: GameState) => void;
   cfg?: SimConfig;
@@ -53,7 +58,7 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
   const finalResult = finish?.result ?? wp;
 
   function call(c: PlayCall) {
-    if (!values) return;
+    if (!values || pending) return;
     const res = step(game, c, seededRng((Math.random() * 2 ** 32) >>> 0), cfg);
     const entry: Entry = {
       before: game, after: res.state, call: c, text: res.text, values,
@@ -84,38 +89,43 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
   }
 
   return (
-    <section className="trainer" aria-label="Play caller">
+    <Stack component="section" gap="md" aria-label="Play caller">
       <WinMeter wp={wp} prev={prevWp} />
 
       {last && <Explainer entry={last} />}
 
       {ended ? (
-        <div className="advice">
-          <p className="advice-label">Drive over</p>
-          <p className="verdict">{ended.driveEnded ?? "Time expired"}</p>
+        <Card className="accent-card">
+          <Text className="eyebrow">Drive over</Text>
+          <Text className="verdict">{ended.driveEnded ?? "Time expired"}</Text>
           {finish ? (
-            <ul className="play-out small">
-              {finish.lines.map((l, i) => <li key={i} className={l.endsWith("ball:") ? "drive-head" : ""}>{l}</li>)}
-            </ul>
+            <List size="sm" spacing={2} listStyleType="none" className="play-out">
+              {finish.lines.map((l, i) => (
+                <List.Item key={i} className={l.endsWith("ball:") ? "drive-head" : undefined}>{l}</List.Item>
+              ))}
+            </List>
           ) : (
-            !ended.after.over && <p>The opponent has the ball. See one way the rest of the game could go.</p>
+            !ended.after.over && <Text>The opponent has the ball. See one way the rest of the game could go.</Text>
           )}
-          <div className="row">
-            {!ended.after.over && <button type="button" className="primary" onClick={playItOut}>{finish ? "Play it out again" : "Play it out"}</button>}
-          </div>
-        </div>
+          {!ended.after.over && (
+            <Group mt="md"><Button onClick={playItOut}>{finish ? "Play it out again" : "Play it out"}</Button></Group>
+          )}
+        </Card>
       ) : (
-        <div className="calls">
-          <p className="advice-label">Call the play</p>
-          <div className="call-grid">
+        <Card>
+          <Text className="eyebrow" mb="xs">Call the play</Text>
+          <SimpleGrid cols={{ base: 2, xs: 3 }} spacing="xs" aria-busy={pending}>
             {CALL_ORDER.map((c) => (
-              <button key={c} type="button" disabled={!available.includes(c)} onClick={() => call(c)}>
+              <Button
+                key={c} variant="default" size="md" className="call-button"
+                disabled={pending || !available.includes(c)} onClick={() => call(c)}
+              >
                 {PLAY_CALLS[c]}
-              </button>
+              </Button>
             ))}
-          </div>
-          <p className="muted small">{tempoNote(game, cfg)}</p>
-        </div>
+          </SimpleGrid>
+          <Text size="xs" c="dimmed" mt="sm">{tempoNote(game, cfg)}</Text>
+        </Card>
       )}
 
       {gameOver && <Recap entries={entries} driveEndWp={wp} result={finalResult} />}
@@ -125,7 +135,7 @@ export default function Trainer({ game, onChange, cfg = DEFAULT_SIM }: {
         onUndo={undo}
         onReset={() => { setEntries([]); setFinish(null); }}
       />
-    </section>
+    </Stack>
   );
 }
 
@@ -136,36 +146,42 @@ export function tempoNote(g: GameState, cfg: SimConfig): string {
     : `The clock is running. Plays use a hurry-up of ${cfg.hurryUp} seconds (${cfg.spikeLineup} for a spike), except when a field goal is enough and you're in range, when they drain the clock. A timeout stops it right now.`;
 }
 
-function WinMeter({ wp, prev }: { wp: number; prev: number | null }) {
+/** Red when the game's slipping away, orange while it's in the balance, green when it's in hand. */
+const meterColor = (wp: number) => (wp < 0.25 ? "red" : wp < 0.6 ? "pylon" : "turf");
+
+/** The win-probability meter, with the change on the last call when there was one. */
+export function WinMeter({ wp, prev, label = "Win probability" }: { wp: number; prev: number | null; label?: string }) {
   // The change between the two percentages as shown, so "26% → 24%" always reads as -2.
   const delta = prev === null ? null : Math.round(wp * 100) - Math.round(prev * 100);
   const points = delta ?? 0;
+  const value = Math.round(wp * 100);
   return (
-    <div className="wp" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(wp * 100)} aria-label="Win probability">
-      <div className="wp-head">
-        <span className="advice-label">Win probability</span>
-        <span className="wp-num">{pct(wp)}</span>
+    <Card className="meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} aria-label={label}>
+      <Text className="eyebrow">{label}</Text>
+      <Group gap="sm" align="baseline" wrap="wrap">
+        <span className="meter-num">{pct(wp)}</span>
         {delta != null && (
-          <span className={`wp-delta ${points > 0 ? "win" : points < 0 ? "lose" : "muted"}`}>
+          <Text size="sm" fw={600} c={points > 0 ? "turf" : points < 0 ? "red" : "dimmed"} className="tabular">
             {points > 0 ? "▲" : points < 0 ? "▼" : "▬"} {points > 0 ? "+" : ""}{points} pts on the last call
-          </span>
+          </Text>
         )}
-      </div>
-      <div className="wp-track"><div className="wp-fill" style={{ width: pct(wp) }} /></div>
-    </div>
+      </Group>
+      <Progress value={value} size="xl" mt="sm" color={meterColor(wp)} aria-hidden className="meter-track" />
+    </Card>
   );
 }
+
+const VERDICT_COLOR = { best: "turf", close: "gray", worse: "red" } as const;
 
 function Explainer({ entry }: { entry: Entry }) {
   const { explanation: x, values, call } = entry;
   return (
-    <div className={`advice explainer ${x.verdict}`}>
-      <p className="advice-label">Last play</p>
-      <p>{entry.text}</p>
-      <p className="verdict">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</p>
-      <ul className="reasons">{x.reasons.map((r, i) => <li key={i}>{r}</li>)}</ul>
+    <Alert color={VERDICT_COLOR[x.verdict]} variant="outline" className="explainer" title={<span className="eyebrow">Last play</span>}>
+      <Text>{entry.text}</Text>
+      <Text className="verdict" mt="xs">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</Text>
+      <List size="sm" spacing={2} mb="sm">{x.reasons.map((r, i) => <List.Item key={i}>{r}</List.Item>)}</List>
       <CallTable values={values} chosen={call} caption="Win probability by call, before the play" />
-    </div>
+    </Alert>
   );
 }
 
@@ -173,22 +189,27 @@ function Explainer({ entry }: { entry: Entry }) {
 export function CallTable({ values, chosen, caption }: { values: CallValues; chosen?: PlayCall; caption: string }) {
   const best = bestScored(values).call;
   return (
-    <table className="call-values">
-      <caption className="muted small">{caption}</caption>
-      <tbody>
+    <Table className="call-values" withRowBorders={false} verticalSpacing={4} horizontalSpacing={0} captionSide="top">
+      <Table.Caption>{caption}</Table.Caption>
+      <Table.Tbody>
         {ranked(values).map(({ call: c, wp: v }) => (
-          <tr key={c}>
-            <th scope="row">
+          <Table.Tr key={c}>
+            <Table.Th scope="row" className="call-name">
               {PLAY_CALLS[c]}
-              {c === best && <span className="tag">best</span>}
-              {c === chosen && <span className="tag">your call</span>}
-            </th>
-            <td className="bar-cell"><div className="bar" style={{ width: pct(v) }} title={`${PLAY_CALLS[c]}: ${pct(v)}`} /></td>
-            <td className="num">{pct(v)}</td>
-          </tr>
+              {c === best && <Badge color="turf" ml={6} size="sm">best</Badge>}
+              {c === chosen && <Badge color="pylon" ml={6} size="sm">your call</Badge>}
+            </Table.Th>
+            <Table.Td className="bar-cell">
+              <Progress
+                value={Math.round(v * 100)} size="md" color={c === best ? "turf" : "pylon"}
+                aria-hidden title={`${PLAY_CALLS[c]}: ${pct(v)}`}
+              />
+            </Table.Td>
+            <Table.Td className="num">{pct(v)}</Table.Td>
+          </Table.Tr>
         ))}
-      </tbody>
-    </table>
+      </Table.Tbody>
+    </Table>
   );
 }
 
@@ -215,32 +236,33 @@ function Recap({ entries, driveEndWp, result }: { entries: Entry[]; driveEndWp: 
       : "It was the right call, and it paid off.";
   }
 
+  const title = <span className="eyebrow">Game recap</span>;
   if (points === 0) {
     return (
-      <div className="advice recap best">
-        <p className="advice-label">Game recap</p>
-        <p className="verdict">{resultText(result)}</p>
-        <p>No call swung your chances by even a point: the game was never in doubt on your drive.</p>
-      </div>
+      <Alert color="turf" variant="outline" title={title} className="recap">
+        <Text className="verdict">{resultText(result)}</Text>
+        <Text>No call swung your chances by even a point: the game was never in doubt on your drive.</Text>
+      </Alert>
     );
   }
 
   return (
-    <div className={`advice recap ${points > 0 ? "best" : "worse"}`}>
-      <p className="advice-label">Game recap</p>
-      <p className="verdict">{resultText(result)}</p>
-      <p>
-        <strong>Biggest swing: call {swing.index + 1} of {entries.length}, {PLAY_CALLS[e.call]}</strong>{" "}
-        <span className={points > 0 ? "win" : "lose"}>
-          ({points > 0 ? "▲ +" : "▼ "}{points} pts, {pct(swing.before)} → {pct(swing.after)})
-        </span>
-      </p>
-      <p>{e.text}</p>
-      <p>{judgment}</p>
-      <p className="muted small">
-        Swings count your calls only: each runs from your win probability before the call to the next one, and the last
-        runs to the end of your drive. What happens after your drive isn't charged to any single call.
-      </p>
-    </div>
+    <Alert color={points > 0 ? "turf" : "red"} variant="outline" title={title} className="recap">
+      <Stack gap={6}>
+        <Text className="verdict">{resultText(result)}</Text>
+        <Text>
+          <strong>Biggest swing: call {swing.index + 1} of {entries.length}, {PLAY_CALLS[e.call]}</strong>{" "}
+          <Text span fw={600} c={points > 0 ? "turf" : "red"}>
+            ({points > 0 ? "▲ +" : "▼ "}{points} pts, {pct(swing.before)} → {pct(swing.after)})
+          </Text>
+        </Text>
+        <Text>{e.text}</Text>
+        <Text>{judgment}</Text>
+        <Text size="xs" c="dimmed">
+          Swings count your calls only: each runs from your win probability before the call to the next one, and the last
+          runs to the end of your drive. What happens after your drive isn't charged to any single call.
+        </Text>
+      </Stack>
+    </Alert>
   );
 }

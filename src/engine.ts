@@ -1,6 +1,10 @@
 // Clock-management engine: pure functions, no DOM access.
 // All times are in whole seconds.
 
+import { DOWNS, PLAY_TYPE_IDS, type Down, type PlayType } from "@clock-manager/schemas";
+
+export { DOWNS, PLAY_TYPE_IDS, type Down, type PlayType };
+
 export interface Rules {
   readonly name: string;
   /** Play clock after a play ends with the game clock running. */
@@ -16,15 +20,10 @@ export const NFL_RULES = Object.freeze({
   twoMinuteWarning: 120,
 } as const satisfies Rules);
 
-export const PLAY_TYPE_IDS = ["kneel", "run"] as const;
-export type PlayType = (typeof PLAY_TYPE_IDS)[number];
-
 export const PLAY_TYPES: Readonly<Record<PlayType, { readonly label: string; readonly duration: number }>> = Object.freeze({
   kneel: { label: "Kneel down", duration: 2 },
   run: { label: "Run, stays in bounds", duration: 6 },
 });
-
-export const DOWNS = [1, 2, 3, 4] as const;
 
 /**
  * If the clock going from `before` to `after` runs through the two-minute warning (and it hasn't
@@ -34,8 +33,6 @@ export function warningCrossed(rules: Rules, warningUsed: boolean, before: numbe
   const w = rules.twoMinuteWarning;
   return !warningUsed && w !== null && before > w && after <= w ? w : null;
 }
-
-export type Down = (typeof DOWNS)[number];
 
 export interface Situation {
   /** Seconds left in the game. */

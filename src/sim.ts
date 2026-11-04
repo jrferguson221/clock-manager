@@ -6,9 +6,10 @@
 
 import { NFL_RULES, PLAY_TYPES, simulateRunOut, type Down } from "./engine";
 import { formatClock } from "./time";
+import type { GameState, PlayCall, Team } from "@clock-manager/schemas";
 
-export type Team = "you" | "opp";
-export type PlayCall = "timeout" | "run" | "pass-sideline" | "pass-middle" | "pass-deep" | "spike" | "kneel" | "fg" | "punt";
+// The game state and call types come from the schemas package, which validates them too.
+export type { GameState, PlayCall, Team };
 
 export const PLAY_CALLS: Readonly<Record<PlayCall, string>> = Object.freeze({
   timeout: "Timeout",
@@ -21,22 +22,6 @@ export const PLAY_CALLS: Readonly<Record<PlayCall, string>> = Object.freeze({
   fg: "Field goal",
   punt: "Punt",
 });
-
-export interface GameState {
-  /** Seconds left in the game. */
-  clock: number;
-  running: boolean;
-  /** The team with the ball. */
-  poss: Team;
-  down: Down;
-  toGo: number;
-  /** Yards from the ball to the goal line the team with the ball is attacking. */
-  ytg: number;
-  /** Your points minus the opponent's. */
-  margin: number;
-  timeouts: Record<Team, number>;
-  over: boolean;
-}
 
 export interface SimConfig {
   /** Seconds from the end of an in-bounds play to a no-huddle snap. */
