@@ -14,7 +14,7 @@ export const downSchema = z.literal(DOWNS);
 export type Down = z.infer<typeof downSchema>;
 
 export const PLAY_CALL_IDS = [
-  "timeout", "run", "pass-sideline", "pass-middle", "pass-deep", "spike", "kneel", "fg", "punt",
+  "timeout", "run", "pass-screen", "pass-sideline", "pass-middle", "pass-play-action", "pass-deep", "spike", "kneel", "fg", "punt",
 ] as const;
 export const playCallSchema = z.enum(PLAY_CALL_IDS);
 export type PlayCall = z.infer<typeof playCallSchema>;

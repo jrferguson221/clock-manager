@@ -193,3 +193,10 @@ body {
 @media (min-width: $mantine-breakpoint-md) {
   .guide-toc { position: sticky; top: rem(16px); }
 }
+
+/* Decisions of the week */
+.play-desc {
+  font-style: italic;
+  padding-left: rem(10px);
+  border-left: 3px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}

@@ -1,0 +1,510 @@
+{
+ "season": 2026,
+ "week": 7,
+ "generatedAt": "2026-11-04T23:42:32.965Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 14,
+ "evaluated": 97,
+ "agreement": {
+  "plays": 97,
+  "meanAbsDiff": 0.0463046637992679,
+  "within10": 0.8556701030927835
+ },
+ "worst": [
+  {
+   "id": "2026_07_CLE_TEN-4257",
+   "gameId": "2026_07_CLE_TEN",
+   "offense": "CLE",
+   "defense": "TEN",
+   "home": "TEN",
+   "away": "CLE",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 51,
+    "running": true,
+    "down": 2,
+    "toGo": 4,
+    "ytg": 63,
+    "margin": 0,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 33,
+   "description": "(:33) (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson pushed ob at CLE 45 for 8 yards (53-A.Hill). The Replay Official reviewed the runner was out of bounds ruling, and the play was REVERSED. (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson to CLE 45 for 8 yards (53-A.Hill).",
+   "call": "pass-middle",
+   "wpCall": 0.5476666666666666,
+   "best": "timeout",
+   "wpBest": 0.661,
+   "cost": 0.1133333333333334,
+   "values": [
+    {
+     "call": "timeout",
+     "wp": 0.661
+    },
+    {
+     "call": "spike",
+     "wp": 0.606
+    },
+    {
+     "call": "run",
+     "wp": 0.5973333333333334
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5476666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5293333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5133333333333333
+    },
+    {
+     "call": "punt",
+     "wp": 0.5
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.4826666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.482
+    },
+    {
+     "call": "kneel",
+     "wp": 0.46
+    }
+   ],
+   "reason": {
+    "text": "The clock was running with 0:51 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
+    "section": "timeouts"
+   },
+   "nflverseWp": 0.561358332633972,
+   "nflverseWpa": 0.022444486618042,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_07_IND_MIN-3368",
+   "gameId": "2026_07_IND_MIN",
+   "offense": "IND",
+   "defense": "MIN",
+   "home": "MIN",
+   "away": "IND",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 282,
+    "running": true,
+    "down": 4,
+    "toGo": 2,
+    "ytg": 30,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 267,
+   "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
+   "call": "fg",
+   "wpCall": 0.3453333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.413,
+   "cost": 0.06766666666666665,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.41733333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.413
+    },
+    {
+     "call": "run",
+     "wp": 0.3993333333333333
+    },
+    {
+     "call": "timeout",
+     "wp": 0.39
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.37933333333333336
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.37266666666666665
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.34933333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.3453333333333333
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.366786807775497,
+   "nflverseWpa": -0.175609558820724,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_07_CLE_TEN-4291",
+   "gameId": "2026_07_CLE_TEN",
+   "offense": "CLE",
+   "defense": "TEN",
+   "home": "TEN",
+   "away": "CLE",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 28,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 55,
+    "margin": 0,
+    "timeouts": 2,
+    "oppTimeouts": 3
+   },
+   "snapClock": 28,
+   "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
+   "call": "pass-sideline",
+   "wpCall": 0.7176666666666667,
+   "best": "pass-deep",
+   "wpBest": 0.7176666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.7176666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.7006666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.6813333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.677
+    },
+    {
+     "call": "run",
+     "wp": 0.6746666666666666
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.67
+    },
+    {
+     "call": "spike",
+     "wp": 0.6243333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.5896666666666667
+    },
+    {
+     "call": "punt",
+     "wp": 0.5
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 55 yards with 0:28 left is too far to go in small chunks. A deep pass completes about 35% of the time, for 20+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.583802819252014,
+   "nflverseWpa": 0.23200923204422,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_07_CLE_TEN-4035",
+   "gameId": "2026_07_CLE_TEN",
+   "offense": "TEN",
+   "defense": "CLE",
+   "home": "TEN",
+   "away": "CLE",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 153,
+    "running": false,
+    "down": 4,
+    "toGo": 8,
+    "ytg": 43,
+    "margin": -7,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 153,
+   "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
+   "call": "pass-deep",
+   "wpCall": 0.1,
+   "best": "pass-middle",
+   "wpBest": 0.09933333333333333,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.1
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.09933333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.08366666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.077
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.075
+    },
+    {
+     "call": "run",
+     "wp": 0.07133333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.054
+    },
+    {
+     "call": "punt",
+     "wp": 0.04566666666666667
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.120108582079411,
+   "nflverseWpa": 0.177786342799664,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_07_MIA_NYJ-3406",
+   "gameId": "2026_07_MIA_NYJ",
+   "offense": "MIA",
+   "defense": "NYJ",
+   "home": "NYJ",
+   "away": "MIA",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 334,
+    "running": true,
+    "down": 2,
+    "toGo": 7,
+    "ytg": 63,
+    "margin": 4,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 295,
+   "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
+   "call": "pass-play-action",
+   "wpCall": 0.839,
+   "best": "run",
+   "wpBest": 0.8486666666666667,
+   "cost": 0.009666666666666712,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.8486666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.839
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.8383333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.8316666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.8213333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.8206666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.818
+    },
+    {
+     "call": "kneel",
+     "wp": 0.8143333333333334
+    },
+    {
+     "call": "spike",
+     "wp": 0.7876666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0.7213333333333334
+    }
+   ],
+   "reason": {
+    "text": "A run keeps the clock moving and rarely turns the ball over.",
+    "section": "running-out-the-clock"
+   },
+   "nflverseWp": 0.769473731517792,
+   "nflverseWpa": 0.175825614727378,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_07_CLE_TEN-4359",
+   "gameId": "2026_07_CLE_TEN",
+   "offense": "CLE",
+   "defense": "TEN",
+   "home": "TEN",
+   "away": "CLE",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 3,
+    "running": false,
+    "down": 1,
+    "toGo": 5,
+    "ytg": 14,
+    "margin": 0,
+    "timeouts": 1,
+    "oppTimeouts": 3
+   },
+   "snapClock": 3,
+   "description": "(:03) 25-A.Szmyt 32 yard field goal is GOOD, Center-50-R.Sunahara, Holder-13-C.Bojorquez.",
+   "call": "fg",
+   "wpCall": 0.975,
+   "best": "kneel",
+   "wpBest": 0.9723333333333334,
+   "cost": 0,
+   "values": [
+    {
+     "call": "spike",
+     "wp": 0.975
+    },
+    {
+     "call": "fg",
+     "wp": 0.975
+    },
+    {
+     "call": "kneel",
+     "wp": 0.9723333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.6093333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.587
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5626666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5466666666666666
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5416666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.5236666666666666
+    }
+   ],
+   "reason": {
+    "text": "With little time and a long field, taking a tie to overtime beats risking a turnover.",
+    "section": "limitations"
+   },
+   "nflverseWp": 0.824265539646149,
+   "nflverseWpa": 0.175734460353851,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_07_IND_MIN-3368",
+   "gameId": "2026_07_IND_MIN",
+   "offense": "IND",
+   "defense": "MIN",
+   "home": "MIN",
+   "away": "IND",
+   "date": "2026-10-25",
+   "situation": {
+    "clock": 282,
+    "running": true,
+    "down": 4,
+    "toGo": 2,
+    "ytg": 30,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 267,
+   "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
+   "call": "fg",
+   "wpCall": 0.3453333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.413,
+   "cost": 0.06766666666666665,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.41733333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.413
+    },
+    {
+     "call": "run",
+     "wp": 0.3993333333333333
+    },
+    {
+     "call": "timeout",
+     "wp": 0.39
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.37933333333333336
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.37266666666666665
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.34933333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.3453333333333333
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.366786807775497,
+   "nflverseWpa": -0.175609558820724,
+   "lowConfidence": false
+  }
+ ]
+}

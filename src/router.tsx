@@ -3,17 +3,24 @@
 // history: links look like .../clock-manager/#/trailing?clock=0:58&trail=7.
 
 import {
-  createHashHistory, createRootRoute, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
+  createHashHistory, createRootRouteWithContext, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
 } from "@tanstack/react-router";
 import {
-  bestCallSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
+  bestCallSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
 } from "@clock-manager/schemas";
 import Layout, { NotFound } from "./Layout";
+import { DecisionsError, DecisionsPending } from "./DecisionsStatus";
+import { fetchedDecisions, type DecisionsData } from "./decisionsData";
 import RunOutPanel from "./RunOutPanel";
 import TrailingPanel from "./TrailingPanel";
 import AdvisorPanel from "./AdvisorPanel";
 
-const rootRoute = createRootRoute({ component: Layout, notFoundComponent: NotFound });
+/** What every route can reach: where the decisions-of-the-week data comes from. */
+export interface RouterContext {
+  decisions: DecisionsData;
+}
+
+const rootRoute = createRootRouteWithContext<RouterContext>()({ component: Layout, notFoundComponent: NotFound });
 
 const leadingRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -48,6 +55,25 @@ const scenariosRoute = createRoute({
   component: lazyRouteComponent(() => import("./ScenarioPanel")),
 });
 
+// Decisions of the week: real late-game calls, scored by the model. The week's file is fetched and
+// validated before the page renders; with no week in the URL, it's the latest one.
+const decisionsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/decisions",
+  validateSearch: decisionsSearchSchema,
+  loaderDeps: ({ search }) => ({ week: search.week }),
+  loader: async ({ context, deps }) => {
+    const index = await context.decisions.index();
+    const latest = index.weeks.at(-1)?.week;
+    if (latest === undefined) return { index, week: null };
+    const wanted = index.weeks.some((w) => w.week === deps.week) && deps.week !== undefined ? deps.week : latest;
+    return { index, week: await context.decisions.week(index.season, wanted) };
+  },
+  component: lazyRouteComponent(() => import("./DecisionsPanel")),
+  pendingComponent: DecisionsPending,
+  errorComponent: DecisionsError,
+});
+
 // The guide is long and only some visitors read it, so it's a separate download, fetched when opened.
 const guideRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -56,11 +82,11 @@ const guideRoute = createRoute({
   component: lazyRouteComponent(() => import("./Guide")),
 });
 
-const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, scenariosRoute, guideRoute]);
+const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, scenariosRoute, decisionsRoute, guideRoute]);
 
 /** The app's router. Tests pass a memory history; the browser uses the URL hash. */
-export function createAppRouter(history: RouterHistory = createHashHistory()) {
-  return createRouter({ routeTree, history, scrollRestoration: true });
+export function createAppRouter(history: RouterHistory = createHashHistory(), decisions: DecisionsData = fetchedDecisions) {
+  return createRouter({ routeTree, history, scrollRestoration: true, context: { decisions } });
 }
 
 declare module "@tanstack/react-router" {

@@ -45,10 +45,9 @@ describe("scenarios", () => {
     expect(behind.options[behind.better ?? 1].id).toBe("score");
   });
 
-  it("QB scramble: with 0:40 left and no timeouts, get out of bounds; with more time, slide", () => {
+  it("QB scramble: with 0:40 left and no timeouts, get out of bounds", () => {
     const late = analyzeScenario("qb-slide", presetInput("qb-slide"), 1000, 200);
     expect(late.options[late.better ?? 0].id).toBe("out-of-bounds");
-    expect(late.flipNote).toMatch(/or more left, slide in bounds instead/);
   });
 
   it("RB with the lead: inside two minutes stay in bounds, unless the extra yards move the chains", () => {

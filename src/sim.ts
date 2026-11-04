@@ -17,6 +17,8 @@ export const PLAY_CALLS: Readonly<Record<PlayCall, string>> = Object.freeze({
   "pass-sideline": "Pass to the sideline",
   "pass-middle": "Pass over the middle",
   "pass-deep": "Deep pass",
+  "pass-play-action": "Play-action pass",
+  "pass-screen": "Screen pass",
   spike: "Spike",
   kneel: "Kneel",
   fg: "Field goal",
@@ -91,6 +93,14 @@ function fgPlay(g: GameState): boolean {
  * the play clock. A trailing team draining for a kick snaps early enough to stop the clock and kick.
  * Everyone else hurries.
  */
+/**
+ * Seconds from the end of the last play to the snap when the clock is running, for a call: a leading team
+ * drains the play clock, a trailing one hurries, a spike or a kick takes its own setup time.
+ */
+export function snapDelay(g: GameState, call: PlayCall, cfg: SimConfig = DEFAULT_SIM): number {
+  return preSnapBurn(g, call, cfg);
+}
+
 function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig): number {
   if (marginFor(g, g.poss) > 0) return BURN;
   if (call === "fg" || call === "punt") return cfg.fgRush;
@@ -112,9 +122,10 @@ export function availableCalls(g: GameState): readonly PlayCall[] {
   if (g.over) return [];
   const calls: PlayCall[] = [];
   if (g.timeouts[g.poss] > 0) calls.push("timeout");
-  calls.push("run", "pass-sideline", "pass-middle", "pass-deep");
+  calls.push("run", "pass-screen", "pass-sideline", "pass-middle", "pass-play-action", "pass-deep");
   if (g.down <= 3) calls.push("spike");
-  calls.push("kneel");
+  // Kneeling gives up a down and time, which only helps a team that's ahead, or tied and settling for overtime.
+  if (marginFor(g, g.poss) >= 0) calls.push("kneel");
   if (g.ytg <= FG_MAX_YTG) calls.push("fg");
   if (g.ytg >= PUNT_MIN_YTG) calls.push("punt");
   return calls;
@@ -163,7 +174,7 @@ export function compression(ytg: number): number {
   return ytg >= RED_ZONE ? 1 : 0.6 + (0.4 * Math.max(0, ytg - 1)) / (RED_ZONE - 1);
 }
 
-type PassCall = "pass-sideline" | "pass-middle" | "pass-deep";
+export type PassCall = "pass-sideline" | "pass-middle" | "pass-deep" | "pass-play-action" | "pass-screen";
 
 interface PassOdds {
   readonly sack: number;
@@ -187,11 +198,20 @@ export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, Pass
     "pass-sideline": { sack: 0.06, interception: 0.025, complete: 0.52, minYards: 4, extraYards: 6, outOfBounds: 0.7 },
     "pass-middle": { sack: 0.06, interception: 0.03, complete: 0.6, minYards: 4, extraYards: 7, outOfBounds: 0.08 },
     "pass-deep": { sack: 0.08, interception: 0.05, complete: 0.35, minYards: 20, extraYards: 12, outOfBounds: 0.25 },
+    // A run fake pulls the linebackers up and opens the intermediate field, but the drop takes longer.
+    "pass-play-action": { sack: 0.07, interception: 0.03, complete: 0.6, minYards: 5, extraYards: 8, outOfBounds: 0.15 },
+    // A quick throw behind blockers: rarely sacked or picked, but often stopped short or behind the line,
+    // with the occasional big gain (about 5 yards a catch).
+    "pass-screen": { sack: 0.02, interception: 0.015, complete: 0.8, minYards: -2, extraYards: 7, outOfBounds: 0.12 },
   },
   prevent: {
     "pass-sideline": { sack: 0.04, interception: 0.025, complete: 0.55, minYards: 4, extraYards: 5, outOfBounds: 0.7 },
     "pass-middle": { sack: 0.04, interception: 0.025, complete: 0.68, minYards: 4, extraYards: 5, outOfBounds: 0.08 },
     "pass-deep": { sack: 0.06, interception: 0.08, complete: 0.2, minYards: 20, extraYards: 10, outOfBounds: 0.25 },
+    // A defense sitting back in pass coverage doesn't bite on the fake.
+    "pass-play-action": { sack: 0.05, interception: 0.04, complete: 0.55, minYards: 5, extraYards: 7, outOfBounds: 0.15 },
+    // Soft coverage leaves room underneath: screens complete easily and run a little farther.
+    "pass-screen": { sack: 0.015, interception: 0.015, complete: 0.85, minYards: -1, extraYards: 7, outOfBounds: 0.12 },
   },
 });
 
@@ -238,13 +258,24 @@ interface RunShape {
  * Runs by field position. Inside the 5 the defense packs the line: short gains, no breakaways. From
  * there runs blend back to the open-field shape by the 12.
  */
-export function runShape(coverage: Coverage, ytg: number): RunShape {
+export function runShape(coverage: Coverage, ytg: number, shortYardage: number | null = null): RunShape {
   const open: RunShape = { mean: RUN_MEAN[coverage], sd: 3.2, breakaway: 0.1 };
   if (ytg <= 5) return { mean: 0.7 + 0.3 * ytg, sd: 2.2, breakaway: 0 };
   const t = Math.min(1, (ytg - 5) / 7);
   const lerp = (goalLine: number, field: number) => goalLine + (field - goalLine) * t;
-  return { mean: lerp(2.2, open.mean), sd: lerp(2.2, open.sd), breakaway: lerp(0, open.breakaway) };
+  const shape = { mean: lerp(2.2, open.mean), sd: lerp(2.2, open.sd), breakaway: lerp(0, open.breakaway) };
+  if (shortYardage === null) return shape;
+  // On 3rd or 4th and short, the defense loads the box too: about 2 of 3 runs convert on 1 yard to go,
+  // 3 in 5 on 2, and half on 3, close to NFL rates.
+  return {
+    mean: Math.min(shape.mean, 0.9 + 0.6 * shortYardage),
+    sd: Math.min(shape.sd, 2.4),
+    breakaway: Math.min(shape.breakaway, 0.04),
+  };
 }
+
+/** Yards to go when it's 3rd or 4th and short (3 or fewer), when defenses sell out against the run. */
+export const shortYardageFor = (g: GameState): number | null => (g.down >= 3 && g.toGo <= 3 ? g.toGo : null);
 
 /** A last-play deep pass from this close is a heave into the end zone rather than a normal deep throw. */
 export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12 });
@@ -263,7 +294,7 @@ function rollHailMary(ytg: number, r: Rng): PlayOutcome {
   return { ...base, yards: 0, incomplete: true };
 }
 
-function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number): PlayOutcome {
+function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, shortYardage: number | null): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false };
   switch (call) {
     case "kneel":
@@ -272,7 +303,7 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number): Play
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
       if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
-      const shape = runShape(coverage, ytg);
+      const shape = runShape(coverage, ytg, shortYardage);
       let yards = Math.round(shape.mean + shape.sd * gauss(r));
       if (r() < shape.breakaway) yards += Math.round(6 + expo(r, 9));
       yards = Math.max(-6, yards);
@@ -280,11 +311,13 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number): Play
     }
     case "pass-sideline":
     case "pass-middle":
-    case "pass-deep": {
+    case "pass-deep":
+    case "pass-play-action":
+    case "pass-screen": {
       const odds = passOdds(coverage, call, ytg);
-      // A deep throw takes longer to develop, and a pick comes farther downfield.
+      // Deep throws and play-action take longer to develop; a deep pick comes farther downfield.
       const deep = call === "pass-deep";
-      const slow = deep ? 1 : 0;
+      const slow = deep || call === "pass-play-action" ? 1 : 0;
       const u = r();
       if (u < odds.sack) return { ...base, yards: deep ? -8 : -7, seconds: 5 + slow, sack: true };
       if (u < odds.sack + odds.interception) return { ...base, yards: deep ? 25 : 12, seconds: 5 + slow, turnover: "interception" };
@@ -448,7 +481,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   const play = forced ?? (call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
     ? rollHailMary(g.ytg, r)
-    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg));
+    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg, shortYardageFor(g)));
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 
@@ -530,6 +563,9 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     if (g.down <= 3 && t > cfg.spikeLineup + 1) return "spike";
     return "fg";
   }
+
+  // Need a touchdown, under 30 seconds, and the end zone within reach: throw at it.
+  if (m < -3 && t <= 30 && g.ytg <= 40 && !g.running) return "pass-deep";
 
   // Last play, or close to it, and a field goal won't do: take a shot at the end zone.
   if (t <= 12 && (m < -3 || g.ytg > 42)) return "pass-deep";
@@ -647,6 +683,15 @@ function scoreCalls(g: GameState, calls: readonly PlayCall[], n: number, cfg: Si
   return [{ call: "timeout", wp: timeoutWp }, ...scoredPlays];
 }
 
+/**
+ * Score every call but a timeout from a situation at the snap, as play-by-play data records it: the
+ * clock is where the snap happened, so no time runs off before it, and a timeout is no longer an option.
+ */
+export function evaluateCallsAtSnap(g: GameState, n = 1500, cfg: SimConfig = DEFAULT_SIM): CallValues {
+  const atSnap = { ...g, running: false };
+  return scoreCalls(atSnap, availableCalls(atSnap).filter((c) => c !== "timeout"), n, cfg);
+}
+
 /** Your win probability with a call that was scored. */
 export function wpOf(values: CallValues, call: PlayCall): number {
   const found = values.find((v) => v.call === call);
@@ -666,7 +711,9 @@ export const TIE = 0.005;
  * Among tied calls, prefer the one that spends the least: no timeout, no down, no risk. On 4th down,
  * a kick counts as less risky than going for it.
  */
-const TIE_ORDER: readonly PlayCall[] = ["kneel", "run", "punt", "fg", "pass-middle", "pass-sideline", "pass-deep", "spike", "timeout"];
+const TIE_ORDER: readonly PlayCall[] = [
+  "kneel", "run", "punt", "fg", "pass-screen", "pass-middle", "pass-sideline", "pass-play-action", "pass-deep", "spike", "timeout",
+];
 
 /** The best call and its win probability. */
 export function bestScored(values: CallValues): ScoredCall {
@@ -704,6 +751,11 @@ export interface Reason {
 }
 
 const reason = (text: string, section: GuideSection): Reason => ({ text, section });
+
+/** Why a call is the best one here, and the guide section that explains it. */
+export function bestCallReason(g: GameState, call: PlayCall, cfg: SimConfig = DEFAULT_SIM): Reason {
+  return whyBest(g, call, cfg);
+}
 
 function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
   const m = marginFor(g, g.poss);
@@ -745,6 +797,19 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
       if (g.ytg <= RED_ZONE)
         return reason(`From the ${g.ytg} there's no deep field: a deep pass is a throw into the end zone, and it scores about ${pct(passOdds("normal", "pass-deep", g.ytg).complete)} of the time.`, "red-zone");
       return reason(`You need a big play: ${g.ytg} yards with ${formatClock(g.clock)} left is too far to go in small chunks. A deep pass completes about ${pct(passOdds(coverageFor(g, g.clock), "pass-deep", g.ytg).complete)} of the time, for 20+ yards.`, coverageFor(g, g.clock) === "prevent" ? "prevent-defense" : "play-model");
+    case "pass-play-action": {
+      const odds = passOdds(coverageFor(g, g.clock), "pass-play-action", g.ytg);
+      return reason(`A run fake pulls the linebackers up and opens the middle of the field: play-action completes about ${pct(odds.complete)} of the time here, for ${odds.minYards}+ yards.`, coverageFor(g, g.clock) === "prevent" ? "prevent-defense" : "play-model");
+    }
+    case "pass-screen": {
+      const coverage = coverageFor(g, g.clock);
+      return reason(
+        coverage === "prevent"
+          ? `They're playing soft, so a screen gets the ball out fast into open space: it completes about ${pct(PASS_ODDS.prevent["pass-screen"].complete)} of the time and is almost never sacked or picked off.`
+          : `A screen is the safest throw: it completes about ${pct(passOdds(coverage, "pass-screen", g.ytg).complete)} of the time and is almost never sacked or picked off, for steady yards.`,
+        coverage === "prevent" ? "prevent-defense" : "play-model",
+      );
+    }
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
@@ -769,7 +834,7 @@ function whyNot(g: GameState, call: PlayCall): Reason | null {
       ? reason(`They're ahead late and playing prevent, with safeties deep: a deep pass completes only about ${pct(odds.complete)} of the time and is picked off about ${pct(odds.interception)}. Shorter throws were the better bet.`, "prevent-defense")
       : reason(`A deep pass completes only about ${pct(odds.complete)} of the time and risks a sack or an interception; shorter throws were the better bet here.`, "play-model");
   }
-  if ((call === "pass-middle" || call === "pass-sideline" || call === "pass-deep") && m > 0)
+  if ((call === "pass-middle" || call === "pass-sideline" || call === "pass-deep" || call === "pass-play-action" || call === "pass-screen") && m > 0)
     return reason("A pass risks an incompletion that stops the clock for them, and an interception.", "running-out-the-clock");
   if (call === "fg" && fgPlay(g) && g.down < 4 && g.clock > 20)
     return reason("Kicking now leaves them time to answer. Drain the clock first.", "field-goal-endgame");

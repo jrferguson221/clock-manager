@@ -1,0 +1,486 @@
+{
+ "season": 2026,
+ "week": 4,
+ "generatedAt": "2026-11-04T23:42:32.965Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 16,
+ "evaluated": 194,
+ "agreement": {
+  "plays": 194,
+  "meanAbsDiff": 0.04895502780449555,
+  "within10": 0.8917525773195877
+ },
+ "worst": [
+  {
+   "id": "2026_04_KC_LV-3687",
+   "gameId": "2026_04_KC_LV",
+   "offense": "LV",
+   "defense": "KC",
+   "home": "LV",
+   "away": "KC",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 313,
+    "running": true,
+    "down": 4,
+    "toGo": 2,
+    "ytg": 30,
+    "margin": -1,
+    "timeouts": 2,
+    "oppTimeouts": 3
+   },
+   "snapClock": 298,
+   "description": "(4:58) 14-M.Gay 48 yard field goal is GOOD, Center-47-A.Ward, Holder-6-A.Cole.",
+   "call": "fg",
+   "wpCall": 0.404,
+   "best": "pass-middle",
+   "wpBest": 0.508,
+   "cost": 0.10399999999999998,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.508
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5006666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.49766666666666665
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.467
+    },
+    {
+     "call": "timeout",
+     "wp": 0.4656666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.45666666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.446
+    },
+    {
+     "call": "fg",
+     "wp": 0.404
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.54519534111023,
+   "nflverseWpa": 0.0708056688308716,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_04_ARI_NYG-4019",
+   "gameId": "2026_04_ARI_NYG",
+   "offense": "NYG",
+   "defense": "ARI",
+   "home": "NYG",
+   "away": "ARI",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 136,
+    "running": false,
+    "down": 4,
+    "toGo": 5,
+    "ytg": 34,
+    "margin": 3,
+    "timeouts": 3,
+    "oppTimeouts": 1
+   },
+   "snapClock": 136,
+   "description": "(2:16) 34-D.Zvada 52 yard field goal is GOOD, Center-58-B.Mann, Holder-15-J.Stout.",
+   "call": "fg",
+   "wpCall": 0.787,
+   "best": "pass-play-action",
+   "wpBest": 0.8723333333333333,
+   "cost": 0.08533333333333326,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.8723333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.8613333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.8316666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.8293333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.8083333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.8006666666666666
+    },
+    {
+     "call": "fg",
+     "wp": 0.787
+    },
+    {
+     "call": "kneel",
+     "wp": 0.699
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.8499755859375,
+   "nflverseWpa": -0.0217184126377106,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_04_KC_LV-3768",
+   "gameId": "2026_04_KC_LV",
+   "offense": "KC",
+   "defense": "LV",
+   "home": "LV",
+   "away": "KC",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 233,
+    "running": true,
+    "down": 3,
+    "toGo": 5,
+    "ytg": 60,
+    "margin": -2,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 215,
+   "description": "(3:35) (Shotgun) 15-P.Mahomes pass deep left to 2-T.Thornton to LV 5 for 55 yards (31-T.Stukes). KC-2-T.Thornton was injured during the play. PENALTY on LV-7-Q.Walker, Unnecessary Roughness, 3 yards, enforced at LV 5.",
+   "call": "pass-deep",
+   "wpCall": 0.6006666666666667,
+   "best": "pass-middle",
+   "wpBest": 0.6006666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.6006666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.5923333333333334
+    },
+    {
+     "call": "timeout",
+     "wp": 0.585
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5803333333333334
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.58
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5706666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.5013333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.49533333333333335
+    },
+    {
+     "call": "punt",
+     "wp": 0.308
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.332407832145691,
+   "nflverseWpa": 0.349218964576721,
+   "lowConfidence": true
+  },
+  {
+   "id": "2026_04_DAL_HOU-4336",
+   "gameId": "2026_04_DAL_HOU",
+   "offense": "DAL",
+   "defense": "HOU",
+   "home": "HOU",
+   "away": "DAL",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 43,
+    "running": false,
+    "down": 2,
+    "toGo": 10,
+    "ytg": 12,
+    "margin": -3,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 43,
+   "description": "(:43) (Shotgun) 4-D.Prescott pass short middle to 88-C.Lamb for 12 yards, TOUCHDOWN.",
+   "call": "pass-middle",
+   "wpCall": 0.6173333333333333,
+   "best": "pass-play-action",
+   "wpBest": 0.6173333333333333,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.6173333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.596
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5853333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.5766666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.573
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.571
+    },
+    {
+     "call": "fg",
+     "wp": 0.5706666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.5093333333333333
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 50% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.554354250431061,
+   "nflverseWpa": 0.293420968991094,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_04_NE_BUF-4424",
+   "gameId": "2026_04_NE_BUF",
+   "offense": "BUF",
+   "defense": "NE",
+   "home": "BUF",
+   "away": "NE",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 74,
+    "running": false,
+    "down": 2,
+    "toGo": 6,
+    "ytg": 60,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 74,
+   "description": "(1:14) (Shotgun) 17-J.Allen pass deep left intended for 5-J.Palmer INTERCEPTED by 4-C.Woodson at NE 19. 4-C.Woodson to NE 19 for no gain (5-J.Palmer).",
+   "call": "pass-deep",
+   "wpCall": 0.30333333333333334,
+   "best": "run",
+   "wpBest": 0.31666666666666665,
+   "cost": 0.013333333333333308,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.31666666666666665
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.30333333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.2936666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.29133333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.29133333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.27
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.26766666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0.059666666666666666
+    }
+   ],
+   "reason": {
+    "text": "A run gains steady yards with little risk, and you have time to spare.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.349396169185638,
+   "nflverseWpa": -0.269800066947937,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_04_JAX_CIN-4490",
+   "gameId": "2026_04_JAX_CIN",
+   "offense": "CIN",
+   "defense": "JAX",
+   "home": "CIN",
+   "away": "JAX",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 56,
+    "running": false,
+    "down": 4,
+    "toGo": 10,
+    "ytg": 21,
+    "margin": -5,
+    "timeouts": 0,
+    "oppTimeouts": 2
+   },
+   "snapClock": 56,
+   "description": "(:56) (Shotgun) 9-J.Burrow pass short middle to 30-C.Brown to JAX 12 for 9 yards (25-R.Lane).",
+   "call": "pass-middle",
+   "wpCall": 0.14466666666666667,
+   "best": "pass-play-action",
+   "wpBest": 0.14466666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.14466666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.13866666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.102
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.09733333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.094
+    },
+    {
+     "call": "run",
+     "wp": 0.06066666666666667
+    },
+    {
+     "call": "fg",
+     "wp": 0.048
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 55% of the time here, for 5+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.29797238111496,
+   "nflverseWpa": -0.264269053936005,
+   "lowConfidence": true
+  },
+  {
+   "id": "2026_04_DAL_HOU-3957",
+   "gameId": "2026_04_DAL_HOU",
+   "offense": "HOU",
+   "defense": "DAL",
+   "home": "HOU",
+   "away": "DAL",
+   "date": "2026-10-04",
+   "situation": {
+    "clock": 154,
+    "running": false,
+    "down": 3,
+    "toGo": 14,
+    "ytg": 27,
+    "margin": -4,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 154,
+   "description": "(2:34) (Shotgun) 7-C.Stroud pass short right to 86-D.Schultz to DAL 25 for 2 yards. Lateral to 32-D.Montgomery pushed ob at DAL 6 for 19 yards (53-D.Winters; 23-A.Speed).",
+   "call": "pass-sideline",
+   "wpCall": 0.275,
+   "best": "pass-play-action",
+   "wpBest": 0.275,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.275
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.26566666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.23633333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.23266666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.22933333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.22933333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.17866666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.12833333333333333
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 55% of the time here, for 5+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.378484100103378,
+   "nflverseWpa": 0.239570587873459,
+   "lowConfidence": false
+  }
+ ]
+}

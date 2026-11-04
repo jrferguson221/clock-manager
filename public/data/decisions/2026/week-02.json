@@ -1,0 +1,561 @@
+{
+ "season": 2026,
+ "week": 2,
+ "generatedAt": "2026-11-04T23:42:32.965Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 16,
+ "evaluated": 125,
+ "agreement": {
+  "plays": 125,
+  "meanAbsDiff": 0.05779502791539829,
+  "within10": 0.768
+ },
+ "worst": [
+  {
+   "id": "2026_02_IND_KC-3768",
+   "gameId": "2026_02_IND_KC",
+   "offense": "KC",
+   "defense": "IND",
+   "home": "KC",
+   "away": "IND",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 202,
+    "running": false,
+    "down": 4,
+    "toGo": 7,
+    "ytg": 58,
+    "margin": 0,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 202,
+   "description": "(3:22) 14-M.Araiza punts 40 yards to IND 18, Center-41-J.Winchester, out of bounds.",
+   "call": "punt",
+   "wpCall": 0.41433333333333333,
+   "best": "pass-play-action",
+   "wpBest": 0.534,
+   "cost": 0.1196666666666667,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.534
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.495
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.45666666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.441
+    },
+    {
+     "call": "punt",
+     "wp": 0.41433333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.38466666666666666
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.36433333333333334
+    },
+    {
+     "call": "kneel",
+     "wp": 0.24966666666666668
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.464575409889221,
+   "nflverseWpa": 0.0747403800487518,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_IND_KC-3975",
+   "gameId": "2026_02_IND_KC",
+   "offense": "IND",
+   "defense": "KC",
+   "home": "KC",
+   "away": "IND",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 34,
+    "running": false,
+    "down": 4,
+    "toGo": 4,
+    "ytg": 51,
+    "margin": 0,
+    "timeouts": 1,
+    "oppTimeouts": 3
+   },
+   "snapClock": 34,
+   "description": "(:34) 8-R.Sanchez punts 41 yards to KC 10, Center-46-L.Rhodes. 81-N.Remigio to KC 16 for 6 yards (80-D.Burks; 29-C.Taylor-Britt).",
+   "call": "punt",
+   "wpCall": 0.5,
+   "best": "pass-play-action",
+   "wpBest": 0.5943333333333334,
+   "cost": 0.09433333333333338,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.5943333333333334
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.577
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.541
+    },
+    {
+     "call": "run",
+     "wp": 0.5306666666666666
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.5113333333333333
+    },
+    {
+     "call": "punt",
+     "wp": 0.5
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.45166666666666666
+    },
+    {
+     "call": "kneel",
+     "wp": 0.23233333333333334
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.482530206441879,
+   "nflverseWpa": -0.155937284231186,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_GB_NYJ-4039",
+   "gameId": "2026_02_GB_NYJ",
+   "offense": "NYJ",
+   "defense": "GB",
+   "home": "NYJ",
+   "away": "GB",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 328,
+    "running": true,
+    "down": 4,
+    "toGo": 3,
+    "ytg": 69,
+    "margin": 3,
+    "timeouts": 2,
+    "oppTimeouts": 3
+   },
+   "snapClock": 289,
+   "description": "(4:49) 14-A.McNamara punts 51 yards to GB 18, Center-42-T.Hennessy. 23-S.Moore pushed ob at NYJ 19 for 63 yards (82-A.Smith).",
+   "call": "punt",
+   "wpCall": 0.609,
+   "best": "pass-middle",
+   "wpBest": 0.701,
+   "cost": 0.09199999999999997,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.701
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.6996666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.6956666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.6823333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6603333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.6416666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.637
+    },
+    {
+     "call": "punt",
+     "wp": 0.609
+    },
+    {
+     "call": "kneel",
+     "wp": 0.48966666666666664
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.699349820613861,
+   "nflverseWpa": -0.261419653892517,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_02_PHI_TEN-4066",
+   "gameId": "2026_02_PHI_TEN",
+   "offense": "PHI",
+   "defense": "TEN",
+   "home": "TEN",
+   "away": "PHI",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 14,
+    "running": false,
+    "down": 1,
+    "toGo": 3,
+    "ytg": 3,
+    "margin": -3,
+    "timeouts": 0,
+    "oppTimeouts": 1
+   },
+   "snapClock": 14,
+   "description": "(:14) (Shotgun) 1-J.Hurts pass short middle to 80-D.Cooper for 3 yards, TOUCHDOWN.",
+   "call": "pass-middle",
+   "wpCall": 0.642,
+   "best": "pass-middle",
+   "wpBest": 0.642,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.642
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.6396666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.614
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.507
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.503
+    },
+    {
+     "call": "spike",
+     "wp": 0.49566666666666664
+    },
+    {
+     "call": "fg",
+     "wp": 0.49566666666666664
+    },
+    {
+     "call": "run",
+     "wp": 0.34933333333333333
+    }
+   ],
+   "reason": {
+    "text": "Coverage tightens in the red zone, but a quick throw over the middle still completes about 39% of the time from the 3.",
+    "section": "red-zone"
+   },
+   "nflverseWp": 0.539876997470856,
+   "nflverseWpa": 0.3717405660292,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_LV_LAC-3781",
+   "gameId": "2026_02_LV_LAC",
+   "offense": "LAC",
+   "defense": "LV",
+   "home": "LAC",
+   "away": "LV",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 232,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 48,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 232,
+   "description": "(3:52) (Shotgun) 8-O.Hampton up the middle to LV 46 for 2 yards (17-N.Dean). FUMBLES (17-N.Dean), RECOVERED by LV-11-J.Chinn at LV 41. 11-J.Chinn to LAC 16 for 43 yards (10-J.Herbert).",
+   "call": "run",
+   "wpCall": 0.4493333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.4726666666666667,
+   "cost": 0.023333333333333373,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.4726666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.4656666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.457
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.4533333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.4493333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.41533333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.41433333333333333
+    },
+    {
+     "call": "punt",
+     "wp": 0.22333333333333333
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.4919154047966,
+   "nflverseWpa": -0.354215681552887,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_CLE_TB-4242",
+   "gameId": "2026_02_CLE_TB",
+   "offense": "TB",
+   "defense": "CLE",
+   "home": "TB",
+   "away": "CLE",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 22,
+    "running": false,
+    "down": 4,
+    "toGo": 11,
+    "ytg": 20,
+    "margin": -4,
+    "timeouts": 1,
+    "oppTimeouts": 0
+   },
+   "snapClock": 22,
+   "description": "(:22) (Shotgun) 6-B.Mayfield pass incomplete deep middle to 2-E.Egbuka.",
+   "call": "pass-deep",
+   "wpCall": 0.25266666666666665,
+   "best": "pass-deep",
+   "wpBest": 0.25266666666666665,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.25266666666666665
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.17666666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.12933333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.08966666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.07266666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.04933333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.014
+    }
+   ],
+   "reason": {
+    "text": "From the 20 there's no deep field: a deep pass is a throw into the end zone, and it scores about 25% of the time.",
+    "section": "red-zone"
+   },
+   "nflverseWp": 0.298814326524735,
+   "nflverseWpa": -0.263368517160416,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_GB_NYJ-4039",
+   "gameId": "2026_02_GB_NYJ",
+   "offense": "NYJ",
+   "defense": "GB",
+   "home": "NYJ",
+   "away": "GB",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 328,
+    "running": true,
+    "down": 4,
+    "toGo": 3,
+    "ytg": 69,
+    "margin": 3,
+    "timeouts": 2,
+    "oppTimeouts": 3
+   },
+   "snapClock": 289,
+   "description": "(4:49) 14-A.McNamara punts 51 yards to GB 18, Center-42-T.Hennessy. 23-S.Moore pushed ob at NYJ 19 for 63 yards (82-A.Smith).",
+   "call": "punt",
+   "wpCall": 0.609,
+   "best": "pass-middle",
+   "wpBest": 0.701,
+   "cost": 0.09199999999999997,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.701
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.6996666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.6956666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.6823333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6603333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.6416666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.637
+    },
+    {
+     "call": "punt",
+     "wp": 0.609
+    },
+    {
+     "call": "kneel",
+     "wp": 0.48966666666666664
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.699349820613861,
+   "nflverseWpa": -0.261419653892517,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_02_GB_NYJ-4298",
+   "gameId": "2026_02_GB_NYJ",
+   "offense": "NYJ",
+   "defense": "GB",
+   "home": "NYJ",
+   "away": "GB",
+   "date": "2026-09-20",
+   "situation": {
+    "clock": 98,
+    "running": true,
+    "down": 4,
+    "toGo": 1,
+    "ytg": 50,
+    "margin": 0,
+    "timeouts": 2,
+    "oppTimeouts": 3
+   },
+   "snapClock": 80,
+   "description": "(1:20) (Shotgun) 0-B.Allen right guard to 50 for no gain (90-L.Van Ness).",
+   "call": "run",
+   "wpCall": 0.5976666666666667,
+   "best": "run",
+   "wpBest": 0.5976666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.5976666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5976666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5916666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.578
+    },
+    {
+     "call": "punt",
+     "wp": 0.5636666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5483333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5466666666666666
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.501
+    },
+    {
+     "call": "kneel",
+     "wp": 0.231
+    }
+   ],
+   "reason": {
+    "text": "On 4th & 1, a run is the surest way to move the chains.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.600710988044739,
+   "nflverseWpa": -0.247740685939789,
+   "lowConfidence": false
+  }
+ ]
+}

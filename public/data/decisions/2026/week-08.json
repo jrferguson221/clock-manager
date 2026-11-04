@@ -1,0 +1,486 @@
+{
+ "season": 2026,
+ "week": 8,
+ "generatedAt": "2026-11-04T23:42:32.965Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 14,
+ "evaluated": 107,
+ "agreement": {
+  "plays": 107,
+  "meanAbsDiff": 0.0475356719707519,
+  "within10": 0.8785046728971962
+ },
+ "worst": [
+  {
+   "id": "2026_08_MIN_DET-3887",
+   "gameId": "2026_08_MIN_DET",
+   "offense": "MIN",
+   "defense": "DET",
+   "home": "DET",
+   "away": "MIN",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 181,
+    "running": false,
+    "down": 4,
+    "toGo": 5,
+    "ytg": 67,
+    "margin": -4,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 181,
+   "description": "(3:01) 19-B.Thorson punts 50 yards to DET 17, Center-42-A.DePaola, fair catch by 86-D.Carter.",
+   "call": "punt",
+   "wpCall": 0.088,
+   "best": "pass-middle",
+   "wpBest": 0.226,
+   "cost": 0.138,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.226
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.202
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.19666666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.17433333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.17333333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.12966666666666668
+    },
+    {
+     "call": "punt",
+     "wp": 0.088
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.178760901093483,
+   "nflverseWpa": 0.00120739638805389,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_KC_DEN-4443",
+   "gameId": "2026_08_KC_DEN",
+   "offense": "KC",
+   "defense": "DEN",
+   "home": "DEN",
+   "away": "KC",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 53,
+    "running": true,
+    "down": 1,
+    "toGo": 4,
+    "ytg": 4,
+    "margin": -4,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 35,
+   "description": "(:35) 9-K.Walker right end to DEN 1 for 3 yards (2-P.Surtain).",
+   "call": "run",
+   "wpCall": 0.5916666666666667,
+   "best": "timeout",
+   "wpBest": 0.723,
+   "cost": 0.1313333333333333,
+   "values": [
+    {
+     "call": "timeout",
+     "wp": 0.723
+    },
+    {
+     "call": "spike",
+     "wp": 0.6366666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.623
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.6206666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.5916666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5913333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.572
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.48233333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.05
+    }
+   ],
+   "reason": {
+    "text": "The clock was running with 0:53 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
+    "section": "timeouts"
+   },
+   "nflverseWp": 0.621221661567688,
+   "nflverseWpa": -0.0772068500518799,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_08_ARI_DAL-4667",
+   "gameId": "2026_08_ARI_DAL",
+   "offense": "ARI",
+   "defense": "DAL",
+   "home": "DAL",
+   "away": "ARI",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 10,
+    "running": false,
+    "down": 2,
+    "toGo": 10,
+    "ytg": 13,
+    "margin": -6,
+    "timeouts": 0,
+    "oppTimeouts": 1
+   },
+   "snapClock": 10,
+   "description": "(:10) (Shotgun) 15-G.Minshew pass short middle to 14-Mi.Wilson for 13 yards, TOUCHDOWN.",
+   "call": "pass-middle",
+   "wpCall": 0.3416666666666667,
+   "best": "pass-deep",
+   "wpBest": 0.3416666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.3416666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.3416666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.2776666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.24966666666666668
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.22866666666666666
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.157
+    },
+    {
+     "call": "run",
+     "wp": 0.06933333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.004666666666666667
+    }
+   ],
+   "reason": {
+    "text": "With 0:10 left and 13 yards to go, there's time for one shot: throw it to the end zone. A heave from here scores about 22% of the time.",
+    "section": "hail-mary"
+   },
+   "nflverseWp": 0.2690449655056,
+   "nflverseWpa": 0.386889511025323,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_KC_DEN-4572",
+   "gameId": "2026_08_KC_DEN",
+   "offense": "KC",
+   "defense": "DEN",
+   "home": "DEN",
+   "away": "KC",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 4,
+    "running": false,
+    "down": 4,
+    "toGo": 6,
+    "ytg": 6,
+    "margin": -4,
+    "timeouts": 0,
+    "oppTimeouts": 0
+   },
+   "snapClock": 4,
+   "description": "(:04) (Shotgun) 15-P.Mahomes sacked at DEN 12 for -6 yards (97-M.Roach).",
+   "call": "pass-middle",
+   "wpCall": 0.4106666666666667,
+   "best": "pass-play-action",
+   "wpBest": 0.4106666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.4106666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.36
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.30133333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.21866666666666668
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.18933333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.10266666666666667
+    },
+    {
+     "call": "fg",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 42% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.375307708978653,
+   "nflverseWpa": -0.375307708978653,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_KC_DEN-4235",
+   "gameId": "2026_08_KC_DEN",
+   "offense": "DEN",
+   "defense": "KC",
+   "home": "DEN",
+   "away": "KC",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 151,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 56,
+    "margin": -3,
+    "timeouts": 2,
+    "oppTimeouts": 2
+   },
+   "snapClock": 151,
+   "description": "(2:31) (Shotgun) 10-B.Nix pass short right to 20-J.Coleman to KC 5 for 51 yards (20-N.Williams; 32-N.Bolton).",
+   "call": "pass-sideline",
+   "wpCall": 0.394,
+   "best": "pass-middle",
+   "wpBest": 0.394,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.394
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.38966666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.38233333333333336
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.37366666666666665
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.37266666666666665
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.354
+    },
+    {
+     "call": "spike",
+     "wp": 0.3516666666666667
+    },
+    {
+     "call": "punt",
+     "wp": 0.124
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.423302352428436,
+   "nflverseWpa": 0.236690402030945,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_KC_DEN-4352",
+   "gameId": "2026_08_KC_DEN",
+   "offense": "KC",
+   "defense": "DEN",
+   "home": "DEN",
+   "away": "KC",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 110,
+    "running": true,
+    "down": 2,
+    "toGo": 4,
+    "ytg": 50,
+    "margin": -4,
+    "timeouts": 2,
+    "oppTimeouts": 2
+   },
+   "snapClock": 92,
+   "description": "(1:32) (No Huddle, Shotgun) 15-P.Mahomes pass short right to 87-T.Kelce to DEN 18 for 32 yards (26-D.Key).",
+   "call": "pass-sideline",
+   "wpCall": 0.30666666666666664,
+   "best": "pass-middle",
+   "wpBest": 0.3016666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-sideline",
+     "wp": 0.30666666666666664
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.3016666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.29933333333333334
+    },
+    {
+     "call": "timeout",
+     "wp": 0.2916666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.29133333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.29
+    },
+    {
+     "call": "spike",
+     "wp": 0.283
+    },
+    {
+     "call": "run",
+     "wp": 0.282
+    },
+    {
+     "call": "punt",
+     "wp": 0.054
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.283133119344711,
+   "nflverseWpa": 0.233382910490036,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_LV_NYJ-4182",
+   "gameId": "2026_08_LV_NYJ",
+   "offense": "NYJ",
+   "defense": "LV",
+   "home": "NYJ",
+   "away": "LV",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 14,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 35,
+    "margin": -5,
+    "timeouts": 0,
+    "oppTimeouts": 1
+   },
+   "snapClock": 14,
+   "description": "(:14) (Shotgun) 7-G.Smith pass deep left intended for 5-G.Wilson INTERCEPTED by 11-J.Chinn [98-M.Crosby] at LV -6. Touchback.",
+   "call": "pass-deep",
+   "wpCall": 0.22266666666666668,
+   "best": "pass-sideline",
+   "wpBest": 0.22266666666666668,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-sideline",
+     "wp": 0.22266666666666668
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.22066666666666668
+    },
+    {
+     "call": "spike",
+     "wp": 0.218
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.12266666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.086
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.066
+    },
+    {
+     "call": "run",
+     "wp": 0.026
+    },
+    {
+     "call": "fg",
+     "wp": 0.002
+    }
+   ],
+   "reason": {
+    "text": "A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.",
+    "section": "clock-rules"
+   },
+   "nflverseWp": 0.206168875098228,
+   "nflverseWpa": -0.18000839650631,
+   "lowConfidence": false
+  }
+ ]
+}

@@ -10,6 +10,7 @@ const MODES = [
   { to: "/trailing", short: "Trailing", label: "Trailing: drive to score" },
   { to: "/best-call", short: "Best call", label: "Best call" },
   { to: "/scenarios", short: "Players", label: "Player decisions" },
+  { to: "/decisions", short: "Week", label: "Decisions of the week" },
   { to: "/guide", short: "Guide", label: "Strategy guide" },
 ] as const;
 

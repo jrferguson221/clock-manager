@@ -1,0 +1,486 @@
+{
+ "season": 2026,
+ "week": 3,
+ "generatedAt": "2026-11-04T23:42:32.965Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 16,
+ "evaluated": 203,
+ "agreement": {
+  "plays": 203,
+  "meanAbsDiff": 0.047831044625790624,
+  "within10": 0.8669950738916257
+ },
+ "worst": [
+  {
+   "id": "2026_03_SEA_WAS-4575",
+   "gameId": "2026_03_SEA_WAS",
+   "offense": "WAS",
+   "defense": "SEA",
+   "home": "WAS",
+   "away": "SEA",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 115,
+    "running": false,
+    "down": 3,
+    "toGo": 9,
+    "ytg": 66,
+    "margin": 2,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 115,
+   "description": "(1:55) (Shotgun) 1-R.White right end to SEA 47 for 19 yards (29-J.Jobe).",
+   "call": "run",
+   "wpCall": 0.6153333333333333,
+   "best": "pass-play-action",
+   "wpBest": 0.7113333333333334,
+   "cost": 0.09600000000000009,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.7113333333333334
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.6793333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.6786666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6333333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.6186666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.6153333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.5376666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0.5133333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.5126666666666667
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.848233461380005,
+   "nflverseWpa": 0.0854945778846741,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_03_BAL_DAL-4186",
+   "gameId": "2026_03_BAL_DAL",
+   "offense": "BAL",
+   "defense": "DAL",
+   "home": "DAL",
+   "away": "BAL",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 94,
+    "running": false,
+    "down": 3,
+    "toGo": 2,
+    "ytg": 2,
+    "margin": -4,
+    "timeouts": 2,
+    "oppTimeouts": 1
+   },
+   "snapClock": 94,
+   "description": "(1:34) 8-L.Jackson pass short middle to 88-M.Hibner for 2 yards, TOUCHDOWN.",
+   "call": "pass-play-action",
+   "wpCall": 0.49933333333333335,
+   "best": "run",
+   "wpBest": 0.564,
+   "cost": 0.0646666666666666,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.564
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.49933333333333335
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.499
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.49533333333333335
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.47333333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.39366666666666666
+    },
+    {
+     "call": "spike",
+     "wp": 0.38
+    },
+    {
+     "call": "fg",
+     "wp": 0.10833333333333334
+    }
+   ],
+   "reason": {
+    "text": "At the 2, the defense packs the line, but a run still scores about 46% of the time from here, with little risk of a turnover.",
+    "section": "red-zone"
+   },
+   "nflverseWp": 0.538224041461945,
+   "nflverseWpa": 0.139600162027928,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_03_TEN_NYG-4070",
+   "gameId": "2026_03_TEN_NYG",
+   "offense": "TEN",
+   "defense": "NYG",
+   "home": "NYG",
+   "away": "TEN",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 24,
+    "running": false,
+    "down": 1,
+    "toGo": 7,
+    "ytg": 7,
+    "margin": -5,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 24,
+   "description": "(:24) (Shotgun) 1-C.Ward pass short left intended for 5-E.Ayomanor INTERCEPTED by 8-J.Holland at NYG -4. Touchback. PENALTY on NYG-3-A.Carter, Unsportsmanlike Conduct, 10 yards, enforced at NYG 20.",
+   "call": "pass-sideline",
+   "wpCall": 0.6013333333333334,
+   "best": "pass-play-action",
+   "wpBest": 0.6013333333333334,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.6013333333333334
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.582
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5573333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5173333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.49733333333333335
+    },
+    {
+     "call": "run",
+     "wp": 0.454
+    },
+    {
+     "call": "spike",
+     "wp": 0.42133333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.023333333333333334
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 44% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.490043163299561,
+   "nflverseWpa": -0.457454204559326,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_03_CIN_PIT-3908",
+   "gameId": "2026_03_CIN_PIT",
+   "offense": "CIN",
+   "defense": "PIT",
+   "home": "PIT",
+   "away": "CIN",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 53,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 38,
+    "margin": -3,
+    "timeouts": 1,
+    "oppTimeouts": 1
+   },
+   "snapClock": 53,
+   "description": "(:53) (Shotgun) 9-J.Burrow sacked at PIT 46 for -8 yards (99-D.Harmon). FUMBLES (99-D.Harmon) [99-D.Harmon], RECOVERED by PIT-69-S.Joseph at CIN 49.",
+   "call": "pass-play-action",
+   "wpCall": 0.4063333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.4036666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-sideline",
+     "wp": 0.4063333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.4036666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.403
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.3993333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.39766666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.3973333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.38466666666666666
+    },
+    {
+     "call": "fg",
+     "wp": 0.2613333333333333
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.451150149106979,
+   "nflverseWpa": -0.418641179800034,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_03_LA_DEN-5085",
+   "gameId": "2026_03_LA_DEN",
+   "offense": "LA",
+   "defense": "DEN",
+   "home": "DEN",
+   "away": "LA",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 2,
+    "running": false,
+    "down": 2,
+    "toGo": 15,
+    "ytg": 19,
+    "margin": -4,
+    "timeouts": 0,
+    "oppTimeouts": 1
+   },
+   "snapClock": 2,
+   "description": "(:02) (Shotgun) 9-M.Stafford pass deep right intended for 17-D.Adams INTERCEPTED by 9-T.Hufanga at DEN -1. Touchback.",
+   "call": "pass-sideline",
+   "wpCall": 0.21866666666666668,
+   "best": "pass-deep",
+   "wpBest": 0.21866666666666668,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.21866666666666668
+    },
+    {
+     "call": "spike",
+     "wp": 0.21866666666666668
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.10266666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.07466666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.04666666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.046
+    },
+    {
+     "call": "run",
+     "wp": 0.025333333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "With 0:02 left and 19 yards to go, there's time for one shot: throw it to the end zone. A heave from here scores about 22% of the time.",
+    "section": "hail-mary"
+   },
+   "nflverseWp": 0.369458675384522,
+   "nflverseWpa": -0.369458675384522,
+   "lowConfidence": true
+  },
+  {
+   "id": "2026_03_HOU_IND-3947",
+   "gameId": "2026_03_HOU_IND",
+   "offense": "IND",
+   "defense": "HOU",
+   "home": "IND",
+   "away": "HOU",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 21,
+    "running": false,
+    "down": 4,
+    "toGo": 1,
+    "ytg": 36,
+    "margin": -1,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 21,
+   "description": "(:21) 3-S.Shrader 53 yard field goal is GOOD, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
+   "call": "fg",
+   "wpCall": 0.6,
+   "best": "fg",
+   "wpBest": 0.6,
+   "cost": 0,
+   "values": [
+    {
+     "call": "fg",
+     "wp": 0.6
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.55
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.526
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.45866666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.44866666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.444
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.192
+    }
+   ],
+   "reason": {
+    "text": "A 53-yard try is good about 62% of the time, and it wins it.",
+    "section": "field-goal-endgame"
+   },
+   "nflverseWp": 0.459501296281815,
+   "nflverseWpa": 0.35943603515625,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_03_SEA_WAS-4262",
+   "gameId": "2026_03_SEA_WAS",
+   "offense": "SEA",
+   "defense": "WAS",
+   "home": "WAS",
+   "away": "SEA",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 249,
+    "running": false,
+    "down": 2,
+    "toGo": 15,
+    "ytg": 49,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 249,
+   "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
+   "call": "pass-play-action",
+   "wpCall": 0.366,
+   "best": "pass-play-action",
+   "wpBest": 0.366,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.366
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.36566666666666664
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.351
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.33666666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.32166666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.31566666666666665
+    },
+    {
+     "call": "spike",
+     "wp": 0.302
+    },
+    {
+     "call": "punt",
+     "wp": 0.22666666666666666
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "section": "play-model"
+   },
+   "nflverseWp": 0.341721117496491,
+   "nflverseWpa": -0.287682806280764,
+   "lowConfidence": false
+  }
+ ]
+}

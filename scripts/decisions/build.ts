@@ -1,0 +1,156 @@
+// Builds the "Decisions of the week" data: scores every late, close offensive decision in a season's
+// NFL play-by-play with the app's model, and writes one JSON file per finished week plus an index.
+//
+//   bun scripts/decisions/build.ts --season 2026                  download from nflverse and build every finished week
+//   bun scripts/decisions/build.ts --season 2026 --input pbp.csv.gz   use a local copy instead
+//
+// Play-by-play data: nflverse (https://github.com/nflverse/nflverse-data), CC-BY 4.0.
+
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@clock-manager/schemas";
+import { bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, ranked, snapDelay, wpOf } from "../../src/sim";
+import type { GameState } from "@clock-manager/schemas";
+import { parseCsv } from "./csv";
+import { completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
+
+export const SOURCE_PBP = "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0";
+export const SOURCE_FTN = "Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0";
+/** Games simulated per option. */
+const GAMES_PER_CALL = 1500;
+/** Beyond this gap between the app's win probability and nflverse's, a verdict is flagged as uncertain. */
+export const DISAGREEMENT = 0.15;
+const WORST_PER_WEEK = 10;
+/** Only calls that cost at least this much make the list: smaller gaps rest too much on model assumptions. */
+export const FLAG_THRESHOLD = 0.06;
+
+/** Every kind of pass. In the weekly lists they're judged together as one decision: "throw it". */
+const PASSES = new Set(["pass-sideline", "pass-middle", "pass-deep", "pass-play-action", "pass-screen"]);
+const NOTABLE_PER_WEEK = 5;
+
+/**
+ * Where to judge a decision from. With the clock stopped before the snap, it's the snap itself: every
+ * option snaps at the same clock. With it running, it's the end of the play before, so each option pays its
+ * own time to the snap: a spike's quick lineup, a hurry-up, a drained play clock, or a timeout's instant
+ * stop. Play-by-play gives the snap clock, so the decision clock is that plus the call's time to the snap.
+ */
+export function decisionPoint(c: Candidate): GameState {
+  if (c.kind === "timeout" || !c.state.running) return c.state;
+  return { ...c.state, clock: c.state.clock + snapDelay(c.state, c.call) };
+}
+
+/** Score one decision, or null if the model has no matching option (e.g. a field goal from beyond its range). */
+export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null {
+  const at = decisionPoint(c);
+  const values = at.running ? evaluateCalls(at, n) : evaluateCallsAtSnap(at, n);
+  if (!values.some((v) => v.call === c.call)) return null;
+  const best = bestScored(values);
+  // Which pass to throw (where it goes, play-action or a screen) depends on the coverage and the play
+  // design, which play-by-play can't show. So a pass is judged as one decision, "throw it", credited with
+  // the best kind of pass; the lists judge clock decisions: pass, run, kneel, spike, kick or timeout.
+  const wpCall = PASSES.has(c.call)
+    ? Math.max(...values.filter((v) => PASSES.has(v.call)).map((v) => v.wp))
+    : wpOf(values, c.call);
+  const lowConfidence = !c.clockKnown || (c.nflverseWp !== null && Math.abs(best.wp - c.nflverseWp) > DISAGREEMENT);
+  return {
+    id: c.id, gameId: c.gameId, offense: c.offense, defense: c.defense, home: c.home, away: c.away, date: c.date,
+    situation: {
+      clock: at.clock, running: at.running, down: at.down, toGo: at.toGo, ytg: at.ytg,
+      margin: at.margin, timeouts: at.timeouts.you, oppTimeouts: at.timeouts.opp,
+    },
+    snapClock: c.state.clock, description: c.description, call: c.call, wpCall, best: best.call, wpBest: best.wp,
+    cost: Math.max(0, best.wp - wpCall),
+    values: ranked(values).map((v) => ({ call: v.call, wp: v.wp })),
+    reason: bestCallReason(at, best.call),
+    nflverseWp: c.nflverseWp, nflverseWpa: c.nflverseWpa, lowConfidence,
+  };
+}
+
+/** A week's file from its scored decisions. */
+export function buildWeek(
+  season: number, week: number, decisions: readonly Decision[], games: number, generatedAt: string, source: string,
+): DecisionWeek {
+  const compared = decisions.flatMap((d) => (d.nflverseWp === null ? [] : [Math.abs(d.wpBest - d.nflverseWp)]));
+  const worst = decisions
+    .filter((d) => !d.lowConfidence && d.cost >= FLAG_THRESHOLD)
+    .sort((a, b) => b.cost - a.cost)
+    .slice(0, WORST_PER_WEEK);
+  const notable = decisions
+    .filter((d) => d.nflverseWpa !== null)
+    .sort((a, b) => Math.abs(b.nflverseWpa ?? 0) - Math.abs(a.nflverseWpa ?? 0))
+    .slice(0, NOTABLE_PER_WEEK);
+  return decisionWeekSchema.parse({
+    season, week, generatedAt, source, games, evaluated: decisions.length,
+    agreement: {
+      plays: compared.length,
+      meanAbsDiff: compared.length === 0 ? 0 : compared.reduce((s, x) => s + x, 0) / compared.length,
+      within10: compared.length === 0 ? 0 : compared.filter((x) => x <= 0.1).length / compared.length,
+    },
+    worst, notable,
+  });
+}
+
+/** FTN's charting for the season, or null when it isn't available (the decisions still build without it). */
+async function loadFtn(season: number, input: string | undefined): Promise<string | null> {
+  try {
+    if (input !== undefined) return await readFile(input, "utf8");
+    return await (await fetchOk(`https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_${season}.csv`)).text();
+  } catch (e) {
+    console.error(`No FTN charting for ${season} (${e instanceof Error ? e.message : String(e)}): play-action and screens count as dropback passes.`);
+    return null;
+  }
+}
+
+async function loadCsv(season: number, input: string | undefined): Promise<string> {
+  const bytes = input !== undefined
+    ? new Uint8Array(await readFile(input))
+    : new Uint8Array(await (await fetchOk(`https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_${season}.csv.gz`)).arrayBuffer());
+  const gz = input === undefined || input.endsWith(".gz");
+  return new TextDecoder().decode(gz ? Bun.gunzipSync(bytes) : bytes);
+}
+
+async function fetchOk(url: string): Promise<Response> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Download failed: ${res.status} ${res.statusText} for ${url}`);
+  return res;
+}
+
+function arg(name: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+}
+
+async function main() {
+  const season = Number(arg("season") ?? new Date().getFullYear());
+  const out = arg("out") ?? "public/data/decisions";
+  const rows = parseCsv(await loadCsv(season, arg("input"))).filter((r) => r.get("season_type") === "REG");
+  const weeks = completeWeeks(rows);
+  const ftn = await loadFtn(season, arg("ftn"));
+  const tags = ftn === null ? new Map<string, PassTag>() : passTagsFrom(parseCsv(ftn));
+  const chartedWeeks = new Set(ftn === null ? [] : parseCsv(ftn).map((r) => Number(r.get("week"))));
+  const generatedAt = new Date().toISOString();
+  console.error(`${season}: ${rows.length} regular-season rows; finished weeks ${weeks.join(", ")}`);
+
+  await mkdir(join(out, String(season)), { recursive: true });
+  const index: { week: number; worst: number }[] = [];
+  for (const week of weeks) {
+    const weekRows = rows.filter((r) => r.get("week") === String(week));
+    const games = new Set(weekRows.map((r) => r.get("game_id"))).size;
+    const started = performance.now();
+    const decisions = findCandidates(weekRows, tags).flatMap((c) => {
+      const d = scoreDecision(c);
+      return d === null ? [] : [d];
+    });
+    const source = chartedWeeks.has(week) ? `${SOURCE_PBP}. ${SOURCE_FTN}` : SOURCE_PBP;
+    const file = buildWeek(season, week, decisions, games, generatedAt, source);
+    await writeFile(join(out, String(season), `week-${String(week).padStart(2, "0")}.json`), `${JSON.stringify(file, null, 1)}\n`);
+    index.push({ week, worst: file.worst.length });
+    console.error(`  week ${week}: ${games} games, ${decisions.length} decisions scored, ${file.worst.length} flagged, models within 10 points on ${Math.round(file.agreement.within10 * 100)}% (${((performance.now() - started) / 1000).toFixed(1)}s)`);
+  }
+  const indexFile = decisionIndexSchema.parse({ season, generatedAt, weeks: index });
+  await writeFile(join(out, String(season), "index.json"), `${JSON.stringify(indexFile, null, 1)}\n`);
+  // The site opens on the latest season built.
+  await writeFile(join(out, "index.json"), `${JSON.stringify(indexFile, null, 1)}\n`);
+}
+
+if (import.meta.main) await main();

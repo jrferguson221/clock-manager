@@ -32,3 +32,4 @@ import "@mantine/core/styles/Progress.css";
 import "@mantine/core/styles/Table.css";
 import "@mantine/core/styles/Tabs.css";
 import "@mantine/core/styles/Accordion.css";
+import "@mantine/core/styles/Loader.css";

@@ -15,6 +15,15 @@ The **Player decisions** tab (`#/scenarios`) compares choices made in the middle
 
 Each option fixes how the play ends, and the rest of the game is simulated 3,000 times, on the same random numbers for both options. The page gives a verdict with the reason, each option's win probability and the situation after the play. A "Where the answer flips" table shows the same choice at other clock times, and a note gives the exact clock at which the answer changes, e.g. "With 0:19 or less left, get out of bounds instead". Each scenario starts from a preset situation, and every input is in the URL.
 
+The **Decisions of the week** tab (`#/decisions`) shows the costliest late-game calls of each NFL week. It covers every offensive decision in the final 5:00 of one-score games: play calls, kicks and timeouts. Each is scored against every option the offense had, and calls that cost 6 points of win probability or more make the list. There's also a list of the plays that swung win probability most. Calls are judged by the odds at the time, not by how they turned out.
+
+- **Data:** NFL play-by-play from [nflverse](https://github.com/nflverse/nflverse-data) (CC-BY 4.0), plus play-action and screen charting by FTN Data via nflverse (CC-BY-SA 4.0). The generated files in `public/data/decisions/` are therefore CC-BY-SA 4.0; see the README there.
+- **Fairness rules:**
+  - **Passes:** all passes are judged as one decision, "throw it", credited with the best kind of pass, since the target and play design depend on things the data can't show.
+  - **Running clock:** when the clock was running, a call is judged from the end of the play before, so each option pays its own time to the snap.
+  - **Disagreement:** every situation is compared with nflverse's independent win-probability model. Where the two disagree by more than 15 points, the decision stays off the list.
+- **Updates:** `scripts/decisions/build.ts` builds the files: `bun scripts/decisions/build.ts --season 2026`. The *Update weekly decisions* GitHub Action runs it every Tuesday at 13:17 UTC, after Monday night's game. It runs the tests against the new data, commits it, and the site redeploys.
+
 The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
 
 The leading and trailing modes also have their own calculators:
@@ -49,6 +58,9 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
 | `src/scenarios.ts` | The player-decision scenarios: their options, verdicts and flip points. Pure functions. |
 | `src/ScenarioPanel.tsx` | The Player decisions page. |
+| `src/DecisionsPanel.tsx`, `src/decisionsData.ts` | The Decisions of the week page, and where its data is fetched from (validated with the schemas package). |
+| `scripts/decisions/` | The data pipeline: CSV reading, turning play-by-play into decisions, and scoring them. |
+| `public/data/decisions/` | The generated weekly files (CC-BY-SA 4.0). |
 | `src/Guide.tsx` | The strategy guide page. Its tables are computed from `src/sim.ts` and `src/engine.ts`. |
 | `src/ReadMore.tsx` | Typed links into the guide (a Mantine `Anchor` wrapped with TanStack Router's `createLink`). |
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
@@ -75,6 +87,7 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 - Tempo is automatic. A team that's ahead drains the play clock. A team that only needs a field goal and is in range drains it too, but leaves time for a timeout or a rushed kick. Everyone else uses the hurry-up time (18 seconds by default). A timeout stops the clock right away.
 - A defense that's behind calls timeout after in-bounds plays in the last 4 minutes, unless the two-minute warning is about to stop the clock for free.
 - Field goals are good about 90% of the time from 35 yards and about 65% from 52, with 62 yards the longest try. Punts net 40 yards. Kickoffs are touchbacks to the 30, and a team that's still behind late tries an onside kick (12% recovered).
+- Play-action passes complete about 60% of the time for about 13 yards, and screens about 80% for about 5, though screens can lose yards. Against prevent, play-action completes less and screens more. On 3rd or 4th and short, defenses load the box: runs convert about two times in three on 1 yard to go, three in five on 2, and half the time on 3.
 - After your call, both teams follow a rule-of-thumb policy for the rest of the game. With time for only one more play, a team that needs just a field goal stops the clock if it must (a timeout, else a spike) and kicks from within 42 yards of the goal line (a 59-yarder at most). It throws deep on the last play or two when a field goal won't do, and on 4th and 15 or longer. A tie at 0:00 is a coin flip in overtime.
 - Each call is scored over 500 simulated games, so differences of a point or two are within the noise. The explainer calls those "close".
 - A timeout isn't a play, so it's scored by what comes next. With the clock running, it's worth the best play from the stopped-clock situation, which is what the meter shows after you call it. With the clock already stopped, it's worth the same best play with one fewer timeout. It can never beat running that play and keeping the timeout, and the explainer always flags it as a mistake.

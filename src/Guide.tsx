@@ -13,12 +13,15 @@ import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
   AVOID, CLOSE, DEFAULT_SIM, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
-  RED_ZONE, SPECIAL_TEAMS, TIE, type GameState,
+  PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
 import { AnchorLink, GuideLink } from "./ReadMore";
 
 const route = getRouteApi("/guide");
+
+/** The pass calls, from the safest to the riskiest. */
+const PASS_CALLS = ["pass-screen", "pass-sideline", "pass-middle", "pass-play-action", "pass-deep"] as const satisfies readonly PassCall[];
 
 const TITLES: Readonly<Record<GuideSection, string>> = {
   "win-probability": "How win probability works",
@@ -224,10 +227,12 @@ function WinProbabilitySection() {
 
 function PlayModelSection() {
   const normal = PASS_ODDS.normal;
-  const passRows = (["pass-sideline", "pass-middle", "pass-deep"] as const).map((call) => {
+  const passRows = PASS_CALLS.map((call) => {
     const o = normal[call];
-    const label = { "pass-sideline": "Pass to the sideline", "pass-middle": "Pass over the middle", "pass-deep": "Deep pass" }[call];
-    return [label, pct(o.complete), `${o.minYards}+ yards, about ${Math.round(o.minYards + o.extraYards)} on average`, pct(o.outOfBounds), pct(o.sack), pct(o.interception)];
+    const label = PLAY_CALLS[call];
+    return [label, pct(o.complete), o.minYards < 0
+      ? `From a ${-o.minYards}-yard loss up, about ${Math.round(o.minYards + o.extraYards)} on average`
+      : `${o.minYards}+ yards, about ${Math.round(o.minYards + o.extraYards)} on average`, pct(o.outOfBounds), pct(o.sack), pct(o.interception)];
   });
   const run = runShape("normal", 75);
 
@@ -495,8 +500,8 @@ function FieldGoalSection() {
 }
 
 function PreventSection() {
-  const rows = (["pass-sideline", "pass-middle", "pass-deep"] as const).map((call) => {
-    const label = { "pass-sideline": "Sideline", "pass-middle": "Middle", "pass-deep": "Deep" }[call];
+  const rows = PASS_CALLS.map((call) => {
+    const label = PLAY_CALLS[call];
     const n = PASS_ODDS.normal[call];
     const p = PASS_ODDS.prevent[call];
     return [label, `${pct(n.complete)} → ${pct(p.complete)}`, `${pct(n.interception)} → ${pct(p.interception)}`, `${pct(n.sack)} → ${pct(p.sack)}`];

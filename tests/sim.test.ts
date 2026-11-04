@@ -39,7 +39,9 @@ describe("step", () => {
 
 describe("availableCalls", () => {
   it("offers a timeout only with one left, a spike only before 4th down, and kicks only from sensible spots", () => {
-    expect(availableCalls({ ...base, timeouts: { you: 0, opp: 3 }, down: 4 })).toEqual(["run", "pass-sideline", "pass-middle", "pass-deep", "kneel", "punt"]);
+    // Trailing: no kneel. Tied or ahead: a kneel is an option.
+    expect(availableCalls({ ...base, timeouts: { you: 0, opp: 3 }, down: 4 })).toEqual(["run", "pass-screen", "pass-sideline", "pass-middle", "pass-play-action", "pass-deep", "punt"]);
+    expect(availableCalls({ ...base, margin: 0 })).toContain("kneel");
     expect(availableCalls({ ...base, ytg: 20 })).toContain("fg");
     expect(availableCalls({ ...base, ytg: 20 })).not.toContain("punt");
   });
@@ -108,7 +110,9 @@ describe("recommend", () => {
     const g: GameState = { ...base, clock: 10, ytg: 20, toGo: 10, down: 2, margin: -1, timeouts: { you: 1, opp: 3 } };
     const r = recommend(g, evaluateCalls(g, 300));
     expect(r.best).toBe("timeout");
-    expect(r.avoid.map((a) => a.call)).toContain("kneel");
+    // A pass that can't reach the end zone or set up the kick in time is clearly worse.
+    expect(r.avoid.length).toBeGreaterThan(0);
+    for (const a of r.avoid) expect(a.reason.text.length).toBeGreaterThan(0);
   });
 });
 
