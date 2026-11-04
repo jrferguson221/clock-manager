@@ -3,7 +3,7 @@ import type { Down } from "./engine";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
 import { formatClock, parseClock } from "./time";
-import { BallOnInput, ClockInput, NumberSelect, Timeline, ToGoInput, spotFrom, yardsToGoalFrom, type Side } from "./fields";
+import { BallOnInput, ClockInput, NumberInput, NumberSelect, Timeline, ToGoInput, spotFrom, yardsToGoalFrom, type Side } from "./fields";
 import Trainer from "./Trainer";
 
 const TRAIL_OPTIONS = Array.from({ length: 17 }, (_, i) => i);
@@ -75,13 +75,11 @@ export default function TrailingPanel() {
         <BallOnInput side={side} yardLine={yardLine} onChange={(s, y) => { setSide(s); setYardLine(y); }} />
         <label>
           Yards per play
-          <input type="number" min={1} max={30} value={yardsPerPlay}
-            onChange={(e) => setYardsPerPlay(Math.min(30, Math.max(1, Number(e.target.value) || 1)))} />
+          <NumberInput value={yardsPerPlay} min={1} max={30} onChange={setYardsPerPlay} />
         </label>
         <label>
           Hurry-up time (s)
-          <input type="number" min={5} max={40} value={hurryUp}
-            onChange={(e) => setHurryUp(Math.min(40, Math.max(5, Number(e.target.value) || 5)))} />
+          <NumberInput value={hurryUp} min={5} max={40} onChange={setHurryUp} />
         </label>
         <label className="check">
           <input type="checkbox" checked={clockRunning} onChange={(e) => setClockRunning(e.target.checked)} />

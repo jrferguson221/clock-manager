@@ -1,12 +1,16 @@
 // Small form and display pieces shared by both panels.
 import type { TimelineEvent } from "./engine";
-import { formatClock } from "./time";
+import { useState } from "react";
+import { formatClock, formatClockDigits } from "./time";
 
 export function ClockInput({ value, onChange, valid }: { value: string; onChange: (v: string) => void; valid: boolean }) {
   return (
     <label>
       Game clock
-      <input value={value} onChange={(e) => onChange(e.target.value)} inputMode="numeric" aria-invalid={!valid} />
+      <input
+        value={value} onChange={(e) => onChange(formatClockDigits(e.target.value))}
+        inputMode="numeric" placeholder="M:SS" aria-invalid={!valid}
+      />
     </label>
   );
 }
@@ -59,6 +63,34 @@ export function PlayLog({ summaries, onUndo, onReset }: { summaries: string[]; o
   );
 }
 
+/**
+ * A whole-number input you can clear and retype freely. Valid numbers in range apply as you type;
+ * leaving the field snaps it back into range.
+ */
+export function NumberInput({ value, min, max, onChange, ...rest }: {
+  value: number; min: number; max: number; onChange: (n: number) => void; "aria-label"?: string;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  return (
+    <input
+      type="number" inputMode="numeric" min={min} max={max} {...rest}
+      value={draft ?? String(value)}
+      onChange={(e) => {
+        setDraft(e.target.value);
+        const n = Number(e.target.value);
+        if (e.target.value.trim() !== "" && Number.isInteger(n) && n >= min && n <= max) onChange(n);
+      }}
+      onBlur={() => {
+        if (draft != null) {
+          const n = Math.round(Number(draft));
+          onChange(draft.trim() === "" || !Number.isFinite(n) ? value : Math.min(max, Math.max(min, n)));
+        }
+        setDraft(null);
+      }}
+    />
+  );
+}
+
 export type Side = "own" | "opp";
 
 export const yardsToGoalFrom = (side: Side, yardLine: number) => (side === "own" ? 100 - yardLine : yardLine);
@@ -76,10 +108,7 @@ export function BallOnInput({ side, yardLine, onChange }: {
           <option value="own">Own</option>
           <option value="opp">Opponent</option>
         </select>
-        <input
-          type="number" min={1} max={50} value={yardLine} aria-label="Yard line"
-          onChange={(e) => onChange(side, Math.min(50, Math.max(1, Number(e.target.value) || 1)))}
-        />
+        <NumberInput value={yardLine} min={1} max={50} aria-label="Yard line" onChange={(y) => onChange(side, y)} />
       </span>
     </label>
   );
@@ -89,8 +118,7 @@ export function ToGoInput({ value, onChange }: { value: number; onChange: (n: nu
   return (
     <label>
       To go
-      <input type="number" min={1} max={99} value={value}
-        onChange={(e) => onChange(Math.min(99, Math.max(1, Number(e.target.value) || 1)))} />
+      <NumberInput value={value} min={1} max={99} onChange={onChange} />
     </label>
   );
 }
