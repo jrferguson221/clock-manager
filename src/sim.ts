@@ -40,6 +40,8 @@ const BURN = NFL_RULES.playClock - 1; // snap with 1 second on the play clock
 export const FG_MAX_YTG = 45;
 /** Punting is an option from 40 or more yards out. */
 export const PUNT_MIN_YTG = 40;
+/** On the last play, a team that needs only a field goal kicks from this close or closer (a 59-yarder). */
+export const LAST_PLAY_FG_YTG = 42;
 /** A defense that's behind uses its timeouts after in-bounds plays in the last 4 minutes. */
 export const DEFENSE_TIMEOUT_WINDOW = 240;
 /** Fewest seconds from the end of an in-bounds play to the next snap, even when rushing. */
@@ -129,7 +131,8 @@ export interface StepResult {
   driveEnded?: string;
 }
 
-interface PlayOutcome {
+/** What happened on a scrimmage play. Scenarios pass one to `step` to replay a specific result. */
+export interface PlayOutcome {
   yards: number;
   seconds: number;
   outOfBounds: boolean;
@@ -388,7 +391,7 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
  * Apply one decision by the team with the ball: the pre-snap clock, the play, the clock after it,
  * a defensive timeout if the defense wants one, and any change of possession.
  */
-export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFAULT_SIM): StepResult {
+export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFAULT_SIM, forced?: PlayOutcome): StepResult {
   if (g.over) throw new RangeError("the game is over");
   const team = g.poss;
   const def = other(team);
@@ -443,9 +446,9 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
     };
   }
 
-  const play = call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
+  const play = forced ?? (call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
     ? rollHailMary(g.ytg, r)
-    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg);
+    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg));
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 
@@ -519,6 +522,15 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     return "run";
   }
 
+  // Time for one last play, a field goal ties or wins, and it's within reach (a 59-yarder at most): kick,
+  // stopping the clock first if it's running.
+  if (m <= 0 && m >= -3 && g.ytg <= LAST_PLAY_FG_YTG && t <= 12) {
+    if (!g.running) return "fg";
+    if (to > 0) return "timeout";
+    if (g.down <= 3 && t > cfg.spikeLineup + 1) return "spike";
+    return "fg";
+  }
+
   // Last play, or close to it, and a field goal won't do: take a shot at the end zone.
   if (t <= 12 && (m < -3 || g.ytg > 42)) return "pass-deep";
 
@@ -563,6 +575,28 @@ export function winProbability(g: GameState, n = 1500, cfg: SimConfig = DEFAULT_
   let sum = 0;
   for (let i = 0; i < n; i++) sum += playOut(g, streamFor(i), cfg);
   return sum / n;
+}
+
+/**
+ * Your win probability if a play snapped from `g` turns out exactly as `outcome`: the play's result is
+ * fixed, and everything after it is simulated, on the same random streams as every other estimate.
+ * `g.clock` is the clock at the snap, so no time runs off before it.
+ */
+export function outcomeWinProbability(
+  g: GameState, call: PlayCall, outcome: PlayOutcome, n = 2000, cfg: SimConfig = DEFAULT_SIM,
+): number {
+  const atSnap = { ...g, running: false };
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const r = streamFor(i);
+    sum += playOut(step(atSnap, call, r, cfg, outcome).state, r, cfg);
+  }
+  return sum / n;
+}
+
+/** What one play does to the situation, with its result fixed: the state after it and how it reads. */
+export function outcomeStep(g: GameState, call: PlayCall, outcome: PlayOutcome, cfg: SimConfig = DEFAULT_SIM): StepResult {
+  return step({ ...g, running: false }, call, streamFor(0), cfg, outcome);
 }
 
 /** A call and your win probability if you make it. */

@@ -6,7 +6,7 @@ import {
   createHashHistory, createRootRoute, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
 } from "@tanstack/react-router";
 import {
-  bestCallSearchSchema, guideSearchSchema, leadingSearchSchema, trailingSearchSchema, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
+  bestCallSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
 } from "@clock-manager/schemas";
 import Layout, { NotFound } from "./Layout";
 import RunOutPanel from "./RunOutPanel";
@@ -39,6 +39,15 @@ const bestCallRoute = createRoute({
   component: AdvisorPanel,
 });
 
+// Player decisions: a separate download, like the guide.
+const scenariosRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/scenarios",
+  validateSearch: scenarioSearchSchema,
+  search: { middlewares: [stripSearchParams(SCENARIO_DEFAULTS)] },
+  component: lazyRouteComponent(() => import("./ScenarioPanel")),
+});
+
 // The guide is long and only some visitors read it, so it's a separate download, fetched when opened.
 const guideRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -47,7 +56,7 @@ const guideRoute = createRoute({
   component: lazyRouteComponent(() => import("./Guide")),
 });
 
-const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, guideRoute]);
+const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, scenariosRoute, guideRoute]);
 
 /** The app's router. Tests pass a memory history; the browser uses the URL hash. */
 export function createAppRouter(history: RouterHistory = createHashHistory()) {

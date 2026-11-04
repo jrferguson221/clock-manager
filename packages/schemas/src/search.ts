@@ -59,6 +59,57 @@ export const bestCallSearchSchema = z.object({
   hurryUp: int("hurryUp", DEFAULT_HURRY_UP),
 });
 
+// ---------------------------------------------------------------------------
+// Scenarios: one decision during a play, compared option by option.
+
+export const SCENARIO_IDS = ["qb-throwaway", "wr-sideline", "rb-score"] as const;
+export const scenarioIdSchema = z.enum(SCENARIO_IDS);
+export type ScenarioId = z.infer<typeof scenarioIdSchema>;
+
+/** The situation at the snap, plus each scenario's own inputs. Fields a scenario doesn't use are ignored. */
+const scenarioShape = (d: {
+  scenario: ScenarioId; clock: string; margin: number; timeouts: number; oppTimeouts: number; down: Down; toGo: number;
+  side: Side; yardLine: number; sackYards: number; gain: number; extra: number; seconds: number;
+}) => ({
+  scenario: withFallback(scenarioIdSchema, d.scenario),
+  /** Game clock at the snap. */
+  clock: withFallback(clockTextSchema, d.clock),
+  margin: int("margin", d.margin),
+  timeouts: int("timeouts", d.timeouts),
+  oppTimeouts: int("timeouts", d.oppTimeouts),
+  down: withFallback(downSchema, d.down),
+  toGo: int("toGo", d.toGo),
+  side: withFallback(sideSchema, d.side),
+  yardLine: int("yardLine", d.yardLine),
+  sackYards: int("sackYards", d.sackYards),
+  gain: int("gain", d.gain),
+  extra: int("extra", d.extra),
+  seconds: int("seconds", d.seconds),
+});
+
+/** Each scenario's starting situation: a spot where the choice is a real one. */
+export const SCENARIO_PRESETS = {
+  // Down 4 with 0:50 left and no timeouts, 2nd & 10 at the opponent's 30: the first read is covered.
+  "qb-throwaway": {
+    scenario: "qb-throwaway", clock: "0:50", margin: -4, timeouts: 0, oppTimeouts: 3, down: 2, toGo: 10,
+    side: "opp", yardLine: 30, sackYards: 8, gain: 12, extra: 6, seconds: 5,
+  },
+  // Down 3 with 0:18 left and no timeouts, 1st & 10 at your 45: a 12-yard catch near the sideline.
+  "wr-sideline": {
+    scenario: "wr-sideline", clock: "0:18", margin: -3, timeouts: 0, oppTimeouts: 3, down: 1, toGo: 10,
+    side: "own", yardLine: 45, sackYards: 8, gain: 12, extra: 6, seconds: 5,
+  },
+  // Tied with 1:05 left, a run from the opponent's 25 breaks into the open.
+  "rb-score": {
+    scenario: "rb-score", clock: "1:05", margin: 0, timeouts: 2, oppTimeouts: 2, down: 1, toGo: 10,
+    side: "opp", yardLine: 25, sackYards: 8, gain: 12, extra: 6, seconds: 5,
+  },
+} as const satisfies Record<ScenarioId, Parameters<typeof scenarioShape>[0]>;
+
+export const scenarioSearchSchema = z.object(scenarioShape(SCENARIO_PRESETS["qb-throwaway"]));
+export type ScenarioSearch = z.output<typeof scenarioSearchSchema>;
+export const SCENARIO_DEFAULTS: ScenarioSearch = scenarioSearchSchema.parse({});
+
 export type LeadingSearch = z.output<typeof leadingSearchSchema>;
 export type TrailingSearch = z.output<typeof trailingSearchSchema>;
 export type BestCallSearch = z.output<typeof bestCallSearchSchema>;

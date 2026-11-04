@@ -6,6 +6,8 @@ Both modes are a play-calling trainer. Enter the situation (clock, score, timeou
 
 The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
 
+The **Player decisions** tab (`#/scenarios`) compares choices players make in the middle of a play: a quarterback throwing it away or taking a sack, a receiver getting out of bounds or turning upfield, and a running back scoring or going down at the 1 to keep the ball and the clock. Each option fixes how the play ends, and the rest of the game is simulated 3,000 times, on the same random numbers for both options. The page gives a verdict with the reason, each option's win probability and the situation after the play. A "Where the answer flips" table shows the same choice at other clock times, and a note gives the exact clock at which the answer changes, e.g. "With 0:19 or less left, get out of bounds instead". Each scenario starts from a preset situation, and every input is in the URL.
+
 The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
 
 The leading and trailing modes also have their own calculators:
@@ -38,6 +40,8 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
 | `src/sim.ts` | Play simulator, win probability and the best-call explainer. Pure functions. |
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
+| `src/scenarios.ts` | The player-decision scenarios: their options, verdicts and flip points. Pure functions. |
+| `src/ScenarioPanel.tsx` | The Player decisions page. |
 | `src/Guide.tsx` | The strategy guide page. Its tables are computed from `src/sim.ts` and `src/engine.ts`. |
 | `src/ReadMore.tsx` | Typed links into the guide (a Mantine `Anchor` wrapped with TanStack Router's `createLink`). |
 | `src/trailing.ts` | Trailing-team drive budget and next-call advice. Pure functions. |
@@ -64,7 +68,7 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 - Tempo is automatic. A team that's ahead drains the play clock. A team that only needs a field goal and is in range drains it too, but leaves time for a timeout or a rushed kick. Everyone else uses the hurry-up time (18 seconds by default). A timeout stops the clock right away.
 - A defense that's behind calls timeout after in-bounds plays in the last 4 minutes, unless the two-minute warning is about to stop the clock for free.
 - Field goals are good about 90% of the time from 35 yards and about 65% from 52, with 62 yards the longest try. Punts net 40 yards. Kickoffs are touchbacks to the 30, and a team that's still behind late tries an onside kick (12% recovered).
-- After your call, both teams follow a rule-of-thumb policy for the rest of the game. It throws deep on the last play or two when a field goal won't do, and on 4th and 15 or longer. A tie at 0:00 is a coin flip in overtime.
+- After your call, both teams follow a rule-of-thumb policy for the rest of the game. With time for only one more play, a team that needs just a field goal stops the clock if it must (a timeout, else a spike) and kicks from within 42 yards of the goal line (a 59-yarder at most). It throws deep on the last play or two when a field goal won't do, and on 4th and 15 or longer. A tie at 0:00 is a coin flip in overtime.
 - Each call is scored over 500 simulated games, so differences of a point or two are within the noise. The explainer calls those "close".
 - A timeout isn't a play, so it's scored by what comes next. With the clock running, it's worth the best play from the stopped-clock situation, which is what the meter shows after you call it. With the clock already stopped, it's worth the same best play with one fewer timeout. It can never beat running that play and keeping the timeout, and the explainer always flags it as a mistake.
 - Every situation is simulated on the same random numbers. So comparisons, such as with and without a timeout, compare like with like, and having more timeouts never shows a lower win probability because of noise.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  bestCallSearchSchema, clockTextSchema, guideSearchSchema, GUIDE_SECTIONS, firstError, gameStateSchema, leadingSearchSchema, rangeSchema, trailingSearchSchema,
+  bestCallSearchSchema, clockTextSchema, guideSearchSchema, scenarioSearchSchema, GUIDE_SECTIONS, SCENARIO_DEFAULTS, SCENARIO_PRESETS, firstError, gameStateSchema, leadingSearchSchema, rangeSchema, trailingSearchSchema,
   BEST_CALL_DEFAULTS, CLOCK_HINT, LEADING_DEFAULTS, LIMITS, TRAILING_DEFAULTS, type GameState,
 } from "../src";
 
@@ -93,5 +93,19 @@ describe("guideSearchSchema", () => {
     expect(guideSearchSchema.parse({}).section).toBeUndefined();
     expect(guideSearchSchema.parse({ section: "nonsense" }).section).toBeUndefined();
     expect(guideSearchSchema.parse({ section: 7 }).section).toBeUndefined();
+  });
+});
+
+describe("scenarioSearchSchema", () => {
+  it("defaults to the QB preset, and every preset is a valid set of params", () => {
+    expect(SCENARIO_DEFAULTS).toEqual(SCENARIO_PRESETS["qb-throwaway"]);
+    for (const preset of Object.values(SCENARIO_PRESETS)) expect(scenarioSearchSchema.parse(preset)).toEqual(preset);
+  });
+
+  it("drops an unknown scenario or out-of-range input back to the default", () => {
+    const parsed = scenarioSearchSchema.parse({ scenario: "kicker", sackYards: 99, extra: 0, gain: 12 });
+    expect(parsed.scenario).toBe("qb-throwaway");
+    expect(parsed.sackYards).toBe(SCENARIO_DEFAULTS.sackYards);
+    expect(parsed.extra).toBe(SCENARIO_DEFAULTS.extra);
   });
 });
