@@ -580,10 +580,11 @@ export function winProbability(g: GameState, n = 1500, cfg: SimConfig = DEFAULT_
 /**
  * Your win probability if a play snapped from `g` turns out exactly as `outcome`: the play's result is
  * fixed, and everything after it is simulated, on the same random streams as every other estimate.
- * `g.clock` is the clock at the snap, so no time runs off before it.
+ * With no `outcome`, the play's result is rolled as usual. `g.clock` is the clock at the snap, so no
+ * time runs off before it.
  */
 export function outcomeWinProbability(
-  g: GameState, call: PlayCall, outcome: PlayOutcome, n = 2000, cfg: SimConfig = DEFAULT_SIM,
+  g: GameState, call: PlayCall, outcome: PlayOutcome | undefined, n = 2000, cfg: SimConfig = DEFAULT_SIM,
 ): number {
   const atSnap = { ...g, running: false };
   let sum = 0;

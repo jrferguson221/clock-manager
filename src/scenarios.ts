@@ -9,6 +9,7 @@ import {
   type PlayOutcome, type Reason, type StepResult,
 } from "./sim";
 import { formatClock } from "./time";
+import { simulateRunOut } from "./engine";
 
 /** A scenario's inputs: the situation at the snap, plus the details of the play. */
 export interface ScenarioInput {
@@ -24,17 +25,30 @@ export interface ScenarioInput {
   seconds: number;
 }
 
-export type OptionId = "throw-away" | "sack" | "out-of-bounds" | "upfield" | "score" | "go-down";
+export type OptionId =
+  | "throw-away" | "sack" | "out-of-bounds" | "upfield" | "score" | "go-down" | "slide" | "stay-in-bounds" | "kneel" | "run";
 
 interface OptionDef {
   readonly id: OptionId;
   readonly label: string;
   readonly call: PlayCall;
-  readonly outcome: (i: ScenarioInput) => PlayOutcome;
+  /** How the play ends. `null` leaves it to chance: the call's usual odds, as for a play that hasn't been run yet. */
+  readonly outcome: (i: ScenarioInput) => PlayOutcome | null;
+  /** For an outcome left to chance: the situation after it, in words. */
+  readonly afterText?: string;
+}
+
+/** The inputs a scenario asks for beyond the situation, with their labels. */
+export interface ScenarioFields {
+  readonly sackYards?: string;
+  readonly gain?: string;
+  readonly extra?: string;
+  readonly seconds?: string;
 }
 
 interface ScenarioDef {
-  readonly role: "QB" | "WR" | "RB";
+  readonly role: "QB" | "WR" | "RB" | "Coach";
+  readonly fields: ScenarioFields;
   readonly title: string;
   readonly question: string;
   readonly options: readonly [OptionDef, OptionDef];
@@ -50,6 +64,7 @@ const runningTime = (yards: number) => Math.max(1, Math.round(yards / 8));
 export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
   "qb-throwaway": {
     role: "QB",
+    fields: { sackYards: "The sack would lose (yards)", seconds: "Seconds the play takes" },
     title: "Throw it away or take the sack?",
     question: "The quarterback's first read is covered and the rush is closing in. Throw it away, or take the sack?",
     options: [
@@ -70,6 +85,7 @@ export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
   },
   "wr-sideline": {
     role: "WR",
+    fields: { gain: "Gain at the catch (yards)", extra: "Extra yards by turning upfield", seconds: "Seconds the play takes" },
     title: "Get out of bounds or turn upfield?",
     question: "The receiver makes the catch near the sideline. Step out of bounds now, or turn upfield for more yards and get tackled in bounds?",
     options: [
@@ -90,6 +106,7 @@ export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
   },
   "rb-score": {
     role: "RB",
+    fields: { seconds: "Seconds from the snap to the goal line" },
     title: "Score, or go down short of the goal line?",
     question: "The running back breaks into the open with the end zone ahead. Score, or go down at the 1 to keep the ball and the clock?",
     options: [
@@ -105,6 +122,69 @@ export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
     clocks: [240, 180, 120, 90, 65, 45, 30, 15],
     caveat: {
       text: "Going down is a sure thing in the model: no fumble, and the offense always gets its snaps off. Real defenses sometimes let a runner score on purpose to get the ball back with time left; this is the runner's answer to that.",
+      section: "running-out-the-clock",
+    },
+  },
+  "qb-slide": {
+    role: "QB",
+    fields: { gain: "Gain if he slides (yards)", extra: "Yards given up to reach the sideline", seconds: "Seconds the play takes" },
+    title: "Slide, or get out of bounds?",
+    question: "The quarterback scrambles with room to run. Slide in bounds for the yards he has, or angle to the sideline and step out, giving up a few yards?",
+    options: [
+      {
+        id: "slide", label: "Slide in bounds", call: "run",
+        outcome: (i) => ({ yards: i.gain, seconds: i.seconds, outOfBounds: false, incomplete: false }),
+      },
+      {
+        id: "out-of-bounds", label: "Get out of bounds", call: "run",
+        outcome: (i) => ({ yards: Math.max(0, i.gain - i.extra), seconds: i.seconds + 1, outOfBounds: true, incomplete: false }),
+      },
+    ],
+    clocks: [180, 120, 90, 60, 45, 30, 20, 10],
+    caveat: {
+      text: "A sliding quarterback is down where the slide starts, and protected from big hits. Angling for the sideline exposes him to one, and to a fumble, which the model doesn't include.",
+      section: "clock-rules",
+    },
+  },
+  "rb-inbounds": {
+    role: "RB",
+    fields: { gain: "Gain if he stays in bounds (yards)", extra: "Extra yards by fighting to the sideline", seconds: "Seconds the play takes" },
+    title: "Stay in bounds, or fight for the extra yards?",
+    question: "Protecting a lead, the running back is near the sideline. Go down in bounds to keep the clock running, or fight for extra yards and step out?",
+    options: [
+      {
+        id: "stay-in-bounds", label: "Stay in bounds", call: "run",
+        outcome: (i) => ({ yards: i.gain, seconds: i.seconds, outOfBounds: false, incomplete: false }),
+      },
+      {
+        id: "out-of-bounds", label: "Get the extra yards", call: "run",
+        outcome: (i) => ({ yards: i.gain + i.extra, seconds: i.seconds + runningTime(i.extra), outOfBounds: true, incomplete: false }),
+      },
+    ],
+    clocks: [300, 240, 180, 150, 120, 90, 60, 30],
+    caveat: {
+      text: "Going out of bounds stops the clock until the snap only in the last 2:00 of the first half and the last 5:00 of the game; earlier, it restarts when the ball is spotted, and stepping out costs almost nothing.",
+      section: "running-out-the-clock",
+    },
+  },
+  "kneel-or-run": {
+    role: "Coach",
+    fields: {},
+    title: "Kneel, or run it?",
+    question: "Ahead late with the ball: take a knee, or hand it off? A kneel can't fail, but can't gain a first down either. Unlike the other scenarios, the run's result is left to chance here.",
+    options: [
+      {
+        id: "kneel", label: "Kneel", call: "kneel",
+        outcome: () => ({ yards: -1, seconds: 2, outOfBounds: false, incomplete: false }),
+      },
+      {
+        id: "run", label: "Run", call: "run", outcome: () => null,
+        afterText: "It varies: runs average about 4 yards, usually stay in bounds, and are fumbled about 1% of the time.",
+      },
+    ],
+    clocks: [240, 180, 150, 130, 110, 90, 60, 40],
+    caveat: {
+      text: "The run uses the model's average run, with no extra protection from a lead-protecting offense. Real teams often run conservatively here, which lowers the fumble risk below the model's 1%.",
       section: "running-out-the-clock",
     },
   },
@@ -151,11 +231,15 @@ const better = (a: number, b: number): 0 | 1 | null => (Math.abs(a - b) <= CLOSE
 export function analyzeScenario(id: ScenarioId, input: ScenarioInput, n = 3000, flipN = 1000): ScenarioAnalysis {
   const def = SCENARIOS[id];
   const [a, b] = def.options;
-  const score = (o: OptionDef, game: GameState, games: number) => outcomeWinProbability(game, o.call, o.outcome({ ...input, game }), games, DEFAULT_SIM);
-  const result = (o: OptionDef): OptionResult => ({
-    id: o.id, label: o.label, wp: score(o, input.game, n),
-    after: describeAfter(outcomeStep(input.game, o.call, o.outcome(input))),
-  });
+  const score = (o: OptionDef, game: GameState, games: number) =>
+    outcomeWinProbability(game, o.call, o.outcome({ ...input, game }) ?? undefined, games, DEFAULT_SIM);
+  const result = (o: OptionDef): OptionResult => {
+    const outcome = o.outcome(input);
+    return {
+      id: o.id, label: o.label, wp: score(o, input.game, n),
+      after: outcome === null ? (o.afterText ?? "It varies.") : describeAfter(outcomeStep(input.game, o.call, outcome)),
+    };
+  };
   const options: readonly [OptionResult, OptionResult] = [result(a), result(b)];
   const pick = better(options[0].wp, options[1].wp);
 
@@ -219,6 +303,8 @@ function findFlip(flips: readonly FlipRow[], now: number, pick: 0 | 1, betterAt:
   return null;
 }
 
+const ordinalDown = (d: number) => ["1st", "2nd", "3rd", "4th"][d - 1] ?? `${d}th`;
+
 const pts = (x: number) => `${Math.round(x * 100)} point${Math.round(x * 100) === 1 ? "" : "s"}`;
 
 function explainScenario(id: ScenarioId, input: ScenarioInput, options: readonly [OptionResult, OptionResult], pick: 0 | 1 | null): Reason {
@@ -274,5 +360,49 @@ function explainScenario(id: ScenarioId, input: ScenarioInput, options: readonly
           : `Score. With ${clock} left, there's too much time to run out from the 1, and the points are worth ${pts(diff)} more than the ball.`,
         section: g.margin < -3 ? "red-zone" : "running-out-the-clock",
       };
+    case "qb-slide":
+      if (pick === 1) {
+        return {
+          text: `Get out of bounds. With ${clock} left, stopping the clock is worth more than the ${input.extra} yards it costs to reach the sideline (${pts(diff)}).${g.timeouts.you > 0 ? "" : " With no timeouts, it's the only way to stop the clock without a spike."}`,
+          section: g.timeouts.you > 0 ? "clock-rules" : "spike",
+        };
+      }
+      return {
+        text: ahead
+          ? `Slide. You're ahead: staying in bounds keeps the clock running for you, and the slide keeps him safe (${pts(diff)}).`
+          : `Slide. The extra ${input.extra} yards are worth more than the seconds the running clock costs (${pts(diff)}): ${g.timeouts.you > 0 ? "a timeout can stop it afterward" : "there's still time to spike it and keep going"}.`,
+        section: ahead ? "running-out-the-clock" : g.timeouts.you > 0 ? "timeouts" : "spike",
+      };
+    case "rb-inbounds": {
+      const stayConverts = input.gain >= g.toGo;
+      const extraConverts = input.gain + input.extra >= g.toGo;
+      if (pick === 1) {
+        return {
+          text: extraConverts && !stayConverts
+            ? `Get the extra yards. They move the chains (${input.gain + input.extra} yards on ${ordinalDown(g.down)} & ${g.toGo}), and a fresh set of downs burns far more clock than one stopped play costs (${pts(diff)}).`
+            : `Get the extra yards: here they're worth more than the seconds a stopped clock gives back (${pts(diff)}).`,
+          section: "running-out-the-clock",
+        };
+      }
+      return {
+        text: `Stay in bounds. Keeping the clock running with ${clock} left is worth more than ${input.extra} more yards${extraConverts && !stayConverts ? ", even with a first down at stake" : ""} (${pts(diff)}). Stepping out would stop the clock for them.`,
+        section: "running-out-the-clock",
+      };
+    }
+    case "kneel-or-run": {
+      const kneelsEndIt = simulateRunOut({ gameClock: g.clock, down: g.down, defTimeouts: g.timeouts.opp, clockRunning: false }).endsGame;
+      if (pick === 0) {
+        return {
+          text: kneelsEndIt
+            ? `Kneel. Kneel-downs end the game from here, so there's nothing to gain from a run and a fumble to risk (${pts(diff)}).`
+            : `Kneel. Even though kneels alone can't end it, a run's chance of a first down isn't worth its fumble risk here (${pts(diff)}).`,
+          section: "running-out-the-clock",
+        };
+      }
+      return {
+        text: `Run it. Kneel-downs can't run out ${clock} against ${g.timeouts.opp} timeout${g.timeouts.opp === 1 ? "" : "s"}, so you need a first down, and only a run can get one. That's worth more than its small fumble risk (${pts(diff)}).`,
+        section: "running-out-the-clock",
+      };
+    }
   }
 }

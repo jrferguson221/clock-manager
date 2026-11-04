@@ -23,3 +23,11 @@ it("falls back to the default scenario for an unknown one", async () => {
   expect(redirectedTo).toBe("/scenarios");
   expect(html).toContain("Throw it away or take the sack?");
 });
+
+it("offers every decision in the picker, labelled by player", async () => {
+  const { html } = await renderAt("/scenarios");
+  for (const label of ["QB: Throw it away or take the sack?", "QB: Slide, or get out of bounds?", "WR: Get out of bounds or turn upfield?",
+    "RB: Score, or go down short of the goal line?", "RB: Stay in bounds, or fight for the extra yards?", "Coach: Kneel, or run it?"]) {
+    expect(html).toContain(label);
+  }
+});

@@ -16,7 +16,7 @@ import { ReasonText } from "./ReadMore";
 
 const route = getRouteApi("/scenarios");
 
-const PLAYER_OPTIONS = SCENARIO_IDS.map((id) => ({ value: id, label: SCENARIOS[id].role }));
+const DECISION_OPTIONS = SCENARIO_IDS.map((id) => ({ value: id, label: `${SCENARIOS[id].role}: ${SCENARIOS[id].title}` }));
 const DOWN_OPTIONS = DOWNS.map((d) => ({ value: d, label: ["1st", "2nd", "3rd", "4th"][d - 1] ?? String(d) }));
 /** Score options from down 16 to up 16. Positive means you lead. */
 const MARGINS = Array.from({ length: 33 }, (_, i) => {
@@ -51,7 +51,7 @@ export default function ScenarioPanel() {
   const form = (
     <Card component="form" onSubmit={(e) => e.preventDefault()} aria-label="Situation" padding="lg">
       <Text className="eyebrow" mb="sm">The decision</Text>
-      <Segmented label="Player" value={s.scenario} options={PLAYER_OPTIONS} onChange={choose} />
+      <ChoiceSelect label="Decision" value={s.scenario} options={DECISION_OPTIONS} onChange={choose} />
       <Text className="eyebrow" mt="lg" mb="sm">Situation at the snap</Text>
       <SimpleGrid cols={{ base: 1, xs: 2, lg: 1 }} spacing="md" verticalSpacing="md">
         <ClockInput text={clock.text} error={clock.error} onType={clock.onType} />
@@ -61,19 +61,18 @@ export default function ScenarioPanel() {
         <Segmented label="Down" value={s.down} options={DOWN_OPTIONS} onChange={(d) => set({ down: d })} />
         <NumberField label="To go" field="toGo" value={s.toGo} onChange={(n) => set({ toGo: n })} />
         <BallOnInput side={s.side} yardLine={s.yardLine} onChange={(side, yardLine) => set({ side, yardLine })} />
-        {s.scenario === "qb-throwaway" && (
-          <NumberField label="The sack would lose (yards)" field="sackYards" value={s.sackYards} onChange={(n) => set({ sackYards: n })} />
+        {def.fields.sackYards !== undefined && (
+          <NumberField label={def.fields.sackYards} field="sackYards" value={s.sackYards} onChange={(n) => set({ sackYards: n })} />
         )}
-        {s.scenario === "wr-sideline" && (
-          <>
-            <NumberField label="Gain at the catch (yards)" field="gain" value={s.gain} onChange={(n) => set({ gain: n })} />
-            <NumberField label="Extra yards by turning upfield" field="extra" value={s.extra} onChange={(n) => set({ extra: n })} />
-          </>
+        {def.fields.gain !== undefined && (
+          <NumberField label={def.fields.gain} field="gain" value={s.gain} onChange={(n) => set({ gain: n })} />
         )}
-        <NumberField
-          label={s.scenario === "rb-score" ? "Seconds from the snap to the goal line" : "Seconds the play takes"}
-          field="seconds" value={s.seconds} onChange={(n) => set({ seconds: n })}
-        />
+        {def.fields.extra !== undefined && (
+          <NumberField label={def.fields.extra} field="extra" value={s.extra} onChange={(n) => set({ extra: n })} />
+        )}
+        {def.fields.seconds !== undefined && (
+          <NumberField label={def.fields.seconds} field="seconds" value={s.seconds} onChange={(n) => set({ seconds: n })} />
+        )}
       </SimpleGrid>
     </Card>
   );
@@ -82,7 +81,7 @@ export default function ScenarioPanel() {
     <ModeLayout intro="Decisions players make in the middle of a play, and what they're worth late in a game." form={form}>
       <Stack gap="md">
         <Card>
-          <Text className="eyebrow">{def.role} decision</Text>
+          <Text className="eyebrow">{def.role === "Coach" ? "Play call" : `${def.role} decision`}</Text>
           <Title order={2} mt={4}>{def.title}</Title>
           <Text mt="xs">{def.question}</Text>
         </Card>

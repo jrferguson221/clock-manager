@@ -6,7 +6,14 @@ Both modes are a play-calling trainer. Enter the situation (clock, score, timeou
 
 The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
 
-The **Player decisions** tab (`#/scenarios`) compares choices players make in the middle of a play: a quarterback throwing it away or taking a sack, a receiver getting out of bounds or turning upfield, and a running back scoring or going down at the 1 to keep the ball and the clock. Each option fixes how the play ends, and the rest of the game is simulated 3,000 times, on the same random numbers for both options. The page gives a verdict with the reason, each option's win probability and the situation after the play. A "Where the answer flips" table shows the same choice at other clock times, and a note gives the exact clock at which the answer changes, e.g. "With 0:19 or less left, get out of bounds instead". Each scenario starts from a preset situation, and every input is in the URL.
+The **Player decisions** tab (`#/scenarios`) compares choices made in the middle of a play, or right before it:
+
+- **QB:** throw it away or take the sack; on a scramble, slide in bounds or get out of bounds.
+- **WR:** get out of bounds or turn upfield.
+- **RB:** score, or go down at the 1 to keep the ball and the clock; with the lead, stay in bounds or fight for extra yards out of bounds.
+- **Coach:** kneel, or run it. The run's result is left to chance, since the decision comes before the snap.
+
+Each option fixes how the play ends, and the rest of the game is simulated 3,000 times, on the same random numbers for both options. The page gives a verdict with the reason, each option's win probability and the situation after the play. A "Where the answer flips" table shows the same choice at other clock times, and a note gives the exact clock at which the answer changes, e.g. "With 0:19 or less left, get out of bounds instead". Each scenario starts from a preset situation, and every input is in the URL.
 
 The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
 

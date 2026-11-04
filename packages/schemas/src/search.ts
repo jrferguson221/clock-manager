@@ -62,7 +62,7 @@ export const bestCallSearchSchema = z.object({
 // ---------------------------------------------------------------------------
 // Scenarios: one decision during a play, compared option by option.
 
-export const SCENARIO_IDS = ["qb-throwaway", "wr-sideline", "rb-score"] as const;
+export const SCENARIO_IDS = ["qb-throwaway", "qb-slide", "wr-sideline", "rb-score", "rb-inbounds", "kneel-or-run"] as const;
 export const scenarioIdSchema = z.enum(SCENARIO_IDS);
 export type ScenarioId = z.infer<typeof scenarioIdSchema>;
 
@@ -98,6 +98,21 @@ export const SCENARIO_PRESETS = {
   "wr-sideline": {
     scenario: "wr-sideline", clock: "0:18", margin: -3, timeouts: 0, oppTimeouts: 3, down: 1, toGo: 10,
     side: "own", yardLine: 45, sackYards: 8, gain: 12, extra: 6, seconds: 5,
+  },
+  // Down 3 with 0:40 left and no timeouts: the quarterback scrambles for 9 from your 45.
+  "qb-slide": {
+    scenario: "qb-slide", clock: "0:40", margin: -3, timeouts: 0, oppTimeouts: 3, down: 2, toGo: 10,
+    side: "own", yardLine: 45, sackYards: 8, gain: 9, extra: 3, seconds: 6,
+  },
+  // Up 1 with 1:15 left, 2nd & 10 at your 35, the opponent with 1 timeout: the runner near the sideline, 4 yards in.
+  "rb-inbounds": {
+    scenario: "rb-inbounds", clock: "1:15", margin: 1, timeouts: 2, oppTimeouts: 1, down: 2, toGo: 10,
+    side: "own", yardLine: 35, sackYards: 8, gain: 4, extra: 3, seconds: 5,
+  },
+  // Up 6 with 2:10 left, 1st & 10 at your 30, and the opponent has all its timeouts.
+  "kneel-or-run": {
+    scenario: "kneel-or-run", clock: "2:10", margin: 6, timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10,
+    side: "own", yardLine: 30, sackYards: 8, gain: 12, extra: 6, seconds: 5,
   },
   // Tied with 1:05 left, a run from the opponent's 25 breaks into the open.
   "rb-score": {

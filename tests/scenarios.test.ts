@@ -45,6 +45,31 @@ describe("scenarios", () => {
     expect(behind.options[behind.better ?? 1].id).toBe("score");
   });
 
+  it("QB scramble: with 0:40 left and no timeouts, get out of bounds; with more time, slide", () => {
+    const late = analyzeScenario("qb-slide", presetInput("qb-slide"), 1000, 200);
+    expect(late.options[late.better ?? 0].id).toBe("out-of-bounds");
+    expect(late.flipNote).toMatch(/or more left, slide in bounds instead/);
+  });
+
+  it("RB with the lead: inside two minutes stay in bounds, unless the extra yards move the chains", () => {
+    const classic = analyzeScenario("rb-inbounds", presetInput("rb-inbounds"), 1000, 200);
+    expect(classic.options[classic.better ?? 1].id).toBe("stay-in-bounds");
+    // 3rd & 6: 4 yards in bounds leaves 4th down; 7 yards out of bounds is a first down.
+    const chains = analyzeScenario("rb-inbounds", presetInput("rb-inbounds", { down: 3, toGo: 6, clock: 150, margin: 4 }), 1000, 200);
+    expect(chains.options[chains.better ?? 0].id).toBe("out-of-bounds");
+    expect(chains.reason.text).toContain("move the chains");
+  });
+
+  it("kneel or run: run when kneels can't end it; never run when they can", () => {
+    const needFirstDown = analyzeScenario("kneel-or-run", presetInput("kneel-or-run"), 1000, 200);
+    expect(needFirstDown.options[needFirstDown.better ?? 0].id).toBe("run");
+    expect(needFirstDown.options[1].after).toContain("It varies");
+    // Up 3 with 1:50 left and the opponent out of timeouts: kneel-downs end it.
+    const kneelOut = analyzeScenario("kneel-or-run", presetInput("kneel-or-run", { clock: 110, margin: 3, timeouts: { you: 2, opp: 0 } }), 1000, 200);
+    expect(kneelOut.better).not.toBe(1);
+    expect(kneelOut.options[0].wp).toBe(1);
+  });
+
   it("every scenario has two options, a caveat linked to the guide, and a flip table that includes the current clock", () => {
     for (const id of SCENARIO_IDS) {
       const input = presetInput(id);
