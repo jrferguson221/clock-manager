@@ -11,17 +11,19 @@ The leading and trailing modes also have their own calculators:
 - **Leading: run out the clock.** Whether you can kneel or run out the clock, the latest clock time it works from, and a play-by-play timeline.
 - **Trailing: drive to score.** A rule-of-thumb next call (hurry up, timeout, spike, let the two-minute warning hit, or burn the clock and kick), and how many plays you need versus how many you have time for.
 
-Built with Vite, React, TypeScript and Vitest.
+Built with Vite, React, TypeScript and Vitest, using Bun.
 
 ## Commands
 
 ```sh
-npm install        # first time only
-npm run dev        # dev server with hot reload at http://localhost:5173
-npm test           # run the tests once
-npm run test:watch # rerun tests on save
-npm run build      # type-check and build into dist/
+bun install        # first time only
+bun run dev        # dev server with hot reload at http://localhost:5173
+bun run test       # run the tests once
+bun run test:watch # rerun tests on save
+bun run build      # type-check and build into dist/
 ```
+
+The project uses [Bun](https://bun.sh) to install packages and run scripts. `bunfig.toml` makes `bun run` use Bun's runtime rather than Node's.
 
 ## Layout
 

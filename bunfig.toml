@@ -1,0 +1,3 @@
+# Run package.json scripts (vite, vitest, tsc) on Bun's runtime instead of Node.
+[run]
+bun = true
