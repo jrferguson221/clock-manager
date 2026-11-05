@@ -3,7 +3,7 @@
 import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { Anchor, type AnchorProps } from "@mantine/core";
 import { createLink, type LinkComponent } from "@tanstack/react-router";
-import type { GuideSection } from "@clock-manager/schemas";
+import type { GuideSection } from "@situational-football/schemas";
 import type { Reason } from "./sim";
 
 interface MantineAnchorProps extends AnchorProps, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps> {}

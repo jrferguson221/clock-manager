@@ -7,7 +7,7 @@ import {
 import { useDebouncedValue } from "@mantine/hooks";
 import {
   clockTextSchema, firstError, rangeSchema, LIMITS, SIDES, type LimitedField, type Side,
-} from "@clock-manager/schemas";
+} from "@situational-football/schemas";
 import type { TimelineEvent } from "./engine";
 import { formatClock, formatClockDigits, parseClock } from "./time";
 

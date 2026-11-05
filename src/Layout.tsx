@@ -3,6 +3,7 @@
 import {
   ActionIcon, Anchor, Box, Container, Group, Stack, Tabs, Text, Title, useComputedColorScheme, useMantineColorScheme,
 } from "@mantine/core";
+import { useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 
 const MODES = [
@@ -19,6 +20,11 @@ export default function Layout() {
   const navigate = useNavigate();
   const active = MODES.find((m) => m.to === pathname)?.to ?? null;
 
+  // On a phone the tabs scroll sideways: keep the current one in view.
+  useEffect(() => {
+    document.querySelector(".mode-tab[data-active]")?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [active]);
+
   return (
     <Tabs
       value={active}
@@ -33,8 +39,8 @@ export default function Layout() {
         <Container size="xl" px={{ base: "sm", sm: "lg" }}>
           <Group justify="space-between" align="center" wrap="nowrap" pt={{ base: "md", sm: "lg" }} pb="sm">
             <Box>
-              <Title order={1} className="brand">Clock Manager</Title>
-              <Text className="tagline">End-of-game clock decisions for American football</Text>
+              <Title order={1} className="brand">Situational Football</Title>
+              <Text className="tagline">Late-game strategy for American football</Text>
             </Box>
             <ColorSchemeToggle />
           </Group>

@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 import {
   bestCallSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
-} from "@clock-manager/schemas";
+} from "@situational-football/schemas";
 import Layout, { NotFound } from "./Layout";
 import { DecisionsError, DecisionsPending } from "./DecisionsStatus";
 import { fetchedDecisions, type DecisionsData } from "./decisionsData";

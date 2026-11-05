@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { decisionWeekSchema } from "@clock-manager/schemas";
+import { decisionWeekSchema } from "@situational-football/schemas";
 import { parseCsv, type CsvRow } from "../../scripts/decisions/csv";
 import { callFor, clockRunningAfter, completeWeeks, findCandidates, passTagsFrom } from "../../scripts/decisions/plays";
 import { buildWeek, decisionPoint, scoreDecision, FLAG_THRESHOLD } from "../../scripts/decisions/build";

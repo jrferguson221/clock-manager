@@ -7,7 +7,7 @@
 import { useEffect, useMemo, type ReactNode } from "react";
 import { Accordion, Card, Grid, List, Stack, Table, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import { GUIDE_SECTIONS, type GuideSection } from "@clock-manager/schemas";
+import { GUIDE_SECTIONS, type GuideSection } from "@situational-football/schemas";
 import { NFL_RULES, PLAY_TYPES, runOutThreshold, DOWNS } from "./engine";
 import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {

@@ -3,7 +3,7 @@
 
 import {
   decisionIndexSchema, decisionWeekSchema, type DecisionIndex, type DecisionWeek,
-} from "@clock-manager/schemas";
+} from "@situational-football/schemas";
 import type * as z from "zod/mini";
 
 export interface DecisionsData {

@@ -6,7 +6,7 @@
 
 import { NFL_RULES, PLAY_TYPES, simulateRunOut, type Down } from "./engine";
 import { formatClock } from "./time";
-import type { GameState, GuideSection, PlayCall, Team } from "@clock-manager/schemas";
+import type { GameState, GuideSection, PlayCall, Team } from "@situational-football/schemas";
 
 // The game state and call types come from the schemas package, which validates them too.
 export type { GameState, PlayCall, Team };

@@ -49,6 +49,11 @@ body {
 .mode-tabs {
   display: flex;
   gap: rem(4px);
+  /* One row: on narrow screens the tabs scroll sideways instead of wrapping onto a second line. */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 }
 
 .mode-tab {
@@ -72,8 +77,8 @@ body {
   }
 
   @mixin smaller-than $mantine-breakpoint-sm {
-    flex: 1 1 0;
-    padding: rem(10px) rem(6px);
+    flex: 0 0 auto;
+    padding: rem(10px) rem(12px);
   }
 }
 

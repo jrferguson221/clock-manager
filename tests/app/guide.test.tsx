@@ -1,5 +1,5 @@
 import { expect, it } from "bun:test";
-import { GUIDE_SECTIONS } from "@clock-manager/schemas";
+import { GUIDE_SECTIONS } from "@situational-football/schemas";
 import { renderAt } from "./render";
 
 it("renders every guide section, each with an anchor the explainer can link to", async () => {

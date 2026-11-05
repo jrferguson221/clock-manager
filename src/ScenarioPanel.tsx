@@ -3,7 +3,7 @@
 import { useMemo, type ReactNode } from "react";
 import { Alert, Badge, Card, Group, Progress, SimpleGrid, Stack, Table, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import { SCENARIO_IDS, SCENARIO_PRESETS, type ScenarioId, type ScenarioSearch } from "@clock-manager/schemas";
+import { SCENARIO_IDS, SCENARIO_PRESETS, type ScenarioId, type ScenarioSearch } from "@situational-football/schemas";
 import { DOWNS } from "./engine";
 import type { GameState } from "./sim";
 import { analyzeScenario, SCENARIOS, type ScenarioAnalysis } from "./scenarios";

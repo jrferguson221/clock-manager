@@ -8,7 +8,7 @@
 // the offense needed (a field goal is enough, or a touchdown) and by time left.
 
 import { readFile } from "node:fs/promises";
-import { DOWNS, type GameState } from "@clock-manager/schemas";
+import { DOWNS, type GameState } from "@situational-football/schemas";
 import { policy, seededRng, step } from "../../src/sim";
 import { parseCsv, type CsvRow } from "../decisions/csv";
 

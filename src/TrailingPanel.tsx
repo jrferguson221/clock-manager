@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Accordion, Alert, Badge, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { TrailingSearch } from "@clock-manager/schemas";
+import type { TrailingSearch } from "@situational-football/schemas";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
 import { ChoiceSelect, NumberField, clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";

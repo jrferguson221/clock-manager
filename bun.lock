@@ -5,11 +5,11 @@
     "": {
       "name": "clock-manager",
       "dependencies": {
-        "@clock-manager/schemas": "workspace:*",
         "@fontsource/barlow": "^5.3.0",
         "@fontsource/barlow-condensed": "^5.3.0",
         "@mantine/core": "^9.7.5",
         "@mantine/hooks": "^9.7.5",
+        "@situational-football/schemas": "workspace:*",
         "@tanstack/react-router": "^1.170.46",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
@@ -27,7 +27,7 @@
       },
     },
     "packages/schemas": {
-      "name": "@clock-manager/schemas",
+      "name": "@situational-football/schemas",
       "version": "0.1.0",
       "dependencies": {
         "zod": "^4.6.7",
@@ -35,8 +35,6 @@
     },
   },
   "packages": {
-    "@clock-manager/schemas": ["@clock-manager/schemas@workspace:packages/schemas"],
-
     "@floating-ui/core": ["@floating-ui/core@1.8.0", "", { "dependencies": { "@floating-ui/utils": "^0.2.12" } }, "sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ=="],
 
     "@floating-ui/dom": ["@floating-ui/dom@1.8.0", "", { "dependencies": { "@floating-ui/core": "^1.8.0", "@floating-ui/utils": "^0.2.12" } }, "sha512-yXSrzeHZBTZadLOlfyhCkJHNeLJnHRnRInwdZ40L7ZiaAtrBwoYlsDrX3v5zB1Utk7CLfzcOVnVVWoXEky7Ceg=="],
@@ -88,6 +86,8 @@
     "@rolldown/binding-win32-x64-msvc": ["@rolldown/binding-win32-x64-msvc@1.2.16", "", { "os": "win32", "cpu": "x64" }, "sha512-1lv1KvX0Z871zfk7vw+dnXMMnHNyDwMzWG8Kv3HxDXMOhzCX4SHc7HK319fInP0i+0p9D8brkfzL7pJOaGl+tw=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.1", "", {}, "sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw=="],
+
+    "@situational-football/schemas": ["@situational-football/schemas@workspace:packages/schemas"],
 
     "@tanstack/history": ["@tanstack/history@1.162.5", "", {}, "sha512-w1+YvwmTkwt5n8yUqEH3IWZ9DsmorCZW/EQ3KYHnqEgIkOZpH54NvW6/Epq3Dzb8H0ifIeYX8PExvrNLIH5FIA=="],
 

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Alert, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { LeadingSearch } from "@clock-manager/schemas";
+import type { LeadingSearch } from "@situational-football/schemas";
 import { simulateRunOut, runOutThreshold, PLAY_TYPE_IDS, PLAY_TYPES, type RunOutResult } from "./engine";
 import type { GameState } from "./sim";
 import { formatClock } from "./time";

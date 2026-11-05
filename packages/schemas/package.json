@@ -1,9 +1,9 @@
 {
-  "name": "@clock-manager/schemas",
+  "name": "@situational-football/schemas",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Zod schemas for Clock Manager's game state, URL search params and form inputs, with their inferred types.",
+  "description": "Zod schemas for Situational Football's game state, URL search params and form inputs, with their inferred types.",
   "exports": {
     ".": "./src/index.ts"
   },

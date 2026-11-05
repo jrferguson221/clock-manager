@@ -3,7 +3,7 @@
 
 import { Accordion, Alert, Badge, Card, Group, List, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { Decision, DecisionIndex, DecisionWeek } from "@clock-manager/schemas";
+import type { Decision, DecisionIndex, DecisionWeek } from "@situational-football/schemas";
 import { PLAY_CALLS } from "./sim";
 import { formatClock } from "./time";
 import { ChoiceSelect, spotFrom } from "./fields";

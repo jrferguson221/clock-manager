@@ -1,6 +1,6 @@
-# Clock Manager
+# Situational Football
 
-A web app for end-of-game clock decisions in American football.
+A web app for late-game strategy in American football: when to run, throw, kick, spike or call timeout, what each call is worth in win probability, and why.
 
 Both modes are a play-calling trainer. Enter the situation (clock, score, timeouts for both teams, down, distance and ball spot), then call each play: timeout, run, screen, pass to the sideline, pass over the middle, play-action pass, deep pass, spike, kneel, field goal or punt. The app simulates the result and updates the situation. A win-probability meter shows your chances. After each call, it explains what the best call was, why, and the win probability for every option. When the drive ends, you can play out the rest of the game to see one way it could go. Once the game is over, a recap shows the final result and the call with the biggest win-probability swing, added or lost, and says whether the call itself was right or the result was luck. You can undo a call to try another.
 
@@ -72,7 +72,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | `src/theme.ts`, `src/styles.css` | The "Sideline" Mantine theme (pylon orange, turf green, night navy, Barlow fonts), and the CSS the theme can't express. `src/mantine-styles.ts` imports Mantine's styles for just the components used. |
 | `src/RunOutPanel.tsx`, `src/TrailingPanel.tsx`, `src/AdvisorPanel.tsx` | One UI panel per mode. |
 | `src/SituationForm.tsx`, `src/fields.tsx` | The situation form all modes share, its inputs, and the timeline table. |
-| `packages/schemas` | `@clock-manager/schemas`, a Bun workspace package: Zod schemas for the game state, URL search params (including the guide's section names) and form fields, and the types inferred from them. The engines take their `GameState`, `Down` and `PlayCall` types from it. |
+| `packages/schemas` | `@situational-football/schemas`, a Bun workspace package: Zod schemas for the game state, URL search params (including the guide's section names) and form fields, and the types inferred from them. The engines take their `GameState`, `Down` and `PlayCall` types from it. |
 | `tests/` | Tests for the engines and the simulator. `tests/app/` renders each route (one file per mode). `packages/schemas/tests/` tests the schemas. |
 
 The repo is a Bun workspace: `bun install` at the root links `packages/schemas`, and `bun run test` runs every package's tests.

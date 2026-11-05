@@ -1,7 +1,7 @@
 // Turns nflverse play-by-play rows into late-game offensive decisions in the model's terms.
 // Pure functions: no network or file access, so they're easy to test.
 
-import { DOWNS, type Down, type GameState, type PlayCall } from "@clock-manager/schemas";
+import { DOWNS, type Down, type GameState, type PlayCall } from "@situational-football/schemas";
 import type { CsvRow } from "./csv";
 
 /** Decisions in the final 5:00 of the 4th quarter, in one-score games. */

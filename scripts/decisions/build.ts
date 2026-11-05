@@ -8,9 +8,9 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@clock-manager/schemas";
+import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@situational-football/schemas";
 import { bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, ranked, snapDelay, wpOf } from "../../src/sim";
-import type { GameState } from "@clock-manager/schemas";
+import type { GameState } from "@situational-football/schemas";
 import { parseCsv } from "./csv";
 import { completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
 

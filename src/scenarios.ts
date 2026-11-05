@@ -3,7 +3,7 @@
 // for every option, so the difference between them is down to the choice alone.
 // Pure functions, no React or DOM access.
 
-import type { GameState, PlayCall, ScenarioId } from "@clock-manager/schemas";
+import type { GameState, PlayCall, ScenarioId } from "@situational-football/schemas";
 import {
   downAndDistance, describeSpot, outcomeStep, outcomeWinProbability, CLOSE, DEFAULT_SIM,
   type PlayOutcome, type Reason, type StepResult,

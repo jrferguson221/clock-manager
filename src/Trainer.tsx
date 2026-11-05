@@ -7,7 +7,7 @@ import { noGainCalls,
   availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
   DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
 } from "./sim";
-import { PLAY_CALL_IDS } from "@clock-manager/schemas";
+import { PLAY_CALL_IDS } from "@situational-football/schemas";
 import { ReasonText } from "./ReadMore";
 import { PlayLog } from "./fields";
 

@@ -1,6 +1,6 @@
-// The URL schemas' defaults live in @clock-manager/schemas, which can't import the engines. Check they agree.
+// The URL schemas' defaults live in @situational-football/schemas, which can't import the engines. Check they agree.
 import { expect, it } from "bun:test";
-import { BEST_CALL_DEFAULTS, TRAILING_DEFAULTS, LIMITS, PLAY_TYPE_IDS } from "@clock-manager/schemas";
+import { BEST_CALL_DEFAULTS, TRAILING_DEFAULTS, LIMITS, PLAY_TYPE_IDS } from "@situational-football/schemas";
 import { DEFAULT_ASSUMPTIONS } from "../src/trailing";
 import { DEFAULT_SIM } from "../src/sim";
 import { PLAY_TYPES } from "../src/engine";

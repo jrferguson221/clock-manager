@@ -1,7 +1,7 @@
 // Clock-management engine: pure functions, no DOM access.
 // All times are in whole seconds.
 
-import { DOWNS, PLAY_TYPE_IDS, type Down, type PlayType } from "@clock-manager/schemas";
+import { DOWNS, PLAY_TYPE_IDS, type Down, type PlayType } from "@situational-football/schemas";
 
 export { DOWNS, PLAY_TYPE_IDS, type Down, type PlayType };
 

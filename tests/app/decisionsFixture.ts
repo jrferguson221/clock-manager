@@ -3,7 +3,7 @@
 
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { decisionIndexSchema, decisionWeekSchema } from "@clock-manager/schemas";
+import { decisionIndexSchema, decisionWeekSchema } from "@situational-football/schemas";
 import type { DecisionsData } from "../../src/decisionsData";
 
 const DIR = join(import.meta.dir, "../../public/data/decisions");

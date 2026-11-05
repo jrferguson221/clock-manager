@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Card, Grid, SimpleGrid, Switch, Text } from "@mantine/core";
-import type { BestCallSearch, LeadingSearch, TrailingSearch } from "@clock-manager/schemas";
+import type { BestCallSearch, LeadingSearch, TrailingSearch } from "@situational-football/schemas";
 import { DOWNS } from "./engine";
 import type { GameState } from "./sim";
 import { formatClock } from "./time";

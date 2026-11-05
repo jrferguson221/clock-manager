@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { SCENARIO_IDS, SCENARIO_PRESETS, type ScenarioId } from "@clock-manager/schemas";
+import { SCENARIO_IDS, SCENARIO_PRESETS, type ScenarioId } from "@situational-football/schemas";
 import { analyzeScenario, SCENARIOS, type ScenarioInput } from "../src/scenarios";
 import { policy, seededRng, step, type GameState } from "../src/sim";
 
