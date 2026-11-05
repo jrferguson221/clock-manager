@@ -700,8 +700,20 @@ export function wpOf(values: CallValues, call: PlayCall): number {
 }
 
 /** The calls sorted from best to worst win probability. */
+/**
+ * The calls from best to worst win probability. Exact ties go to the call that spends the least, so a
+ * timeout that only matches a play (it can never beat it with the clock stopped) ranks below that play.
+ */
 export function ranked(values: CallValues): ScoredCall[] {
-  return [...values].sort((a, b) => b.wp - a.wp);
+  return [...values].sort((a, b) => b.wp - a.wp || TIE_ORDER.indexOf(a.call) - TIE_ORDER.indexOf(b.call));
+}
+
+/**
+ * Calls that can't help with the clock already stopped: a timeout spends a timeout and a spike a down, and
+ * neither gains anything. They can tie the best play at most, never beat it.
+ */
+export function noGainCalls(g: GameState): readonly PlayCall[] {
+  return g.running ? [] : ["timeout", "spike"];
 }
 
 /** When calls are this close, they count as tied. */
@@ -822,8 +834,9 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
 
 function whyNot(g: GameState, call: PlayCall): Reason | null {
   const m = marginFor(g, g.poss);
-  if (call === "timeout" && !g.running) return reason("Your timeout was wasted: the clock was already stopped.", "timeouts");
-  if (call === "spike" && !g.running) return reason("Spiking with the clock already stopped throws away a down.", "spike");
+  if (call === "timeout" && !g.running)
+    return reason("A timeout gains nothing with the clock already stopped, and spends one you may need later.", "timeouts");
+  if (call === "spike" && !g.running) return reason("A spike gains nothing with the clock already stopped, and throws away a down.", "spike");
   if (call === "kneel" && m <= 0) return reason("Kneeling gives up a down and time you need.", "clock-rules");
   if (call === "pass-deep" && m <= 0) {
     const coverage = coverageFor(g, g.clock);
@@ -943,7 +956,9 @@ export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEF
   const next = others.find((v) => g.running || (v.call !== "timeout" && v.call !== "spike"));
   const runnerUp = next === undefined ? null : { call: next.call, wp: next.wp, close: wp - next.wp <= CLOSE };
   const avoid = others
-    .filter((v) => wp - v.wp >= AVOID || (wastesResource(g, v.call) && wp - v.wp > TIE))
+    // A timeout or spike with the clock stopped is always worth avoiding, even when it costs nothing
+    // measurable: it gives up something and can't gain anything.
+    .filter((v) => wp - v.wp >= AVOID || wastesResource(g, v.call))
     .flatMap((v): Avoid[] => {
       const why = whyNot(g, v.call);
       return why === null ? [] : [{ call: v.call, wp: v.wp, reason: why }];

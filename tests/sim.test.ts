@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, biggestSwing, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -249,5 +249,27 @@ describe("field position", () => {
     const late: GameState = { ...base, clock: 100, margin: -3 };
     expect(coverageFor({ ...late, ytg: 40 }, 100)).toBe("prevent");
     expect(coverageFor({ ...late, ytg: 15 }, 100)).toBe("normal");
+  });
+});
+
+describe("a timeout with the clock stopped", () => {
+  // Up 3 with 2:20 left, 1st & 10 at your 30, clock stopped: a timeout changes nothing, so it can't be best.
+  const g: GameState = { ...base, clock: 140, running: false, down: 1, toGo: 10, ytg: 70, margin: 3, timeouts: { you: 3, opp: 3 } };
+  const values = evaluateCalls(g, 500);
+
+  it("never ranks above the play it can only match, even when it costs nothing", () => {
+    const order = ranked(values).map((v) => v.call);
+    expect(bestCall(values)).not.toBe("timeout");
+    expect(order.indexOf("timeout")).toBeGreaterThan(order.indexOf(bestCall(values)));
+  });
+
+  it("is always on the list of calls to avoid, with why", () => {
+    const avoid = recommend(g, values).avoid.find((a) => a.call === "timeout");
+    expect(avoid?.reason.text).toContain("already stopped");
+  });
+
+  it("is tagged as a no-gain call, along with a spike, only while the clock is stopped", () => {
+    expect(noGainCalls(g)).toEqual(["timeout", "spike"]);
+    expect(noGainCalls({ ...g, running: true })).toEqual([]);
   });
 });

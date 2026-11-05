@@ -3,7 +3,7 @@
 
 import { useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, Group, List, Progress, SimpleGrid, Stack, Table, Text } from "@mantine/core";
-import {
+import { noGainCalls,
   availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
   DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
 } from "./sim";
@@ -181,13 +181,17 @@ function Explainer({ entry }: { entry: Entry }) {
       <Text>{entry.text}</Text>
       <Text className="verdict" mt="xs">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</Text>
       <List size="sm" spacing={2} mb="sm">{x.reasons.map((r, i) => <List.Item key={i}><ReasonText reason={r} /></List.Item>)}</List>
-      <CallTable values={values} chosen={call} caption="Win probability by call, before the play" />
+      <CallTable values={values} chosen={call} caption="Win probability by call, before the play" noGain={noGainCalls(entry.before)} />
     </Alert>
   );
 }
 
 /** Every call's win probability as a ranked bar list, tagging the best call and (optionally) yours. */
-export function CallTable({ values, chosen, caption }: { values: CallValues; chosen?: PlayCall; caption: string }) {
+export function CallTable({ values, chosen, caption, noGain = [] }: {
+  values: CallValues; chosen?: PlayCall; caption: string;
+  /** Calls that can't gain anything here (a timeout or spike with the clock stopped), tagged as such. */
+  noGain?: readonly PlayCall[];
+}) {
   const best = bestScored(values).call;
   return (
     <Table className="call-values" withRowBorders={false} verticalSpacing={4} horizontalSpacing={0} captionSide="top">
@@ -199,6 +203,7 @@ export function CallTable({ values, chosen, caption }: { values: CallValues; cho
               {PLAY_CALLS[c]}
               {c === best && <Badge color="turf" ml={6} size="sm">best</Badge>}
               {c === chosen && <Badge color="pylon" ml={6} size="sm">your call</Badge>}
+              {noGain.includes(c) && <Badge color="gray" variant="light" ml={6} size="sm">no gain</Badge>}
             </Table.Th>
             <Table.Td className="bar-cell">
               <Progress

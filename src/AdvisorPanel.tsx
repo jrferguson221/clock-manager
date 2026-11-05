@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Alert, Card, List, Stack, Text } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { BestCallSearch } from "@clock-manager/schemas";
-import { evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } from "./sim";
+import { noGainCalls, evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } from "./sim";
 import { ChoiceSelect, NumberField, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout } from "./SituationForm";
 import { CallTable, WinMeter, tempoNote } from "./Trainer";
@@ -74,7 +74,7 @@ export default function AdvisorPanel() {
 
           <Card>
             <Text className="eyebrow">Every option</Text>
-            <CallTable values={analysis.values} caption="Your win probability with each call" />
+            <CallTable values={analysis.values} caption="Your win probability with each call" noGain={noGainCalls(analysis.game)} />
             {analysis.rec.avoid.length > 0 && (
               <>
                 <Text className="eyebrow" c="red" mt="md">Avoid</Text>
