@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-04T23:42:32.965Z",
+ "generatedAt": "2026-11-05T16:04:21.878Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.0463046637992679,
+  "meanAbsDiff": 0.04564512645522344,
   "within10": 0.8556701030927835
  },
  "worst": [
@@ -32,34 +32,38 @@
    "snapClock": 33,
    "description": "(:33) (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson pushed ob at CLE 45 for 8 yards (53-A.Hill). The Replay Official reviewed the runner was out of bounds ruling, and the play was REVERSED. (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson to CLE 45 for 8 yards (53-A.Hill).",
    "call": "pass-middle",
-   "wpCall": 0.5476666666666666,
+   "wpCall": 0.5573333333333333,
    "best": "timeout",
-   "wpBest": 0.661,
-   "cost": 0.1133333333333334,
+   "wpBest": 0.6486666666666666,
+   "cost": 0.09133333333333327,
    "values": [
     {
      "call": "timeout",
-     "wp": 0.661
+     "wp": 0.6486666666666666
     },
     {
      "call": "spike",
-     "wp": 0.606
+     "wp": 0.6
     },
     {
      "call": "run",
-     "wp": 0.5973333333333334
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.5476666666666666
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.5293333333333333
+     "wp": 0.593
     },
     {
      "call": "pass-screen",
-     "wp": 0.5133333333333333
+     "wp": 0.5573333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5476666666666666
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5473333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5053333333333333
     },
     {
      "call": "punt",
@@ -67,15 +71,11 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.4826666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.482
+     "wp": 0.4603333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.46
+     "wp": 0.44
     }
    ],
    "reason": {
@@ -107,47 +107,47 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3453333333333333,
-   "best": "pass-middle",
-   "wpBest": 0.413,
-   "cost": 0.06766666666666665,
+   "wpCall": 0.3436666666666667,
+   "best": "run",
+   "wpBest": 0.4186666666666667,
+   "cost": 0.07500000000000001,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.41733333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.413
-    },
-    {
      "call": "run",
-     "wp": 0.3993333333333333
+     "wp": 0.4186666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.39
+     "wp": 0.408
     },
     {
      "call": "pass-screen",
-     "wp": 0.37933333333333336
+     "wp": 0.39466666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.38466666666666666
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.37866666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37266666666666665
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.34933333333333333
+     "wp": 0.35333333333333333
     },
     {
      "call": "fg",
-     "wp": 0.3453333333333333
+     "wp": 0.3436666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.3016666666666667
     }
    ],
    "reason": {
-    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
-    "section": "play-model"
+    "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
+    "section": "field-goal-endgame"
    },
    "nflverseWp": 0.366786807775497,
    "nflverseWpa": -0.175609558820724,
@@ -176,42 +176,42 @@
    "snapClock": 28,
    "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
    "call": "pass-sideline",
-   "wpCall": 0.7176666666666667,
+   "wpCall": 0.709,
    "best": "pass-deep",
-   "wpBest": 0.7176666666666667,
+   "wpBest": 0.709,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.7176666666666667
+     "wp": 0.709
     },
     {
      "call": "pass-play-action",
-     "wp": 0.7006666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.6813333333333333
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.677
-    },
-    {
-     "call": "run",
-     "wp": 0.6746666666666666
+     "wp": 0.676
     },
     {
      "call": "pass-screen",
-     "wp": 0.67
+     "wp": 0.665
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.6636666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6543333333333333
     },
     {
      "call": "spike",
-     "wp": 0.6243333333333333
+     "wp": 0.6396666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.629
     },
     {
      "call": "kneel",
-     "wp": 0.5896666666666667
+     "wp": 0.576
     },
     {
      "call": "punt",
@@ -219,7 +219,7 @@
     }
    ],
    "reason": {
-    "text": "You need a big play: 55 yards with 0:28 left is too far to go in small chunks. A deep pass completes about 35% of the time, for 20+ yards.",
+    "text": "You need a big play: 55 yards with 0:28 left is too far to go in small chunks. A deep pass completes about 30% of the time, for 20+ yards.",
     "section": "play-model"
    },
    "nflverseWp": 0.583802819252014,
@@ -247,46 +247,46 @@
    "snapClock": 153,
    "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
    "call": "pass-deep",
-   "wpCall": 0.1,
+   "wpCall": 0.11966666666666667,
    "best": "pass-middle",
-   "wpBest": 0.09933333333333333,
+   "wpBest": 0.11833333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.1
+     "wp": 0.11966666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.09933333333333333
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.08366666666666667
+     "wp": 0.11833333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.077
+     "wp": 0.11633333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.106
     },
     {
      "call": "pass-screen",
-     "wp": 0.075
+     "wp": 0.08866666666666667
     },
     {
      "call": "run",
-     "wp": 0.07133333333333333
+     "wp": 0.08333333333333333
     },
     {
      "call": "fg",
-     "wp": 0.054
+     "wp": 0.075
     },
     {
      "call": "punt",
-     "wp": 0.04566666666666667
+     "wp": 0.06633333333333333
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.120108582079411,
@@ -314,50 +314,50 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.839,
+   "wpCall": 0.8036666666666666,
    "best": "run",
-   "wpBest": 0.8486666666666667,
-   "cost": 0.009666666666666712,
+   "wpBest": 0.8163333333333334,
+   "cost": 0.012666666666666715,
    "values": [
     {
      "call": "run",
-     "wp": 0.8486666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.839
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.8383333333333334
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.8316666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.8213333333333334
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.8206666666666667
+     "wp": 0.8163333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.818
+     "wp": 0.8086666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.8036666666666666
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.8013333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.7953333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.7923333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.7603333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.8143333333333334
+     "wp": 0.7503333333333333
     },
     {
      "call": "spike",
-     "wp": 0.7876666666666666
+     "wp": 0.7356666666666667
     },
     {
      "call": "punt",
-     "wp": 0.7213333333333334
+     "wp": 0.6906666666666667
     }
    ],
    "reason": {
@@ -395,11 +395,11 @@
    "cost": 0,
    "values": [
     {
-     "call": "spike",
+     "call": "fg",
      "wp": 0.975
     },
     {
-     "call": "fg",
+     "call": "spike",
      "wp": 0.975
     },
     {
@@ -412,19 +412,19 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.587
+     "wp": 0.581
     },
     {
      "call": "pass-middle",
-     "wp": 0.5626666666666666
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5466666666666666
+     "wp": 0.574
     },
     {
      "call": "pass-screen",
-     "wp": 0.5416666666666666
+     "wp": 0.5616666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5476666666666666
     },
     {
      "call": "run",
@@ -460,47 +460,47 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3453333333333333,
-   "best": "pass-middle",
-   "wpBest": 0.413,
-   "cost": 0.06766666666666665,
+   "wpCall": 0.3436666666666667,
+   "best": "run",
+   "wpBest": 0.4186666666666667,
+   "cost": 0.07500000000000001,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.41733333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.413
-    },
-    {
      "call": "run",
-     "wp": 0.3993333333333333
+     "wp": 0.4186666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.39
+     "wp": 0.408
     },
     {
      "call": "pass-screen",
-     "wp": 0.37933333333333336
+     "wp": 0.39466666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.38466666666666666
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.37866666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37266666666666665
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.34933333333333333
+     "wp": 0.35333333333333333
     },
     {
      "call": "fg",
-     "wp": 0.3453333333333333
+     "wp": 0.3436666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.3016666666666667
     }
    ],
    "reason": {
-    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
-    "section": "play-model"
+    "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
+    "section": "field-goal-endgame"
    },
    "nflverseWp": 0.366786807775497,
    "nflverseWpa": -0.175609558820724,

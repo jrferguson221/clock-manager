@@ -152,18 +152,31 @@ export interface PlayOutcome {
   sack?: boolean;
 }
 
-/** How the defense is playing. A defense that leads late plays "prevent": deep and soft. */
-export type Coverage = "normal" | "prevent";
+/**
+ * How the defense is playing:
+ * - "prevent": ahead late, it protects the deep field (the last 4:00, outside the red zone).
+ * - "obvious": everyone knows a pass is coming: 3rd or 4th & 7+, or the offense trailing or tied by a score
+ *   in the last 5:00. More sacks, fewer completions, and play-action fools fewer defenders.
+ * - "normal": anything else.
+ */
+export type Coverage = "normal" | "obvious" | "prevent";
 
 /** A defense that's ahead plays prevent in the last 4 minutes. */
 export const PREVENT_WINDOW = 240;
+/** The offense is obviously passing when trailing or tied by a score in the last 5 minutes… */
+export const OBVIOUS_WINDOW = 300;
+/** …or on 3rd or 4th down with this many yards or more to go. */
+export const OBVIOUS_TO_GO = 7;
 
 /** Inside the opponent's 20 the field is compressed: less room to defend, and to throw into. */
 export const RED_ZONE = 20;
 
 export function coverageFor(g: GameState, clock: number): Coverage {
+  const m = marginFor(g, g.poss);
   // Prevent protects the deep field, and in the red zone there isn't one.
-  return marginFor(g, other(g.poss)) > 0 && clock <= PREVENT_WINDOW && g.ytg > RED_ZONE ? "prevent" : "normal";
+  if (m < 0 && clock <= PREVENT_WINDOW && g.ytg > RED_ZONE) return "prevent";
+  if ((g.down >= 3 && g.toGo >= OBVIOUS_TO_GO) || (m <= 0 && m >= -8 && clock <= OBVIOUS_WINDOW)) return "obvious";
+  return "normal";
 }
 
 /**
@@ -177,8 +190,11 @@ export function compression(ytg: number): number {
 export type PassCall = "pass-sideline" | "pass-middle" | "pass-deep" | "pass-play-action" | "pass-screen";
 
 interface PassOdds {
+  /** Chance of a sack, per snap. */
   readonly sack: number;
+  /** Chance of an interception, per snap. */
   readonly interception: number;
+  /** Chance of a completion, per snap (sacks count as snaps, so this is below the per-throw rate). */
   readonly complete: number;
   /** Completions gain at least this many yards… */
   readonly minYards: number;
@@ -189,31 +205,55 @@ interface PassOdds {
 }
 
 /**
- * Pass odds by coverage. Against prevent, safeties play deep and fewer rushers come: deep throws
- * complete less and get picked more, while short and middle throws complete more often but are
- * tackled sooner, and there are fewer sacks.
+ * Pass odds by situation, fitted to the 2025 and 2026 (weeks 1-8) NFL regular seasons: about 28,800
+ * dropbacks charted by FTN, so play-action and screens are known. Re-fit with scripts/calibrate/passes.ts.
+ *
+ * - Completion and interception rates are per throw in the data, converted to per snap here.
+ * - Yards per catch: the minimum is about the 10th percentile, and the exponential's mean makes up the average.
+ * - Sacks can't be tied to a target (a sacked passer never threw), so dropback passes share the measured
+ *   rate: 6% normally, 10% in obvious passing situations, deep throws a little more as they take longer.
+ * - Prevent has few plays (50 to 513 per kind of pass), so its numbers are pulled toward the normal ones in
+ *   proportion to how few plays back them.
+ * - Play-action in obvious passing and prevent keeps about half its usual edge over a dropback: the
+ *   linebackers aren't fooled when a pass is expected. Real play-action passes in those spots are too few
+ *   (118 and 50) to fit directly; they hint at more sacks (8.5% and 14%), which the 9% here reflects.
  */
 export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, PassOdds>>>> = Object.freeze({
   normal: {
-    "pass-sideline": { sack: 0.06, interception: 0.025, complete: 0.52, minYards: 4, extraYards: 6, outOfBounds: 0.7 },
-    "pass-middle": { sack: 0.06, interception: 0.03, complete: 0.6, minYards: 4, extraYards: 7, outOfBounds: 0.08 },
-    "pass-deep": { sack: 0.08, interception: 0.05, complete: 0.35, minYards: 20, extraYards: 12, outOfBounds: 0.25 },
-    // A run fake pulls the linebackers up and opens the intermediate field, but the drop takes longer.
-    "pass-play-action": { sack: 0.07, interception: 0.03, complete: 0.6, minYards: 5, extraYards: 8, outOfBounds: 0.15 },
-    // A quick throw behind blockers: rarely sacked or picked, but often stopped short or behind the line,
-    // with the occasional big gain (about 5 yards a catch).
-    "pass-screen": { sack: 0.02, interception: 0.015, complete: 0.8, minYards: -2, extraYards: 7, outOfBounds: 0.12 },
+    // 66% complete, 9 yards a catch, 26% of catches out of bounds.
+    "pass-sideline": { sack: 0.06, interception: 0.017, complete: 0.624, minYards: 3, extraYards: 6, outOfBounds: 0.26 },
+    // 70% complete, 11 yards a catch, almost never out of bounds.
+    "pass-middle": { sack: 0.06, interception: 0.025, complete: 0.653, minYards: 4, extraYards: 7, outOfBounds: 0.03 },
+    // 36% complete for 32 yards a catch, 4% intercepted.
+    "pass-deep": { sack: 0.08, interception: 0.037, complete: 0.328, minYards: 20, extraYards: 12, outOfBounds: 0.24 },
+    // A run fake pulls the linebackers up: 63% complete for 13 yards a catch.
+    "pass-play-action": { sack: 0.067, interception: 0.018, complete: 0.589, minYards: 2, extraYards: 11, outOfBounds: 0.25 },
+    // A quick throw behind blockers: 86% complete, almost never sacked or picked, often stopped short (6 a catch).
+    "pass-screen": { sack: 0.005, interception: 0.006, complete: 0.86, minYards: -2, extraYards: 8, outOfBounds: 0.14 },
+  },
+  obvious: {
+    "pass-sideline": { sack: 0.1, interception: 0.02, complete: 0.537, minYards: 4, extraYards: 6, outOfBounds: 0.21 },
+    "pass-middle": { sack: 0.1, interception: 0.035, complete: 0.597, minYards: 5, extraYards: 7, outOfBounds: 0.03 },
+    "pass-deep": { sack: 0.12, interception: 0.054, complete: 0.295, minYards: 20, extraYards: 14, outOfBounds: 0.14 },
+    "pass-play-action": { sack: 0.09, interception: 0.025, complete: 0.593, minYards: 3, extraYards: 9.5, outOfBounds: 0.2 },
+    "pass-screen": { sack: 0.005, interception: 0.003, complete: 0.84, minYards: -1, extraYards: 8, outOfBounds: 0.08 },
   },
   prevent: {
-    "pass-sideline": { sack: 0.04, interception: 0.025, complete: 0.55, minYards: 4, extraYards: 5, outOfBounds: 0.7 },
-    "pass-middle": { sack: 0.04, interception: 0.025, complete: 0.68, minYards: 4, extraYards: 5, outOfBounds: 0.08 },
-    "pass-deep": { sack: 0.06, interception: 0.08, complete: 0.2, minYards: 20, extraYards: 10, outOfBounds: 0.25 },
-    // A defense sitting back in pass coverage doesn't bite on the fake.
-    "pass-play-action": { sack: 0.05, interception: 0.04, complete: 0.55, minYards: 5, extraYards: 7, outOfBounds: 0.15 },
-    // Soft coverage leaves room underneath: screens complete easily and run a little farther.
-    "pass-screen": { sack: 0.015, interception: 0.015, complete: 0.85, minYards: -1, extraYards: 7, outOfBounds: 0.12 },
+    // Throws underneath complete as usual and gain a little more; catches near the sideline get out of bounds.
+    "pass-sideline": { sack: 0.06, interception: 0.024, complete: 0.62, minYards: 3, extraYards: 7, outOfBounds: 0.32 },
+    "pass-middle": { sack: 0.06, interception: 0.017, complete: 0.654, minYards: 4, extraYards: 7.5, outOfBounds: 0.03 },
+    // The deep field is what prevent protects: 31% complete, 5% intercepted.
+    "pass-deep": { sack: 0.08, interception: 0.047, complete: 0.287, minYards: 20, extraYards: 11.5, outOfBounds: 0.24 },
+    "pass-play-action": { sack: 0.09, interception: 0.02, complete: 0.593, minYards: 3, extraYards: 10.5, outOfBounds: 0.2 },
+    "pass-screen": { sack: 0.005, interception: 0.005, complete: 0.864, minYards: -2, extraYards: 8.3, outOfBounds: 0.15 },
   },
 });
+
+/**
+ * On 3rd or 4th and 3 or fewer, coverage tightens at the sticks: passes complete this much less often.
+ * Fitted so passes convert about 55% of the time there, as in 2025-26 (56%, 57% and 54% on 1, 2 and 3 to go).
+ */
+export const SHORT_YARDAGE_PASS = 0.86;
 
 /** Completion rate of a throw into the end zone from the 20, before compression. */
 const END_ZONE_SHOT = 0.25;
@@ -229,7 +269,7 @@ export function passOdds(coverage: Coverage, call: PassCall, ytg: number): PassO
 }
 
 /** Average run gain by coverage: prevent gives up a little more on the ground. */
-const RUN_MEAN: Readonly<Record<Coverage, number>> = Object.freeze({ normal: 3.6, prevent: 4.3 });
+const RUN_MEAN: Readonly<Record<Coverage, number>> = Object.freeze({ normal: 3.6, obvious: 3.6, prevent: 4.3 });
 
 /** Standard normal CDF (Abramowitz–Stegun 7.1.26, error under 1.5e-7). */
 function normalCdf(z: number): number {
@@ -265,10 +305,10 @@ export function runShape(coverage: Coverage, ytg: number, shortYardage: number |
   const lerp = (goalLine: number, field: number) => goalLine + (field - goalLine) * t;
   const shape = { mean: lerp(2.2, open.mean), sd: lerp(2.2, open.sd), breakaway: lerp(0, open.breakaway) };
   if (shortYardage === null) return shape;
-  // On 3rd or 4th and short, the defense loads the box too: about 2 of 3 runs convert on 1 yard to go,
-  // 3 in 5 on 2, and half on 3, close to NFL rates.
+  // On 3rd or 4th and short, the defense loads the box too. Fitted to 2025-26: runs convert about 74% of the
+  // time on 1 yard to go, 61% on 2 and 55% on 3 (scripts/calibrate/passes.ts measures this).
   return {
-    mean: Math.min(shape.mean, 0.9 + 0.6 * shortYardage),
+    mean: Math.min(shape.mean, 1.4 + 0.45 * shortYardage),
     sd: Math.min(shape.sd, 2.4),
     breakaway: Math.min(shape.breakaway, 0.04),
   };
@@ -314,7 +354,8 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, short
     case "pass-deep":
     case "pass-play-action":
     case "pass-screen": {
-      const odds = passOdds(coverage, call, ytg);
+      const fitted = passOdds(coverage, call, ytg);
+      const odds = shortYardage === null ? fitted : { ...fitted, complete: fitted.complete * SHORT_YARDAGE_PASS };
       // Deep throws and play-action take longer to develop; a deep pick comes farther downfield.
       const deep = call === "pass-deep";
       const slow = deep || call === "pass-play-action" ? 1 : 0;
@@ -577,7 +618,10 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
   }
   if (g.running && t <= 120 && to > 0) return "timeout";
   if (g.running && t <= 40 && g.down <= 2) return "spike";
-  if (t <= 120) return to === 0 || t <= 30 ? "pass-sideline" : "pass-middle";
+  // Late passing, chosen by testing rules over 48 trailing situations against the calibrated odds:
+  // play-action with field and time to work with, the sideline when there's no timeout and little time,
+  // otherwise over the middle (sideline catches only get out of bounds about a quarter of the time).
+  if (t <= 120) return g.ytg > 40 && t > 30 ? "pass-play-action" : to === 0 && t <= 40 ? "pass-sideline" : "pass-middle";
   return g.down === 1 && g.toGo >= 10 && t > 150 ? "run" : "pass-middle";
 }
 
@@ -795,8 +839,10 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
       return reason(`The clock was running with ${formatClock(g.clock)} left. A timeout saves the ${cfg.hurryUp} seconds a hurry-up snap would burn.`, "timeouts");
     case "spike":
       return reason(`A spike stops the clock about ${cfg.spikeLineup} seconds after the play and saves a timeout, at the cost of a down.`, "spike");
-    case "pass-sideline":
-      return reason("A sideline throw usually ends out of bounds, which stops the clock without spending a timeout.", "clock-rules");
+    case "pass-sideline": {
+      const odds = passOdds(coverageFor(g, g.clock), "pass-sideline", g.ytg);
+      return reason(`A sideline throw completes about ${pct(odds.complete / (1 - odds.sack))} of the time, and about ${pct(odds.outOfBounds)} of catches end out of bounds, stopping the clock without spending a timeout.`, "clock-rules");
+    }
     case "pass-middle":
       if (g.ytg <= RED_ZONE)
         return reason(`Coverage tightens in the red zone, but a quick throw over the middle still completes about ${pct(passOdds("normal", "pass-middle", g.ytg).complete)} of the time from the ${g.ytg}.`, "red-zone");

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -142,10 +142,13 @@ describe("deep pass", () => {
     expect(rate).toBeLessThan(0.4);
   });
 
-  it("completes far less against a prevent defense: the defense leads in the last 4 minutes", () => {
-    const rate = completionRate({ ...base, clock: 200, margin: -3 });
-    expect(rate).toBeGreaterThan(0.15);
-    expect(rate).toBeLessThan(0.25);
+  it("completes less against a prevent defense (the defense leads in the last 4 minutes), as in real games", () => {
+    // Real deep passes: about 36% complete normally, 28% against prevent (before the sacks counted here).
+    const prevent = completionRate({ ...base, clock: 200, margin: -3 });
+    const normal = completionRate({ ...base, clock: 600 });
+    expect(prevent).toBeGreaterThan(0.24);
+    expect(prevent).toBeLessThan(0.32);
+    expect(prevent).toBeLessThan(normal - 0.02);
     // When you're the one ahead, the defense is chasing the game and doesn't play prevent.
     expect(completionRate({ ...base, clock: 200, margin: 3 })).toBeGreaterThan(0.3);
   });
@@ -184,10 +187,12 @@ describe("timeouts", () => {
     expect(one).toBeGreaterThan(zero);
   });
 
-  it("taking one with the clock stopped costs exactly a timeout: it scores what the situation with one fewer is worth", () => {
+  it("taking one with the clock stopped costs a timeout: it scores the same best play with one fewer, never more", () => {
     const values = evaluateCalls(trailing, 500);
     const oneFewer = bestScored(evaluateCalls({ ...trailing, timeouts: { you: 1, opp: 3 } }, 500)).wp;
-    expect(wpOf(values, "timeout")).toBeCloseTo(oneFewer, 10);
+    // It's the best play from here, run with one fewer timeout: at most what one fewer is worth, and close to it.
+    expect(wpOf(values, "timeout")).toBeLessThanOrEqual(oneFewer + 1e-9);
+    expect(oneFewer - wpOf(values, "timeout")).toBeLessThan(0.02);
     expect(wpOf(values, "timeout")).toBeLessThan(bestScored(values).wp);
   });
 
@@ -248,7 +253,8 @@ describe("field position", () => {
   it("a defense doesn't play prevent in the red zone: there's no deep field to protect", () => {
     const late: GameState = { ...base, clock: 100, margin: -3 };
     expect(coverageFor({ ...late, ytg: 40 }, 100)).toBe("prevent");
-    expect(coverageFor({ ...late, ytg: 15 }, 100)).toBe("normal");
+    // Still an obvious passing situation, trailing late, but not prevent.
+    expect(coverageFor({ ...late, ytg: 15 }, 100)).toBe("obvious");
   });
 });
 
@@ -271,5 +277,64 @@ describe("a timeout with the clock stopped", () => {
   it("is tagged as a no-gain call, along with a spike, only while the clock is stopped", () => {
     expect(noGainCalls(g)).toEqual(["timeout", "spike"]);
     expect(noGainCalls({ ...g, running: true })).toEqual([]);
+  });
+});
+
+describe("calibrated pass odds", () => {
+  const perThrow = (call: "pass-sideline" | "pass-middle" | "pass-deep" | "pass-play-action" | "pass-screen", coverage: "normal" | "obvious" | "prevent") => {
+    const o = PASS_ODDS[coverage][call];
+    return { completion: o.complete / (1 - o.sack), yardsPerCatch: o.minYards + o.extraYards, outOfBounds: o.outOfBounds, sack: o.sack };
+  };
+
+  it("match the 2025-26 NFL rates they were fitted to", () => {
+    // Per throw, as in scripts/calibrate/passes.ts: completion %, yards per catch and catches out of bounds.
+    expect(perThrow("pass-sideline", "normal").completion).toBeCloseTo(0.664, 2);
+    expect(perThrow("pass-sideline", "normal").outOfBounds).toBeCloseTo(0.26, 2);
+    expect(perThrow("pass-middle", "normal").completion).toBeCloseTo(0.695, 2);
+    expect(perThrow("pass-deep", "normal").completion).toBeCloseTo(0.357, 2);
+    expect(perThrow("pass-play-action", "normal").completion).toBeCloseTo(0.631, 2);
+    expect(perThrow("pass-play-action", "normal").yardsPerCatch).toBeCloseTo(13, 0);
+    expect(perThrow("pass-screen", "normal").completion).toBeCloseTo(0.864, 2);
+  });
+
+  it("make every pass harder when a pass is obvious, and play-action keeps only about half its edge", () => {
+    for (const call of ["pass-sideline", "pass-middle", "pass-deep"] as const) {
+      expect(perThrow(call, "obvious").sack).toBeGreaterThan(perThrow(call, "normal").sack);
+      expect(perThrow(call, "obvious").completion).toBeLessThan(perThrow(call, "normal").completion);
+    }
+    // Yards per dropback, sacks costing about 7 yards: play-action's edge over a middle throw shrinks.
+    const ypd = (call: "pass-middle" | "pass-play-action", c: "normal" | "obvious") => {
+      const o = PASS_ODDS[c][call];
+      return o.complete * (o.minYards + o.extraYards) - o.sack * 7;
+    };
+    const normalEdge = ypd("pass-play-action", "normal") - ypd("pass-middle", "normal");
+    const obviousEdge = ypd("pass-play-action", "obvious") - ypd("pass-middle", "obvious");
+    expect(normalEdge).toBeGreaterThan(0);
+    expect(obviousEdge).toBeLessThan(normalEdge * 0.75);
+    expect(obviousEdge).toBeGreaterThan(0);
+  });
+
+  it("knows an obvious passing situation: 3rd & long, or trailing or tied late", () => {
+    expect(coverageFor({ ...base, clock: 900, down: 3, toGo: 8, margin: 3 }, 900)).toBe("obvious");
+    expect(coverageFor({ ...base, clock: 250, down: 1, toGo: 10, margin: 0 }, 250)).toBe("obvious");
+    expect(coverageFor({ ...base, clock: 900, down: 1, toGo: 10, margin: 0 }, 900)).toBe("normal");
+  });
+});
+
+describe("3rd and 4th & short", () => {
+  const conversions = (call: "run" | "pass-middle", toGo: number) => {
+    let converted = 0;
+    for (let i = 0; i < 4000; i++) {
+      const g: GameState = { ...base, clock: 900, running: false, down: 3, toGo, ytg: 60, margin: 0 };
+      if (step(g, call, seededRng(i)).state.down === 1) converted++;
+    }
+    return converted / 4000;
+  };
+
+  it("runs and passes convert at about the 2025-26 NFL rates", () => {
+    // Real: runs 74% / 61% / 55% on 1 / 2 / 3 to go; passes 56% / 57% / 54%.
+    expect(Math.abs(conversions("run", 1) - 0.74)).toBeLessThan(0.05);
+    expect(Math.abs(conversions("run", 3) - 0.55)).toBeLessThan(0.05);
+    expect(Math.abs(conversions("pass-middle", 2) - 0.57)).toBeLessThan(0.05);
   });
 });

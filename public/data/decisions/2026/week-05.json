@@ -1,18 +1,18 @@
 {
  "season": 2026,
  "week": 5,
- "generatedAt": "2026-11-04T23:42:32.965Z",
+ "generatedAt": "2026-11-05T16:04:21.878Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 15,
  "evaluated": 139,
  "agreement": {
   "plays": 139,
-  "meanAbsDiff": 0.06027714311318994,
-  "within10": 0.7985611510791367
+  "meanAbsDiff": 0.06273320837544023,
+  "within10": 0.8057553956834532
  },
  "worst": [
   {
-   "id": "2026_05_PHI_JAX-4630",
+   "id": "2026_05_PHI_JAX-4652",
    "gameId": "2026_05_PHI_JAX",
    "offense": "JAX",
    "defense": "PHI",
@@ -20,133 +20,263 @@
    "away": "PHI",
    "date": "2026-10-11",
    "situation": {
-    "clock": 112,
+    "clock": 106,
     "running": false,
-    "down": 3,
-    "toGo": 8,
-    "ytg": 75,
+    "down": 4,
+    "toGo": 2,
+    "ytg": 69,
     "margin": 2,
     "timeouts": 2,
-    "oppTimeouts": 2
+    "oppTimeouts": 1
    },
-   "snapClock": 112,
-   "description": "(1:52) (Shotgun) 33-B.Tuten left tackle to JAX 31 for 6 yards (33-C.DeJean).",
-   "call": "run",
-   "wpCall": 0.6053333333333333,
-   "best": "pass-play-action",
-   "wpBest": 0.7113333333333334,
-   "cost": 0.1060000000000001,
+   "snapClock": 106,
+   "description": "(1:46) 9-L.Cooke punts 41 yards to PHI 28, Center-52-D.Hamilton. 85-B.Covey to PHI 38 for 10 yards (35-J.Mcleod).",
+   "call": "punt",
+   "wpCall": 0.48333333333333334,
+   "best": "run",
+   "wpBest": 0.706,
+   "cost": 0.22266666666666662,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.7113333333333334
+     "call": "run",
+     "wp": 0.706
     },
     {
      "call": "pass-middle",
-     "wp": 0.6686666666666666
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.6633333333333333
+     "wp": 0.6446666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6293333333333333
+     "wp": 0.6193333333333333
     },
     {
-     "call": "run",
-     "wp": 0.6053333333333333
+     "call": "pass-play-action",
+     "wp": 0.5966666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.598
-    },
-    {
-     "call": "kneel",
-     "wp": 0.48933333333333334
-    },
-    {
-     "call": "spike",
-     "wp": 0.472
+     "wp": 0.59
     },
     {
      "call": "punt",
-     "wp": 0.4633333333333333
+     "wp": 0.48333333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.4146666666666667
+    },
+    {
+     "call": "kneel",
+     "wp": 0.186
     }
    ],
    "reason": {
-    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
-    "section": "play-model"
+    "text": "A run keeps the clock moving and rarely turns the ball over.",
+    "section": "running-out-the-clock"
    },
-   "nflverseWp": 0.835082471370697,
-   "nflverseWpa": -0.0049978494644165,
+   "nflverseWp": 0.830084621906281,
+   "nflverseWpa": -0.1925328373909,
    "lowConfidence": false
   },
   {
-   "id": "2026_05_NYG_WAS-4297",
-   "gameId": "2026_05_NYG_WAS",
-   "offense": "WAS",
-   "defense": "NYG",
-   "home": "WAS",
-   "away": "NYG",
+   "id": "2026_05_PHI_JAX-4540",
+   "gameId": "2026_05_PHI_JAX",
+   "offense": "PHI",
+   "defense": "JAX",
+   "home": "JAX",
+   "away": "PHI",
    "date": "2026-10-11",
    "situation": {
-    "clock": 15,
-    "running": false,
+    "clock": 149,
+    "running": true,
     "down": 4,
-    "toGo": 13,
-    "ytg": 54,
-    "margin": 0,
-    "timeouts": 1,
+    "toGo": 16,
+    "ytg": 71,
+    "margin": -2,
+    "timeouts": 3,
     "oppTimeouts": 2
    },
-   "snapClock": 15,
-   "description": "(:15) 10-T.Way punts 52 yards to NYG 2, Center-69-T.Ott, downed by WAS-37-I.Yiadom.",
+   "snapClock": 134,
+   "description": "(2:14) 10-B.Mann punts 57 yards to JAX 14, Center-41-R.Underwood. 11-P.Washington ran ob at JAX 23 for 9 yards (17-A.Ebiketie).",
    "call": "punt",
-   "wpCall": 0.5,
+   "wpCall": 0.21266666666666667,
    "best": "pass-deep",
-   "wpBest": 0.5893333333333334,
-   "cost": 0.08933333333333338,
+   "wpBest": 0.31333333333333335,
+   "cost": 0.10066666666666668,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.5893333333333334
+     "wp": 0.31333333333333335
+    },
+    {
+     "call": "timeout",
+     "wp": 0.2956666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5076666666666667
-    },
-    {
-     "call": "punt",
-     "wp": 0.5
+     "wp": 0.251
     },
     {
      "call": "pass-middle",
-     "wp": 0.47933333333333333
+     "wp": 0.227
+    },
+    {
+     "call": "punt",
+     "wp": 0.21266666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4633333333333333
+     "wp": 0.20433333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.4136666666666667
+     "wp": 0.20033333333333334
     },
     {
      "call": "run",
-     "wp": 0.412
-    },
-    {
-     "call": "kneel",
-     "wp": 0.313
+     "wp": 0.167
     }
    ],
    "reason": {
-    "text": "You need a big play: 54 yards with 0:15 left is too far to go in small chunks. A deep pass completes about 35% of the time, for 20+ yards.",
+    "text": "You need a big play: 71 yards with 2:29 left is too far to go in small chunks. A deep pass completes about 29% of the time, for 20+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.216953709721565,
+   "nflverseWpa": -0.0934090167284012,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_05_CLE_NYJ-4418",
+   "gameId": "2026_05_CLE_NYJ",
+   "offense": "NYJ",
+   "defense": "CLE",
+   "home": "NYJ",
+   "away": "CLE",
+   "date": "2026-10-11",
+   "situation": {
+    "clock": 108,
+    "running": false,
+    "down": 4,
+    "toGo": 4,
+    "ytg": 70,
+    "margin": 5,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 108,
+   "description": "(1:48) 14-A.McNamara punts 50 yards to CLE 20, Center-42-T.Hennessy, fair catch by 12-D.Boston.",
+   "call": "punt",
+   "wpCall": 0.7773333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.864,
+   "cost": 0.08666666666666667,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.864
+    },
+    {
+     "call": "run",
+     "wp": 0.8433333333333334
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.842
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.824
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.7893333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.778
+    },
+    {
+     "call": "punt",
+     "wp": 0.7773333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.6173333333333333
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
    },
-   "nflverseWp": 0.54301255941391,
-   "nflverseWpa": -0.0929002165794373,
+   "nflverseWp": 0.907277822494507,
+   "nflverseWpa": -0.102081194519997,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_05_CLE_NYJ-4164",
+   "gameId": "2026_05_CLE_NYJ",
+   "offense": "NYJ",
+   "defense": "CLE",
+   "home": "NYJ",
+   "away": "CLE",
+   "date": "2026-10-11",
+   "situation": {
+    "clock": 187,
+    "running": false,
+    "down": 3,
+    "toGo": 9,
+    "ytg": 22,
+    "margin": -2,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 187,
+   "description": "(3:07) (Shotgun) 0-B.Allen left tackle for 22 yards, TOUCHDOWN.",
+   "call": "run",
+   "wpCall": 0.419,
+   "best": "pass-play-action",
+   "wpBest": 0.49533333333333335,
+   "cost": 0.07633333333333336,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.499
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.49533333333333335
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.4836666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.471
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.45366666666666666
+    },
+    {
+     "call": "run",
+     "wp": 0.419
+    },
+    {
+     "call": "spike",
+     "wp": 0.39066666666666666
+    },
+    {
+     "call": "fg",
+     "wp": 0.39
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.59231436252594,
+   "nflverseWpa": 0.199407017971755,
    "lowConfidence": false
   },
   {
@@ -172,36 +302,36 @@
    "call": "run",
    "wpCall": 0.2823333333333333,
    "best": "timeout",
-   "wpBest": 0.349,
-   "cost": 0.06666666666666665,
+   "wpBest": 0.34933333333333333,
+   "cost": 0.067,
    "values": [
     {
      "call": "timeout",
-     "wp": 0.349
+     "wp": 0.34933333333333333
     },
     {
      "call": "run",
      "wp": 0.2823333333333333
     },
     {
+     "call": "pass-screen",
+     "wp": 0.25566666666666665
+    },
+    {
      "call": "pass-middle",
-     "wp": 0.223
+     "wp": 0.22366666666666668
     },
     {
      "call": "pass-play-action",
-     "wp": 0.223
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.21633333333333332
+     "wp": 0.22
     },
     {
      "call": "pass-sideline",
-     "wp": 0.19966666666666666
+     "wp": 0.20766666666666667
     },
     {
      "call": "spike",
-     "wp": 0.191
+     "wp": 0.187
     },
     {
      "call": "pass-deep",
@@ -218,6 +348,73 @@
    },
    "nflverseWp": 0.24088753759861,
    "nflverseWpa": 0.172015441733801,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_05_DEN_LAC-4113",
+   "gameId": "2026_05_DEN_LAC",
+   "offense": "DEN",
+   "defense": "LAC",
+   "home": "LAC",
+   "away": "DEN",
+   "date": "2026-10-11",
+   "situation": {
+    "clock": 72,
+    "running": false,
+    "down": 4,
+    "toGo": 7,
+    "ytg": 18,
+    "margin": 3,
+    "timeouts": 1,
+    "oppTimeouts": 0
+   },
+   "snapClock": 72,
+   "description": "(1:12) 3-W.Lutz 36 yard field goal is GOOD, Center-48-M.Fraboni, Holder-16-J.Crawshaw.",
+   "call": "fg",
+   "wpCall": 0.888,
+   "best": "pass-middle",
+   "wpBest": 0.95,
+   "cost": 0.061999999999999944,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.95
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.948
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.942
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.942
+    },
+    {
+     "call": "run",
+     "wp": 0.9393333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.9353333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.897
+    },
+    {
+     "call": "fg",
+     "wp": 0.888
+    }
+   ],
+   "reason": {
+    "text": "Coverage tightens in the red zone, but a quick throw over the middle still completes about 63% of the time from the 18.",
+    "section": "red-zone"
+   },
+   "nflverseWp": 0.946678459644318,
+   "nflverseWpa": -0.0842982828617096,
    "lowConfidence": false
   }
  ],
@@ -258,23 +455,23 @@
     },
     {
      "call": "pass-play-action",
+     "wp": 0.022
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.008
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.007333333333333333
+    },
+    {
+     "call": "pass-sideline",
      "wp": 0.005333333333333333
     },
     {
      "call": "run",
      "wp": 0.004666666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.004
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0
     },
     {
      "call": "spike",
@@ -310,42 +507,42 @@
    "snapClock": 206,
    "description": "(3:26) (Shotgun) 16-T.Lawrence pass deep right to 11-P.Washington for 27 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.3396666666666667,
+   "wpCall": 0.3403333333333333,
    "best": "pass-middle",
-   "wpBest": 0.3396666666666667,
+   "wpBest": 0.3403333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.3396666666666667
+     "wp": 0.3403333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.327
-    },
-    {
-     "call": "run",
-     "wp": 0.2966666666666667
+     "wp": 0.32266666666666666
     },
     {
      "call": "pass-sideline",
+     "wp": 0.30266666666666664
+    },
+    {
+     "call": "run",
      "wp": 0.292
     },
     {
      "call": "pass-screen",
-     "wp": 0.243
+     "wp": 0.25433333333333336
     },
     {
      "call": "pass-deep",
-     "wp": 0.194
+     "wp": 0.24366666666666667
     },
     {
      "call": "fg",
-     "wp": 0.192
+     "wp": 0.215
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.31495675444603,
@@ -373,50 +570,50 @@
    "snapClock": 260,
    "description": "(4:20) 7-G.Smith sacked at CLE 48 for -9 yards (49-C.Schwesinger). FUMBLES (49-C.Schwesinger) [49-C.Schwesinger], RECOVERED by CLE-98-A.Huntington at NYJ 48. 98-A.Huntington to NYJ 43 for 5 yards (66-J.Tippmann; 70-A.Membou).",
    "call": "pass-play-action",
-   "wpCall": 0.6106666666666667,
-   "best": "run",
-   "wpBest": 0.6223333333333333,
-   "cost": 0.011666666666666603,
+   "wpCall": 0.6096666666666667,
+   "best": "pass-screen",
+   "wpBest": 0.6096666666666667,
+   "cost": 0,
    "values": [
     {
-     "call": "run",
-     "wp": 0.6223333333333333
-    },
-    {
      "call": "pass-screen",
-     "wp": 0.6106666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.6073333333333333
+     "wp": 0.6096666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.604
+     "wp": 0.6063333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.5973333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.5963333333333334
+     "wp": 0.588
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5876666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5866666666666667
+     "wp": 0.5763333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.5743333333333334
+     "wp": 0.5413333333333333
     },
     {
      "call": "spike",
-     "wp": 0.532
+     "wp": 0.5153333333333333
     },
     {
      "call": "fg",
-     "wp": 0.36466666666666664
+     "wp": 0.378
     }
    ],
    "reason": {
-    "text": "A run gains steady yards with little risk, and you have time to spare.",
+    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
     "section": "play-model"
    },
    "nflverseWp": 0.570932149887085,
@@ -444,38 +641,38 @@
    "snapClock": 12,
    "description": "(:12) 4-J.Elliott 48 yard field goal is GOOD, Center-41-R.Underwood, Holder-10-B.Mann.",
    "call": "fg",
-   "wpCall": 0.7693333333333333,
+   "wpCall": 0.7666666666666667,
    "best": "fg",
-   "wpBest": 0.7693333333333333,
+   "wpBest": 0.7666666666666667,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.7693333333333333
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.4726666666666667
+     "wp": 0.7666666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.4673333333333333
+     "wp": 0.502
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.4553333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.382
+     "wp": 0.4066666666666667
     },
     {
      "call": "run",
-     "wp": 0.3626666666666667
+     "wp": 0.362
     },
     {
      "call": "pass-screen",
-     "wp": 0.31
+     "wp": 0.32266666666666666
     },
     {
      "call": "pass-deep",
-     "wp": 0.19666666666666666
+     "wp": 0.28933333333333333
     }
    ],
    "reason": {
@@ -507,46 +704,46 @@
    "snapClock": 187,
    "description": "(3:07) (Shotgun) 0-B.Allen left tackle for 22 yards, TOUCHDOWN.",
    "call": "run",
-   "wpCall": 0.4483333333333333,
+   "wpCall": 0.419,
    "best": "pass-play-action",
-   "wpBest": 0.497,
-   "cost": 0.04866666666666669,
+   "wpBest": 0.49533333333333335,
+   "cost": 0.07633333333333336,
    "values": [
     {
+     "call": "pass-deep",
+     "wp": 0.499
+    },
+    {
      "call": "pass-play-action",
-     "wp": 0.497
+     "wp": 0.49533333333333335
     },
     {
      "call": "pass-middle",
-     "wp": 0.483
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.4723333333333333
+     "wp": 0.4836666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.47
+     "wp": 0.471
     },
     {
      "call": "pass-screen",
-     "wp": 0.4673333333333333
+     "wp": 0.45366666666666666
     },
     {
      "call": "run",
-     "wp": 0.4483333333333333
+     "wp": 0.419
     },
     {
      "call": "spike",
-     "wp": 0.42933333333333334
+     "wp": 0.39066666666666666
     },
     {
      "call": "fg",
-     "wp": 0.428
+     "wp": 0.39
     }
    ],
    "reason": {
-    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 55% of the time here, for 5+ yards.",
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.59231436252594,

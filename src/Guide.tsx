@@ -13,7 +13,7 @@ import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
   AVOID, CLOSE, DEFAULT_SIM, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
-  PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
+  OBVIOUS_TO_GO, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
 import { AnchorLink, GuideLink } from "./ReadMore";
@@ -225,12 +225,24 @@ function WinProbabilitySection() {
   );
 }
 
+/** Completion rate per throw: the model's odds are per snap, and sacks count as snaps. */
+const perThrow = (o: { complete: number; sack: number }) => o.complete / (1 - o.sack);
+
+function ObviousTable() {
+  const rows = PASS_CALLS.map((call) => {
+    const n = PASS_ODDS.normal[call];
+    const o = PASS_ODDS.obvious[call];
+    return [PLAY_CALLS[call], `${pct(perThrow(n))} → ${pct(perThrow(o))}`, `${pct(n.sack)} → ${pct(o.sack)}`, `${pct(n.interception)} → ${pct(o.interception)}`];
+  });
+  return <NumberTable caption="Normal → obvious passing situation" head={["Pass", "Complete (per throw)", "Sacked", "Intercepted"]} rows={rows} />;
+}
+
 function PlayModelSection() {
   const normal = PASS_ODDS.normal;
   const passRows = PASS_CALLS.map((call) => {
     const o = normal[call];
     const label = PLAY_CALLS[call];
-    return [label, pct(o.complete), o.minYards < 0
+    return [label, pct(perThrow(o)), o.minYards < 0
       ? `From a ${-o.minYards}-yard loss up, about ${Math.round(o.minYards + o.extraYards)} on average`
       : `${o.minYards}+ yards, about ${Math.round(o.minYards + o.extraYards)} on average`, pct(o.outOfBounds), pct(o.sack), pct(o.interception)];
   });
@@ -239,14 +251,22 @@ function PlayModelSection() {
   return (
     <Section id="play-model">
       <Text>
-        Each call has fixed odds in the open field. They're rules of thumb, set to land near NFL averages for late-game
-        situations, not fitted to any one team.
+        Each call has fixed odds in the open field. The pass odds are fitted to real NFL plays: the 2025 season and
+        2026 so far, about 28,800 dropbacks charted by FTN Data, so play-action and screens are known. They describe an
+        average offense against an average defense, not any one team.
       </Text>
       <NumberTable
         caption="Passes, between the 20s, against a normal defense"
-        head={["Call", "Complete", "Gain when complete", "Out of bounds (completions)", "Sack", "Interception"]}
+        head={["Call", "Complete (per throw)", "Gain when complete", "Out of bounds (completions)", "Sack", "Interception"]}
         rows={passRows}
       />
+      <Text>
+        When everyone knows a pass is coming (3rd or 4th and {OBVIOUS_TO_GO} or more, or trailing or tied by a score in
+        the last {OBVIOUS_WINDOW / 60} minutes), defenses rush harder and drop into coverage. Every pass gets harder,
+        and play-action keeps only about half its usual edge over a regular dropback: the linebackers aren't fooled
+        when they know it's a pass.
+      </Text>
+      <ObviousTable />
       <List spacing={4}>
         <List.Item>
           <strong>Run:</strong> about {run.mean.toFixed(1)} yards typically, with a {pct(run.breakaway)} chance of a
@@ -504,21 +524,22 @@ function PreventSection() {
     const label = PLAY_CALLS[call];
     const n = PASS_ODDS.normal[call];
     const p = PASS_ODDS.prevent[call];
-    return [label, `${pct(n.complete)} → ${pct(p.complete)}`, `${pct(n.interception)} → ${pct(p.interception)}`, `${pct(n.sack)} → ${pct(p.sack)}`];
+    return [label, `${pct(perThrow(n))} → ${pct(perThrow(p))}`, `${pct(n.interception)} → ${pct(p.interception)}`, `${pct(n.sack)} → ${pct(p.sack)}`];
   });
   return (
     <Section id="prevent-defense">
       <Text>
-        A defense protecting a lead late plays "prevent": safeties deep, fewer pass rushers, coverage that gives up short
-        catches to stop the long ones. In the app, a defense that's ahead plays prevent in the last{" "}
-        {PREVENT_WINDOW / 60} minutes, outside the red zone.
+        A defense protecting a lead late plays "prevent": safeties deep, coverage that gives up short catches to stop the
+        long ones. In the app, a defense that's ahead plays prevent in the last {PREVENT_WINDOW / 60} minutes, outside
+        the red zone.
       </Text>
-      <NumberTable caption="Normal → prevent" head={["Pass", "Complete", "Intercepted", "Sacked"]} rows={rows} />
+      <NumberTable caption="Normal → prevent" head={["Pass", "Complete (per throw)", "Intercepted", "Sacked"]} rows={rows} />
       <Text>
-        Short and middle throws complete more often but are tackled sooner, and runs average about{" "}
-        {runShape("prevent", 75).mean.toFixed(1)} yards instead of {runShape("normal", 75).mean.toFixed(1)}. So against
-        prevent, take the underneath throws and get out of bounds; the deep ball is what it's built to stop. A defense
-        that's behind doesn't play prevent.
+        In real games, prevent mostly takes away the deep ball, which completes far less and is picked off more. Short
+        and sideline throws complete about as usual and gain a little more, and catches near the sideline get out of
+        bounds more often. Runs average about {runShape("prevent", 75).mean.toFixed(1)} yards instead of{" "}
+        {runShape("normal", 75).mean.toFixed(1)}. So against prevent, take the underneath throws and get out of bounds.
+        A defense that's behind doesn't play prevent.
       </Text>
     </Section>
   );

@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-04T23:42:32.965Z",
+ "generatedAt": "2026-11-05T16:04:21.878Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
  "agreement": {
   "plays": 186,
-  "meanAbsDiff": 0.05355679583148929,
+  "meanAbsDiff": 0.05153165586709333,
   "within10": 0.8387096774193549
  },
  "worst": [
@@ -32,50 +32,117 @@
    "snapClock": 120,
    "description": "(2:00) 39-C.Little 60 yard field goal is GOOD, Center-55-J.Bobenmoyer, Holder-9-L.Cooke.",
    "call": "fg",
-   "wpCall": 0.20233333333333334,
+   "wpCall": 0.20666666666666667,
    "best": "pass-middle",
-   "wpBest": 0.33766666666666667,
-   "cost": 0.13533333333333333,
+   "wpBest": 0.347,
+   "cost": 0.1403333333333333,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.33766666666666667
-    },
-    {
-     "call": "run",
-     "wp": 0.311
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.284
+     "wp": 0.347
     },
     {
      "call": "pass-play-action",
-     "wp": 0.282
+     "wp": 0.32
+    },
+    {
+     "call": "run",
+     "wp": 0.31833333333333336
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.31633333333333336
     },
     {
      "call": "pass-screen",
-     "wp": 0.24733333333333332
-    },
-    {
-     "call": "fg",
-     "wp": 0.20233333333333334
+     "wp": 0.2663333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.17966666666666667
+     "wp": 0.234
+    },
+    {
+     "call": "fg",
+     "wp": 0.20666666666666667
     },
     {
      "call": "punt",
-     "wp": 0.105
+     "wp": 0.115
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 68% of the time against it.",
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.356236040592194,
    "nflverseWpa": 0.0843361020088196,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_06_TEN_IND-4162",
+   "gameId": "2026_06_TEN_IND",
+   "offense": "IND",
+   "defense": "TEN",
+   "home": "IND",
+   "away": "TEN",
+   "date": "2026-10-18",
+   "situation": {
+    "clock": 31,
+    "running": true,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 46,
+    "margin": -6,
+    "timeouts": 0,
+    "oppTimeouts": 3
+   },
+   "snapClock": 19,
+   "description": "(:19) (No Huddle) 17-D.Jones spiked the ball to stop the clock.",
+   "call": "spike",
+   "wpCall": 0.055,
+   "best": "pass-deep",
+   "wpBest": 0.13266666666666665,
+   "cost": 0.07766666666666666,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.13266666666666665
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.08833333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.07566666666666666
+    },
+    {
+     "call": "spike",
+     "wp": 0.055
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.051
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.04633333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.014333333333333333
+    },
+    {
+     "call": "punt",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 46 yards with 0:31 left is too far to go in small chunks. A deep pass completes about 29% of the time, for 20+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.13636426627636,
+   "nflverseWpa": -0.00806334614753723,
    "lowConfidence": false
   },
   {
@@ -99,10 +166,10 @@
    "snapClock": 13,
    "description": "(:13) (No Huddle) 18-J.McCarthy spiked the ball to stop the clock.",
    "call": "spike",
-   "wpCall": 0.10233333333333333,
+   "wpCall": 0.09166666666666666,
    "best": "pass-deep",
    "wpBest": 0.16733333333333333,
-   "cost": 0.065,
+   "cost": 0.07566666666666667,
    "values": [
     {
      "call": "pass-deep",
@@ -110,23 +177,23 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.12533333333333332
-    },
-    {
-     "call": "pass-sideline",
      "wp": 0.11666666666666667
     },
     {
-     "call": "spike",
-     "wp": 0.10233333333333333
+     "call": "pass-middle",
+     "wp": 0.10266666666666667
     },
     {
-     "call": "pass-middle",
-     "wp": 0.10133333333333333
+     "call": "pass-sideline",
+     "wp": 0.09333333333333334
+    },
+    {
+     "call": "spike",
+     "wp": 0.09166666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.07166666666666667
+     "wp": 0.08833333333333333
     },
     {
      "call": "run",
@@ -143,6 +210,144 @@
    },
    "nflverseWp": 0.162140399217606,
    "nflverseWpa": -0.0578835755586624,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_06_PIT_TB-4035",
+   "gameId": "2026_06_PIT_TB",
+   "offense": "PIT",
+   "defense": "TB",
+   "home": "TB",
+   "away": "PIT",
+   "date": "2026-10-18",
+   "situation": {
+    "clock": 98,
+    "running": false,
+    "down": 1,
+    "toGo": 3,
+    "ytg": 3,
+    "margin": 0,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 98,
+   "description": "(1:38) 8-A.Rodgers pass incomplete short right to 80-D.Washington (27-Z.McCollum).",
+   "call": "pass-play-action",
+   "wpCall": 0.867,
+   "best": "kneel",
+   "wpBest": 0.9353333333333333,
+   "cost": 0.06833333333333336,
+   "values": [
+    {
+     "call": "kneel",
+     "wp": 0.9353333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.9023333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.867
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.863
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.861
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.856
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.8463333333333334
+    },
+    {
+     "call": "spike",
+     "wp": 0.8423333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.6966666666666667
+    }
+   ],
+   "reason": {
+    "text": "With little time and a long field, taking a tie to overtime beats risking a turnover.",
+    "section": "limitations"
+   },
+   "nflverseWp": 0.808301270008087,
+   "nflverseWpa": -0.00688111782073975,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_06_SEA_DEN-4359",
+   "gameId": "2026_06_SEA_DEN",
+   "offense": "SEA",
+   "defense": "DEN",
+   "home": "DEN",
+   "away": "SEA",
+   "date": "2026-10-15",
+   "situation": {
+    "clock": 23,
+    "running": true,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 23,
+    "margin": -3,
+    "timeouts": 0,
+    "oppTimeouts": 3
+   },
+   "snapClock": 11,
+   "description": "(:11) (No Huddle) 14-S.Darnold spiked the ball to stop the clock.",
+   "call": "spike",
+   "wpCall": 0.43833333333333335,
+   "best": "pass-deep",
+   "wpBest": 0.49866666666666665,
+   "cost": 0.060333333333333294,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.49866666666666665
+    },
+    {
+     "call": "fg",
+     "wp": 0.43833333333333335
+    },
+    {
+     "call": "spike",
+     "wp": 0.43833333333333335
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.268
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.25566666666666665
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.181
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.16233333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.044333333333333336
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 23 yards with 0:23 left is too far to go in small chunks. A deep pass completes about 29% of the time, for 20+ yards.",
+    "section": "prevent-defense"
+   },
+   "nflverseWp": 0.412250250577927,
+   "nflverseWpa": 0.000276386737823486,
    "lowConfidence": false
   }
  ],
@@ -168,50 +373,50 @@
    "snapClock": 106,
    "description": "(1:46) (Shotgun) 10-J.Daniels pass short right intended for 2-E.Egbuka INTERCEPTED by 35-J.Dean at TB 43. 35-J.Dean pushed ob at TB 3 for 40 yards (10-J.Daniels).",
    "call": "pass-sideline",
-   "wpCall": 0.617,
-   "best": "pass-play-action",
-   "wpBest": 0.6146666666666667,
+   "wpCall": 0.636,
+   "best": "pass-screen",
+   "wpBest": 0.636,
    "cost": 0,
    "values": [
     {
-     "call": "pass-deep",
-     "wp": 0.617
+     "call": "pass-screen",
+     "wp": 0.636
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6146666666666667
+     "wp": 0.6293333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.5956666666666667
+     "wp": 0.629
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.6163333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5913333333333334
+     "wp": 0.6126666666666667
     },
     {
      "call": "run",
-     "wp": 0.5873333333333334
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.5783333333333334
+     "wp": 0.61
     },
     {
      "call": "spike",
-     "wp": 0.508
+     "wp": 0.5513333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.494
+     "wp": 0.521
     },
     {
      "call": "punt",
-     "wp": 0.46266666666666667
+     "wp": 0.395
     }
    ],
    "reason": {
-    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 60% of the time here, for 5+ yards.",
+    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
     "section": "play-model"
    },
    "nflverseWp": 0.641680479049683,
@@ -249,28 +454,28 @@
      "wp": 0.8493333333333334
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.29333333333333333
-    },
-    {
      "call": "pass-deep",
      "wp": 0.19466666666666665
     },
     {
+     "call": "pass-sideline",
+     "wp": 0.15866666666666668
+    },
+    {
      "call": "pass-play-action",
-     "wp": 0.10066666666666667
+     "wp": 0.15866666666666668
     },
     {
      "call": "pass-screen",
-     "wp": 0.05733333333333333
+     "wp": 0.07866666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.054
+     "wp": 0.056
     },
     {
      "call": "run",
-     "wp": 0.03666666666666667
+     "wp": 0.036
     }
    ],
    "reason": {
@@ -302,51 +507,51 @@
    "snapClock": 91,
    "description": "(1:31) (No Huddle) 14-S.Darnold pass short left intended for 15-T.Horton INTERCEPTED by 31-K.Abrams-Draine at DEN 31. 31-K.Abrams-Draine to DEN 31 for no gain (15-T.Horton).",
    "call": "pass-sideline",
-   "wpCall": 0.38,
-   "best": "pass-screen",
-   "wpBest": 0.376,
-   "cost": 0,
+   "wpCall": 0.35633333333333334,
+   "best": "run",
+   "wpBest": 0.38033333333333336,
+   "cost": 0.02400000000000002,
    "values": [
     {
-     "call": "pass-middle",
-     "wp": 0.38
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.376
+     "call": "run",
+     "wp": 0.38033333333333336
     },
     {
      "call": "timeout",
-     "wp": 0.374
+     "wp": 0.37133333333333335
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.363
+     "call": "pass-screen",
+     "wp": 0.35633333333333334
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.35333333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.358
+     "wp": 0.3476666666666667
     },
     {
-     "call": "run",
-     "wp": 0.35433333333333333
+     "call": "pass-sideline",
+     "wp": 0.3456666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.29333333333333333
-    },
-    {
-     "call": "fg",
-     "wp": 0.214
+     "wp": 0.30133333333333334
     },
     {
      "call": "spike",
-     "wp": 0.21266666666666667
+     "wp": 0.217
+    },
+    {
+     "call": "fg",
+     "wp": 0.216
     }
    ],
    "reason": {
-    "text": "They're playing soft, so a screen gets the ball out fast into open space: it completes about 85% of the time and is almost never sacked or picked off.",
-    "section": "prevent-defense"
+    "text": "On 3rd & 1, a run is the surest way to move the chains.",
+    "section": "play-model"
    },
    "nflverseWp": 0.405717015266418,
    "nflverseWpa": -0.352295935153961,
@@ -388,19 +593,19 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5116666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.5053333333333333
+     "wp": 0.5126666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.5033333333333333
+     "wp": 0.5066666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5056666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.503
+     "wp": 0.5023333333333333
     },
     {
      "call": "run",
@@ -450,28 +655,28 @@
      "wp": 0.32766666666666666
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.16766666666666666
+     "call": "pass-deep",
+     "wp": 0.08833333333333333
     },
     {
-     "call": "pass-deep",
-     "wp": 0.059333333333333335
+     "call": "pass-sideline",
+     "wp": 0.08066666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.04466666666666667
+     "wp": 0.06833333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.034666666666666665
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.028666666666666667
+     "wp": 0.04
     },
     {
      "call": "run",
      "wp": 0.017
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.016
     }
    ],
    "reason": {
