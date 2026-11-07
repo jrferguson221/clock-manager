@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 1,
- "generatedAt": "2026-11-05T16:04:21.878Z",
+ "generatedAt": "2026-11-05T20:47:00.674Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.04006007153798492,
-  "within10": 0.8785046728971962
+  "meanAbsDiff": 0.03847505927735772,
+  "within10": 0.9065420560747663
  },
  "worst": [
   {
@@ -34,12 +34,12 @@
    "call": "spike",
    "wpCall": 0.5486666666666666,
    "best": "fg",
-   "wpBest": 0.6943333333333334,
-   "cost": 0.14566666666666672,
+   "wpBest": 0.768,
+   "cost": 0.21933333333333338,
    "values": [
     {
      "call": "fg",
-     "wp": 0.6943333333333334
+     "wp": 0.768
     },
     {
      "call": "pass-deep",
@@ -79,7 +79,7 @@
     }
    ],
    "reason": {
-    "text": "A 61-yard try is good about 38% of the time, and it wins it.",
+    "text": "A 61-yard try is good about 51% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "nflverseWp": 0.67042088508606,
@@ -109,12 +109,12 @@
    "call": "pass-sideline",
    "wpCall": 0.5486666666666666,
    "best": "fg",
-   "wpBest": 0.678,
-   "cost": 0.1293333333333334,
+   "wpBest": 0.7536666666666667,
+   "cost": 0.20500000000000007,
    "values": [
     {
      "call": "fg",
-     "wp": 0.678
+     "wp": 0.7536666666666667
     },
     {
      "call": "pass-deep",
@@ -126,11 +126,11 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.539
+     "wp": 0.5443333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.522
+     "wp": 0.524
     },
     {
      "call": "pass-middle",
@@ -138,11 +138,11 @@
     },
     {
      "call": "run",
-     "wp": 0.514
+     "wp": 0.5153333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5076666666666667
+     "wp": 0.5086666666666667
     },
     {
      "call": "kneel",
@@ -154,82 +154,11 @@
     }
    ],
    "reason": {
-    "text": "A 61-yard try is good about 38% of the time, and it wins it.",
+    "text": "A 61-yard try is good about 51% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "nflverseWp": 0.661021888256073,
    "nflverseWpa": -0.0529081225395203,
-   "lowConfidence": false
-  },
-  {
-   "id": "2026_01_BUF_HOU-3940",
-   "gameId": "2026_01_BUF_HOU",
-   "offense": "HOU",
-   "defense": "BUF",
-   "home": "HOU",
-   "away": "BUF",
-   "date": "2026-09-13",
-   "situation": {
-    "clock": 243,
-    "running": true,
-    "down": 4,
-    "toGo": 9,
-    "ytg": 63,
-    "margin": 1,
-    "timeouts": 3,
-    "oppTimeouts": 3
-   },
-   "snapClock": 204,
-   "description": "(3:24) 38-K.Kroeger punts 59 yards to BUF 4, Center-40-A.Brinkman, downed by HOU-22-J.Smith.",
-   "call": "punt",
-   "wpCall": 0.43033333333333335,
-   "best": "timeout",
-   "wpBest": 0.508,
-   "cost": 0.07766666666666666,
-   "values": [
-    {
-     "call": "timeout",
-     "wp": 0.508
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.487
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.474
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.468
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.44233333333333336
-    },
-    {
-     "call": "punt",
-     "wp": 0.43033333333333335
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.424
-    },
-    {
-     "call": "run",
-     "wp": 0.387
-    },
-    {
-     "call": "kneel",
-     "wp": 0.28933333333333333
-    }
-   ],
-   "reason": {
-    "text": "The clock was running with 4:03 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
-    "section": "timeouts"
-   },
-   "nflverseWp": 0.649044454097748,
-   "nflverseWpa": -0.012370228767395,
    "lowConfidence": false
   },
   {
@@ -255,24 +184,24 @@
    "call": "punt",
    "wpCall": 0.5,
    "best": "run",
-   "wpBest": 0.5766666666666667,
-   "cost": 0.07666666666666666,
+   "wpBest": 0.573,
+   "cost": 0.07299999999999995,
    "values": [
     {
      "call": "run",
-     "wp": 0.5766666666666667
+     "wp": 0.573
     },
     {
      "call": "pass-screen",
-     "wp": 0.5556666666666666
+     "wp": 0.5513333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.5236666666666666
+     "wp": 0.519
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5136666666666667
+     "wp": 0.5063333333333333
     },
     {
      "call": "punt",
@@ -280,15 +209,15 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.49133333333333334
+     "wp": 0.484
     },
     {
      "call": "pass-deep",
-     "wp": 0.405
+     "wp": 0.40066666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.18766666666666668
+     "wp": 0.18466666666666667
     }
    ],
    "reason": {
@@ -322,42 +251,42 @@
    "snapClock": 26,
    "description": "(:26) (Shotgun) 10-D.Maye pass deep right intended for 13-M.Hollins INTERCEPTED by 29-J.Jobe [0-D.Lawrence] at SEA -3. Touchback.",
    "call": "pass-sideline",
-   "wpCall": 0.563,
+   "wpCall": 0.5643333333333334,
    "best": "pass-deep",
-   "wpBest": 0.563,
+   "wpBest": 0.5643333333333334,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.563
+     "wp": 0.5643333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.5573333333333333
+     "wp": 0.5453333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.5463333333333333
+     "wp": 0.534
     },
     {
      "call": "pass-play-action",
-     "wp": 0.533
+     "wp": 0.53
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5296666666666666
+     "wp": 0.528
     },
     {
      "call": "run",
-     "wp": 0.5093333333333333
+     "wp": 0.49833333333333335
     },
     {
      "call": "fg",
-     "wp": 0.4686666666666667
+     "wp": 0.47433333333333333
     },
     {
      "call": "spike",
-     "wp": 0.4686666666666667
+     "wp": 0.47433333333333333
     }
    ],
    "reason": {
@@ -389,42 +318,42 @@
    "snapClock": 101,
    "description": "(1:41) (Shotgun) 17-J.Allen pass deep middle to 5-J.Palmer for 34 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.507,
+   "wpCall": 0.5223333333333333,
    "best": "pass-play-action",
-   "wpBest": 0.507,
+   "wpBest": 0.5223333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.507
+     "wp": 0.5223333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.49466666666666664
+     "wp": 0.4866666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.475
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.4493333333333333
+     "wp": 0.474
     },
     {
      "call": "pass-screen",
-     "wp": 0.44333333333333336
+     "wp": 0.4666666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.46066666666666667
     },
     {
      "call": "run",
-     "wp": 0.42333333333333334
-    },
-    {
-     "call": "spike",
-     "wp": 0.3546666666666667
+     "wp": 0.43266666666666664
     },
     {
      "call": "fg",
-     "wp": 0.3526666666666667
+     "wp": 0.386
+    },
+    {
+     "call": "spike",
+     "wp": 0.38533333333333336
     }
    ],
    "reason": {
@@ -456,38 +385,38 @@
    "snapClock": 16,
    "description": "(:16) (Shotgun) 7-C.Stroud sacked at BUF 28 for -10 yards (15-G.Rousseau). FUMBLES (15-G.Rousseau) [15-G.Rousseau], RECOVERED by BUF-8-T.Bernard at BUF 24.",
    "call": "pass-middle",
-   "wpCall": 0.35733333333333334,
+   "wpCall": 0.32266666666666666,
    "best": "pass-deep",
-   "wpBest": 0.35733333333333334,
+   "wpBest": 0.32266666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.35733333333333334
+     "wp": 0.32266666666666666
     },
     {
      "call": "spike",
-     "wp": 0.24866666666666667
+     "wp": 0.20866666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.19533333333333333
+     "wp": 0.196
     },
     {
      "call": "pass-middle",
-     "wp": 0.15666666666666668
+     "wp": 0.156
     },
     {
      "call": "pass-sideline",
-     "wp": 0.15066666666666667
+     "wp": 0.13733333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.132
+     "wp": 0.126
     },
     {
      "call": "run",
-     "wp": 0.04466666666666667
+     "wp": 0.042666666666666665
     },
     {
      "call": "fg",
@@ -523,14 +452,14 @@
    "snapClock": 2,
    "description": "(:02) 10-D.Carlson 62 yard field goal is No Good, Wide Right, Center-49-Z.Wood, Holder-17-R.Wright.",
    "call": "fg",
-   "wpCall": 0.6943333333333334,
+   "wpCall": 0.768,
    "best": "fg",
-   "wpBest": 0.6943333333333334,
+   "wpBest": 0.768,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.6943333333333334
+     "wp": 0.768
     },
     {
      "call": "pass-deep",
@@ -549,11 +478,11 @@
      "wp": 0.502
     },
     {
-     "call": "pass-middle",
-     "wp": 0.502
+     "call": "run",
+     "wp": 0.5016666666666667
     },
     {
-     "call": "run",
+     "call": "pass-middle",
      "wp": 0.5016666666666667
     },
     {
@@ -570,12 +499,12 @@
     }
    ],
    "reason": {
-    "text": "A 61-yard try is good about 38% of the time, and it wins it.",
+    "text": "A 61-yard try is good about 51% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "nflverseWp": 0.608113765716553,
    "nflverseWpa": -0.215947630582377,
-   "lowConfidence": false
+   "lowConfidence": true
   },
   {
    "id": "2026_01_BUF_HOU-4436",
@@ -598,42 +527,42 @@
    "snapClock": 25,
    "description": "(:25) (Shotgun) 7-C.Stroud sacked at BUF 18 for -9 yards (96-D.Walker).",
    "call": "pass-middle",
-   "wpCall": 0.5506666666666666,
+   "wpCall": 0.536,
    "best": "pass-middle",
-   "wpBest": 0.5506666666666666,
+   "wpBest": 0.536,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.5506666666666666
+     "wp": 0.536
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5466666666666666
+     "wp": 0.5306666666666666
     },
     {
      "call": "pass-deep",
-     "wp": 0.526
+     "wp": 0.5066666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5186666666666667
+     "wp": 0.5
     },
     {
      "call": "pass-screen",
-     "wp": 0.49933333333333335
+     "wp": 0.482
     },
     {
      "call": "spike",
-     "wp": 0.43933333333333335
-    },
-    {
-     "call": "run",
      "wp": 0.4033333333333333
     },
     {
+     "call": "run",
+     "wp": 0.39666666666666667
+    },
+    {
      "call": "fg",
-     "wp": 0.02666666666666667
+     "wp": 0.03266666666666666
     }
    ],
    "reason": {

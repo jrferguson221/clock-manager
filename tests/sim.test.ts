@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -191,7 +191,8 @@ describe("timeouts", () => {
     const values = evaluateCalls(trailing, 500);
     const oneFewer = bestScored(evaluateCalls({ ...trailing, timeouts: { you: 1, opp: 3 } }, 500)).wp;
     // It's the best play from here, run with one fewer timeout: at most what one fewer is worth, and close to it.
-    expect(wpOf(values, "timeout")).toBeLessThanOrEqual(oneFewer + 1e-9);
+    // (The best call prefers the one that spends least among calls within TIE of the top, so allow that much.)
+    expect(wpOf(values, "timeout")).toBeLessThanOrEqual(oneFewer + TIE);
     expect(oneFewer - wpOf(values, "timeout")).toBeLessThan(0.02);
     expect(wpOf(values, "timeout")).toBeLessThan(bestScored(values).wp);
   });
@@ -336,5 +337,58 @@ describe("3rd and 4th & short", () => {
     expect(Math.abs(conversions("run", 1) - 0.74)).toBeLessThan(0.05);
     expect(Math.abs(conversions("run", 3) - 0.55)).toBeLessThan(0.05);
     expect(Math.abs(conversions("pass-middle", 2) - 0.57)).toBeLessThan(0.05);
+  });
+});
+
+describe("field goals and long yardage, as calibrated", () => {
+  it("make kicks at the 2022-26 NFL rates: about 73% from 50-54, 65% from 55-59", () => {
+    expect(fgMakeChance(52 - 17)).toBeCloseTo(0.732, 3);
+    expect(fgMakeChance(57 - 17)).toBeCloseTo(0.648, 3);
+    expect(fgMakeChance(54 - 17)).toBeGreaterThan(fgMakeChance(57 - 17));
+    expect(fgMakeChance(54 - 17)).toBeLessThan(fgMakeChance(52 - 17));
+    expect(fgMakeChance(1)).toBeGreaterThan(0.99);
+  });
+
+  it("4th & 8 up 3 with 2:36 left: kicking a 54-yarder is close to going for it, not a costly mistake", () => {
+    const g: GameState = { ...base, clock: 156, running: false, down: 4, toGo: 8, ytg: 36, margin: 3, timeouts: { you: 2, opp: 2 } };
+    const v = evaluateCallsAtSnap(g, 1500);
+    const best = bestScored(v).wp;
+    expect(best - wpOf(v, "fg")).toBeLessThan(0.06);
+  });
+
+  it("middle throws on 3rd & long convert about as often as real ones (41% of throws on 3rd/4th & 7-10)", () => {
+    let converted = 0;
+    for (let i = 0; i < 4000; i++) {
+      const g: GameState = { ...base, clock: 900, running: false, down: 3, toGo: 8, ytg: 60, margin: 0 };
+      if (step(g, "pass-middle", seededRng(i)).state.down === 1) converted++;
+    }
+    // Per snap, so sacks (about 10% here) count against it: 41% of throws is about 37% of snaps.
+    expect(Math.abs(converted / 4000 - 0.37)).toBeLessThan(0.05);
+  });
+});
+
+describe("3rd and 4th down by yards to go, as calibrated", () => {
+  const rate = (call: "run" | "pass-middle" | "pass-sideline", toGo: number) => {
+    let converted = 0;
+    for (let i = 0; i < 4000; i++) {
+      const g: GameState = { ...base, clock: 900, running: false, down: 3, toGo, ytg: 60, margin: 0 };
+      if (step(g, call, seededRng(i)).state.down === 1) converted++;
+    }
+    return converted / 4000;
+  };
+
+  it("on 3rd/4th & 4-6, runs and passes convert at the real rates, not the open-field ones", () => {
+    // Real: runs 44% / 34% / 27% on 4 / 5 / 6 to go; middle throws about 58% and sideline 51% of throws.
+    expect(Math.abs(rate("run", 4) - 0.44)).toBeLessThan(0.05);
+    expect(Math.abs(rate("run", 6) - 0.27)).toBeLessThan(0.05);
+    expect(Math.abs(rate("pass-middle", 5) / 0.94 - 0.58)).toBeLessThan(0.05);
+    expect(Math.abs(rate("pass-sideline", 5) / 0.94 - 0.51)).toBeLessThan(0.05);
+  });
+
+  it("no prevent on 3rd or 4th and short: the defense guards the sticks", () => {
+    const late: GameState = { ...base, clock: 181, running: false, down: 4, toGo: 5, ytg: 67, margin: -4 };
+    expect(coverageFor(late, 181)).toBe("obvious");
+    expect(coverageFor({ ...late, down: 1, toGo: 10 }, 181)).toBe("prevent");
+    expect(coverageFor({ ...late, down: 3, toGo: 12 }, 181)).toBe("prevent");
   });
 });

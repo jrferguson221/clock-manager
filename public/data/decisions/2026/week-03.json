@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 3,
- "generatedAt": "2026-11-05T16:04:21.878Z",
+ "generatedAt": "2026-11-05T20:47:00.674Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 203,
  "agreement": {
   "plays": 203,
-  "meanAbsDiff": 0.04916065891302373,
-  "within10": 0.8669950738916257
+  "meanAbsDiff": 0.04695057257439797,
+  "within10": 0.8768472906403941
  },
  "worst": [],
  "notable": [
@@ -33,42 +33,42 @@
    "snapClock": 24,
    "description": "(:24) (Shotgun) 1-C.Ward pass short left intended for 5-E.Ayomanor INTERCEPTED by 8-J.Holland at NYG -4. Touchback. PENALTY on NYG-3-A.Carter, Unsportsmanlike Conduct, 10 yards, enforced at NYG 20.",
    "call": "pass-sideline",
-   "wpCall": 0.6246666666666667,
+   "wpCall": 0.608,
    "best": "pass-middle",
-   "wpBest": 0.6246666666666667,
+   "wpBest": 0.608,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6246666666666667
+     "wp": 0.608
     },
     {
      "call": "pass-sideline",
-     "wp": 0.578
+     "wp": 0.5633333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5693333333333334
+     "wp": 0.56
     },
     {
      "call": "pass-screen",
-     "wp": 0.548
+     "wp": 0.536
     },
     {
      "call": "pass-deep",
-     "wp": 0.48933333333333334
+     "wp": 0.47533333333333333
     },
     {
      "call": "run",
-     "wp": 0.45266666666666666
+     "wp": 0.44466666666666665
     },
     {
      "call": "spike",
-     "wp": 0.42133333333333334
+     "wp": 0.38666666666666666
     },
     {
      "call": "fg",
-     "wp": 0.02666666666666667
+     "wp": 0.03266666666666666
     }
    ],
    "reason": {
@@ -100,46 +100,46 @@
    "snapClock": 53,
    "description": "(:53) (Shotgun) 9-J.Burrow sacked at PIT 46 for -8 yards (99-D.Harmon). FUMBLES (99-D.Harmon) [99-D.Harmon], RECOVERED by PIT-69-S.Joseph at CIN 49.",
    "call": "pass-play-action",
-   "wpCall": 0.438,
-   "best": "pass-deep",
-   "wpBest": 0.438,
+   "wpCall": 0.43333333333333335,
+   "best": "pass-play-action",
+   "wpBest": 0.429,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.438
+     "wp": 0.43333333333333335
     },
     {
      "call": "pass-play-action",
-     "wp": 0.42833333333333334
+     "wp": 0.429
     },
     {
      "call": "pass-screen",
-     "wp": 0.425
+     "wp": 0.42733333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.4176666666666667
+     "wp": 0.4166666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4093333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.4063333333333333
+     "wp": 0.4086666666666667
     },
     {
      "call": "spike",
      "wp": 0.4056666666666667
     },
     {
+     "call": "run",
+     "wp": 0.4026666666666667
+    },
+    {
      "call": "fg",
-     "wp": 0.285
+     "wp": 0.3443333333333333
     }
    ],
    "reason": {
-    "text": "You need a big play: 38 yards with 0:53 left is too far to go in small chunks. A deep pass completes about 29% of the time, for 20+ yards.",
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.451150149106979,
@@ -234,26 +234,26 @@
    "snapClock": 21,
    "description": "(:21) 3-S.Shrader 53 yard field goal is GOOD, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.6033333333333334,
+   "wpCall": 0.7053333333333334,
    "best": "fg",
-   "wpBest": 0.6033333333333334,
+   "wpBest": 0.7053333333333334,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.6033333333333334
+     "wp": 0.7053333333333334
     },
     {
      "call": "run",
-     "wp": 0.47933333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.4593333333333333
+     "wp": 0.5166666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.43133333333333335
+     "wp": 0.4786666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.42533333333333334
     },
     {
      "call": "pass-play-action",
@@ -261,20 +261,20 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4166666666666667
+     "wp": 0.38
     },
     {
      "call": "pass-deep",
-     "wp": 0.24066666666666667
+     "wp": 0.256
     }
    ],
    "reason": {
-    "text": "A 53-yard try is good about 62% of the time, and it wins it.",
+    "text": "A 53-yard try is good about 72% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "nflverseWp": 0.459501296281815,
    "nflverseWpa": 0.35943603515625,
-   "lowConfidence": false
+   "lowConfidence": true
   },
   {
    "id": "2026_03_SEA_WAS-4262",
@@ -297,30 +297,30 @@
    "snapClock": 249,
    "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.39366666666666666,
+   "wpCall": 0.386,
    "best": "pass-middle",
-   "wpBest": 0.39366666666666666,
+   "wpBest": 0.386,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.39366666666666666
+     "wp": 0.386
     },
     {
      "call": "pass-play-action",
-     "wp": 0.38033333333333336
+     "wp": 0.373
     },
     {
      "call": "pass-deep",
-     "wp": 0.379
+     "wp": 0.37033333333333335
     },
     {
      "call": "pass-screen",
-     "wp": 0.368
+     "wp": 0.3606666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.36666666666666664
+     "wp": 0.35633333333333334
     },
     {
      "call": "run",
@@ -328,11 +328,11 @@
     },
     {
      "call": "spike",
-     "wp": 0.31433333333333335
+     "wp": 0.31233333333333335
     },
     {
      "call": "punt",
-     "wp": 0.243
+     "wp": 0.24566666666666667
     }
    ],
    "reason": {

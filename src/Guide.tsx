@@ -531,7 +531,8 @@ function PreventSection() {
       <Text>
         A defense protecting a lead late plays "prevent": safeties deep, coverage that gives up short catches to stop the
         long ones. In the app, a defense that's ahead plays prevent in the last {PREVENT_WINDOW / 60} minutes, outside
-        the red zone.
+        the red zone, except on 3rd or 4th and short: there, giving up a short catch loses the down, so it guards the
+        first-down marker instead.
       </Text>
       <NumberTable caption="Normal → prevent" head={["Pass", "Complete (per throw)", "Intercepted", "Sacked"]} rows={rows} />
       <Text>

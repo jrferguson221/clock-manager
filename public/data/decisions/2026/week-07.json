@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-05T16:04:21.878Z",
+ "generatedAt": "2026-11-05T20:47:00.674Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.04564512645522344,
-  "within10": 0.8556701030927835
+  "meanAbsDiff": 0.04430277501123469,
+  "within10": 0.865979381443299
  },
  "worst": [
   {
@@ -32,50 +32,50 @@
    "snapClock": 33,
    "description": "(:33) (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson pushed ob at CLE 45 for 8 yards (53-A.Hill). The Replay Official reviewed the runner was out of bounds ruling, and the play was REVERSED. (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson to CLE 45 for 8 yards (53-A.Hill).",
    "call": "pass-middle",
-   "wpCall": 0.5573333333333333,
+   "wpCall": 0.546,
    "best": "timeout",
-   "wpBest": 0.6486666666666666,
-   "cost": 0.09133333333333327,
+   "wpBest": 0.6443333333333333,
+   "cost": 0.09833333333333327,
    "values": [
     {
      "call": "timeout",
-     "wp": 0.6486666666666666
-    },
-    {
-     "call": "spike",
-     "wp": 0.6
+     "wp": 0.6443333333333333
     },
     {
      "call": "run",
-     "wp": 0.593
+     "wp": 0.5956666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.574
     },
     {
      "call": "pass-screen",
-     "wp": 0.5573333333333333
+     "wp": 0.546
     },
     {
      "call": "pass-middle",
-     "wp": 0.5476666666666666
+     "wp": 0.54
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5473333333333333
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5053333333333333
+     "wp": 0.5376666666666666
     },
     {
      "call": "punt",
      "wp": 0.5
     },
     {
+     "call": "pass-sideline",
+     "wp": 0.493
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.4603333333333333
+     "wp": 0.43566666666666665
     },
     {
      "call": "kneel",
-     "wp": 0.44
+     "wp": 0.4096666666666667
     }
    ],
    "reason": {
@@ -107,42 +107,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3436666666666667,
+   "wpCall": 0.35833333333333334,
    "best": "run",
-   "wpBest": 0.4186666666666667,
-   "cost": 0.07500000000000001,
+   "wpBest": 0.42133333333333334,
+   "cost": 0.063,
    "values": [
     {
      "call": "run",
-     "wp": 0.4186666666666667
+     "wp": 0.42133333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.408
+     "wp": 0.41133333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.39466666666666667
+     "wp": 0.3923333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.38466666666666666
+     "wp": 0.3883333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.37866666666666665
+     "wp": 0.38166666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.35333333333333333
+     "wp": 0.3636666666666667
     },
     {
      "call": "fg",
-     "wp": 0.3436666666666667
+     "wp": 0.35833333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.3016666666666667
+     "wp": 0.30666666666666664
     }
    ],
    "reason": {
@@ -176,30 +176,30 @@
    "snapClock": 28,
    "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
    "call": "pass-sideline",
-   "wpCall": 0.709,
+   "wpCall": 0.7126666666666667,
    "best": "pass-deep",
-   "wpBest": 0.709,
+   "wpBest": 0.7126666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.709
+     "wp": 0.7126666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.676
+     "wp": 0.683
     },
     {
      "call": "pass-screen",
-     "wp": 0.665
+     "wp": 0.6696666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.6636666666666666
+     "wp": 0.666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6543333333333333
+     "wp": 0.6563333333333333
     },
     {
      "call": "spike",
@@ -207,7 +207,7 @@
     },
     {
      "call": "run",
-     "wp": 0.629
+     "wp": 0.633
     },
     {
      "call": "kneel",
@@ -247,46 +247,46 @@
    "snapClock": 153,
    "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
    "call": "pass-deep",
-   "wpCall": 0.11966666666666667,
-   "best": "pass-middle",
-   "wpBest": 0.11833333333333333,
+   "wpCall": 0.119,
+   "best": "pass-play-action",
+   "wpBest": 0.119,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.11966666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.11833333333333333
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.11633333333333333
+     "wp": 0.119
     },
     {
      "call": "pass-sideline",
      "wp": 0.106
     },
     {
+     "call": "pass-middle",
+     "wp": 0.10133333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.09866666666666667
+    },
+    {
      "call": "pass-screen",
-     "wp": 0.08866666666666667
+     "wp": 0.08633333333333333
     },
     {
      "call": "run",
-     "wp": 0.08333333333333333
+     "wp": 0.08133333333333333
     },
     {
      "call": "fg",
-     "wp": 0.075
+     "wp": 0.07633333333333334
     },
     {
      "call": "punt",
-     "wp": 0.06633333333333333
+     "wp": 0.06333333333333334
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.120108582079411,
@@ -314,50 +314,50 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.8036666666666666,
+   "wpCall": 0.823,
    "best": "run",
-   "wpBest": 0.8163333333333334,
-   "cost": 0.012666666666666715,
+   "wpBest": 0.825,
+   "cost": 0.0020000000000000018,
    "values": [
     {
      "call": "run",
-     "wp": 0.8163333333333334
-    },
-    {
-     "call": "timeout",
-     "wp": 0.8086666666666666
+     "wp": 0.825
     },
     {
      "call": "pass-middle",
-     "wp": 0.8036666666666666
+     "wp": 0.823
     },
     {
-     "call": "pass-screen",
-     "wp": 0.8013333333333333
+     "call": "timeout",
+     "wp": 0.82
     },
     {
      "call": "pass-play-action",
-     "wp": 0.7953333333333333
+     "wp": 0.8176666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.8146666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.7923333333333333
+     "wp": 0.8133333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.7603333333333333
+     "wp": 0.7876666666666666
     },
     {
      "call": "kneel",
-     "wp": 0.7503333333333333
+     "wp": 0.772
     },
     {
      "call": "spike",
-     "wp": 0.7356666666666667
+     "wp": 0.7583333333333333
     },
     {
      "call": "punt",
-     "wp": 0.6906666666666667
+     "wp": 0.727
     }
    ],
    "reason": {
@@ -389,22 +389,22 @@
    "snapClock": 3,
    "description": "(:03) 25-A.Szmyt 32 yard field goal is GOOD, Center-50-R.Sunahara, Holder-13-C.Bojorquez.",
    "call": "fg",
-   "wpCall": 0.975,
+   "wpCall": 0.9823333333333333,
    "best": "kneel",
-   "wpBest": 0.9723333333333334,
+   "wpBest": 0.9813333333333333,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.975
+     "wp": 0.9823333333333333
     },
     {
      "call": "spike",
-     "wp": 0.975
+     "wp": 0.9823333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.9723333333333334
+     "wp": 0.9813333333333333
     },
     {
      "call": "pass-deep",
@@ -437,7 +437,7 @@
    },
    "nflverseWp": 0.824265539646149,
    "nflverseWpa": 0.175734460353851,
-   "lowConfidence": false
+   "lowConfidence": true
   },
   {
    "id": "2026_07_IND_MIN-3368",
@@ -460,42 +460,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3436666666666667,
+   "wpCall": 0.35833333333333334,
    "best": "run",
-   "wpBest": 0.4186666666666667,
-   "cost": 0.07500000000000001,
+   "wpBest": 0.42133333333333334,
+   "cost": 0.063,
    "values": [
     {
      "call": "run",
-     "wp": 0.4186666666666667
+     "wp": 0.42133333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.408
+     "wp": 0.41133333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.39466666666666667
+     "wp": 0.3923333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.38466666666666666
+     "wp": 0.3883333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.37866666666666665
+     "wp": 0.38166666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.35333333333333333
+     "wp": 0.3636666666666667
     },
     {
      "call": "fg",
-     "wp": 0.3436666666666667
+     "wp": 0.35833333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.3016666666666667
+     "wp": 0.30666666666666664
     }
    ],
    "reason": {

@@ -76,10 +76,31 @@ const other = (t: Team): Team => (t === "you" ? "opp" : "you");
 const marginFor = (g: GameState, team: Team) => (team === "you" ? g.margin : -g.margin);
 const who = (team: Team) => (team === "you" ? "You" : "They");
 
-/** Field-goal make chance for a try from this spot: roughly the NFL's recent rates by distance. */
+/**
+ * Field-goal make rates by distance, measured from 2022-2026 NFL regular seasons (about 3,800 tries, in
+ * 5-yard bands, at each band's middle). Kickers have got so good from long range that the rate is nearly
+ * flat from the high 40s to the high 50s. Re-measure with scripts/calibrate/kicks.ts.
+ */
+export const FG_MAKE_BY_DISTANCE: readonly (readonly [number, number])[] = [
+  [20, 0.995], [32, 0.967], [37, 0.91], [42, 0.839], [47, 0.764], [52, 0.732], [57, 0.648], [62, 0.481], [67, 0.3],
+];
+
+/** Field-goal make chance for a try from this spot (distance = yards to the goal line + 17). */
 export function fgMakeChance(ytg: number): number {
   const distance = ytg + 17;
-  return 1 / (1 + Math.exp(0.12 * (distance - 57)));
+  const first = FG_MAKE_BY_DISTANCE[0];
+  const last = FG_MAKE_BY_DISTANCE.at(-1);
+  if (first === undefined || last === undefined) return 0;
+  if (distance <= first[0]) return first[1];
+  if (distance >= last[0]) return last[1];
+  for (let i = 1; i < FG_MAKE_BY_DISTANCE.length; i++) {
+    const hi = FG_MAKE_BY_DISTANCE[i];
+    const lo = FG_MAKE_BY_DISTANCE[i - 1];
+    if (hi !== undefined && lo !== undefined && distance <= hi[0]) {
+      return lo[1] + ((hi[1] - lo[1]) * (distance - lo[0])) / (hi[0] - lo[0]);
+    }
+  }
+  return last[1];
 }
 
 /** Whether a field goal ties or wins for the team with the ball, and they're in comfortable range. */
@@ -154,7 +175,8 @@ export interface PlayOutcome {
 
 /**
  * How the defense is playing:
- * - "prevent": ahead late, it protects the deep field (the last 4:00, outside the red zone).
+ * - "prevent": ahead late, it protects the deep field (the last 4:00, outside the red zone), except on 3rd or
+ *   4th and 6 or fewer, when giving up a short catch loses the down: there it guards the sticks instead.
  * - "obvious": everyone knows a pass is coming: 3rd or 4th & 7+, or the offense trailing or tied by a score
  *   in the last 5:00. More sacks, fewer completions, and play-action fools fewer defenders.
  * - "normal": anything else.
@@ -173,8 +195,10 @@ export const RED_ZONE = 20;
 
 export function coverageFor(g: GameState, clock: number): Coverage {
   const m = marginFor(g, g.poss);
-  // Prevent protects the deep field, and in the red zone there isn't one.
-  if (m < 0 && clock <= PREVENT_WINDOW && g.ytg > RED_ZONE) return "prevent";
+  // Prevent protects the deep field, and in the red zone there isn't one. On 3rd or 4th and short, a defense
+  // can't concede the underneath catch prevent gives up, so it plays the sticks: an obvious passing down.
+  const sticks = g.down >= 3 && g.toGo < OBVIOUS_TO_GO;
+  if (m < 0 && clock <= PREVENT_WINDOW && g.ytg > RED_ZONE && !sticks) return "prevent";
   if ((g.down >= 3 && g.toGo >= OBVIOUS_TO_GO) || (m <= 0 && m >= -8 && clock <= OBVIOUS_WINDOW)) return "obvious";
   return "normal";
 }
@@ -240,20 +264,37 @@ export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, Pass
   },
   prevent: {
     // Throws underneath complete as usual and gain a little more; catches near the sideline get out of bounds.
-    "pass-sideline": { sack: 0.06, interception: 0.024, complete: 0.62, minYards: 3, extraYards: 7, outOfBounds: 0.32 },
+    "pass-sideline": { sack: 0.06, interception: 0.024, complete: 0.629, minYards: 3, extraYards: 7, outOfBounds: 0.32 },
     "pass-middle": { sack: 0.06, interception: 0.017, complete: 0.654, minYards: 4, extraYards: 7.5, outOfBounds: 0.03 },
     // The deep field is what prevent protects: 31% complete, 5% intercepted.
-    "pass-deep": { sack: 0.08, interception: 0.047, complete: 0.287, minYards: 20, extraYards: 11.5, outOfBounds: 0.24 },
+    "pass-deep": { sack: 0.08, interception: 0.047, complete: 0.276, minYards: 20, extraYards: 11.5, outOfBounds: 0.24 },
     "pass-play-action": { sack: 0.09, interception: 0.02, complete: 0.593, minYards: 3, extraYards: 10.5, outOfBounds: 0.2 },
     "pass-screen": { sack: 0.005, interception: 0.005, complete: 0.864, minYards: -2, extraYards: 8.3, outOfBounds: 0.15 },
   },
 });
 
 /**
- * On 3rd or 4th and 3 or fewer, coverage tightens at the sticks: passes complete this much less often.
- * Fitted so passes convert about 55% of the time there, as in 2025-26 (56%, 57% and 54% on 1, 2 and 3 to go).
+ * On 3rd and 4th down, defenses play to stop the conversion: they guard the first-down marker and give up
+ * catches short of it. Each kind of pass completes this much less often, by yards to go, fitted to real
+ * conversion rates on 3rd/4th down outside the red zone (2022-26; by kind of pass from FTN's 2025-26 charting):
+ * - short (1-3 to go): passes convert about 55%;
+ * - medium (4-6): sideline 51%, middle 58%, deep 35%, play-action 49%, screens 32% of throws;
+ * - long (7+): sideline 36%, middle 41%, deep 34%, play-action 41%, screens 31% on 7-10.
+ * Re-measure with scripts/calibrate/passes.ts.
  */
-export const SHORT_YARDAGE_PASS = 0.86;
+export type SticksBand = "short" | "medium" | "long";
+
+export const STICKS_PASS: Readonly<Record<SticksBand, Readonly<Partial<Record<PassCall, number>>>>> = Object.freeze({
+  short: { "pass-sideline": 0.86, "pass-middle": 0.86, "pass-deep": 0.86, "pass-play-action": 0.86, "pass-screen": 0.86 },
+  medium: { "pass-sideline": 0.94, "pass-middle": 0.87, "pass-play-action": 0.92, "pass-screen": 0.81 },
+  long: { "pass-middle": 0.86, "pass-deep": 0.85 },
+});
+
+/** On 3rd or 4th down, how far there is to go: short (1-3), medium (4-6) or long (7+). */
+export function sticksBand(g: GameState): SticksBand | null {
+  if (g.down < 3) return null;
+  return g.toGo <= 3 ? "short" : g.toGo < OBVIOUS_TO_GO ? "medium" : "long";
+}
 
 /** Completion rate of a throw into the end zone from the 20, before compression. */
 const END_ZONE_SHOT = 0.25;
@@ -298,24 +339,21 @@ interface RunShape {
  * Runs by field position. Inside the 5 the defense packs the line: short gains, no breakaways. From
  * there runs blend back to the open-field shape by the 12.
  */
-export function runShape(coverage: Coverage, ytg: number, shortYardage: number | null = null): RunShape {
+export function runShape(coverage: Coverage, ytg: number, sticksToGo: number | null = null): RunShape {
   const open: RunShape = { mean: RUN_MEAN[coverage], sd: 3.2, breakaway: 0.1 };
   if (ytg <= 5) return { mean: 0.7 + 0.3 * ytg, sd: 2.2, breakaway: 0 };
   const t = Math.min(1, (ytg - 5) / 7);
   const lerp = (goalLine: number, field: number) => goalLine + (field - goalLine) * t;
   const shape = { mean: lerp(2.2, open.mean), sd: lerp(2.2, open.sd), breakaway: lerp(0, open.breakaway) };
-  if (shortYardage === null) return shape;
-  // On 3rd or 4th and short, the defense loads the box too. Fitted to 2025-26: runs convert about 74% of the
-  // time on 1 yard to go, 61% on 2 and 55% on 3 (scripts/calibrate/passes.ts measures this).
-  return {
-    mean: Math.min(shape.mean, 1.4 + 0.45 * shortYardage),
-    sd: Math.min(shape.sd, 2.4),
-    breakaway: Math.min(shape.breakaway, 0.04),
-  };
+  if (sticksToGo === null) return shape;
+  // On 3rd or 4th and up to 6 to go, the defense plays to stop the run short of the marker. Fitted to 2022-26:
+  // runs convert about 74% of the time on 1 yard to go, 61% on 2, 55% on 3, 44% on 4, 34% on 5 and 27% on 6.
+  const mean = sticksToGo <= 3 ? 1.4 + 0.45 * sticksToGo : 1.1 + 0.45 * sticksToGo;
+  return { mean: Math.min(shape.mean, mean), sd: Math.min(shape.sd, 2.4), breakaway: Math.min(shape.breakaway, 0.04) };
 }
 
-/** Yards to go when it's 3rd or 4th and short (3 or fewer), when defenses sell out against the run. */
-export const shortYardageFor = (g: GameState): number | null => (g.down >= 3 && g.toGo <= 3 ? g.toGo : null);
+/** Yards to go on 3rd or 4th and 6 or fewer, when defenses play the run to stop it short of the marker. */
+export const sticksRunFor = (g: GameState): number | null => (g.down >= 3 && g.toGo < OBVIOUS_TO_GO ? g.toGo : null);
 
 /** A last-play deep pass from this close is a heave into the end zone rather than a normal deep throw. */
 export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12 });
@@ -334,7 +372,7 @@ function rollHailMary(ytg: number, r: Rng): PlayOutcome {
   return { ...base, yards: 0, incomplete: true };
 }
 
-function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, shortYardage: number | null): PlayOutcome {
+function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, sticksToGo: number | null, sticks: SticksBand | null): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false };
   switch (call) {
     case "kneel":
@@ -343,7 +381,7 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, short
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
       if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
-      const shape = runShape(coverage, ytg, shortYardage);
+      const shape = runShape(coverage, ytg, sticksToGo);
       let yards = Math.round(shape.mean + shape.sd * gauss(r));
       if (r() < shape.breakaway) yards += Math.round(6 + expo(r, 9));
       yards = Math.max(-6, yards);
@@ -355,7 +393,8 @@ function rollPlay(call: PlayCall, r: Rng, coverage: Coverage, ytg: number, short
     case "pass-play-action":
     case "pass-screen": {
       const fitted = passOdds(coverage, call, ytg);
-      const odds = shortYardage === null ? fitted : { ...fitted, complete: fitted.complete * SHORT_YARDAGE_PASS };
+      const factor = sticks === null ? 1 : (STICKS_PASS[sticks][call] ?? 1);
+      const odds = factor === 1 ? fitted : { ...fitted, complete: fitted.complete * factor };
       // Deep throws and play-action take longer to develop; a deep pick comes farther downfield.
       const deep = call === "pass-deep";
       const slow = deep || call === "pass-play-action" ? 1 : 0;
@@ -522,7 +561,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   const play = forced ?? (call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
     ? rollHailMary(g.ytg, r)
-    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg, shortYardageFor(g)));
+    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg, sticksRunFor(g), sticksBand(g)));
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 

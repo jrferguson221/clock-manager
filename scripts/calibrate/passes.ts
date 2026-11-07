@@ -68,7 +68,9 @@ async function main() {
       const margin = Number(r.get("score_differential"));
       const late = r.get("qtr") === "4";
       // The model's prevent: the defense ahead (by one score) in the last 4:00, outside the red zone.
-      const prevent = late && clock <= 240 && margin < 0 && margin >= -8 && ytg > 20;
+      // 3rd or 4th and 6 or fewer: the defense guards the sticks instead (an obvious passing down, not prevent).
+      const sticks = (down === 3 || down === 4) && toGo <= 6;
+      const prevent = late && clock <= 240 && margin < 0 && margin >= -8 && ytg > 20 && !sticks;
       const obvious = (down >= 3 && toGo >= 7) || (late && clock <= 300 && margin <= 0 && margin >= -8);
       const situation: Situation = prevent ? "prevent" : obvious ? "obvious" : "normal";
 

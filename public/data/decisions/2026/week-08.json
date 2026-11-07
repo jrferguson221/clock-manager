@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 8,
- "generatedAt": "2026-11-05T16:04:21.878Z",
+ "generatedAt": "2026-11-05T20:47:00.674Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.04924117397279059,
-  "within10": 0.8785046728971962
+  "meanAbsDiff": 0.044885783661760374,
+  "within10": 0.9065420560747663
  },
  "worst": [
   {
@@ -32,42 +32,42 @@
    "snapClock": 35,
    "description": "(:35) 9-K.Walker right end to DEN 1 for 3 yards (2-P.Surtain).",
    "call": "run",
-   "wpCall": 0.6,
+   "wpCall": 0.5956666666666667,
    "best": "timeout",
-   "wpBest": 0.737,
-   "cost": 0.137,
+   "wpBest": 0.72,
+   "cost": 0.1243333333333333,
    "values": [
     {
      "call": "timeout",
-     "wp": 0.737
+     "wp": 0.72
     },
     {
      "call": "spike",
-     "wp": 0.6563333333333333
+     "wp": 0.621
     },
     {
      "call": "pass-middle",
-     "wp": 0.614
+     "wp": 0.6073333333333333
     },
     {
      "call": "run",
-     "wp": 0.6
+     "wp": 0.5956666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5976666666666667
+     "wp": 0.5913333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5943333333333334
+     "wp": 0.587
     },
     {
      "call": "pass-screen",
-     "wp": 0.5923333333333334
+     "wp": 0.584
     },
     {
      "call": "pass-deep",
-     "wp": 0.47433333333333333
+     "wp": 0.467
     },
     {
      "call": "fg",
@@ -103,113 +103,117 @@
    "snapClock": 181,
    "description": "(3:01) 19-B.Thorson punts 50 yards to DET 17, Center-42-A.DePaola, fair catch by 86-D.Carter.",
    "call": "punt",
-   "wpCall": 0.128,
+   "wpCall": 0.115,
    "best": "pass-middle",
-   "wpBest": 0.243,
-   "cost": 0.11499999999999999,
+   "wpBest": 0.21333333333333335,
+   "cost": 0.09833333333333334,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.243
+     "wp": 0.21333333333333335
     },
     {
      "call": "pass-play-action",
-     "wp": 0.23633333333333334
+     "wp": 0.211
     },
     {
      "call": "pass-sideline",
-     "wp": 0.22766666666666666
-    },
-    {
-     "call": "run",
-     "wp": 0.21666666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.19533333333333333
+     "wp": 0.19866666666666666
     },
     {
      "call": "pass-deep",
-     "wp": 0.18333333333333332
+     "wp": 0.19633333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.16633333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.15133333333333332
     },
     {
      "call": "punt",
-     "wp": 0.128
-    }
-   ],
-   "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
-    "section": "prevent-defense"
-   },
-   "nflverseWp": 0.178760901093483,
-   "nflverseWpa": 0.00120739638805389,
-   "lowConfidence": false
-  },
-  {
-   "id": "2026_08_KC_DEN-4207",
-   "gameId": "2026_08_KC_DEN",
-   "offense": "KC",
-   "defense": "DEN",
-   "home": "DEN",
-   "away": "KC",
-   "date": "2026-11-01",
-   "situation": {
-    "clock": 156,
-    "running": false,
-    "down": 4,
-    "toGo": 8,
-    "ytg": 36,
-    "margin": 3,
-    "timeouts": 2,
-    "oppTimeouts": 2
-   },
-   "snapClock": 156,
-   "description": "(2:36) 7-H.Butker 54 yard field goal is No Good, Wide Right, Center-41-J.Winchester, Holder-14-M.Araiza.",
-   "call": "fg",
-   "wpCall": 0.6956666666666667,
-   "best": "pass-middle",
-   "wpBest": 0.7653333333333333,
-   "cost": 0.06966666666666665,
-   "values": [
-    {
-     "call": "pass-middle",
-     "wp": 0.7653333333333333
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.7466666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.729
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.7213333333333334
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.7213333333333334
-    },
-    {
-     "call": "fg",
-     "wp": 0.6956666666666667
-    },
-    {
-     "call": "run",
-     "wp": 0.683
-    },
-    {
-     "call": "kneel",
-     "wp": 0.6223333333333333
+     "wp": 0.115
     }
    ],
    "reason": {
     "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
    },
-   "nflverseWp": 0.744060099124908,
-   "nflverseWpa": -0.167362451553345,
+   "nflverseWp": 0.178760901093483,
+   "nflverseWpa": 0.00120739638805389,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_08_ARI_DAL-4455",
+   "gameId": "2026_08_ARI_DAL",
+   "offense": "DAL",
+   "defense": "ARI",
+   "home": "DAL",
+   "away": "ARI",
+   "date": "2026-11-01",
+   "situation": {
+    "clock": 74,
+    "running": true,
+    "down": 4,
+    "toGo": 13,
+    "ytg": 23,
+    "margin": 3,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 74,
+   "description": "Timeout #2 by DAL at 01:14.",
+   "call": "timeout",
+   "wpCall": 0.9116666666666666,
+   "best": "run",
+   "wpBest": 0.9753333333333334,
+   "cost": 0.06366666666666676,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.9796666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.9773333333333334
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.976
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.9756666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.9753333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.974
+    },
+    {
+     "call": "kneel",
+     "wp": 0.9653333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.9603333333333334
+    },
+    {
+     "call": "timeout",
+     "wp": 0.9116666666666666
+    }
+   ],
+   "reason": {
+    "text": "A run keeps the clock moving and rarely turns the ball over.",
+    "section": "running-out-the-clock"
+   },
+   "nflverseWp": 0.953477919101715,
+   "nflverseWpa": null,
    "lowConfidence": false
   }
  ],
@@ -302,26 +306,26 @@
    "snapClock": 4,
    "description": "(:04) (Shotgun) 15-P.Mahomes sacked at DEN 12 for -6 yards (97-M.Roach).",
    "call": "pass-middle",
-   "wpCall": 0.4073333333333333,
+   "wpCall": 0.35933333333333334,
    "best": "pass-middle",
-   "wpBest": 0.4073333333333333,
+   "wpBest": 0.35933333333333334,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.4073333333333333
+     "wp": 0.35933333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.346
+     "wp": 0.32
     },
     {
      "call": "pass-sideline",
-     "wp": 0.31866666666666665
+     "wp": 0.2966666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.266
+     "wp": 0.22333333333333333
     },
     {
      "call": "pass-deep",
@@ -365,42 +369,42 @@
    "snapClock": 151,
    "description": "(2:31) (Shotgun) 10-B.Nix pass short right to 20-J.Coleman to KC 5 for 51 yards (20-N.Williams; 32-N.Bolton).",
    "call": "pass-sideline",
-   "wpCall": 0.4256666666666667,
+   "wpCall": 0.4103333333333333,
    "best": "pass-middle",
-   "wpBest": 0.42233333333333334,
+   "wpBest": 0.4103333333333333,
    "cost": 0,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.4256666666666667
+     "call": "pass-middle",
+     "wp": 0.4103333333333333
     },
     {
-     "call": "pass-middle",
-     "wp": 0.42233333333333334
+     "call": "pass-play-action",
+     "wp": 0.4086666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.41633333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.414
+     "wp": 0.404
     },
     {
      "call": "pass-screen",
-     "wp": 0.4116666666666667
+     "wp": 0.3943333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.3933333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.4026666666666667
+     "wp": 0.38533333333333336
     },
     {
      "call": "spike",
-     "wp": 0.39
+     "wp": 0.37233333333333335
     },
     {
      "call": "punt",
-     "wp": 0.13833333333333334
+     "wp": 0.14033333333333334
     }
    ],
    "reason": {
@@ -432,46 +436,46 @@
    "snapClock": 92,
    "description": "(1:32) (No Huddle, Shotgun) 15-P.Mahomes pass short right to 87-T.Kelce to DEN 18 for 32 yards (26-D.Key).",
    "call": "pass-sideline",
-   "wpCall": 0.367,
+   "wpCall": 0.34933333333333333,
    "best": "pass-middle",
-   "wpBest": 0.367,
+   "wpBest": 0.34933333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.367
+     "wp": 0.34933333333333333
     },
     {
      "call": "timeout",
-     "wp": 0.366
+     "wp": 0.3476666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.362
+     "wp": 0.345
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3616666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.35133333333333333
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.35133333333333333
-    },
-    {
-     "call": "spike",
-     "wp": 0.3363333333333333
+     "wp": 0.3403333333333333
     },
     {
      "call": "run",
-     "wp": 0.334
+     "wp": 0.323
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.32
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.315
+    },
+    {
+     "call": "spike",
+     "wp": 0.306
     },
     {
      "call": "punt",
-     "wp": 0.051333333333333335
+     "wp": 0.05366666666666667
     }
    ],
    "reason": {
@@ -518,7 +522,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.14066666666666666
+     "wp": 0.13933333333333334
     },
     {
      "call": "pass-play-action",
@@ -538,11 +542,11 @@
     },
     {
      "call": "fg",
-     "wp": 0.002
+     "wp": 0.0026666666666666666
     }
    ],
    "reason": {
-    "text": "You need a big play: 35 yards with 0:14 left is too far to go in small chunks. A deep pass completes about 29% of the time, for 20+ yards.",
+    "text": "You need a big play: 35 yards with 0:14 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
     "section": "prevent-defense"
    },
    "nflverseWp": 0.206168875098228,
