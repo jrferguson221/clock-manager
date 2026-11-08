@@ -7,6 +7,7 @@ import { DEFAULT_SIM, type GameState } from "./sim";
 import { ChoiceSelect, NumberField, clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
+import Scorebug from "./Scorebug";
 import Trainer from "./Trainer";
 
 const route = getRouteApi("/trailing");
@@ -58,7 +59,12 @@ export default function TrailingPanel() {
   );
 
   return (
-    <ModeLayout intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." form={form}>
+    <ModeLayout
+      intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." form={form} mustEdit={gameClock == null}
+      scorebug={(edit) => (
+        <Scorebug {...s} margin={-s.trail} notes={[`${yardsPerPlay} yards a play`, `${hurryUp}s hurry-up`]} onEdit={edit} />
+      )}
+    >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 1:45.</Alert>
       ) : (

@@ -233,3 +233,84 @@ body {
   text-decoration: none;
   cursor: help;
 }
+
+/* ---------- Scorebug ---------- */
+/* A TV-style score bar: always night-game navy, in both color schemes, so it reads like the broadcast. */
+
+.scorebug {
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  box-shadow: var(--mantine-shadow-md);
+  font-family: var(--mantine-font-family-headings);
+  color: #fff;
+}
+
+.sb-bar {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.3fr) 1fr 1fr 1.2fr auto;
+  align-items: stretch;
+  background: linear-gradient(180deg, #222938 0%, #141925 100%);
+}
+
+.sb-teams { display: grid; background: #0d111a; }
+.sb-team {
+  display: flex; align-items: center; justify-content: space-between; gap: rem(10px);
+  padding: rem(6px) rem(14px);
+  border-left: 5px solid var(--mantine-color-pylon-6);
+}
+.sb-team.opp { border-left-color: #6b768c; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.sb-name { font-size: rem(20px); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.1; }
+.sb-ball { color: var(--mantine-color-pylon-4); font-size: rem(13px); vertical-align: middle; margin-left: rem(2px); }
+
+.sb-timeouts { display: inline-flex; gap: rem(3px); }
+.sb-to { width: rem(14px); height: rem(5px); border-radius: 1px; background: rgba(255, 255, 255, 0.18); }
+.sb-to.on { background: #ffd43b; }
+
+.sb-cell {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: rem(8px) rem(12px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center; min-width: 0;
+}
+.sb-label {
+  font-size: rem(12px); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #9aa3b5; white-space: nowrap;
+}
+.sb-value {
+  font-size: rem(28px); font-weight: 700; line-height: 1.05; letter-spacing: 0.03em;
+  text-transform: uppercase; font-variant-numeric: tabular-nums; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: rem(8px);
+}
+.sb-score.ahead .sb-value { color: var(--mantine-color-turf-3); }
+.sb-score.behind .sb-value { color: var(--mantine-color-pylon-3); }
+.sb-clock .sb-value { font-size: rem(32px); }
+.sb-down .sb-value { color: #ffd43b; }
+
+/* A live clock gets a green dot; a stopped one a red square. */
+.sb-dot { width: rem(9px); height: rem(9px); background: var(--mantine-color-red-6); border-radius: 1px; }
+.sb-dot.running { background: var(--mantine-color-turf-4); border-radius: 50%; }
+
+.sb-edit {
+  display: flex; align-items: center; padding: 0 rem(14px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sb-notes {
+  background: #0d111a; color: #c4cad6;
+  font-family: var(--mantine-font-family);
+  font-size: var(--mantine-font-size-sm);
+  padding: rem(5px) rem(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* On a phone: teams and score on top, clock and down below, Edit across the bottom. */
+@media (max-width: $mantine-breakpoint-sm) {
+  .sb-bar { grid-template-columns: 1.4fr 1fr; }
+  .sb-teams { grid-column: 1; }
+  .sb-down { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+  .sb-clock { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+  .sb-edit { grid-column: 1 / -1; padding: rem(8px) rem(12px); border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+  .sb-edit .mantine-Button-root { width: 100%; }
+  .sb-value { font-size: rem(24px); }
+  .sb-clock .sb-value { font-size: rem(28px); }
+}

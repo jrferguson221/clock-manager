@@ -15,3 +15,12 @@ it("needs a touchdown when the URL says you trail by 7", async () => {
   expect(router.state.location.search).toMatchObject({ trail: 7, ypp: 9 });
   expect(html).toContain("Plays to reach the end zone at 9 yards a play");
 });
+
+it("shows the situation as a scorebug with the drive settings under it", async () => {
+  const { html } = await renderAt("/trailing?trail=7&ypp=9&side=opp&yardLine=8&toGo=8&down=3");
+  expect(html).toContain("Down 7");
+  expect(html).toContain("3rd &amp; Goal");
+  expect(html).toContain("Opp 8");
+  expect(html).toContain("9 yards a play · 18s hurry-up");
+  expect(html).toContain("Edit the situation");
+});

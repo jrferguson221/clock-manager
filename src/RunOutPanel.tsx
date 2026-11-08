@@ -8,6 +8,7 @@ import { formatClock } from "./time";
 import { ChoiceSelect, Timeline, clampTo, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import SituationForm, { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
+import Scorebug from "./Scorebug";
 import Trainer from "./Trainer";
 
 const route = getRouteApi("/");
@@ -46,7 +47,12 @@ export default function RunOutPanel() {
   );
 
   return (
-    <ModeLayout intro="You're ahead and have the ball. Call each play and see how it changes your chances." form={form}>
+    <ModeLayout
+      intro="You're ahead and have the ball. Call each play and see how it changes your chances." form={form} mustEdit={gameClock == null}
+      scorebug={(edit) => (
+        <Scorebug {...s} margin={s.lead} notes={[`Run out with: ${PLAY_TYPES[s.playType].label.toLowerCase()}`]} onEdit={edit} />
+      )}
+    >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 2:05.</Alert>
       ) : (

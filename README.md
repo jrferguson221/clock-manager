@@ -2,7 +2,7 @@
 
 A web app for late-game strategy in American football: when to run, throw, kick, spike or call timeout, what each call is worth in win probability, and why.
 
-Both modes are a play-calling trainer. Enter the situation (clock, score, timeouts for both teams, down, distance and ball spot), then call each play: timeout, run, screen, pass to the sideline, pass over the middle, play-action pass, deep pass, spike, kneel, field goal or punt. The app simulates the result and updates the situation. A win-probability meter shows your chances. After each call, it explains what the best call was, why, and the win probability for every option. When the drive ends, you can play out the rest of the game to see one way it could go. Once the game is over, a recap shows the final result and the call with the biggest win-probability swing, added or lost, and says whether the call itself was right or the result was luck. You can undo a call to try another.
+The **Leading** and **Trailing** modes are a play-calling trainer. The situation (clock, score, timeouts for both teams, down, distance and ball spot) shows as a TV-style scorebug that follows each play; its **Edit** button opens the full form to change it. Call each play: timeout, run, screen, pass to the sideline, pass over the middle, play-action pass, deep pass, spike, kneel, field goal or punt. The app simulates the result and updates the situation. A win-probability meter shows your chances. After each call, it explains what the best call was, why, and the win probability for every option. When the drive ends, you can play out the rest of the game to see one way it could go. Once the game is over, a recap shows the final result and the call with the biggest win-probability swing, added or lost, and says whether the call itself was right or the result was luck. You can undo a call to try another.
 
 The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
 
@@ -57,6 +57,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | Path | What it holds |
 | --- | --- |
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
+| `src/Scorebug.tsx` | The scorebug the Leading and Trailing modes show the situation in. |
 | `src/TwoPointPanel.tsx` | The Kick or go for 2 tab. |
 | `src/sim.ts` | Play simulator, win probability and the best-call explainer. Pure functions. |
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |

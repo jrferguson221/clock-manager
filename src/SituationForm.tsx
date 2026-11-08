@@ -1,7 +1,7 @@
 // The situation form every mode shares: clock, score, timeouts, down and distance, ball spot and clock state.
 
-import type { ReactNode } from "react";
-import { Card, Grid, SimpleGrid, Switch, Text } from "@mantine/core";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Button, Card, Grid, SimpleGrid, Stack, Switch, Text } from "@mantine/core";
 import type { BestCallSearch, LeadingSearch, TrailingSearch } from "@situational-football/schemas";
 import { DOWNS } from "./engine";
 import type { GameState } from "./sim";
@@ -55,19 +55,60 @@ export default function SituationForm({ situation: s, set, clock, score, oppTime
   );
 }
 
-/** A mode's page: its intro, then the form beside the results on wide screens, above them on narrow ones. */
-export function ModeLayout({ intro, form, children }: { intro: string; form: ReactNode; children: ReactNode }) {
+/**
+ * A mode's page: its intro, then the form beside the results on wide screens, above them on narrow ones.
+ * With a `scorebug`, the situation shows as a scorebug over full-width results instead, and its Edit
+ * button brings back the form (with a Done button). `mustEdit` keeps the form open, e.g. while the clock
+ * field holds something that isn't a clock.
+ */
+export function ModeLayout({ intro, form, children, scorebug, mustEdit = false }: {
+  intro: string;
+  form: ReactNode;
+  children: ReactNode;
+  scorebug?: (edit: () => void) => ReactNode;
+  mustEdit?: boolean;
+}) {
+  const [editing, setEditing] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const moved = useRef(false);
+  const showForm = scorebug === undefined || editing || mustEdit;
+
+  // Move focus with the switch: into the form on Edit, back to the Edit button on Done.
+  useEffect(() => {
+    if (!moved.current) return;
+    moved.current = false;
+    const target = showForm ? root.current?.querySelector<HTMLElement>(".form-column form input") : root.current?.querySelector<HTMLElement>(".scorebug button");
+    target?.focus();
+  }, [showForm]);
+  const toggle = (next: boolean) => {
+    moved.current = true;
+    setEditing(next);
+  };
+
+  const results = <section className="results" aria-live="polite" aria-label="Results">{children}</section>;
   return (
-    <>
+    <div ref={root}>
       <Text c="dimmed" mb="md">{intro}</Text>
-      <Grid gap="lg">
-        <Grid.Col span={{ base: 12, lg: 4 }}>
-          <div className="form-column">{form}</div>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, lg: 8 }}>
-          <section className="results" aria-live="polite" aria-label="Results">{children}</section>
-        </Grid.Col>
-      </Grid>
-    </>
+      {showForm ? (
+        <Grid gap="lg">
+          <Grid.Col span={{ base: 12, lg: 4 }}>
+            <div className="form-column">
+              {scorebug !== undefined && (
+                <Button fullWidth mb="sm" onClick={() => toggle(false)} disabled={mustEdit}>
+                  Done: show the scorebug
+                </Button>
+              )}
+              {form}
+            </div>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, lg: 8 }}>{results}</Grid.Col>
+        </Grid>
+      ) : (
+        <Stack gap="lg">
+          {scorebug(() => toggle(true))}
+          {results}
+        </Stack>
+      )}
+    </div>
   );
 }

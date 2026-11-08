@@ -10,12 +10,20 @@ it("leading mode renders a verdict, timeline and the play caller", async () => {
   expect(html).toContain("<table");
   expect(html).toContain("Win probability");
   expect(html).toContain("Call the play");
-  expect(html).toContain('value="2:30"');
+  // The situation shows as a scorebug, not the form, until you press Edit.
+  expect(html).toMatch(/aria-label="Situation"[^>]*class="scorebug"|class="scorebug"[^>]*aria-label="Situation"/);
+  expect(html).toMatch(/<\/span>2:30<\/span>/);
+  expect(html).toContain("Up 3");
+  expect(html).toContain("1st &amp; 10");
+  expect(html).toContain("Own 30");
+  expect(html).not.toContain('value="2:30"');
 });
 
 it("reads the situation from the URL: kneeling out 0:40 with the defense out of timeouts", async () => {
   const { html } = await renderAt("/?clock=0:40&oppTimeouts=0");
-  expect(html).toContain('value="0:40"');
+  expect(html).toMatch(/<\/span>0:40<\/span>/);
+  expect(html).toContain('aria-label="Them: 0 timeouts left"');
   expect(html).toContain("Run it out");
   expect(html).not.toContain("You can&#x27;t run it out");
 });
+
