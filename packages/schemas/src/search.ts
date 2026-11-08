@@ -125,6 +125,20 @@ export const scenarioSearchSchema = z.object(scenarioShape(SCENARIO_PRESETS["qb-
 export type ScenarioSearch = z.output<typeof scenarioSearchSchema>;
 export const SCENARIO_DEFAULTS: ScenarioSearch = scenarioSearchSchema.parse({});
 
+// ---------------------------------------------------------------------------
+// Kick or go for two, just after you score a touchdown.
+
+export const twoPointSearchSchema = z.object({
+  /** Time left after the touchdown, M:SS. */
+  clock: withFallback(clockTextSchema, "3:00"),
+  /** Your points minus theirs with the touchdown's 6 counted, before the try. */
+  margin: int("margin", 1),
+  timeouts: int("timeouts", 2),
+  oppTimeouts: int("timeouts", 3),
+});
+export type TwoPointSearch = z.output<typeof twoPointSearchSchema>;
+export const TWO_POINT_DEFAULTS: TwoPointSearch = twoPointSearchSchema.parse({});
+
 export type LeadingSearch = z.output<typeof leadingSearchSchema>;
 export type TrailingSearch = z.output<typeof trailingSearchSchema>;
 export type BestCallSearch = z.output<typeof bestCallSearchSchema>;

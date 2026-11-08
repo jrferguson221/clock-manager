@@ -17,6 +17,7 @@ export const GUIDE_SECTIONS = [
   "red-zone",
   "hail-mary",
   "fourth-down",
+  "two-point",
   "scoring-and-kickoffs",
   "limitations",
 ] as const;

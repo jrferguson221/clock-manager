@@ -13,7 +13,7 @@ import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
   AVOID, CLOSE, DEFAULT_SIM, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
-  OBVIOUS_TO_GO, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
+  GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
 import { AnchorLink, GuideLink } from "./ReadMore";
@@ -37,6 +37,7 @@ const TITLES: Readonly<Record<GuideSection, string>> = {
   "red-zone": "The red zone and the goal line",
   "hail-mary": "The Hail Mary",
   "fourth-down": "Fourth down",
+  "two-point": "Kick or go for two",
   "scoring-and-kickoffs": "Extra points, two-point tries and onside kicks",
   limitations: "What the model leaves out",
 };
@@ -101,6 +102,7 @@ export default function Guide() {
           <RedZoneSection />
           <HailMarySection />
           <FourthDownSection />
+          <TwoPointSection />
           <ScoringSection />
           <LimitationsSection />
         </Stack>
@@ -632,14 +634,60 @@ function FourthDownSection() {
   );
 }
 
+/** The scores after a touchdown where going for two is the call, as words. */
+const scoreWords = (ms: readonly number[]) => ms.map((m) => String(Math.abs(m))).join(", ").replace(/, ([^,]*)$/, " or $1");
+
+function TwoPointSection() {
+  const down = GO_FOR_TWO_MARGINS.filter((m) => m < 0).sort((a, b) => b - a);
+  const up = GO_FOR_TWO_MARGINS.filter((m) => m > 0);
+  return (
+    <Section id="two-point">
+      <Text>
+        A touchdown is worth 6, and then comes the try: an extra point, good {pct(SPECIAL_TEAMS.extraPoint)} of the time
+        and worth about {Math.round(SPECIAL_TEAMS.extraPoint * 100) / 100} points, or a two-point try, good{" "}
+        {pct(SPECIAL_TEAMS.twoPoint)} of the time and worth about {Math.round(2 * SPECIAL_TEAMS.twoPoint * 100) / 100}.
+        On average they're almost even, so late in a game the choice comes down to which scores the result leaves you
+        with.
+      </Text>
+      <Text>
+        <strong>Go for 2</strong> when the touchdown leaves you down {scoreWords(down)}, or up {scoreWords(up)}.
+        Otherwise, kick. That's the model's answer over the final 10 minutes, and the rule both teams follow in its
+        simulations.
+      </Text>
+      <List spacing={4}>
+        <List.Item><strong>Down 2:</strong> two points tie the game. The clearest call on the chart, and the closer to the end, the bigger the edge.</List.Item>
+        <List.Item><strong>Up 1:</strong> two points make it a 3-point lead, so a field goal can only tie, not beat you.</List.Item>
+        <List.Item><strong>Down 5:</strong> two points leave you down 3, so a field goal ties; a kick leaves you down 4, still needing a touchdown.</List.Item>
+        <List.Item><strong>Up 5:</strong> two points make it a 7-point lead, so a touchdown and extra point only tie.</List.Item>
+        <List.Item>
+          <strong>Down 8 and down 10:</strong> two points turn the deficit into 6 or 8, so your next touchdown wins or can
+          tie. If the try fails you learn early that you need two more scores, while there's still time to plan for them.
+        </List.Item>
+        <List.Item>
+          <strong>Down 4:</strong> the model's one departure from what teams do (they kick almost every time). Going for 2
+          leaves you down 2, where a field goal wins rather than ties, and a tie is only a coin flip in overtime. The edge is
+          small: one to two points of win probability.
+        </List.Item>
+        <List.Item><strong>Down 1 or tied:</strong> kick. The extra point ties or takes the lead almost every time.</List.Item>
+      </List>
+      <Text>
+        Most other scores are within a point either way, so either is reasonable there. If your offense converts more
+        often than the league, going for 2 gets better: the{" "}
+        <AnchorLink to="/two-point">kick or go for 2 tool</AnchorLink> shows the conversion rate at which the two choices
+        break even for any score and time.
+      </Text>
+    </Section>
+  );
+}
+
 function ScoringSection() {
   return (
     <Section id="scoring-and-kickoffs">
       <List spacing={4}>
         <List.Item>
           <strong>After a touchdown</strong>, the extra point is good {pct(SPECIAL_TEAMS.extraPoint)} of the time and a
-          two-point try {pct(SPECIAL_TEAMS.twoPoint)}. Teams go for two when a touchdown leaves them down 2, so two points
-          would tie; otherwise they kick.
+          two-point try {pct(SPECIAL_TEAMS.twoPoint)} (2022-2026 NFL seasons). Which to try depends on the score: see{" "}
+          <GuideLink section="two-point">kick or go for two</GuideLink>.
         </List.Item>
         <List.Item>
           <strong>Kickoffs</strong> are touchbacks: the receiving team starts at its {SPECIAL_TEAMS.touchbackYardLine}.

@@ -6,7 +6,8 @@ import {
   createHashHistory, createRootRouteWithContext, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
 } from "@tanstack/react-router";
 import {
-  bestCallSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS,
+  bestCallSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, twoPointSearchSchema,
+  SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS, TWO_POINT_DEFAULTS,
 } from "@situational-football/schemas";
 import Layout, { NotFound } from "./Layout";
 import { DecisionsError, DecisionsPending } from "./DecisionsStatus";
@@ -46,6 +47,15 @@ const bestCallRoute = createRoute({
   component: AdvisorPanel,
 });
 
+// Kick or go for two after a touchdown.
+const twoPointRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/two-point",
+  validateSearch: twoPointSearchSchema,
+  search: { middlewares: [stripSearchParams(TWO_POINT_DEFAULTS)] },
+  component: lazyRouteComponent(() => import("./TwoPointPanel")),
+});
+
 // Player decisions: a separate download, like the guide.
 const scenariosRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -82,7 +92,7 @@ const guideRoute = createRoute({
   component: lazyRouteComponent(() => import("./Guide")),
 });
 
-const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, scenariosRoute, decisionsRoute, guideRoute]);
+const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, twoPointRoute, scenariosRoute, decisionsRoute, guideRoute]);
 
 /** The app's router. Tests pass a memory history; the browser uses the URL hash. */
 export function createAppRouter(history: RouterHistory = createHashHistory(), decisions: DecisionsData = fetchedDecisions) {

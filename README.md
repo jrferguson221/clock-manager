@@ -6,6 +6,8 @@ Both modes are a play-calling trainer. Enter the situation (clock, score, timeou
 
 The **Best call** tab is the informational version. Enter any situation where you have the ball, including the score from down 16 to up 16, and it shows the best call with the reason, your win probability with it, every option ranked, and which calls to avoid and why. It scores each option over 1,500 simulated games instead of 500, so its rankings are steadier than the trainer's.
 
+The **Kick or go for 2** tab (`#/two-point`) is for the try after a touchdown. Enter the score with the touchdown counted, the time left and both teams' timeouts, and it shows which try gives you the better chance to win, your win probability with each, and the two-point conversion rate at which they break even. Each try result (0, 1 or 2 points) is played out over 3,000 simulated games, kickoff included.
+
 The **Player decisions** tab (`#/scenarios`) compares choices made in the middle of a play, or right before it:
 
 - **QB:** throw it away or take the sack; on a scramble, slide in bounds or get out of bounds.
@@ -25,7 +27,7 @@ The **Decisions of the week** tab (`#/decisions`) shows the costliest late-game 
 - **Team colors:** each card has the offense's color as a stripe, and both teams' abbreviations on their own colors. The colors are from nflverse's teams table (`src/teamColors.ts`); no logos are used. `src/teamPalette.ts` uses a team's color only where it passes WCAG contrast on the card in each color scheme: 3:1 for the stripe and chip, and 4.5:1 for the chip's text. It falls back to the same hue lightened or darkened, or to the team's other colors. Tests check every team in both schemes.
 - **Updates:** `scripts/decisions/build.ts` builds the files: `bun scripts/decisions/build.ts --season 2026`. The *Update weekly decisions* GitHub Action runs it every Tuesday at 13:17 UTC, after Monday night's game. It runs the tests against the new data, commits it, and the site redeploys.
 
-The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
+The **Strategy guide** tab (`#/guide`) explains the late-game clock rules and strategy (timeouts, spikes, the two-minute warning, running out the clock, playing for a field goal, prevent defense, the red zone, Hail Marys, fourth down, kick or go for two, extra points and onside kicks), how the app works out win probability, and what the model leaves out. Every reason the explainer and Best call give ends with a **Read more** link to the guide section behind it, e.g. `#/guide?section=timeouts`. The guide's tables and numbers are computed from the model when the page loads, so they always match it. It's a separate download, fetched only when the guide is opened.
 
 The leading and trailing modes also have their own calculators:
 
@@ -55,6 +57,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | Path | What it holds |
 | --- | --- |
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
+| `src/TwoPointPanel.tsx` | The Kick or go for 2 tab. |
 | `src/sim.ts` | Play simulator, win probability and the best-call explainer. Pure functions. |
 | `src/Trainer.tsx` | The play-calling trainer UI shared by both modes. |
 | `src/scenarios.ts` | The player-decision scenarios: their options, verdicts and flip points. Pure functions. |
@@ -92,7 +95,7 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 - A deep pass on the last play (10 seconds or less, within 60 yards) is an end-zone heave. It scores about 20% of the time from 25 yards, 10% from 45 and 4% from 60, and is intercepted about 12% of the time. Passes carry sack and interception risk, and runs a small fumble risk.
 - Tempo is automatic. A team that's ahead drains the play clock. A team that only needs a field goal and is in range drains it too, but leaves time for a timeout or a rushed kick. Everyone else uses the hurry-up time (18 seconds by default). A timeout stops the clock right away.
 - A defense that's behind calls timeout after in-bounds plays in the last 4 minutes, unless the two-minute warning is about to stop the clock for free.
-- Field goals are made at the 2022–2026 NFL rates by distance (about 3,800 tries; `scripts/calibrate/kicks.ts` re-measures them): about 97% from 30–34 yards, 84% from 40–44, 73% from 50–54, 65% from 55–59 and 48% from 60–64, with 62 yards the longest try. Punts net 40 yards. Kickoffs are touchbacks to the 30, and a team that's still behind late tries an onside kick (12% recovered).
+- Field goals are made at the 2022–2026 NFL rates by distance (about 3,800 tries; `scripts/calibrate/kicks.ts` re-measures them): about 97% from 30–34 yards, 84% from 40–44, 73% from 50–54, 65% from 55–59 and 48% from 60–64, with 62 yards the longest try. Extra points are good 95.4% of the time and two-point tries 48.1% (2022–2026, about 5,400 and 570 tries; `scripts/calibrate/tries.ts` re-measures them and shows how often teams go for two at each score late in games). In the simulations a team goes for two when the touchdown leaves it down 10, 8, 5, 4 or 2, or up 1 or 5: where the Kick or go for 2 tool favors two over the final 10:00. Punts net 40 yards. Kickoffs are touchbacks to the 30, and a team that's still behind late tries an onside kick (12% recovered).
 - After your call, both teams follow a rule-of-thumb policy for the rest of the game. With time for only one more play, a team that needs just a field goal stops the clock if it must (a timeout, else a spike) and kicks from within 42 yards of the goal line (a 59-yarder at most). It throws deep on the last play or two when a field goal won't do, and on 4th and 15 or longer. A tie at 0:00 is a coin flip in overtime.
 - Each call is scored over 500 simulated games, so differences of a point or two are within the noise. The explainer calls those "close".
 - A timeout isn't a play, so it's scored by what comes next. With the clock running, it's worth the best play from the stopped-clock situation, which is what the meter shows after you call it. With the clock already stopped, it's worth the same best play with one fewer timeout. It can never beat running that play and keeping the timeout, and the explainer always flags it as a mistake.

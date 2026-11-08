@@ -452,10 +452,10 @@ function changePossession(g: GameState, clock: number, theirYtg: number): GameSt
 
 /** Kicking-game and try odds. The strategy guide reads these, so it always matches the model. */
 export const SPECIAL_TEAMS = Object.freeze({
-  /** Extra point success. */
-  extraPoint: 0.95,
-  /** Two-point try success. A team goes for two only when down 2 after the touchdown. */
-  twoPoint: 0.48,
+  /** Extra point success: 95.4% in 2022-2026 NFL regular seasons (about 5,400 kicks). */
+  extraPoint: 0.954,
+  /** Two-point try success: 48.1% over the same seasons (about 570 tries). */
+  twoPoint: 0.481,
   /** Onside kick recovery by the kicking team. */
   onsideRecovery: 0.12,
   /** A team still behind after scoring tries an onside kick with this many seconds left or fewer. */
@@ -466,6 +466,23 @@ export const SPECIAL_TEAMS = Object.freeze({
   puntNet: 40,
 });
 
+// ---------------------------------------------------------------------------
+// The try after a touchdown
+
+export type TryCall = "kick" | "two";
+export const TRY_CALLS: Readonly<Record<TryCall, string>> = Object.freeze({ kick: "Kick the extra point", two: "Go for 2" });
+
+/**
+ * The scoring team's margin after the 6 points (before the try) at which it goes for two in the
+ * simulations: where evaluateTry favors two across the final 10:00. NFL teams almost always go for two
+ * down 10, 5 or 2 and up 1 or 5, and about half the time down 8; down 4 is the model's one departure
+ * from practice (teams kick 98% of the time), a small edge from a field goal then winning instead of tying.
+ */
+export const GO_FOR_TWO_MARGINS: readonly number[] = [-10, -8, -5, -4, -2, 1, 5];
+
+/** The rule-of-thumb try both teams follow in the simulations. */
+export const tryPolicy = (marginAfterSix: number): TryCall => (GO_FOR_TWO_MARGINS.includes(marginAfterSix) ? "two" : "kick");
+
 /** Points, the try after a touchdown, then the kickoff (onside if the kicking team is still behind late). */
 function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: GameState; text: string } {
   const scorer = g.poss;
@@ -473,8 +490,7 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
   let margin = g.margin + sign * points;
   let text = points === 6 ? "Touchdown" : "Field goal is good";
   if (points === 6) {
-    const after = marginFor({ ...g, margin }, scorer);
-    if (after === -2) {
+    if (tryPolicy(marginFor({ ...g, margin }, scorer)) === "two") {
       const good = r() < SPECIAL_TEAMS.twoPoint;
       if (good) margin += sign * 2;
       text += good ? ", 2-point try good" : ", 2-point try fails";
@@ -484,10 +500,13 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
       text += good ? ", extra point good" : ", extra point missed";
     }
   }
-  const scored = { ...g, margin };
-  if (clock <= 0) return { state: { ...scored, clock: 0, running: false, over: true }, text: `${text}.` };
+  return kickoff({ ...g, margin }, clock, text, r);
+}
 
-  const kickerMargin = marginFor(scored, scorer);
+/** After a score by the team with the ball in `scored`: the kickoff, onside if the scorer is still behind late. */
+function kickoff(scored: GameState, clock: number, text: string, r: Rng): { state: GameState; text: string } {
+  if (clock <= 0) return { state: { ...scored, clock: 0, running: false, over: true }, text: `${text}.` };
+  const kickerMargin = marginFor(scored, scored.poss);
   if (kickerMargin < 0 && clock <= SPECIAL_TEAMS.onsideWindow) {
     const t = Math.max(0, clock - 3);
     if (r() < SPECIAL_TEAMS.onsideRecovery) {
@@ -1050,4 +1069,42 @@ export function recommend(g: GameState, values: CallValues, cfg: SimConfig = DEF
     })
     .sort((a, b) => a.wp - b.wp);
   return { best, wp, reason: whyBest(g, best, cfg), runnerUp, avoid };
+}
+
+// ---------------------------------------------------------------------------
+// Kick or go for two
+
+export interface TryValues {
+  /** Your win probability if the try adds 0, 1 or 2 points, everything after it simulated. */
+  byPoints: readonly [number, number, number];
+  /** Your win probability with each call, at the league's success rates. */
+  kick: number;
+  two: number;
+  best: TryCall;
+  /** The two-point success rate at which going for two is as good as kicking (null: two never helps). */
+  breakEven: number | null;
+}
+
+/**
+ * Kick or go for two, for you, just after you score a touchdown. `g.margin` already counts the 6
+ * points, `g.clock` is the time left after the touchdown, and the kickoff follows the try.
+ */
+export function evaluateTry(g: GameState, n = 3000, cfg: SimConfig = DEFAULT_SIM): TryValues {
+  const scored: GameState = { ...g, poss: "you", running: false };
+  const wpAfter = (extra: number) => {
+    let sum = 0;
+    for (let i = 0; i < n; i++) {
+      const r = streamFor(i);
+      const s = kickoff({ ...scored, margin: scored.margin + extra }, scored.clock, "", r).state;
+      sum += s.over ? (s.margin > 0 ? 1 : s.margin < 0 ? 0 : 0.5) : playOut(s, r, cfg);
+    }
+    return sum / n;
+  };
+  const byPoints = [wpAfter(0), wpAfter(1), wpAfter(2)] as const;
+  const [w0, w1, w2] = byPoints;
+  const kick = w0 + SPECIAL_TEAMS.extraPoint * (w1 - w0);
+  const two = w0 + SPECIAL_TEAMS.twoPoint * (w2 - w0);
+  const gain = w2 - w0;
+  const breakEven = gain > 0 ? Math.min(1, (SPECIAL_TEAMS.extraPoint * (w1 - w0)) / gain) : null;
+  return { byPoints, kick, two, best: two > kick ? "two" : "kick", breakEven };
 }

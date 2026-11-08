@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -390,5 +390,43 @@ describe("3rd and 4th down by yards to go, as calibrated", () => {
     expect(coverageFor(late, 181)).toBe("obvious");
     expect(coverageFor({ ...late, down: 1, toGo: 10 }, 181)).toBe("prevent");
     expect(coverageFor({ ...late, down: 3, toGo: 12 }, 181)).toBe("prevent");
+  });
+});
+
+describe("kick or go for two", () => {
+  const after = (margin: number, clock: number): GameState => ({
+    clock, running: false, poss: "you", down: 1, toGo: 10, ytg: 75, margin, timeouts: { you: 2, opp: 2 }, over: false,
+  });
+
+  it("goes for two down 2 or up 1, and kicks tied or down 1", () => {
+    for (const clock of [300, 120, 30]) {
+      expect(evaluateTry(after(-2, clock)).best).toBe("two");
+      expect(evaluateTry(after(1, clock)).best).toBe("two");
+      expect(evaluateTry(after(0, clock)).best).toBe("kick");
+      expect(evaluateTry(after(-1, clock)).best).toBe("kick");
+    }
+  });
+
+  it("the simulations' rule agrees with the evaluator wherever the edge is clear", () => {
+    for (let m = -12; m <= 12; m++) {
+      for (const clock of [300, 120]) {
+        const v = evaluateTry(after(m, clock), 2000);
+        if (Math.abs(v.two - v.kick) >= CLOSE) expect(`${m}@${clock}:${tryPolicy(m)}`).toBe(`${m}@${clock}:${v.best}`);
+      }
+    }
+  });
+
+  it("break-even conversion rate sits on the right side of the league rate", () => {
+    const two = evaluateTry(after(-2, 120));
+    const kick = evaluateTry(after(0, 120));
+    expect(two.breakEven).not.toBeNull();
+    expect(two.breakEven ?? 1).toBeLessThan(SPECIAL_TEAMS.twoPoint);
+    expect(kick.breakEven ?? 1).toBeGreaterThan(SPECIAL_TEAMS.twoPoint);
+  });
+
+  it("with no time left, only the try decides the game", () => {
+    const v = evaluateTry(after(-2, 0));
+    expect(v.byPoints).toEqual([0, 0, 0.5]);
+    expect(v.two).toBeCloseTo(SPECIAL_TEAMS.twoPoint * 0.5, 5);
   });
 });

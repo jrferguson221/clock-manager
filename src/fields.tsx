@@ -41,10 +41,12 @@ export function useClockField(committed: string, commit: (clock: string) => void
   };
 }
 
-export function ClockInput({ text, error, onType }: { text: string; error: string | null; onType: (raw: string) => void }) {
+export function ClockInput({ text, error, onType, label = "Game clock" }: {
+  text: string; error: string | null; onType: (raw: string) => void; label?: string;
+}) {
   return (
     <TextInput
-      label="Game clock" value={text} onChange={(e) => onType(e.currentTarget.value)}
+      label={label} value={text} onChange={(e) => onType(e.currentTarget.value)}
       inputMode="numeric" placeholder="M:SS" autoComplete="off" error={error}
       classNames={{ input: "clock-input" }}
     />
