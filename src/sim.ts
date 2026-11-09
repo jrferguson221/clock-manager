@@ -980,7 +980,8 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
   }
 }
 
-function whyNot(g: GameState, call: PlayCall): Reason | null {
+/** Why a call was worse than the best one, when there's a specific reason (null when it was only a bit worse). */
+export function whyNot(g: GameState, call: PlayCall): Reason | null {
   const m = marginFor(g, g.poss);
   if (call === "timeout" && !g.running)
     return reason("A timeout gains nothing with the clock already stopped, and spends one you may need later.", "timeouts");

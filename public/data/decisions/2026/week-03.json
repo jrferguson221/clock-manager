@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 3,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 203,
  "agreement": {
   "plays": 203,
-  "meanAbsDiff": 0.04695057257439797,
-  "within10": 0.8768472906403941
+  "meanAbsDiff": 0.045551453923087765,
+  "within10": 0.896551724137931
  },
  "worst": [],
  "notable": [
@@ -33,38 +33,38 @@
    "snapClock": 24,
    "description": "(:24) (Shotgun) 1-C.Ward pass short left intended for 5-E.Ayomanor INTERCEPTED by 8-J.Holland at NYG -4. Touchback. PENALTY on NYG-3-A.Carter, Unsportsmanlike Conduct, 10 yards, enforced at NYG 20.",
    "call": "pass-sideline",
-   "wpCall": 0.608,
+   "wpCall": 0.6083333333333333,
    "best": "pass-middle",
-   "wpBest": 0.608,
+   "wpBest": 0.6083333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.608
+     "wp": 0.6083333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5633333333333334
+     "wp": 0.561
     },
     {
      "call": "pass-play-action",
-     "wp": 0.56
+     "wp": 0.559
     },
     {
      "call": "pass-screen",
-     "wp": 0.536
+     "wp": 0.533
     },
     {
      "call": "pass-deep",
-     "wp": 0.47533333333333333
+     "wp": 0.4723333333333333
     },
     {
      "call": "run",
-     "wp": 0.44466666666666665
+     "wp": 0.44066666666666665
     },
     {
      "call": "spike",
-     "wp": 0.38666666666666666
+     "wp": 0.385
     },
     {
      "call": "fg",
@@ -74,6 +74,11 @@
    "reason": {
     "text": "Coverage tightens in the red zone, but a quick throw over the middle still completes about 47% of the time from the 7.",
     "section": "red-zone"
+   },
+   "against": null,
+   "score": {
+    "offense": 7,
+    "defense": 12
    },
    "nflverseWp": 0.490043163299561,
    "nflverseWpa": -0.457454204559326,
@@ -100,47 +105,52 @@
    "snapClock": 53,
    "description": "(:53) (Shotgun) 9-J.Burrow sacked at PIT 46 for -8 yards (99-D.Harmon). FUMBLES (99-D.Harmon) [99-D.Harmon], RECOVERED by PIT-69-S.Joseph at CIN 49.",
    "call": "pass-play-action",
-   "wpCall": 0.43333333333333335,
-   "best": "pass-play-action",
-   "wpBest": 0.429,
+   "wpCall": 0.45966666666666667,
+   "best": "pass-screen",
+   "wpBest": 0.45566666666666666,
    "cost": 0,
    "values": [
     {
-     "call": "pass-deep",
-     "wp": 0.43333333333333335
-    },
-    {
      "call": "pass-play-action",
-     "wp": 0.429
+     "wp": 0.45966666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.42733333333333334
+     "wp": 0.45566666666666666
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.4553333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.4166666666666667
+     "wp": 0.44433333333333336
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4086666666666667
-    },
-    {
-     "call": "spike",
-     "wp": 0.4056666666666667
+     "wp": 0.43666666666666665
     },
     {
      "call": "run",
-     "wp": 0.4026666666666667
+     "wp": 0.432
+    },
+    {
+     "call": "spike",
+     "wp": 0.414
     },
     {
      "call": "fg",
-     "wp": 0.3443333333333333
+     "wp": 0.3473333333333333
     }
    ],
    "reason": {
-    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
+    "text": "They're playing soft, so a screen gets the ball out fast into open space: it completes about 86% of the time and is almost never sacked or picked off.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 27,
+    "defense": 30
    },
    "nflverseWp": 0.451150149106979,
    "nflverseWpa": -0.418641179800034,
@@ -209,6 +219,11 @@
     "text": "With 0:02 left and 19 yards to go, there's time for one shot: throw it to the end zone. A heave from here scores about 22% of the time.",
     "section": "hail-mary"
    },
+   "against": null,
+   "score": {
+    "offense": 26,
+    "defense": 30
+   },
    "nflverseWp": 0.369458675384522,
    "nflverseWpa": -0.369458675384522,
    "lowConfidence": true
@@ -234,43 +249,48 @@
    "snapClock": 21,
    "description": "(:21) 3-S.Shrader 53 yard field goal is GOOD, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.7053333333333334,
+   "wpCall": 0.68,
    "best": "fg",
-   "wpBest": 0.7053333333333334,
+   "wpBest": 0.68,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.7053333333333334
+     "wp": 0.68
     },
     {
      "call": "run",
-     "wp": 0.5166666666666667
+     "wp": 0.5333333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.4786666666666667
+     "wp": 0.49533333333333335
     },
     {
      "call": "pass-middle",
-     "wp": 0.42533333333333334
+     "wp": 0.43933333333333335
     },
     {
      "call": "pass-play-action",
-     "wp": 0.42133333333333334
+     "wp": 0.427
     },
     {
      "call": "pass-sideline",
-     "wp": 0.38
+     "wp": 0.3873333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.256
+     "wp": 0.258
     }
    ],
    "reason": {
     "text": "A 53-yard try is good about 72% of the time, and it wins it.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 16,
+    "defense": 17
    },
    "nflverseWp": 0.459501296281815,
    "nflverseWpa": 0.35943603515625,
@@ -297,26 +317,26 @@
    "snapClock": 249,
    "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.386,
+   "wpCall": 0.38166666666666665,
    "best": "pass-middle",
-   "wpBest": 0.386,
+   "wpBest": 0.38166666666666665,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.386
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.373
+     "wp": 0.38166666666666665
     },
     {
      "call": "pass-deep",
-     "wp": 0.37033333333333335
+     "wp": 0.38066666666666665
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.369
     },
     {
      "call": "pass-screen",
-     "wp": 0.3606666666666667
+     "wp": 0.36333333333333334
     },
     {
      "call": "pass-sideline",
@@ -324,20 +344,25 @@
     },
     {
      "call": "run",
-     "wp": 0.33766666666666667
+     "wp": 0.3463333333333333
     },
     {
      "call": "spike",
-     "wp": 0.31233333333333335
+     "wp": 0.32166666666666666
     },
     {
      "call": "punt",
-     "wp": 0.24566666666666667
+     "wp": 0.25766666666666665
     }
    ],
    "reason": {
     "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 27
    },
    "nflverseWp": 0.341721117496491,
    "nflverseWpa": -0.287682806280764,

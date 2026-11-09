@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 4,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 194,
  "agreement": {
   "plays": 194,
-  "meanAbsDiff": 0.04562191261197484,
-  "within10": 0.9072164948453608
+  "meanAbsDiff": 0.04557672495474314,
+  "within10": 0.9020618556701031
  },
  "worst": [
   {
@@ -32,47 +32,52 @@
    "snapClock": 136,
    "description": "(2:16) 34-D.Zvada 52 yard field goal is GOOD, Center-58-B.Mann, Holder-15-J.Stout.",
    "call": "fg",
-   "wpCall": 0.741,
+   "wpCall": 0.7423333333333333,
    "best": "pass-middle",
-   "wpBest": 0.8336666666666667,
-   "cost": 0.09266666666666667,
+   "wpBest": 0.8193333333333334,
+   "cost": 0.07700000000000007,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.8336666666666667
+     "wp": 0.8193333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.8053333333333333
+     "wp": 0.79
     },
     {
      "call": "pass-play-action",
-     "wp": 0.8006666666666666
+     "wp": 0.787
     },
     {
      "call": "pass-deep",
-     "wp": 0.777
+     "wp": 0.7593333333333333
     },
     {
      "call": "run",
-     "wp": 0.766
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.762
+     "wp": 0.7436666666666667
     },
     {
      "call": "fg",
-     "wp": 0.741
+     "wp": 0.7423333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.7423333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.659
+     "wp": 0.6303333333333333
     }
    ],
    "reason": {
     "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 27,
+    "defense": 24
    },
    "nflverseWp": 0.8499755859375,
    "nflverseWpa": -0.0217184126377106,
@@ -101,51 +106,56 @@
    "snapClock": 215,
    "description": "(3:35) (Shotgun) 15-P.Mahomes pass deep left to 2-T.Thornton to LV 5 for 55 yards (31-T.Stukes). KC-2-T.Thornton was injured during the play. PENALTY on LV-7-Q.Walker, Unnecessary Roughness, 3 yards, enforced at LV 5.",
    "call": "pass-deep",
-   "wpCall": 0.5546666666666666,
+   "wpCall": 0.538,
    "best": "pass-middle",
-   "wpBest": 0.552,
+   "wpBest": 0.538,
    "cost": 0,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.5546666666666666
-    },
-    {
      "call": "pass-middle",
-     "wp": 0.552
+     "wp": 0.538
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.5436666666666666
+     "call": "pass-play-action",
+     "wp": 0.5233333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.5333333333333333
+     "wp": 0.515
     },
     {
-     "call": "timeout",
-     "wp": 0.533
-    },
-    {
-     "call": "pass-deep",
+     "call": "pass-sideline",
      "wp": 0.5123333333333333
     },
     {
+     "call": "timeout",
+     "wp": 0.49966666666666665
+    },
+    {
      "call": "run",
-     "wp": 0.508
+     "wp": 0.493
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.4846666666666667
     },
     {
      "call": "spike",
-     "wp": 0.4553333333333333
+     "wp": 0.43633333333333335
     },
     {
      "call": "punt",
-     "wp": 0.33066666666666666
+     "wp": 0.3233333333333333
     }
    ],
    "reason": {
     "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 17,
+    "defense": 19
    },
    "nflverseWp": 0.332407832145691,
    "nflverseWpa": 0.349218964576721,
@@ -172,26 +182,26 @@
    "snapClock": 43,
    "description": "(:43) (Shotgun) 4-D.Prescott pass short middle to 88-C.Lamb for 12 yards, TOUCHDOWN.",
    "call": "pass-middle",
-   "wpCall": 0.6233333333333333,
+   "wpCall": 0.6286666666666667,
    "best": "pass-middle",
-   "wpBest": 0.6233333333333333,
+   "wpBest": 0.6286666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6233333333333333
+     "wp": 0.6286666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6183333333333333
+     "wp": 0.623
     },
     {
      "call": "pass-screen",
-     "wp": 0.608
+     "wp": 0.6133333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5963333333333334
+     "wp": 0.603
     },
     {
      "call": "pass-deep",
@@ -199,20 +209,25 @@
     },
     {
      "call": "run",
-     "wp": 0.573
-    },
-    {
-     "call": "fg",
-     "wp": 0.5173333333333333
+     "wp": 0.577
     },
     {
      "call": "spike",
-     "wp": 0.5043333333333333
+     "wp": 0.528
+    },
+    {
+     "call": "fg",
+     "wp": 0.487
     }
    ],
    "reason": {
     "text": "Coverage tightens in the red zone, but a quick throw over the middle still completes about 54% of the time from the 12.",
     "section": "red-zone"
+   },
+   "against": null,
+   "score": {
+    "offense": 27,
+    "defense": 30
    },
    "nflverseWp": 0.554354250431061,
    "nflverseWpa": 0.293420968991094,
@@ -239,47 +254,52 @@
    "snapClock": 74,
    "description": "(1:14) (Shotgun) 17-J.Allen pass deep left intended for 5-J.Palmer INTERCEPTED by 4-C.Woodson at NE 19. 4-C.Woodson to NE 19 for no gain (5-J.Palmer).",
    "call": "pass-deep",
-   "wpCall": 0.324,
+   "wpCall": 0.35533333333333333,
    "best": "pass-middle",
-   "wpBest": 0.324,
+   "wpBest": 0.35533333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.324
+     "wp": 0.35533333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.317
+     "wp": 0.351
     },
     {
      "call": "pass-sideline",
-     "wp": 0.31066666666666665
-    },
-    {
-     "call": "run",
-     "wp": 0.309
+     "wp": 0.3423333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.30633333333333335
+     "wp": 0.3396666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.3383333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.29733333333333334
+     "wp": 0.32133333333333336
     },
     {
      "call": "spike",
-     "wp": 0.26866666666666666
+     "wp": 0.2986666666666667
     },
     {
      "call": "punt",
-     "wp": 0.06
+     "wp": 0.06233333333333333
     }
    ],
    "reason": {
     "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 26,
+    "defense": 29
    },
    "nflverseWp": 0.349396169185638,
    "nflverseWpa": -0.269800066947937,
@@ -306,43 +326,48 @@
    "snapClock": 56,
    "description": "(:56) (Shotgun) 9-J.Burrow pass short middle to 30-C.Brown to JAX 12 for 9 yards (25-R.Lane).",
    "call": "pass-middle",
-   "wpCall": 0.15733333333333333,
+   "wpCall": 0.16933333333333334,
    "best": "pass-play-action",
-   "wpBest": 0.15733333333333333,
+   "wpBest": 0.16933333333333334,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.15733333333333333
+     "wp": 0.16933333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.14533333333333334
+     "wp": 0.16233333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.13133333333333333
+     "wp": 0.13966666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.12066666666666667
+     "wp": 0.12633333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.11
+     "wp": 0.114
     },
     {
      "call": "run",
-     "wp": 0.058
+     "wp": 0.061
     },
     {
      "call": "fg",
-     "wp": 0.04466666666666667
+     "wp": 0.052
     }
    ],
    "reason": {
     "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 17,
+    "defense": 22
    },
    "nflverseWp": 0.29797238111496,
    "nflverseWpa": -0.264269053936005,
@@ -369,47 +394,52 @@
    "snapClock": 154,
    "description": "(2:34) (Shotgun) 7-C.Stroud pass short right to 86-D.Schultz to DAL 25 for 2 yards. Lateral to 32-D.Montgomery pushed ob at DAL 6 for 19 yards (53-D.Winters; 23-A.Speed).",
    "call": "pass-sideline",
-   "wpCall": 0.30833333333333335,
+   "wpCall": 0.289,
    "best": "pass-play-action",
-   "wpBest": 0.30833333333333335,
+   "wpBest": 0.289,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.30833333333333335
+     "wp": 0.289
     },
     {
      "call": "pass-middle",
-     "wp": 0.2836666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.27666666666666667
+     "wp": 0.273
     },
     {
      "call": "pass-deep",
-     "wp": 0.2723333333333333
+     "wp": 0.26766666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.26266666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.2693333333333333
+     "wp": 0.26033333333333336
     },
     {
      "call": "run",
-     "wp": 0.268
+     "wp": 0.258
     },
     {
      "call": "fg",
-     "wp": 0.20366666666666666
+     "wp": 0.211
     },
     {
      "call": "spike",
-     "wp": 0.19033333333333333
+     "wp": 0.18133333333333335
     }
    ],
    "reason": {
     "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 23,
+    "defense": 27
    },
    "nflverseWp": 0.378484100103378,
    "nflverseWpa": 0.239570587873459,

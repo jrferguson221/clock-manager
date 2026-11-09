@@ -9,7 +9,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@situational-football/schemas";
-import { bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, ranked, snapDelay, wpOf } from "../../src/sim";
+import { bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, ranked, snapDelay, whyNot, wpOf } from "../../src/sim";
 import type { GameState } from "@situational-football/schemas";
 import { parseCsv } from "./csv";
 import { completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
@@ -52,6 +52,10 @@ export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null
     ? Math.max(...values.filter((v) => PASSES.has(v.call)).map((v) => v.wp))
     : wpOf(values, c.call);
   const lowConfidence = !c.clockKnown || (c.nflverseWp !== null && Math.abs(best.wp - c.nflverseWp) > DISAGREEMENT);
+  // A pass is credited with the best kind of pass, so that's the call to explain against.
+  const judged = PASSES.has(c.call)
+    ? values.filter((v) => PASSES.has(v.call)).reduce((a, b) => (b.wp > a.wp ? b : a)).call
+    : c.call;
   return {
     id: c.id, gameId: c.gameId, offense: c.offense, defense: c.defense, home: c.home, away: c.away, date: c.date,
     situation: {
@@ -62,6 +66,8 @@ export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null
     cost: Math.max(0, best.wp - wpCall),
     values: ranked(values).map((v) => ({ call: v.call, wp: v.wp })),
     reason: bestCallReason(at, best.call),
+    against: judged === best.call ? null : whyNot(at, judged),
+    score: c.score,
     nflverseWp: c.nflverseWp, nflverseWpa: c.nflverseWpa, lowConfidence,
   };
 }

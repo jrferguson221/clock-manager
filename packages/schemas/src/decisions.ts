@@ -53,6 +53,10 @@ export const decisionSchema = z.object({
   values: z.array(z.object({ call: playCallSchema, wp: probability })),
   /** Why the best call was best, with the guide section behind it. */
   reason: z.object({ text: z.string(), section: guideSectionSchema }),
+  /** Why their call was worse than the best one, when the model has a specific reason. */
+  against: z.nullable(z.object({ text: z.string(), section: guideSectionSchema })),
+  /** The actual score before the play: the offense's points and the defense's. */
+  score: z.nullable(z.object({ offense: z.int().check(z.minimum(0)), defense: z.int().check(z.minimum(0)) })),
   /** nflverse's win probability for the offense before the play, for comparison. */
   nflverseWp: z.nullable(probability),
   /** nflverse's win probability added by the play: what actually happened. */

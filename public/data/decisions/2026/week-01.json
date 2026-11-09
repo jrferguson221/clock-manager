@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 1,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03847505927735772,
+  "meanAbsDiff": 0.037839035495976454,
   "within10": 0.9065420560747663
  },
  "worst": [
@@ -82,6 +82,11 @@
     "text": "A 61-yard try is good about 51% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 24
+   },
    "nflverseWp": 0.67042088508606,
    "nflverseWpa": -0.00939899682998657,
    "lowConfidence": false
@@ -107,14 +112,26 @@
    "snapClock": 6,
    "description": "(:06) (Shotgun) 6-T.Shough pass incomplete short right.",
    "call": "pass-sideline",
-   "wpCall": 0.5486666666666666,
+   "wpCall": 0.598,
    "best": "fg",
    "wpBest": 0.7536666666666667,
-   "cost": 0.20500000000000007,
+   "cost": 0.15566666666666673,
    "values": [
     {
      "call": "fg",
      "wp": 0.7536666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.598
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5956666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5673333333333334
     },
     {
      "call": "pass-deep",
@@ -125,20 +142,8 @@
      "wp": 0.5486666666666666
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.5443333333333333
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.524
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.5156666666666667
-    },
-    {
      "call": "run",
-     "wp": 0.5153333333333333
+     "wp": 0.533
     },
     {
      "call": "pass-play-action",
@@ -156,6 +161,11 @@
    "reason": {
     "text": "A 61-yard try is good about 51% of the time, and it wins it.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 24
    },
    "nflverseWp": 0.661021888256073,
    "nflverseWpa": -0.0529081225395203,
@@ -184,24 +194,24 @@
    "call": "punt",
    "wpCall": 0.5,
    "best": "run",
-   "wpBest": 0.573,
-   "cost": 0.07299999999999995,
+   "wpBest": 0.59,
+   "cost": 0.08999999999999997,
    "values": [
     {
      "call": "run",
-     "wp": 0.573
+     "wp": 0.59
     },
     {
      "call": "pass-screen",
-     "wp": 0.5513333333333333
+     "wp": 0.5656666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.519
+     "wp": 0.5266666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5063333333333333
+     "wp": 0.5173333333333333
     },
     {
      "call": "punt",
@@ -209,20 +219,28 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.484
+     "wp": 0.494
     },
     {
      "call": "pass-deep",
-     "wp": 0.40066666666666667
+     "wp": 0.4136666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.18466666666666667
+     "wp": 0.17566666666666667
     }
    ],
    "reason": {
     "text": "On 4th & 1, a run is the surest way to move the chains.",
     "section": "play-model"
+   },
+   "against": {
+    "text": "Punting gives the ball back when you need to score.",
+    "section": "fourth-down"
+   },
+   "score": {
+    "offense": 24,
+    "defense": 24
    },
    "nflverseWp": 0.591552734375,
    "nflverseWpa": -0.140131235122681,
@@ -293,6 +311,11 @@
     "text": "From the 16 there's no deep field: a deep pass is a throw into the end zone, and it scores about 23% of the time.",
     "section": "red-zone"
    },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 13
+   },
    "nflverseWp": 0.470545679330826,
    "nflverseWpa": -0.420909851789475,
    "lowConfidence": false
@@ -318,47 +341,52 @@
    "snapClock": 101,
    "description": "(1:41) (Shotgun) 17-J.Allen pass deep middle to 5-J.Palmer for 34 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.5223333333333333,
+   "wpCall": 0.49966666666666665,
    "best": "pass-play-action",
-   "wpBest": 0.5223333333333333,
+   "wpBest": 0.49966666666666665,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.5223333333333333
+     "wp": 0.49966666666666665
     },
     {
      "call": "pass-middle",
-     "wp": 0.4866666666666667
+     "wp": 0.4796666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.474
+     "wp": 0.461
     },
     {
      "call": "pass-screen",
-     "wp": 0.4666666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.46066666666666667
+     "wp": 0.4603333333333333
     },
     {
      "call": "run",
-     "wp": 0.43266666666666664
+     "wp": 0.45566666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.45266666666666666
     },
     {
      "call": "fg",
-     "wp": 0.386
+     "wp": 0.39
     },
     {
      "call": "spike",
-     "wp": 0.38533333333333336
+     "wp": 0.39
     }
    ],
    "reason": {
     "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 30,
+    "defense": 31
    },
    "nflverseWp": 0.503744661808014,
    "nflverseWpa": 0.32445606553182,
@@ -385,14 +413,14 @@
    "snapClock": 16,
    "description": "(:16) (Shotgun) 7-C.Stroud sacked at BUF 28 for -10 yards (15-G.Rousseau). FUMBLES (15-G.Rousseau) [15-G.Rousseau], RECOVERED by BUF-8-T.Bernard at BUF 24.",
    "call": "pass-middle",
-   "wpCall": 0.32266666666666666,
+   "wpCall": 0.32366666666666666,
    "best": "pass-deep",
-   "wpBest": 0.32266666666666666,
+   "wpBest": 0.32366666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.32266666666666666
+     "wp": 0.32366666666666666
     },
     {
      "call": "spike",
@@ -400,23 +428,23 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.196
+     "wp": 0.19666666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.156
+     "wp": 0.157
     },
     {
      "call": "pass-sideline",
-     "wp": 0.13733333333333334
+     "wp": 0.138
     },
     {
      "call": "pass-screen",
-     "wp": 0.126
+     "wp": 0.12766666666666668
     },
     {
      "call": "run",
-     "wp": 0.042666666666666665
+     "wp": 0.043
     },
     {
      "call": "fg",
@@ -427,84 +455,14 @@
     "text": "From the 18 there's no deep field: a deep pass is a throw into the end zone, and it scores about 24% of the time.",
     "section": "red-zone"
    },
+   "against": null,
+   "score": {
+    "offense": 31,
+    "defense": 36
+   },
    "nflverseWp": 0.323989570140839,
    "nflverseWpa": -0.299520373344421,
    "lowConfidence": false
-  },
-  {
-   "id": "2026_01_NO_DET-4815",
-   "gameId": "2026_01_NO_DET",
-   "offense": "NO",
-   "defense": "DET",
-   "home": "DET",
-   "away": "NO",
-   "date": "2026-09-13",
-   "situation": {
-    "clock": 2,
-    "running": false,
-    "down": 3,
-    "toGo": 10,
-    "ytg": 44,
-    "margin": 0,
-    "timeouts": 0,
-    "oppTimeouts": 2
-   },
-   "snapClock": 2,
-   "description": "(:02) 10-D.Carlson 62 yard field goal is No Good, Wide Right, Center-49-Z.Wood, Holder-17-R.Wright.",
-   "call": "fg",
-   "wpCall": 0.768,
-   "best": "fg",
-   "wpBest": 0.768,
-   "cost": 0,
-   "values": [
-    {
-     "call": "fg",
-     "wp": 0.768
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.5486666666666666
-    },
-    {
-     "call": "spike",
-     "wp": 0.5486666666666666
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.5046666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.502
-    },
-    {
-     "call": "run",
-     "wp": 0.5016666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.5016666666666667
-    },
-    {
-     "call": "kneel",
-     "wp": 0.5
-    },
-    {
-     "call": "punt",
-     "wp": 0.5
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5
-    }
-   ],
-   "reason": {
-    "text": "A 61-yard try is good about 51% of the time, and it wins it.",
-    "section": "field-goal-endgame"
-   },
-   "nflverseWp": 0.608113765716553,
-   "nflverseWpa": -0.215947630582377,
-   "lowConfidence": true
   },
   {
    "id": "2026_01_BUF_HOU-4436",
@@ -527,38 +485,38 @@
    "snapClock": 25,
    "description": "(:25) (Shotgun) 7-C.Stroud sacked at BUF 18 for -9 yards (96-D.Walker).",
    "call": "pass-middle",
-   "wpCall": 0.536,
+   "wpCall": 0.546,
    "best": "pass-middle",
-   "wpBest": 0.536,
+   "wpBest": 0.546,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.536
+     "wp": 0.546
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5306666666666666
+     "wp": 0.5393333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.5066666666666667
+     "wp": 0.512
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5
+     "wp": 0.5076666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.482
+     "wp": 0.48933333333333334
     },
     {
      "call": "spike",
-     "wp": 0.4033333333333333
+     "wp": 0.406
     },
     {
      "call": "run",
-     "wp": 0.39666666666666667
+     "wp": 0.401
     },
     {
      "call": "fg",
@@ -569,8 +527,81 @@
     "text": "Coverage tightens in the red zone, but a quick throw over the middle still completes about 50% of the time from the 9.",
     "section": "red-zone"
    },
+   "against": null,
+   "score": {
+    "offense": 31,
+    "defense": 36
+   },
    "nflverseWp": 0.549474120140076,
    "nflverseWpa": -0.212537258863449,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_01_NE_SEA-3810",
+   "gameId": "2026_01_NE_SEA",
+   "offense": "NE",
+   "defense": "SEA",
+   "home": "SEA",
+   "away": "NE",
+   "date": "2026-09-09",
+   "situation": {
+    "clock": 120,
+    "running": false,
+    "down": 4,
+    "toGo": 9,
+    "ytg": 47,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 1
+   },
+   "snapClock": 120,
+   "description": "(2:00) (Shotgun) 10-D.Maye pass short right to 13-M.Hollins to SEA 36 for 11 yards (13-E.Jones).",
+   "call": "pass-sideline",
+   "wpCall": 0.24966666666666668,
+   "best": "pass-play-action",
+   "wpBest": 0.24966666666666668,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.24966666666666668
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.21866666666666668
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.21666666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.21033333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.203
+    },
+    {
+     "call": "run",
+     "wp": 0.14133333333333334
+    },
+    {
+     "call": "punt",
+     "wp": 0.12766666666666668
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
+    "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 13
+   },
+   "nflverseWp": 0.268993079662323,
+   "nflverseWpa": 0.184620648622513,
    "lowConfidence": false
   }
  ]

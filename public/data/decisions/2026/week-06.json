@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
  "agreement": {
   "plays": 186,
-  "meanAbsDiff": 0.05029803516280479,
-  "within10": 0.8494623655913979
+  "meanAbsDiff": 0.048922945634491954,
+  "within10": 0.8655913978494624
  },
  "worst": [
   {
@@ -74,6 +74,11 @@
     "text": "You need a big play: 46 yards with 0:31 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
     "section": "prevent-defense"
    },
+   "against": null,
+   "score": {
+    "offense": 20,
+    "defense": 26
+   },
    "nflverseWp": 0.13636426627636,
    "nflverseWpa": -0.00806334614753723,
    "lowConfidence": false
@@ -101,24 +106,24 @@
    "call": "spike",
    "wpCall": 0.09166666666666666,
    "best": "pass-deep",
-   "wpBest": 0.16733333333333333,
-   "cost": 0.07566666666666667,
+   "wpBest": 0.16766666666666666,
+   "cost": 0.076,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.16733333333333333
+     "wp": 0.16766666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.11666666666666667
+     "wp": 0.117
     },
     {
      "call": "pass-middle",
-     "wp": 0.10266666666666667
+     "wp": 0.103
     },
     {
      "call": "pass-sideline",
-     "wp": 0.09333333333333334
+     "wp": 0.09366666666666666
     },
     {
      "call": "spike",
@@ -126,7 +131,7 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.08833333333333333
+     "wp": 0.08866666666666667
     },
     {
      "call": "run",
@@ -141,79 +146,13 @@
     "text": "From the 14 there's no deep field: a deep pass is a throw into the end zone, and it scores about 22% of the time.",
     "section": "red-zone"
    },
+   "against": null,
+   "score": {
+    "offense": 27,
+    "defense": 34
+   },
    "nflverseWp": 0.162140399217606,
    "nflverseWpa": -0.0578835755586624,
-   "lowConfidence": false
-  },
-  {
-   "id": "2026_06_PIT_TB-4035",
-   "gameId": "2026_06_PIT_TB",
-   "offense": "PIT",
-   "defense": "TB",
-   "home": "TB",
-   "away": "PIT",
-   "date": "2026-10-18",
-   "situation": {
-    "clock": 98,
-    "running": false,
-    "down": 1,
-    "toGo": 3,
-    "ytg": 3,
-    "margin": 0,
-    "timeouts": 3,
-    "oppTimeouts": 2
-   },
-   "snapClock": 98,
-   "description": "(1:38) 8-A.Rodgers pass incomplete short right to 80-D.Washington (27-Z.McCollum).",
-   "call": "pass-play-action",
-   "wpCall": 0.8716666666666667,
-   "best": "kneel",
-   "wpBest": 0.937,
-   "cost": 0.06533333333333335,
-   "values": [
-    {
-     "call": "kneel",
-     "wp": 0.937
-    },
-    {
-     "call": "run",
-     "wp": 0.9043333333333333
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.8716666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.8656666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.8653333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.8603333333333333
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.8486666666666667
-    },
-    {
-     "call": "spike",
-     "wp": 0.8463333333333334
-    },
-    {
-     "call": "fg",
-     "wp": 0.703
-    }
-   ],
-   "reason": {
-    "text": "With little time and a long field, taking a tie to overtime beats risking a turnover.",
-    "section": "limitations"
-   },
-   "nflverseWp": 0.808301270008087,
-   "nflverseWpa": -0.00688111782073975,
    "lowConfidence": false
   },
   {
@@ -279,6 +218,11 @@
     "text": "You need a big play: 23 yards with 0:23 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
     "section": "prevent-defense"
    },
+   "against": null,
+   "score": {
+    "offense": 11,
+    "defense": 14
+   },
    "nflverseWp": 0.412250250577927,
    "nflverseWpa": 0.000276386737823486,
    "lowConfidence": false
@@ -306,51 +250,56 @@
    "snapClock": 106,
    "description": "(1:46) (Shotgun) 10-J.Daniels pass short right intended for 2-E.Egbuka INTERCEPTED by 35-J.Dean at TB 43. 35-J.Dean pushed ob at TB 3 for 40 yards (10-J.Daniels).",
    "call": "pass-sideline",
-   "wpCall": 0.626,
-   "best": "pass-screen",
-   "wpBest": 0.626,
+   "wpCall": 0.6053333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.6053333333333333,
    "cost": 0,
    "values": [
     {
-     "call": "pass-screen",
-     "wp": 0.626
+     "call": "pass-middle",
+     "wp": 0.6053333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6243333333333333
+     "wp": 0.6053333333333333
     },
     {
-     "call": "pass-middle",
-     "wp": 0.6183333333333333
+     "call": "pass-screen",
+     "wp": 0.5953333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.6083333333333333
+     "wp": 0.5946666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5986666666666667
+     "wp": 0.581
     },
     {
      "call": "run",
-     "wp": 0.595
+     "wp": 0.5676666666666667
     },
     {
      "call": "spike",
-     "wp": 0.5326666666666666
+     "wp": 0.5123333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.505
+     "wp": 0.495
     },
     {
      "call": "punt",
-     "wp": 0.408
+     "wp": 0.38
     }
    ],
    "reason": {
-    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 16,
+    "defense": 16
    },
    "nflverseWp": 0.641680479049683,
    "nflverseWpa": -0.44998174905777,
@@ -388,7 +337,7 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.19466666666666665
+     "wp": 0.195
     },
     {
      "call": "pass-play-action",
@@ -408,12 +357,17 @@
     },
     {
      "call": "run",
-     "wp": 0.018
+     "wp": 0.018333333333333333
     }
    ],
    "reason": {
     "text": "A 42-yard try is good about 84% of the time, and it wins it.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 15,
+    "defense": 16
    },
    "nflverseWp": 0.60250186920166,
    "nflverseWpa": 0.39749813079834,
@@ -440,51 +394,56 @@
    "snapClock": 91,
    "description": "(1:31) (No Huddle) 14-S.Darnold pass short left intended for 15-T.Horton INTERCEPTED by 31-K.Abrams-Draine at DEN 31. 31-K.Abrams-Draine to DEN 31 for no gain (15-T.Horton).",
    "call": "pass-sideline",
-   "wpCall": 0.37533333333333335,
+   "wpCall": 0.388,
    "best": "run",
-   "wpBest": 0.393,
-   "cost": 0.017666666666666664,
+   "wpBest": 0.4216666666666667,
+   "cost": 0.03366666666666668,
    "values": [
     {
      "call": "run",
-     "wp": 0.393
+     "wp": 0.4216666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.38233333333333336
+     "wp": 0.41133333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.37533333333333335
+     "wp": 0.388
     },
     {
      "call": "pass-play-action",
-     "wp": 0.3576666666666667
+     "wp": 0.37233333333333335
     },
     {
      "call": "pass-middle",
-     "wp": 0.353
+     "wp": 0.36833333333333335
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3433333333333333
+     "wp": 0.351
     },
     {
      "call": "pass-deep",
-     "wp": 0.3396666666666667
-    },
-    {
-     "call": "fg",
-     "wp": 0.2613333333333333
+     "wp": 0.34
     },
     {
      "call": "spike",
-     "wp": 0.258
+     "wp": 0.25233333333333335
+    },
+    {
+     "call": "fg",
+     "wp": 0.25
     }
    ],
    "reason": {
     "text": "On 3rd & 1, a run is the surest way to move the chains.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 11,
+    "defense": 14
    },
    "nflverseWp": 0.405717015266418,
    "nflverseWpa": -0.352295935153961,
@@ -553,6 +512,11 @@
     "text": "A 49-yard try is good about 75% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
+   "against": null,
+   "score": {
+    "offense": 31,
+    "defense": 31
+   },
    "nflverseWp": 0.707787573337555,
    "nflverseWpa": 0.292212426662445,
    "lowConfidence": true
@@ -615,6 +579,11 @@
    "reason": {
     "text": "A 52-yard try is good about 73% of the time, and it ties it.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 16,
+    "defense": 19
    },
    "nflverseWp": 0.220210701227188,
    "nflverseWpa": 0.260641902685165,

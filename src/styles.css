@@ -697,7 +697,7 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 .sb-run-toggle:focus-visible { outline: 2px solid var(--sb-yellow); outline-offset: 2px; }
 
 .sb-field { user-select: none; -webkit-user-select: none; }
-.sbf-turf { cursor: pointer; touch-action: none; }
+.sbf-turf.editable { cursor: pointer; touch-action: none; }
 
 /* The strip under the field: the mode's settings, editable the same way, and a hint. */
 .sb-notes { display: flex; flex-wrap: wrap; align-items: center; gap: rem(4px) rem(18px); }
@@ -817,3 +817,63 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 
 /* Player decisions: which decision, above the scorebug. */
 .decision-picker { max-width: rem(560px); margin-bottom: var(--mantine-spacing-md); }
+
+/* ---------- A real game's scorebug (Decisions of the week): team plates with the actual score ---------- */
+
+.game-bug .sb-bar {
+  grid-template-columns: minmax(9rem, 1fr) minmax(9rem, 1fr) minmax(10rem, 1.1fr) minmax(9.5rem, 1.2fr);
+  grid-template-areas: "you them clock down";
+}
+.sb-team.game {
+  display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto;
+  align-items: center; column-gap: rem(12px); row-gap: rem(7px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.sb-team.game .sb-name { grid-column: 1; grid-row: 1; }
+.sb-team.game .sb-name abbr { text-decoration: none; }
+.sb-team.game .sb-timeouts { grid-column: 1; grid-row: 2; }
+.sb-points {
+  grid-column: 2; grid-row: 1 / span 2;
+  font-size: rem(36px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+}
+/* Timeout bars on a team's own color: dark when used, light when left, readable on any plate. */
+.sb-team.game .sb-to::before { background: rgba(0, 0, 0, 0.35); }
+.sb-team.game .sb-to.on::before { background: currentColor; box-shadow: none; }
+.game-bug .sb-to { cursor: default; }
+/* Each end zone in its team's color. */
+.game-bug .sbf-ez.own { background: var(--ez-own); color: var(--ez-own-ink); }
+.game-bug .sbf-ez.opp { background: var(--ez-opp); color: var(--ez-opp-ink); }
+.game-bug .sb-to:hover::before { transform: none; }
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .game-bug .sb-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "you them" "clock down";
+  }
+  .sb-points { font-size: rem(30px); }
+}
+
+/* The decision, as a call sheet: label column, then the content. */
+.call-sheet {
+  display: grid; grid-template-columns: minmax(7rem, auto) 1fr;
+  margin: var(--mantine-spacing-sm) 0 0;
+}
+.call-sheet dt, .call-sheet dd {
+  margin: 0; padding: rem(10px) 0;
+  border-top: 1px dashed var(--mantine-color-default-border);
+}
+.call-sheet dt {
+  padding-right: var(--mantine-spacing-md);
+  font-family: var(--mantine-font-family-headings);
+  font-size: rem(14px); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+.call-sheet dd { min-width: 0; }
+.call-sheet .call-name { font-weight: 700; }
+.call-sheet .why { margin: 0; padding-left: rem(18px); }
+.call-sheet .why li + li { margin-top: rem(4px); }
+@media (max-width: $mantine-breakpoint-xs) {
+  .call-sheet { grid-template-columns: 1fr; }
+  .call-sheet dt { padding-bottom: 0; }
+  .call-sheet dd { border-top: 0; padding-top: rem(4px); }
+}

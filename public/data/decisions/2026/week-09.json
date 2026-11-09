@@ -1,0 +1,452 @@
+{
+ "season": 2026,
+ "week": 9,
+ "generatedAt": "2026-11-09T21:16:37.070Z",
+ "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
+ "games": 14,
+ "evaluated": 107,
+ "agreement": {
+  "plays": 107,
+  "meanAbsDiff": 0.04206624723260643,
+  "within10": 0.9158878504672897
+ },
+ "worst": [
+  {
+   "id": "2026_09_CLE_NO-3652",
+   "gameId": "2026_09_CLE_NO",
+   "offense": "NO",
+   "defense": "CLE",
+   "home": "NO",
+   "away": "CLE",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 263,
+    "running": false,
+    "down": 4,
+    "toGo": 3,
+    "ytg": 63,
+    "margin": -4,
+    "timeouts": 3,
+    "oppTimeouts": 3
+   },
+   "snapClock": 263,
+   "description": "(4:23) 17-R.Wright punts 46 yards to CLE 17, Center-49-Z.Wood, fair catch by 1-K.Concepcion.",
+   "call": "punt",
+   "wpCall": 0.17666666666666667,
+   "best": "pass-middle",
+   "wpBest": 0.25733333333333336,
+   "cost": 0.08066666666666669,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.25733333333333336
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.25533333333333336
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.24166666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.23633333333333334
+    },
+    {
+     "call": "run",
+     "wp": 0.235
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.21566666666666667
+    },
+    {
+     "call": "punt",
+     "wp": 0.17666666666666667
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "against": {
+    "text": "Punting gives the ball back when you need to score.",
+    "section": "fourth-down"
+   },
+   "score": {
+    "offense": 9,
+    "defense": 13
+   },
+   "nflverseWp": 0.241798892617226,
+   "nflverseWpa": 0.00987289845943451,
+   "lowConfidence": false
+  }
+ ],
+ "notable": [
+  {
+   "id": "2026_09_DEN_CAR-4561",
+   "gameId": "2026_09_DEN_CAR",
+   "offense": "CAR",
+   "defense": "DEN",
+   "home": "CAR",
+   "away": "DEN",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 102,
+    "running": true,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 36,
+    "margin": -5,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 84,
+   "description": "(1:24) (No Huddle, Shotgun) 9-B.Young sacked at DEN 44 for -8 yards (15-N.Bonitto). FUMBLES (15-N.Bonitto) [15-N.Bonitto], RECOVERED by DEN-15-N.Bonitto at DEN 44. The Replay Official reviewed the fumble ruling, and the play was Upheld. The ruling on the field stands.",
+   "call": "pass-middle",
+   "wpCall": 0.4226666666666667,
+   "best": "pass-play-action",
+   "wpBest": 0.4226666666666667,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-play-action",
+     "wp": 0.4226666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.4116666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.41
+    },
+    {
+     "call": "run",
+     "wp": 0.4073333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.407
+    },
+    {
+     "call": "timeout",
+     "wp": 0.4046666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.3863333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.37266666666666665
+    },
+    {
+     "call": "fg",
+     "wp": 0.08666666666666667
+    }
+   ],
+   "reason": {
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
+    "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 21,
+    "defense": 26
+   },
+   "nflverseWp": 0.354381114244461,
+   "nflverseWpa": -0.324914246797562,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_09_DAL_IND-4670",
+   "gameId": "2026_09_DAL_IND",
+   "offense": "DAL",
+   "defense": "IND",
+   "home": "IND",
+   "away": "DAL",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 97,
+    "running": false,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 65,
+    "margin": -3,
+    "timeouts": 0,
+    "oppTimeouts": 3
+   },
+   "snapClock": 97,
+   "description": "(1:37) (Shotgun) 4-D.Prescott pass deep right to 19-R.Flournoy to IND 19 for 46 yards (1-A.Gardner).",
+   "call": "pass-deep",
+   "wpCall": 0.29233333333333333,
+   "best": "pass-middle",
+   "wpBest": 0.29233333333333333,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.29233333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.28933333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.28733333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.2853333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.27566666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.275
+    },
+    {
+     "call": "spike",
+     "wp": 0.26066666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
+    "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 20,
+    "defense": 23
+   },
+   "nflverseWp": 0.275937914848328,
+   "nflverseWpa": 0.287225604057312,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_09_CLE_NO-4304",
+   "gameId": "2026_09_CLE_NO",
+   "offense": "CLE",
+   "defense": "NO",
+   "home": "NO",
+   "away": "CLE",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 12,
+    "running": false,
+    "down": 4,
+    "toGo": 3,
+    "ytg": 33,
+    "margin": -3,
+    "timeouts": 0,
+    "oppTimeouts": 0
+   },
+   "snapClock": 12,
+   "description": "(:12) 25-A.Szmyt 51 yard field goal is GOOD, Center-50-R.Sunahara, Holder-13-C.Bojorquez.",
+   "call": "fg",
+   "wpCall": 0.37566666666666665,
+   "best": "fg",
+   "wpBest": 0.37566666666666665,
+   "cost": 0,
+   "values": [
+    {
+     "call": "fg",
+     "wp": 0.37566666666666665
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.121
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.06733333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.04833333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.029333333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.01633333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.014666666666666666
+    }
+   ],
+   "reason": {
+    "text": "A 50-yard try is good about 74% of the time, and it ties it.",
+    "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 13,
+    "defense": 16
+   },
+   "nflverseWp": 0.210388526320457,
+   "nflverseWpa": 0.232348397374153,
+   "lowConfidence": true
+  },
+  {
+   "id": "2026_09_TB_CHI-4405",
+   "gameId": "2026_09_TB_CHI",
+   "offense": "CHI",
+   "defense": "TB",
+   "home": "CHI",
+   "away": "TB",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 3,
+    "running": false,
+    "down": 3,
+    "toGo": 14,
+    "ytg": 20,
+    "margin": 0,
+    "timeouts": 2,
+    "oppTimeouts": 0
+   },
+   "snapClock": 3,
+   "description": "(:03) 8-C.Santos 38 yard field goal is GOOD, Center-46-S.Daly, Holder-19-T.Taylor. Penalty on TB-91-A.Robinson, Unnecessary Roughness, declined.",
+   "call": "fg",
+   "wpCall": 0.953,
+   "best": "fg",
+   "wpBest": 0.953,
+   "cost": 0,
+   "values": [
+    {
+     "call": "fg",
+     "wp": 0.953
+    },
+    {
+     "call": "spike",
+     "wp": 0.953
+    },
+    {
+     "call": "kneel",
+     "wp": 0.9463333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.6093333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.5513333333333333
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.5346666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5323333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5223333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.5113333333333333
+    }
+   ],
+   "reason": {
+    "text": "A 37-yard try is good about 91% of the time, and it wins it.",
+    "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 24
+   },
+   "nflverseWp": 0.785260617733002,
+   "nflverseWpa": 0.214739382266998,
+   "lowConfidence": true
+  },
+  {
+   "id": "2026_09_CLE_NO-4194",
+   "gameId": "2026_09_CLE_NO",
+   "offense": "CLE",
+   "defense": "NO",
+   "home": "NO",
+   "away": "CLE",
+   "date": "2026-11-08",
+   "situation": {
+    "clock": 41,
+    "running": false,
+    "down": 3,
+    "toGo": 6,
+    "ytg": 70,
+    "margin": -3,
+    "timeouts": 1,
+    "oppTimeouts": 0
+   },
+   "snapClock": 41,
+   "description": "(:41) (Shotgun) 2-S.Sanders pass deep left to 3-J.Jeudy to NO 40 for 30 yards (22-M.Emerson) [99-C.Young].",
+   "call": "pass-deep",
+   "wpCall": 0.143,
+   "best": "pass-deep",
+   "wpBest": 0.143,
+   "cost": 0,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.143
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.09966666666666667
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.096
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.08966666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.08633333333333333
+    },
+    {
+     "call": "spike",
+     "wp": 0.06766666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.05566666666666667
+    },
+    {
+     "call": "punt",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 70 yards with 0:41 left is too far to go in small chunks. A deep pass completes about 30% of the time, for 20+ yards.",
+    "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 13,
+    "defense": 16
+   },
+   "nflverseWp": 0.220157995820045,
+   "nflverseWpa": 0.20164780318737,
+   "lowConfidence": false
+  }
+ ]
+}

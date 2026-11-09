@@ -12,6 +12,7 @@ const play = (fields: Record<string, string>): CsvRow => row({
   game_id: "2026_08_KC_DEN", play_id: "100", week: "8", qtr: "4", game_seconds_remaining: "90", score_differential: "-3",
   posteam: "KC", defteam: "DEN", home_team: "DEN", away_team: "KC", game_date: "2026-10-25", down: "2", ydstogo: "10",
   yardline_100: "40", posteam_timeouts_remaining: "1", defteam_timeouts_remaining: "2", wp: "0.3", wpa: "0.01",
+  posteam_score: "17", defteam_score: "20",
   play_type: "pass", desc: "pass", ...fields,
 });
 
@@ -112,5 +113,22 @@ describe("scoring", () => {
     const small = buildWeek(2026, 8, [{ ...d, lowConfidence: false, cost: FLAG_THRESHOLD - 0.01 }], 1, "2026-11-04T00:00:00Z", "test");
     expect(small.worst.length).toBe(0);
     expect(decisionWeekSchema.safeParse(confident).success).toBe(true);
+  });
+});
+
+describe("the score and the case against the call", () => {
+  it("carries the actual score before the play, from the offense's side", () => {
+    const [c] = findCandidates([play({ game_seconds_remaining: "90" })]);
+    expect(c?.score).toEqual({ offense: 17, defense: 20 });
+    const [none] = findCandidates([play({ posteam_score: "" })]);
+    expect(none?.score).toBeNull();
+  });
+
+  it("explains why a punt was worse when trailing late", () => {
+    const [c] = findCandidates([play({ play_type: "punt", down: "4", ydstogo: "1", yardline_100: "45", game_seconds_remaining: "100" })]);
+    if (c === undefined) throw new Error("no candidate");
+    const d = scoreDecision(c, 200);
+    expect(d?.against?.text).toBe("Punting gives the ball back when you need to score.");
+    expect(d?.score).toEqual({ offense: 17, defense: 20 });
   });
 });

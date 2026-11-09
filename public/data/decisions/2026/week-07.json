@@ -1,91 +1,16 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.04430277501123469,
-  "within10": 0.865979381443299
+  "meanAbsDiff": 0.04371205047418165,
+  "within10": 0.9072164948453608
  },
  "worst": [
-  {
-   "id": "2026_07_CLE_TEN-4257",
-   "gameId": "2026_07_CLE_TEN",
-   "offense": "CLE",
-   "defense": "TEN",
-   "home": "TEN",
-   "away": "CLE",
-   "date": "2026-10-25",
-   "situation": {
-    "clock": 51,
-    "running": true,
-    "down": 2,
-    "toGo": 4,
-    "ytg": 63,
-    "margin": 0,
-    "timeouts": 3,
-    "oppTimeouts": 3
-   },
-   "snapClock": 33,
-   "description": "(:33) (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson pushed ob at CLE 45 for 8 yards (53-A.Hill). The Replay Official reviewed the runner was out of bounds ruling, and the play was REVERSED. (No Huddle, Shotgun) 4-D.Watson pass short middle to 22-D.Sampson to CLE 45 for 8 yards (53-A.Hill).",
-   "call": "pass-middle",
-   "wpCall": 0.546,
-   "best": "timeout",
-   "wpBest": 0.6443333333333333,
-   "cost": 0.09833333333333327,
-   "values": [
-    {
-     "call": "timeout",
-     "wp": 0.6443333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.5956666666666667
-    },
-    {
-     "call": "spike",
-     "wp": 0.574
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.546
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.54
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.5376666666666666
-    },
-    {
-     "call": "punt",
-     "wp": 0.5
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.493
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.43566666666666665
-    },
-    {
-     "call": "kneel",
-     "wp": 0.4096666666666667
-    }
-   ],
-   "reason": {
-    "text": "The clock was running with 0:51 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
-    "section": "timeouts"
-   },
-   "nflverseWp": 0.561358332633972,
-   "nflverseWpa": 0.022444486618042,
-   "lowConfidence": false
-  },
   {
    "id": "2026_07_IND_MIN-3368",
    "gameId": "2026_07_IND_MIN",
@@ -107,47 +32,52 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.35833333333333334,
+   "wpCall": 0.342,
    "best": "run",
-   "wpBest": 0.42133333333333334,
-   "cost": 0.063,
+   "wpBest": 0.4206666666666667,
+   "cost": 0.07866666666666666,
    "values": [
     {
      "call": "run",
-     "wp": 0.42133333333333334
+     "wp": 0.4206666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.41133333333333333
+     "wp": 0.411
     },
     {
      "call": "pass-screen",
-     "wp": 0.3923333333333333
+     "wp": 0.406
     },
     {
      "call": "pass-middle",
-     "wp": 0.3883333333333333
+     "wp": 0.401
     },
     {
      "call": "pass-play-action",
-     "wp": 0.38166666666666665
+     "wp": 0.3993333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3636666666666667
+     "wp": 0.375
     },
     {
      "call": "fg",
-     "wp": 0.35833333333333334
+     "wp": 0.342
     },
     {
      "call": "pass-deep",
-     "wp": 0.30666666666666664
+     "wp": 0.32466666666666666
     }
    ],
    "reason": {
     "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 13
    },
    "nflverseWp": 0.366786807775497,
    "nflverseWpa": -0.175609558820724,
@@ -176,42 +106,42 @@
    "snapClock": 28,
    "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
    "call": "pass-sideline",
-   "wpCall": 0.7126666666666667,
-   "best": "pass-deep",
-   "wpBest": 0.7126666666666667,
+   "wpCall": 0.717,
+   "best": "pass-screen",
+   "wpBest": 0.717,
    "cost": 0,
    "values": [
     {
-     "call": "pass-deep",
-     "wp": 0.7126666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.683
-    },
-    {
      "call": "pass-screen",
-     "wp": 0.6696666666666666
+     "wp": 0.717
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.708
     },
     {
      "call": "pass-middle",
-     "wp": 0.666
+     "wp": 0.7036666666666667
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.6563333333333333
-    },
-    {
-     "call": "spike",
-     "wp": 0.6396666666666667
+     "call": "pass-play-action",
+     "wp": 0.7033333333333334
     },
     {
      "call": "run",
-     "wp": 0.633
+     "wp": 0.699
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6913333333333334
+    },
+    {
+     "call": "spike",
+     "wp": 0.656
     },
     {
      "call": "kneel",
-     "wp": 0.576
+     "wp": 0.628
     },
     {
      "call": "punt",
@@ -219,8 +149,13 @@
     }
    ],
    "reason": {
-    "text": "You need a big play: 55 yards with 0:28 left is too far to go in small chunks. A deep pass completes about 30% of the time, for 20+ yards.",
+    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 24
    },
    "nflverseWp": 0.583802819252014,
    "nflverseWpa": 0.23200923204422,
@@ -257,37 +192,42 @@
      "wp": 0.119
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.106
+     "call": "pass-middle",
+     "wp": 0.10366666666666667
     },
     {
-     "call": "pass-middle",
-     "wp": 0.10133333333333333
+     "call": "pass-sideline",
+     "wp": 0.10166666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.09866666666666667
+     "wp": 0.09533333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.08633333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.08133333333333333
+     "wp": 0.088
     },
     {
      "call": "fg",
-     "wp": 0.07633333333333334
+     "wp": 0.08233333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.08033333333333334
     },
     {
      "call": "punt",
-     "wp": 0.06333333333333334
+     "wp": 0.06166666666666667
     }
    ],
    "reason": {
     "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 17,
+    "defense": 24
    },
    "nflverseWp": 0.120108582079411,
    "nflverseWpa": 0.177786342799664,
@@ -314,55 +254,63 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.823,
+   "wpCall": 0.8246666666666667,
    "best": "run",
-   "wpBest": 0.825,
-   "cost": 0.0020000000000000018,
+   "wpBest": 0.829,
+   "cost": 0.0043333333333333,
    "values": [
     {
      "call": "run",
-     "wp": 0.825
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.823
+     "wp": 0.829
     },
     {
      "call": "timeout",
-     "wp": 0.82
+     "wp": 0.826
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.8246666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.8176666666666667
+     "wp": 0.8193333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.8146666666666667
-    },
-    {
-     "call": "pass-sideline",
      "wp": 0.8133333333333334
     },
     {
+     "call": "pass-sideline",
+     "wp": 0.813
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.7876666666666666
+     "wp": 0.7966666666666666
     },
     {
      "call": "kneel",
-     "wp": 0.772
+     "wp": 0.7833333333333333
     },
     {
      "call": "spike",
-     "wp": 0.7583333333333333
+     "wp": 0.7643333333333333
     },
     {
      "call": "punt",
-     "wp": 0.727
+     "wp": 0.7373333333333333
     }
    ],
    "reason": {
     "text": "A run keeps the clock moving and rarely turns the ball over.",
     "section": "running-out-the-clock"
+   },
+   "against": {
+    "text": "A pass risks an incompletion that stops the clock for them, and an interception.",
+    "section": "running-out-the-clock"
+   },
+   "score": {
+    "offense": 21,
+    "defense": 17
    },
    "nflverseWp": 0.769473731517792,
    "nflverseWpa": 0.175825614727378,
@@ -432,8 +380,13 @@
     }
    ],
    "reason": {
-    "text": "With little time and a long field, taking a tie to overtime beats risking a turnover.",
-    "section": "limitations"
+    "text": "A field goal is enough and you're in range. A kneel drains the clock with no risk of a fumble, at the cost of a yard on the kick.",
+    "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 24,
+    "defense": 24
    },
    "nflverseWp": 0.824265539646149,
    "nflverseWpa": 0.175734460353851,
@@ -460,47 +413,52 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.35833333333333334,
+   "wpCall": 0.342,
    "best": "run",
-   "wpBest": 0.42133333333333334,
-   "cost": 0.063,
+   "wpBest": 0.4206666666666667,
+   "cost": 0.07866666666666666,
    "values": [
     {
      "call": "run",
-     "wp": 0.42133333333333334
+     "wp": 0.4206666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.41133333333333333
+     "wp": 0.411
     },
     {
      "call": "pass-screen",
-     "wp": 0.3923333333333333
+     "wp": 0.406
     },
     {
      "call": "pass-middle",
-     "wp": 0.3883333333333333
+     "wp": 0.401
     },
     {
      "call": "pass-play-action",
-     "wp": 0.38166666666666665
+     "wp": 0.3993333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3636666666666667
+     "wp": 0.375
     },
     {
      "call": "fg",
-     "wp": 0.35833333333333334
+     "wp": 0.342
     },
     {
      "call": "pass-deep",
-     "wp": 0.30666666666666664
+     "wp": 0.32466666666666666
     }
    ],
    "reason": {
     "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 13
    },
    "nflverseWp": 0.366786807775497,
    "nflverseWpa": -0.175609558820724,

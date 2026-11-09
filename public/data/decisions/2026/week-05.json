@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 5,
- "generatedAt": "2026-11-05T20:47:00.674Z",
+ "generatedAt": "2026-11-09T21:16:37.070Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 15,
  "evaluated": 139,
  "agreement": {
   "plays": 139,
-  "meanAbsDiff": 0.06165001573937114,
-  "within10": 0.7913669064748201
+  "meanAbsDiff": 0.057214607821808684,
+  "within10": 0.8129496402877698
  },
  "worst": [
   {
@@ -32,50 +32,130 @@
    "snapClock": 106,
    "description": "(1:46) 9-L.Cooke punts 41 yards to PHI 28, Center-52-D.Hamilton. 85-B.Covey to PHI 38 for 10 yards (35-J.Mcleod).",
    "call": "punt",
-   "wpCall": 0.4886666666666667,
+   "wpCall": 0.4666666666666667,
    "best": "run",
-   "wpBest": 0.7126666666666667,
-   "cost": 0.22399999999999998,
+   "wpBest": 0.7203333333333334,
+   "cost": 0.2536666666666667,
    "values": [
     {
      "call": "run",
-     "wp": 0.7126666666666667
+     "wp": 0.7203333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.648
+     "wp": 0.675
     },
     {
      "call": "pass-sideline",
-     "wp": 0.622
+     "wp": 0.6516666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5993333333333334
+     "wp": 0.6296666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.596
+     "wp": 0.62
     },
     {
      "call": "punt",
-     "wp": 0.4886666666666667
+     "wp": 0.4666666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.4206666666666667
+     "wp": 0.4623333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.19533333333333333
+     "wp": 0.21733333333333332
     }
    ],
    "reason": {
     "text": "A run keeps the clock moving and rarely turns the ball over.",
     "section": "running-out-the-clock"
    },
+   "against": {
+    "text": "Punting gives the ball back when you still had a good chance to keep it.",
+    "section": "fourth-down"
+   },
+   "score": {
+    "offense": 16,
+    "defense": 14
+   },
    "nflverseWp": 0.830084621906281,
    "nflverseWpa": -0.1925328373909,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_05_SF_SEA-3995",
+   "gameId": "2026_05_SF_SEA",
+   "offense": "SF",
+   "defense": "SEA",
+   "home": "SEA",
+   "away": "SF",
+   "date": "2026-10-11",
+   "situation": {
+    "clock": 120,
+    "running": false,
+    "down": 4,
+    "toGo": 2,
+    "ytg": 25,
+    "margin": 0,
+    "timeouts": 2,
+    "oppTimeouts": 2
+   },
+   "snapClock": 120,
+   "description": "(2:00) 18-E.Pineiro 44 yard field goal is GOOD, Center-46-J.Weeks, Holder-15-C.Waitman.",
+   "call": "fg",
+   "wpCall": 0.6126666666666667,
+   "best": "run",
+   "wpBest": 0.7083333333333334,
+   "cost": 0.09566666666666668,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.7083333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.6643333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.645
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.643
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.6266666666666667
+    },
+    {
+     "call": "fg",
+     "wp": 0.6126666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.5233333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.4003333333333333
+    }
+   ],
+   "reason": {
+    "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
+    "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 29,
+    "defense": 29
+   },
+   "nflverseWp": 0.581214010715485,
+   "nflverseWpa": 0.0732331275939941,
    "lowConfidence": false
   },
   {
@@ -99,10 +179,10 @@
    "snapClock": 8,
    "description": "(:08) (No Huddle, Shotgun) 23-K.Williams left guard for 1 yard, TOUCHDOWN.",
    "call": "run",
-   "wpCall": 0.2823333333333333,
+   "wpCall": 0.2826666666666667,
    "best": "timeout",
    "wpBest": 0.34933333333333333,
-   "cost": 0.067,
+   "cost": 0.06666666666666665,
    "values": [
     {
      "call": "timeout",
@@ -110,31 +190,31 @@
     },
     {
      "call": "run",
-     "wp": 0.2823333333333333
+     "wp": 0.2826666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.25566666666666665
+     "wp": 0.25633333333333336
     },
     {
      "call": "pass-middle",
-     "wp": 0.22366666666666668
+     "wp": 0.224
     },
     {
      "call": "pass-play-action",
-     "wp": 0.22
+     "wp": 0.22066666666666668
     },
     {
      "call": "pass-sideline",
-     "wp": 0.20766666666666667
+     "wp": 0.20833333333333334
     },
     {
      "call": "spike",
-     "wp": 0.187
+     "wp": 0.18766666666666668
     },
     {
      "call": "pass-deep",
-     "wp": 0.16733333333333333
+     "wp": 0.16766666666666666
     },
     {
      "call": "fg",
@@ -144,6 +224,14 @@
    "reason": {
     "text": "The clock was running with 0:26 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
     "section": "timeouts"
+   },
+   "against": {
+    "text": "A play that ends in bounds keeps the clock running when you're short on time.",
+    "section": "clock-rules"
+   },
+   "score": {
+    "offense": 27,
+    "defense": 34
    },
    "nflverseWp": 0.24088753759861,
    "nflverseWpa": 0.172015441733801,
@@ -214,6 +302,11 @@
     "text": "A 56-yard try is good about 66% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
+   "against": null,
+   "score": {
+    "offense": 16,
+    "defense": 17
+   },
    "nflverseWp": 0.495616108179092,
    "nflverseWpa": 0.504383891820908,
    "lowConfidence": true
@@ -239,43 +332,48 @@
    "snapClock": 206,
    "description": "(3:26) (Shotgun) 16-T.Lawrence pass deep right to 11-P.Washington for 27 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.30433333333333334,
+   "wpCall": 0.289,
    "best": "pass-middle",
-   "wpBest": 0.30433333333333334,
+   "wpBest": 0.289,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.30433333333333334
+     "wp": 0.289
     },
     {
      "call": "pass-play-action",
-     "wp": 0.2896666666666667
+     "wp": 0.27566666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.2786666666666667
+     "wp": 0.2633333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.25766666666666665
+     "wp": 0.24933333333333332
     },
     {
      "call": "pass-screen",
-     "wp": 0.24433333333333335
+     "wp": 0.23533333333333334
     },
     {
      "call": "run",
-     "wp": 0.23
+     "wp": 0.22466666666666665
     },
     {
      "call": "fg",
-     "wp": 0.20666666666666667
+     "wp": 0.19666666666666666
     }
    ],
    "reason": {
     "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 14
    },
    "nflverseWp": 0.31495675444603,
    "nflverseWpa": 0.372117656269084,
@@ -302,51 +400,56 @@
    "snapClock": 260,
    "description": "(4:20) 7-G.Smith sacked at CLE 48 for -9 yards (49-C.Schwesinger). FUMBLES (49-C.Schwesinger) [49-C.Schwesinger], RECOVERED by CLE-98-A.Huntington at NYJ 48. 98-A.Huntington to NYJ 43 for 5 yards (66-J.Tippmann; 70-A.Membou).",
    "call": "pass-play-action",
-   "wpCall": 0.6143333333333333,
+   "wpCall": 0.607,
    "best": "pass-screen",
-   "wpBest": 0.6143333333333333,
+   "wpBest": 0.607,
    "cost": 0,
    "values": [
     {
      "call": "pass-screen",
-     "wp": 0.6143333333333333
+     "wp": 0.607
     },
     {
      "call": "pass-middle",
-     "wp": 0.602
-    },
-    {
-     "call": "run",
-     "wp": 0.594
+     "wp": 0.5896666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5906666666666667
+     "wp": 0.5816666666666667
     },
     {
-     "call": "timeout",
-     "wp": 0.58
-    },
-    {
-     "call": "pass-sideline",
+     "call": "run",
      "wp": 0.5773333333333334
     },
     {
+     "call": "pass-sideline",
+     "wp": 0.5766666666666667
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.5576666666666666
+     "wp": 0.558
+    },
+    {
+     "call": "timeout",
+     "wp": 0.5523333333333333
     },
     {
      "call": "spike",
-     "wp": 0.526
+     "wp": 0.5383333333333333
     },
     {
      "call": "fg",
-     "wp": 0.417
+     "wp": 0.43366666666666664
     }
    ],
    "reason": {
     "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
     "section": "play-model"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 12
    },
    "nflverseWp": 0.570932149887085,
    "nflverseWpa": -0.36609947681427,
@@ -384,15 +487,15 @@
     },
     {
      "call": "pass-middle",
-     "wp": 0.44866666666666666
+     "wp": 0.45
     },
     {
      "call": "pass-play-action",
-     "wp": 0.396
+     "wp": 0.3973333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.366
+     "wp": 0.36733333333333335
     },
     {
      "call": "pass-deep",
@@ -400,16 +503,21 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.2826666666666667
+     "wp": 0.2846666666666667
     },
     {
      "call": "run",
-     "wp": 0.19933333333333333
+     "wp": 0.2
     }
    ],
    "reason": {
     "text": "A 47-yard try is good about 76% of the time, and it wins it.",
     "section": "field-goal-endgame"
+   },
+   "against": null,
+   "score": {
+    "offense": 14,
+    "defense": 16
    },
    "nflverseWp": 0.423896372318268,
    "nflverseWpa": 0.315610945224762,
@@ -436,47 +544,52 @@
    "snapClock": 187,
    "description": "(3:07) (Shotgun) 0-B.Allen left tackle for 22 yards, TOUCHDOWN.",
    "call": "run",
-   "wpCall": 0.4573333333333333,
+   "wpCall": 0.5003333333333333,
    "best": "pass-play-action",
-   "wpBest": 0.5163333333333333,
-   "cost": 0.059,
+   "wpBest": 0.545,
+   "cost": 0.04466666666666674,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.5163333333333333
+     "wp": 0.545
     },
     {
      "call": "pass-deep",
-     "wp": 0.5006666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.49566666666666664
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.48733333333333334
+     "wp": 0.528
     },
     {
      "call": "pass-screen",
-     "wp": 0.478
+     "wp": 0.527
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5246666666666666
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.5226666666666666
     },
     {
      "call": "run",
-     "wp": 0.4573333333333333
+     "wp": 0.5003333333333333
     },
     {
      "call": "fg",
-     "wp": 0.4176666666666667
+     "wp": 0.461
     },
     {
      "call": "spike",
-     "wp": 0.41733333333333333
+     "wp": 0.46
     }
    ],
    "reason": {
     "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
+   },
+   "against": null,
+   "score": {
+    "offense": 10,
+    "defense": 12
    },
    "nflverseWp": 0.59231436252594,
    "nflverseWpa": 0.199407017971755,

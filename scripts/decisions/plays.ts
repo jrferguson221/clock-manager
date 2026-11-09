@@ -31,6 +31,8 @@ export interface Candidate {
   clockKnown: boolean;
   nflverseWp: number | null;
   nflverseWpa: number | null;
+  /** The score before the play: the offense's points and the defense's, or null if the data lacks it. */
+  score: { offense: number; defense: number } | null;
 }
 
 /** FTN's charting of a pass play: was it play-action, or a screen? Keyed by "gameId-playId". */
@@ -114,6 +116,13 @@ function stateFrom(row: CsvRow, clock: number, running: boolean, timeoutsAdded =
   };
 }
 
+/** The score before a play, from the offense's side. */
+function scoreFrom(row: CsvRow): { offense: number; defense: number } | null {
+  const offense = num(row.get("posteam_score"));
+  const defense = num(row.get("defteam_score"));
+  return offense === null || defense === null || offense < 0 || defense < 0 ? null : { offense, defense };
+}
+
 const inWindow = (row: CsvRow) => {
   const clock = num(row.get("game_seconds_remaining"));
   const margin = num(row.get("score_differential"));
@@ -131,7 +140,7 @@ export function findCandidates(rows: readonly CsvRow[], tags: PassTags = new Map
     if (prev !== undefined && prev.get("game_id") !== row.get("game_id")) prev = undefined;
     const meta = (r: CsvRow) => ({
       gameId: r.get("game_id"), week: Number(r.get("week")), offense: r.get("posteam"), defense: r.get("defteam"),
-      home: r.get("home_team"), away: r.get("away_team"), date: r.get("game_date"),
+      home: r.get("home_team"), away: r.get("away_team"), date: r.get("game_date"), score: scoreFrom(r),
     });
 
     // An offensive timeout: the situation comes from the next play, the clock from the timeout.

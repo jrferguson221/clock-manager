@@ -8,7 +8,8 @@ import { PLAY_CALLS } from "./sim";
 import { formatClock } from "./time";
 import { ChoiceSelect, spotFrom } from "./fields";
 import { AnchorLink, GuideLink, ReasonText } from "./ReadMore";
-import { teamName, teamStyle } from "./teamPalette";
+import { teamName, teamPalette, teamStyle } from "./teamPalette";
+import { GameBug } from "./Scorebug";
 
 const route = getRouteApi("/decisions");
 
@@ -17,9 +18,6 @@ const points = (x: number) => {
   const n = Math.round(x * 100);
   return `${n} point${Math.abs(n) === 1 ? "" : "s"}`;
 };
-const ordinal = (d: number) => ["1st", "2nd", "3rd", "4th"][d - 1] ?? `${d}th`;
-const spot = (ytg: number) => (ytg === 50 ? "midfield" : ytg > 50 ? `own ${100 - ytg}` : `opp ${ytg}`);
-const score = (m: number) => (m > 0 ? `up ${m}` : m < 0 ? `down ${-m}` : "tied");
 
 export default function DecisionsPanel() {
   const { index, week } = route.useLoaderData();
@@ -134,15 +132,28 @@ function Method({ week }: { week: DecisionWeek }) {
   );
 }
 
+/** A team on the scorebug: its plate in its own color, with the score and timeouts at the decision. */
+function bugTeam(abbr: string, points: number | null, timeouts: number) {
+  // The daytime accent: the team's own color whenever it holds up on white, so a solid plate shows the real
+  // color (the night accent swaps very dark colors, like Denver's navy, for a neutral that reads on dark cards).
+  const { accent, onAccent } = teamPalette(abbr, "light");
+  return { abbr, name: teamName(abbr), points, timeouts, plate: { background: accent, color: onAccent } };
+}
+
+/**
+ * One decision, in reading order: the situation (a scorebug with the real score), their call, the best
+ * call, why the best call was better than theirs, and what actually happened.
+ */
 function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "worst" | "notable" }) {
   const s = d.situation;
   const sameCall = d.call === d.best || d.cost < 0.005;
+  const decidedEarlier = s.running && s.clock !== d.snapClock;
   return (
     <Card
       className={`team-card team-colors${kind === "worst" ? " costly" : ""}`} style={teamStyle(d.offense)}
       aria-label={`${teamName(d.offense)} versus ${teamName(d.defense)}, ${formatClock(d.snapClock)} left`}
     >
-      <Group justify="space-between" align="center" wrap="wrap" gap="xs">
+      <Group justify="space-between" align="center" wrap="wrap" gap="xs" mb="sm">
         <Group gap={6} align="center" wrap="nowrap">
           {rank !== undefined && <Text className="eyebrow">#{rank}</Text>}
           <TeamChip team={d.offense} />
@@ -152,38 +163,57 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
         </Group>
         {d.lowConfidence && <Badge color="gray" variant="light">Models disagree: less certain</Badge>}
       </Group>
-      <Title order={4} mt={4}>
-        {d.offense}: {PLAY_CALLS[d.call]}, {ordinal(s.down)} & {s.toGo >= s.ytg ? "goal" : s.toGo} at {spot(s.ytg)}, {formatClock(d.snapClock)} left
-      </Title>
-      <Text size="sm" c="dimmed">
-        {d.offense} {score(s.margin)}, timeouts {s.timeouts}–{s.oppTimeouts}.{" "}
-        {s.running && s.clock !== d.snapClock
-          ? `The clock was running: the call was made at ${formatClock(s.clock)}, at the end of the play before, and judged from there.`
-          : `Clock ${s.running ? "running" : "stopped"}.`}
-      </Text>
-      <Text mt="xs" className="play-desc">“{d.description}”</Text>
 
-      <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm" mt="sm">
-        <div>
-          <Text size="sm" c="dimmed">Their call</Text>
-          <Text fw={700}>{PLAY_CALLS[d.call]}: {pct(d.wpCall)}</Text>
-        </div>
-        <div>
-          <Text size="sm" c="dimmed">The model's best call</Text>
-          <Text fw={700}>{sameCall ? "The same, or as good" : `${PLAY_CALLS[d.best]}: ${pct(d.wpBest)}`}</Text>
-        </div>
-      </SimpleGrid>
-      {kind === "worst" && <Text mt="xs" fw={600}>Cost: {points(d.cost)} of win probability.</Text>}
-      {!sameCall && <Text size="sm" mt="xs"><ReasonText reason={d.reason} /></Text>}
+      <GameBug
+        offense={bugTeam(d.offense, d.score?.offense ?? null, s.timeouts)}
+        defense={bugTeam(d.defense, d.score?.defense ?? null, s.oppTimeouts)}
+        margin={s.margin} clock={formatClock(s.clock)} running={s.running} down={s.down} toGo={s.toGo} ytg={s.ytg}
+      />
+      {decidedEarlier && (
+        <Text size="sm" c="dimmed" mt={6}>
+          The clock was running, so the call is judged from the end of the play before, at {formatClock(s.clock)}. They
+          snapped at {formatClock(d.snapClock)}.
+        </Text>
+      )}
 
-      <Text size="sm" c="dimmed" mt="xs">
-        {d.nflverseWp !== null && <>nflverse's win probability before the play: {pct(d.nflverseWp)}. </>}
-        {d.nflverseWpa !== null && (
-          <>How it turned out: {Math.abs(d.nflverseWpa) < 0.005 ? "about even" : `${d.nflverseWpa > 0 ? "+" : "−"}${points(Math.abs(d.nflverseWpa))}`}.</>
+      <dl className="call-sheet">
+        <dt>Their call</dt>
+        <dd><span className="call-name">{PLAY_CALLS[d.call]}</span>: {pct(d.wpCall)} to win</dd>
+
+        <dt>Best call</dt>
+        <dd>
+          {sameCall ? "Theirs, or one as good" : <><span className="call-name">{PLAY_CALLS[d.best]}</span>: {pct(d.wpBest)} to win</>}
+          {kind === "worst" && !sameCall && <> · <strong>{points(d.cost)} better</strong></>}
+        </dd>
+
+        {!sameCall && (
+          <>
+            <dt>Why</dt>
+            <dd>
+              <ul className="why">
+                <li><ReasonText reason={d.reason} /></li>
+                {d.against !== null && <li><ReasonText reason={d.against} /></li>}
+              </ul>
+            </dd>
+          </>
         )}
-      </Text>
+
+        <dt>Result</dt>
+        <dd>
+          <Text className="play-desc">“{d.description}”</Text>
+          {(d.nflverseWp !== null || d.nflverseWpa !== null) && (
+            <Text size="sm" c="dimmed" mt={4}>
+              {d.nflverseWp !== null && <>nflverse's win probability before the play: {pct(d.nflverseWp)}. </>}
+              {d.nflverseWpa !== null && (
+                <>The play: {Math.abs(d.nflverseWpa) < 0.005 ? "about even" : `${d.nflverseWpa > 0 ? "+" : "−"}${points(Math.abs(d.nflverseWpa))}`}.</>
+              )}
+            </Text>
+          )}
+        </dd>
+      </dl>
+
       <AnchorLink
-        to="/best-call" mt="xs" size="sm"
+        to="/best-call" mt="sm" size="sm"
         search={{
           clock: formatClock(s.clock), running: s.running, margin: Math.max(-16, Math.min(16, s.margin)),
           timeouts: s.timeouts, oppTimeouts: s.oppTimeouts, down: s.down, toGo: Math.min(99, s.toGo), ...spotFrom(s.ytg),

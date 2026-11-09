@@ -4,6 +4,7 @@
 // field strip to place the ball.
 
 import { useRef, type PointerEvent, type ReactNode } from "react";
+import { Box } from "@mantine/core";
 import type { Down, Side } from "@situational-football/schemas";
 import { DOWNS } from "./engine";
 import { spotFrom, type Option } from "./fields";
@@ -154,7 +155,13 @@ const YARD_LINES = Array.from({ length: 19 }, (_, i) => (i + 1) * 5);
  * A mini gridiron: your end zone on the left, theirs on the right, the ball and the yellow line to gain.
  * Click or drag on the turf to place the ball (the ball-spot picker in the bar does the same from the keyboard).
  */
-function FieldStrip({ marks, onBall }: { marks: FieldMarks; onBall: (yardsFromOwnGoal: number) => void }) {
+function FieldStrip({ marks, onBall, ends = ["You", "Them"] }: {
+  marks: FieldMarks;
+  /** Click or drag to place the ball; omit for a strip that only shows the spot. */
+  onBall?: (yardsFromOwnGoal: number) => void;
+  /** End-zone labels: the offense's own end zone, then the one it attacks. */
+  ends?: readonly [string, string];
+}) {
   const turf = useRef<HTMLDivElement>(null);
   const ball = stripPercent(marks.ball);
   const target = stripPercent(marks.lineToGain);
@@ -165,15 +172,16 @@ function FieldStrip({ marks, onBall }: { marks: FieldMarks; onBall: (yardsFromOw
     const box = turf.current?.getBoundingClientRect();
     if (box === undefined || box.width === 0) return;
     const yards = spotAt((e.clientX - box.left) / box.width);
-    if (yards !== marks.ball) onBall(yards);
+    if (yards !== marks.ball) onBall?.(yards);
   };
   return (
     <div className="sb-field" role="img" aria-label={label}>
-      <div className="sbf-ez own"><span>You</span></div>
+      <div className="sbf-ez own"><span>{ends[0]}</span></div>
       <div
-        ref={turf} className="sbf-turf" title="Click or drag to place the ball"
-        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); place(e); }}
-        onPointerMove={(e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) place(e); }}
+        ref={turf} className={onBall === undefined ? "sbf-turf" : "sbf-turf editable"}
+        title={onBall === undefined ? undefined : "Click or drag to place the ball"}
+        onPointerDown={onBall === undefined ? undefined : (e) => { e.currentTarget.setPointerCapture(e.pointerId); place(e); }}
+        onPointerMove={onBall === undefined ? undefined : (e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) place(e); }}
       >
         {YARD_LINES.map((y) => (
           <span key={y} className={y % 10 === 0 ? "sbf-tick ten" : "sbf-tick"} style={{ left: `${y}%` }}>
@@ -181,7 +189,7 @@ function FieldStrip({ marks, onBall }: { marks: FieldMarks; onBall: (yardsFromOw
           </span>
         ))}
       </div>
-      <div className="sbf-ez opp"><span>Them</span></div>
+      <div className="sbf-ez opp"><span>{ends[1]}</span></div>
       <div className="sbf-drive" style={{ left: `${ball}%`, width: `${target - ball}%` }} />
       <div className="sbf-ltg" style={{ left: `${target}%` }} />
       <div className="sbf-los" style={{ left: `${ball}%` }}>
@@ -283,5 +291,81 @@ function BallCell({ ball, marks, set, placeBall }: {
         {spotName(marks.ball)}
       </BugSelect>
     </>
+  );
+}
+
+/** Timeout bars that only show the count. */
+function TimeoutsShown({ left, team }: { left: number; team: string }) {
+  return (
+    <span className="sb-timeouts" role="img" aria-label={`${team}: ${left} timeout${left === 1 ? "" : "s"} left`}>
+      {[1, 2, 3].map((n) => <span key={n} className={n <= left ? "sb-to on" : "sb-to"} />)}
+    </span>
+  );
+}
+
+export interface GameBugTeam {
+  /** Abbreviation, as in the data, e.g. "KC". */
+  abbr: string;
+  name: string;
+  /** Points, or null when the data doesn't have the score. */
+  points: number | null;
+  timeouts: number;
+  /** The plate's color and the text on it. */
+  plate: { background: string; color: string };
+}
+
+/**
+ * A real game's situation as a scorebug, to read rather than edit: both teams on their own colors with the
+ * actual score, the team with the ball first, then the clock and the ball's spot over the field strip.
+ */
+export function GameBug({ offense, defense, margin, clock, running, down, toGo, ytg }: {
+  offense: GameBugTeam;
+  defense: GameBugTeam;
+  /** The offense's points minus the defense's, shown when the actual score isn't known. */
+  margin: number;
+  clock: string;
+  running: boolean;
+  down: Down;
+  toGo: number;
+  /** Yards from the defense's goal line. */
+  ytg: number;
+}) {
+  const marks = fieldMarks("opp", ytg, toGo);
+  const plate = (t: GameBugTeam, ball: boolean) => (
+    <div className={`sb-team game ${ball ? "you" : "opp"}`} style={{ background: t.plate.background, color: t.plate.color }}>
+      <span className="sb-name">
+        <abbr title={t.name}>{t.abbr}</abbr>
+        {ball && <span className="sb-poss" role="img" aria-label="has the ball" title="Has the ball"><Football className="sb-poss-ball" /></span>}
+      </span>
+      <TimeoutsShown left={t.timeouts} team={t.name} />
+      {t.points !== null && <span className="sb-points" aria-label={`${t.name} ${t.points}`}>{t.points}</span>}
+    </div>
+  );
+  const fallback = offense.points === null || defense.points === null;
+  return (
+    <Box
+      component="section" className="scorebug game-bug" aria-label="Situation"
+      style={{
+        "--ez-own": offense.plate.background, "--ez-own-ink": offense.plate.color,
+        "--ez-opp": defense.plate.background, "--ez-opp-ink": defense.plate.color,
+      }}
+    >
+      <div className="sb-bar">
+        {plate(offense, true)}
+        {plate(defense, false)}
+        <div className="sb-clock">
+          <span className="sb-qtr">4th</span>
+          <span className="sb-clock-stack">
+            <span className="sb-big sb-time"><span className={running ? "sb-dot running" : "sb-dot"} aria-hidden />{clock}</span>
+            <span className="sb-cap">{running ? "Clock running" : "Clock stopped"}</span>
+          </span>
+        </div>
+        <div className="sb-down">
+          <span className="sb-big">{ORDINALS[down - 1]} &amp; {marks.goal ? "Goal" : Math.min(toGo, ytg)}</span>
+          <span className="sb-cap sb-spot">{fallback ? `${spotName(marks.ball)} · ${offense.abbr} ${margin > 0 ? `up ${margin}` : margin < 0 ? `down ${-margin}` : "tied"}` : spotName(marks.ball)}</span>
+        </div>
+      </div>
+      <FieldStrip marks={marks} ends={[offense.abbr, defense.abbr]} />
+    </Box>
   );
 }
