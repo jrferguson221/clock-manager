@@ -79,7 +79,7 @@ function Result({ result: r, threshold }: { result: RunOutResult; threshold: num
     <Card>
       <Stack gap="sm">
         {r.endsGame ? (
-          <Alert color="turf.8" variant="filled" title="Run it out">
+          <Alert color="green.8" variant="filled" title="Run it out">
             The game ends after {r.snaps} snap{r.snaps === 1 ? "" : "s"}.
           </Alert>
         ) : (

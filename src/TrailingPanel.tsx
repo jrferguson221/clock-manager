@@ -115,7 +115,7 @@ export default function TrailingPanel() {
                   </Text>
                   <Group component="dd" gap="xs" align="center">
                     <span className="stat-value">{n}</span>
-                    <Badge color={short > 0 ? "red" : "turf"} size="lg">{short > 0 ? `${short} short` : "enough time"}</Badge>
+                    <Badge color={short > 0 ? "red" : "green"} size="lg">{short > 0 ? `${short} short` : "enough time"}</Badge>
                   </Group>
                 </Card>
               );

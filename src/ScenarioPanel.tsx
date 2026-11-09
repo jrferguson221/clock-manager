@@ -111,10 +111,10 @@ function Results({ analysis: a, pending, caveat }: { analysis: ScenarioAnalysis;
           <Card key={o.id} aria-label={`${o.label}: ${pct(o.wp)} win probability`}>
             <Group justify="space-between" align="baseline">
               <Text fw={700} className="option-label">{o.label}</Text>
-              {a.better === i && <Badge color="turf">Better</Badge>}
+              {a.better === i && <Badge color="green">Better</Badge>}
             </Group>
             <Text className="meter-num tabular" mt={4}>{pct(o.wp)}</Text>
-            <Progress value={o.wp * 100} mt={6} aria-hidden className="meter-track" color={a.better === i ? "turf" : "gray"} />
+            <Progress value={o.wp * 100} mt={6} aria-hidden className="meter-track" color={a.better === i ? "green" : "gray"} />
             <Text size="sm" c="dimmed" mt="sm">Win probability. After the play: {o.after}</Text>
           </Card>
         ))}

@@ -1,4 +1,4 @@
-// The page frame: the turf header with the mode tabs and the color-scheme toggle, and the active mode below.
+// The page frame: the call-sheet header (an X-and-O mark, the title, the binder-tab modes) and the color-scheme toggle, and the active mode below.
 
 import {
   ActionIcon, Anchor, Box, Container, Group, Stack, Tabs, Text, Title, useComputedColorScheme, useMantineColorScheme,
@@ -39,10 +39,13 @@ export default function Layout() {
       <header className="field-header">
         <Container size="xl" px={{ base: "sm", sm: "lg" }}>
           <Group justify="space-between" align="center" wrap="nowrap" pt={{ base: "md", sm: "lg" }} pb="sm">
-            <Box>
-              <Title order={1} className="brand">Situational Football</Title>
-              <Text className="tagline">Late-game strategy for American football</Text>
-            </Box>
+            <Group gap="sm" wrap="nowrap" align="center">
+              <PlayMark />
+              <Box>
+                <Title order={1} className="brand">Situational Football</Title>
+                <Text className="tagline">Late-game strategy for American football</Text>
+              </Box>
+            </Group>
             <ColorSchemeToggle />
           </Group>
           <Tabs.List aria-label="Mode">
@@ -86,6 +89,18 @@ function ColorSchemeToggle() {
     >
       {computed === "dark" ? <SunIcon /> : <MoonIcon />}
     </ActionIcon>
+  );
+}
+
+/** The brand mark: an O, its dashed route, and the X it beats, as drawn on a whiteboard. */
+function PlayMark() {
+  return (
+    <svg className="play-mark" viewBox="0 0 48 48" aria-hidden focusable="false">
+      <circle cx="12" cy="34" r="7" fill="none" stroke="currentColor" strokeWidth="3" />
+      <path d="M18 28 C24 20 28 16 36 13" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="4 4" strokeLinecap="round" />
+      <path d="M31 9l6 4-5 5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M33 30l9 9M42 30l-9 9" stroke="var(--mantine-color-red-4)" strokeWidth="3.5" strokeLinecap="round" />
+    </svg>
   );
 }
 

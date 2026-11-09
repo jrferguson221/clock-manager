@@ -1,55 +1,90 @@
-/* What the Sideline theme (src/theme.ts) can't express through Mantine props: the turf header, the page
-   behind the cards, and a few scoreboard-style type treatments. Processed by postcss-preset-mantine. */
+/* What the Coach's playbook theme (src/theme.ts) can't express through Mantine props: the gridded whiteboard
+   behind everything, the call-sheet header and binder-tab modes, box labels, marker and highlighter
+   treatments, and the broadcast scorebug. Processed by postcss-preset-mantine. */
+
+/* ---------- The board ---------- */
 
 body {
-  /* Chalk by day, a darker navy than the cards under the lights. */
-  background: light-dark(#f4f3ee, var(--mantine-color-dark-9));
+  /* A whiteboard's printed grid by day, a slate chalkboard's at night. */
+  background-color: var(--board);
+  background-image:
+    linear-gradient(var(--sheet-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sheet-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+  /* Every number on a call sheet lines up. */
+  font-variant-numeric: tabular-nums;
+}
+
+::selection { background: #ffe74d; color: #1a2030; }
+
+/* Focus: marker blue on the sheet, highlighter yellow at night and on the ink header. */
+:root { --focus: var(--mantine-color-blue-7); }
+[data-mantine-color-scheme="dark"] { --focus: var(--mantine-color-yellow-4); }
+[data-mantine-color-scheme] .mantine-focus-auto:focus-visible,
+[data-mantine-color-scheme] a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .tabular { font-variant-numeric: tabular-nums; }
 
-/* ---------- Header: a strip of turf with yard lines ---------- */
+/* No one-word last lines in running text. */
+p, li { text-wrap: pretty; }
+
+/* ---------- Header: the top of the call sheet ---------- */
 
 .field-header {
   color: #fff;
-  background-color: var(--mantine-color-turf-8);
-  background-image:
-    repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), rgba(255, 255, 255, 0.16) calc(10% - 2px) 10%),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.07) 0 5%, transparent 5% 10%);
-  border-bottom: 4px solid var(--mantine-color-pylon-6);
+  background-color: #1a2030;
 
   @mixin dark {
-    background-color: var(--mantine-color-turf-9);
+    background-color: #0d1115;
+  }
+}
+
+.play-mark {
+  width: rem(46px);
+  height: rem(46px);
+  flex: none;
+  color: #fff;
+
+  @mixin smaller-than $mantine-breakpoint-sm {
+    width: rem(36px);
+    height: rem(36px);
   }
 }
 
 .brand {
   color: #fff;
-  font-size: rem(40px);
-  letter-spacing: 0.04em;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  font-size: rem(38px);
+  letter-spacing: 0.05em;
 
   @mixin smaller-than $mantine-breakpoint-sm {
-    font-size: rem(30px);
+    font-size: rem(27px);
   }
 }
 
 .tagline {
-  color: rgba(255, 255, 255, 0.85);
+  color: #c9ced8;
   font-size: var(--mantine-font-size-sm);
+  letter-spacing: 0.01em;
 }
 
 .scheme-toggle {
   color: #fff;
   flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
 
-  &:hover { background: rgba(255, 255, 255, 0.15); }
+  &:hover { background: rgba(255, 255, 255, 0.1); }
+  &:focus-visible { outline: 2px solid var(--mantine-color-yellow-4); outline-offset: 2px; }
 }
 
+/* The modes are a binder's index tabs: the open one is the page it sits on. */
 .mode-tabs {
   display: flex;
   gap: rem(4px);
-  /* One row: on narrow screens the tabs scroll sideways instead of wrapping onto a second line. */
+  margin-top: rem(4px);
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
@@ -58,28 +93,98 @@ body {
 
 .mode-tab {
   flex: 0 1 auto;
-  padding: rem(10px) rem(16px);
-  color: rgba(255, 255, 255, 0.82);
+  padding: rem(9px) rem(16px) rem(10px);
+  color: #d5d9e1;
   font-size: var(--mantine-font-size-md);
-  border-radius: var(--mantine-radius-sm) var(--mantine-radius-sm) 0 0;
-  background: transparent;
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  background: rgba(255, 255, 255, 0.07);
 
-  &:hover { color: #fff; background: rgba(0, 0, 0, 0.15); }
+  &:hover { color: #fff; background: rgba(255, 255, 255, 0.14); }
 
+  /* The open tab's name is run over with the highlighter. */
   &[data-active] {
     color: var(--mantine-color-text);
-    background: light-dark(#f4f3ee, var(--mantine-color-dark-9));
+    background: var(--board);
+  }
+  &[data-active] .mantine-Tabs-tabLabel {
+    padding: 0 0.12em;
+    margin: 0 -0.12em;
+    background: linear-gradient(180deg, transparent 58%, var(--highlight) 58%, var(--highlight) 96%, transparent 96%);
+
+    @mixin dark {
+      background: linear-gradient(180deg, transparent 90%, var(--highlight) 90%);
+    }
   }
 
   &:focus-visible {
-    outline: 3px solid var(--mantine-color-pylon-4);
-    outline-offset: -3px;
+    outline: 2px solid var(--mantine-color-yellow-4);
+    outline-offset: -2px;
   }
 
   @mixin smaller-than $mantine-breakpoint-sm {
     flex: 0 0 auto;
-    padding: rem(10px) rem(12px);
+    padding: rem(9px) rem(12px) rem(10px);
   }
+}
+
+/* ---------- Sheets ---------- */
+
+/* Every sheet is boxed; its first label is the box's title bar, in ink, like a call sheet. */
+.mantine-Card-root > .eyebrow:first-child {
+  margin: calc(var(--card-padding) * -1) calc(var(--card-padding) * -1) var(--mantine-spacing-sm);
+  padding: rem(5px) var(--card-padding) rem(4px);
+  color: #fffffc;
+  background: var(--sheet-ink);
+  letter-spacing: 0.12em;
+
+  @mixin dark {
+    color: var(--mantine-color-dark-0);
+    background: var(--mantine-color-dark-5);
+  }
+}
+
+/* Labels further down a sheet are ruled off instead. */
+.mantine-Card-root > .eyebrow:not(:first-child) {
+  padding-bottom: rem(3px);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+/* Field labels read like the blanks on a call sheet. */
+.mantine-InputWrapper-label {
+  font-family: var(--mantine-font-family-headings);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: rem(4px);
+}
+
+.mantine-Input-input {
+  border-color: light-dark(#8f8c82, var(--mantine-color-dark-3));
+}
+
+/* Ruled tables: an ink rule under the head row. */
+.mantine-Table-thead .mantine-Table-th {
+  font-family: var(--mantine-font-family-headings);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--sheet-rule);
+}
+.mantine-Table-table {
+  --table-striped-color: light-dark(rgba(26, 32, 48, 0.035), rgba(230, 234, 237, 0.04));
+  --table-highlight-on-hover-color: light-dark(var(--mantine-color-blue-0), rgba(84, 128, 220, 0.12));
+}
+
+/* Outline alerts are sheets too, outlined in marker. */
+.mantine-Alert-root[data-variant="outline"] {
+  background: var(--mantine-color-body);
+  border-width: 2px;
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.mantine-Accordion-root[data-variant="contained"] .mantine-Accordion-item {
+  background: var(--mantine-color-body);
 }
 
 /* ---------- Layout ---------- */
@@ -109,7 +214,7 @@ body {
   font-family: var(--mantine-font-family-headings);
   font-size: var(--mantine-font-size-sm);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mantine-color-dimmed);
 }
@@ -122,30 +227,78 @@ body {
   margin: rem(2px) 0 rem(6px);
 }
 
-.verdict.big { font-size: rem(36px); text-transform: uppercase; letter-spacing: 0.02em; }
+.verdict.big { font-size: rem(38px); line-height: 1.1; text-transform: uppercase; letter-spacing: 0.03em; }
 
-/* Cards that carry a verdict get a colored edge, like a flag on the sideline. */
-.accent-card { border-left: 5px solid var(--mantine-color-pylon-6); }
-.accent-card.best { border-left-color: var(--mantine-color-turf-6); }
+/* The answer gets a highlighter stroke, the way a coach marks the call to make: a fat underline pulled up
+   behind the lower half of the letters, line by line. At night the stroke drops below the letters so
+   chalk-white text never sits on yellow. */
+.verdict.big {
+  text-decoration-line: underline;
+  text-decoration-color: var(--highlight);
+  text-decoration-thickness: 0.42em;
+  text-underline-offset: -0.34em;
+  text-decoration-skip-ink: none;
+
+  @mixin dark {
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.1em;
+  }
+}
+
+/* A sheet that carries the call is outlined in marker and titled in it: blue for a call, green for the best one. */
+.mantine-Card-root.accent-card {
+  border: 2px solid var(--mantine-color-blue-7);
+
+  & > .eyebrow:first-child {
+    margin-inline: calc(var(--card-padding) * -1 - 1px);
+    margin-top: calc(var(--card-padding) * -1 - 1px);
+    background: var(--mantine-color-blue-7);
+    color: #fff;
+  }
+}
+.mantine-Card-root.accent-card.best {
+  border-color: var(--mantine-color-green-7);
+  & > .eyebrow:first-child { background: var(--mantine-color-green-7); }
+}
 
 .meter-num {
   font-family: var(--mantine-font-family-headings);
-  font-size: rem(52px);
+  font-size: rem(56px);
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-.meter-track { background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5)); }
+/* Progress tracks are scales: a tick every 10%, like the yard lines on a play diagram. */
+.meter-track,
+.call-values .mantine-Progress-root {
+  background-color: light-dark(#e4e2da, var(--mantine-color-dark-5));
+  background-image: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), light-dark(rgba(26, 32, 48, 0.22), rgba(230, 234, 237, 0.2)) calc(10% - 1px) 10%);
+}
 
+/* Call buttons are the cells of the call sheet. A call you can't make is crossed off. */
 .call-button {
   height: auto;
   min-height: rem(48px);
   padding-block: rem(8px);
   white-space: normal;
   line-height: 1.15;
+  border-color: light-dark(#8f8c82, var(--mantine-color-dark-3));
 
-  &:not(:disabled):hover { border-color: var(--mantine-color-pylon-6); }
+  &:not(:disabled):hover {
+    border-color: var(--mantine-color-blue-7);
+    background: light-dark(var(--mantine-color-blue-0), rgba(84, 128, 220, 0.14));
+    @mixin dark { border-color: var(--mantine-color-blue-3); }
+  }
+
+  &:disabled {
+    background-color: transparent;
+    background-image: repeating-linear-gradient(135deg, transparent 0 6px, light-dark(rgba(26, 32, 48, 0.07), rgba(230, 234, 237, 0.06)) 6px 7px);
+    border-style: dashed;
+    color: var(--mantine-color-dimmed);
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+  }
 
   & .mantine-Button-label { white-space: normal; }
 }
@@ -157,7 +310,7 @@ body {
 .stat dd { margin: 0; }
 .stat-value {
   font-family: var(--mantine-font-family-headings);
-  font-size: rem(36px);
+  font-size: rem(38px);
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -175,7 +328,8 @@ body {
   /* Badges clip their text when squeezed; the bar column should give way instead. */
   & .call-name .mantine-Badge-root { min-width: max-content; vertical-align: 1px; }
   & .bar-cell { width: 100%; }
-  & .num { text-align: right; padding-left: rem(10px); font-variant-numeric: tabular-nums; }
+  & .num { text-align: right; padding-left: rem(10px); font-variant-numeric: tabular-nums; font-weight: 600; }
+  & tr + tr > * { border-top: 1px dashed light-dark(rgba(26, 32, 48, 0.14), rgba(230, 234, 237, 0.12)); }
 
   @mixin smaller-than $mantine-breakpoint-xs {
     & .call-name { white-space: normal; }
@@ -189,25 +343,69 @@ body {
   & .drive-head { padding-left: 0; margin-top: rem(6px); font-weight: 600; }
 }
 
-/* Strategy guide */
-.guide-title { font-size: rem(40px); text-transform: uppercase; letter-spacing: 0.01em; }
-.guide-section { scroll-margin-top: rem(16px); }
-.guide-section h3 { text-transform: uppercase; letter-spacing: 0.02em; }
+/* ---------- Strategy guide: the playbook ---------- */
+/* Sections are numbered in reading order, in the contents and on each heading, so the two cross-reference. */
+
+.guide-title { font-size: rem(40px); text-transform: uppercase; letter-spacing: 0.02em; }
+.guide { counter-reset: guide-section; }
+/* Barlow is narrow: 58ch of its zeros is about 78 characters of prose. */
+.guide > div > p { max-width: 54ch; }
+.guide-section { scroll-margin-top: rem(16px); counter-increment: guide-section; }
+.guide-section > .mantine-Stack-root > p.mantine-Text-root:not(.guide-caption),
+.guide-section > .mantine-Stack-root > .mantine-List-root { max-width: 58ch; }
+.guide-section > h3 {
+  display: flex;
+  align-items: baseline;
+  gap: rem(10px);
+  padding-bottom: rem(6px);
+  border-bottom: 2px solid var(--sheet-rule);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &::before {
+    content: counter(guide-section, decimal-leading-zero);
+    flex: none;
+    color: var(--mantine-color-blue-text);
+    font-variant-numeric: tabular-nums;
+  }
+}
+/* The guide's tables are printed on the sheet, not drawn on the board. */
+.guide .mantine-Table-table { background: var(--mantine-color-body); }
 .guide-caption { font-weight: 600; font-size: var(--mantine-font-size-sm); color: var(--mantine-color-dimmed); margin-bottom: rem(6px); }
 .read-more { font-size: 0.9em; white-space: nowrap; }
 @media (min-width: $mantine-breakpoint-md) {
   .guide-toc { position: sticky; top: rem(16px); }
 }
 
-/* Decisions of the week */
-.play-desc {
-  font-style: italic;
-  padding-left: rem(10px);
-  border-left: 3px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+nav[aria-label="Guide sections"] .mantine-List-root { counter-reset: toc; }
+nav[aria-label="Guide sections"] .mantine-List-item {
+  counter-increment: toc;
+  display: flex;
+  align-items: baseline;
+  gap: rem(8px);
+
+  &::before {
+    content: counter(toc, decimal-leading-zero);
+    flex: none;
+    width: 2ch;
+    color: var(--mantine-color-dimmed);
+    font-family: var(--mantine-font-family-headings);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-/* Team colors (Decisions of the week). Each element carries its team's light- and dark-scheme colors as
-   custom properties, already checked for contrast; these rules pick the pair for the current scheme. */
+/* ---------- Decisions of the week ---------- */
+
+.play-desc {
+  font-style: italic;
+  padding: rem(6px) rem(10px);
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(rgba(26, 32, 48, 0.045), rgba(230, 234, 237, 0.05));
+}
+
+/* Team colors. Each element carries its team's light- and dark-scheme colors as custom properties, already
+   checked for contrast; these rules pick the pair for the current scheme. */
 .team-colors {
   --team-accent: var(--team-accent-light);
   --team-on-accent: var(--team-on-accent-light);
@@ -216,8 +414,15 @@ body {
   --team-accent: var(--team-accent-dark);
   --team-on-accent: var(--team-on-accent-dark);
 }
-.team-card { border-left: 5px solid var(--team-accent); }
-.team-card.costly { border-left-width: 8px; }
+/* The offense's color runs across the top of its sheet like a strip of colored tape; the costliest get a wider one. */
+.mantine-Card-root.team-card {
+  padding-top: calc(var(--card-padding) + rem(4px));
+  box-shadow: inset 0 rem(4px) 0 var(--team-accent), var(--mantine-shadow-xs);
+}
+.mantine-Card-root.team-card.costly {
+  padding-top: calc(var(--card-padding) + rem(7px));
+  box-shadow: inset 0 rem(7px) 0 var(--team-accent), var(--mantine-shadow-xs);
+}
 .team-chip {
   display: inline-block;
   min-width: 2.6em;
@@ -235,22 +440,25 @@ body {
 }
 
 /* ---------- Scorebug ---------- */
-/* A broadcast score bar over a slim field strip: always night-game navy, in both color schemes. */
+/* The TV on the sheet: a broadcast score bar over a slim field strip, always film-room slate in both
+   color schemes. Your plate is marker blue, theirs slate; the line to gain is the highlighter's yellow. */
 
 .scorebug {
-  --sb-ink: #0b0f17;
+  --sb-ink: #12171c;
   --sb-line: rgba(255, 255, 255, 0.1);
-  --sb-yellow: #ffd43b;
-  --sb-blue: #4dabf7;
-  border-radius: var(--mantine-radius-md);
+  --sb-yellow: #ffe12a;
+  --sb-blue: #7a9ae4;
+  border-radius: var(--mantine-radius-sm);
   overflow: hidden;
   font-family: var(--mantine-font-family-headings);
   color: #fff;
   background: var(--sb-ink);
-  box-shadow: 0 3px 6px rgba(9, 12, 20, 0.18), 0 12px 28px rgba(9, 12, 20, 0.22);
+  border: 1px solid #12171c;
+  box-shadow: 0 2px 4px rgba(26, 32, 48, 0.16), 0 10px 24px rgba(26, 32, 48, 0.18);
 
   @mixin dark {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 12px 28px rgba(0, 0, 0, 0.5);
+    border-color: #4b5864;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -260,8 +468,8 @@ body {
   grid-template-areas: "you margin them clock down";
   align-items: stretch;
   min-height: rem(66px);
-  background: linear-gradient(180deg, #2a3245 0%, #1a202c 52%, #121722 100%);
-  border-bottom: 1px solid #06080d;
+  background: linear-gradient(180deg, #2d3741 0%, #1a2128 55%, #141a1f 100%);
+  border-bottom: 1px solid #0a0d10;
 }
 
 .sb-big {
@@ -270,7 +478,7 @@ body {
 }
 .sb-cap {
   font-size: rem(11.5px); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #a9b1c2; white-space: nowrap; line-height: 1.1;
+  color: #b3bcc5; white-space: nowrap; line-height: 1.1;
 }
 
 /* Team blocks: a colored plate with the name and three timeout bars. */
@@ -282,18 +490,18 @@ body {
 }
 .sb-team.you {
   grid-area: you;
-  background: linear-gradient(180deg, #e0670f 0%, #c24a00 55%, #a13d00 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset -1px 0 0 rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #3d6dd6 0%, #2c5cc8 50%, #2049a8 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), inset -1px 0 0 rgba(0, 0, 0, 0.25);
 }
 .sb-team.opp {
   grid-area: them;
   align-items: flex-end;
-  background: linear-gradient(180deg, #4a5670 0%, #3a4459 55%, #2e3648 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 1px 0 0 rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #4b5864 0%, #3a4550 55%, #2d3741 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 1px 0 0 rgba(0, 0, 0, 0.25);
 }
 .sb-name {
   display: inline-flex; align-items: center; gap: rem(8px);
-  font-size: rem(24px); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1;
+  font-size: rem(24px); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
 .sb-poss { display: inline-flex; }
@@ -310,24 +518,23 @@ body {
   background: rgba(0, 0, 0, 0.32); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
   transition: transform 100ms ease;
 }
-.sb-to.on::before { background: linear-gradient(180deg, #fff6c2, var(--sb-yellow)); box-shadow: 0 0 4px rgba(255, 212, 59, 0.45); }
+.sb-to.on::before { background: linear-gradient(180deg, #fff6c2, var(--sb-yellow)); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
 .sb-to:hover::before { transform: scaleY(1.5); }
 .sb-to:focus-visible { outline: 2px solid var(--sb-yellow); outline-offset: 1px; border-radius: 2px; }
 
-/* The score sits between the teams on a tile tinted by who's ahead. */
+/* The score sits between the teams on a tile tinted by who's ahead (the words say it too: "Up 3", "Down 3"). */
 .sb-margin {
   grid-area: margin;
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: rem(5px);
   padding: rem(8px) rem(18px);
   min-width: rem(104px);
-  background: linear-gradient(180deg, #111621, #080b12);
-  box-shadow: inset 0 3px 0 #6b768c;
+  background: linear-gradient(180deg, #141a1f, #0b0e11);
 }
-.sb-margin.ahead { box-shadow: inset 0 3px 0 var(--mantine-color-turf-4); }
-.sb-margin.ahead .sb-big { color: #8fe0ad; }
-.sb-margin.behind { box-shadow: inset 0 3px 0 #ff6b6b; }
-.sb-margin.behind .sb-big { color: #ffa8a8; }
-.sb-margin .sb-cap { font-size: rem(10px); color: #8a93a6; }
+.sb-margin.ahead { background: linear-gradient(180deg, #123322, #0b1a12); }
+.sb-margin.ahead .sb-big { color: #97d3ae; }
+.sb-margin.behind { background: linear-gradient(180deg, #3a1517, #1c0b0c); }
+.sb-margin.behind .sb-big { color: #f2b0b1; }
+.sb-margin .sb-cap { font-size: rem(11px); color: #a1abb4; }
 
 /* Quarter chip and the clock. */
 .sb-clock {
@@ -340,16 +547,16 @@ body {
   font-size: rem(15px); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1;
   padding: rem(4px) rem(7px);
   border-radius: var(--mantine-radius-xs);
-  background: rgba(255, 255, 255, 0.1); color: #dde2ea;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1); color: #e6eaed;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 .sb-clock-stack { display: flex; flex-direction: column; gap: rem(5px); }
 .sb-time { display: inline-flex; align-items: center; gap: rem(8px); font-size: rem(32px); }
-.sb-clock .sb-cap { font-size: rem(10px); color: #8a93a6; }
+.sb-clock .sb-cap { font-size: rem(11px); color: #a1abb4; }
 
 /* A live clock gets a green dot; a stopped one a red square. */
-.sb-dot { width: rem(9px); height: rem(9px); background: #fa5252; border-radius: 1px; flex: none; }
-.sb-dot.running { background: #51cf66; border-radius: 50%; box-shadow: 0 0 6px rgba(81, 207, 102, 0.8); }
+.sb-dot { width: rem(9px); height: rem(9px); background: #e57577; border-radius: 1px; flex: none; }
+.sb-dot.running { background: #62bd86; border-radius: 50%; box-shadow: 0 0 0 2px rgba(98, 189, 134, 0.3); }
 
 /* Down and distance, in the same yellow as the line to gain below. */
 .sb-down {
@@ -357,10 +564,9 @@ body {
   display: flex; flex-direction: column; justify-content: center; align-items: center; gap: rem(5px);
   padding: rem(8px) rem(14px);
   border-left: 1px solid var(--sb-line);
-  background: linear-gradient(180deg, rgba(255, 212, 59, 0.07), rgba(255, 212, 59, 0));
 }
 .sb-down .sb-big { color: var(--sb-yellow); }
-.sb-spot { color: #dde2ea; }
+.sb-spot { color: #e6eaed; }
 
 /* ---------- Field strip: a mini gridiron under the bar ---------- */
 
@@ -372,17 +578,17 @@ body {
 }
 .sbf-ez {
   display: flex; align-items: center; justify-content: center; overflow: hidden;
-  font-size: rem(11px); font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.88);
+  font-size: rem(11px); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
 }
-.sbf-ez.own { background: linear-gradient(180deg, #b44a0a, #8c3600); border-right: 2px solid rgba(255, 255, 255, 0.85); }
-.sbf-ez.opp { background: linear-gradient(180deg, #3a4459, #262d3c); border-left: 2px solid rgba(255, 255, 255, 0.85); }
+.sbf-ez.own { background: #2049a8; border-right: 2px solid rgba(255, 255, 255, 0.85); }
+.sbf-ez.opp { background: #3a4550; border-left: 2px solid rgba(255, 255, 255, 0.85); }
 .sbf-turf {
   position: relative;
-  background-color: #1b7a40;
+  background-color: #1d6e43;
   background-image:
     repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.09) 0 5%, transparent 5% 10%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.16));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.14));
   box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 /* Ruler-style yard ticks along the bottom edge, numbers along the top, so the ball never covers them. */
@@ -397,15 +603,17 @@ body {
   transform: translateX(-50%);
   font-size: rem(11px); font-weight: 700; letter-spacing: 0.02em; line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
 }
 .sbf-num.mid { color: #fff; }
 
-/* The ground to gain is tinted; blue line of scrimmage with the ball on it; yellow line to gain. */
+/* The ground to gain is a dashed route; light-blue line of scrimmage with the ball on it; yellow line to gain. */
 .sbf-drive {
   position: absolute; top: 0; bottom: 0;
-  background: linear-gradient(180deg, rgba(255, 212, 59, 0.24), rgba(255, 212, 59, 0.1));
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.85) 50%, transparent 50%) left 62% / 8px 2px repeat-x,
+    linear-gradient(180deg, rgba(255, 225, 42, 0.2), rgba(255, 225, 42, 0.08));
   pointer-events: none;
 }
 .sbf-ltg, .sbf-los {
@@ -413,8 +621,8 @@ body {
   width: rem(3px);
   transform: translateX(-50%);
 }
-.sbf-ltg { background: var(--sb-yellow); box-shadow: 0 0 6px rgba(255, 212, 59, 0.75); }
-.sbf-los { background: var(--sb-blue); box-shadow: 0 0 6px rgba(77, 171, 247, 0.7); }
+.sbf-ltg { background: var(--sb-yellow); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25); }
+.sbf-los { background: var(--sb-blue); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25); }
 .sbf-ball {
   position: absolute; top: 66%; left: 50%;
   width: rem(22px); height: rem(13px);
@@ -423,8 +631,8 @@ body {
 }
 
 .sb-notes {
-  background: linear-gradient(180deg, #121722, #0b0f17);
-  color: #c4cad6;
+  background: #12171c;
+  color: #c6cdd3;
   font-family: var(--mantine-font-family-headings);
   font-size: rem(14px); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
   padding: rem(5px) rem(14px);
@@ -459,8 +667,8 @@ body {
   .sb-down { padding: rem(8px) rem(6px); }
   .sb-field { height: rem(34px); }
   .sbf-num { top: rem(-22px); }
-  .sbf-ez { font-size: rem(9px); letter-spacing: 0.08em; }
-  .sbf-num { font-size: rem(9.5px); padding: 0 1px; }
+  .sbf-ez { font-size: rem(11px); letter-spacing: 0.02em; }
+  .sbf-num { font-size: rem(11px); letter-spacing: 0; padding: 0 1px; }
   .sbf-ball { width: rem(18px); height: rem(11px); }
   .sb-notes { font-size: rem(12.5px); }
 }
@@ -480,7 +688,7 @@ body {
   opacity: 0; cursor: pointer;
   font-size: 16px; /* at least 16px, so a phone doesn't zoom in on focus */
 }
-.sb-pick-face { border-bottom: 1px dashed rgba(255, 255, 255, 0.28); }
+.sb-pick-face { border-bottom: 1px dashed rgba(255, 255, 255, 0.32); }
 .sb-pick:hover .sb-pick-face { border-bottom-color: currentColor; }
 .sb-pick:focus-within { outline: 2px solid var(--sb-yellow); outline-offset: 3px; }
 .sb-dd { display: inline-flex; align-items: baseline; gap: rem(7px); }
@@ -489,18 +697,18 @@ body {
 .sb-clock-input {
   width: 4.1ch; padding: 0; margin: 0;
   font: inherit; letter-spacing: inherit; color: inherit;
-  background: none; border: 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.28); border-radius: 0;
+  background: none; border: 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.32); border-radius: 0;
   font-variant-numeric: tabular-nums;
 }
 .sb-clock-input:hover { border-bottom-color: #fff; }
 .sb-clock-input:focus { outline: 2px solid var(--sb-yellow); outline-offset: 3px; border-radius: 2px; }
-.sb-clock-input.invalid { color: #ffa8a8; border-bottom: 2px solid #fa5252; }
+.sb-clock-input.invalid { color: #f2b0b1; border-bottom: 2px solid #e57577; }
 
 .sb-run-toggle {
   align-self: flex-start;
   padding: 0; border: 0; background: none; cursor: pointer;
   font-family: inherit;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.22);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.26);
 }
 .sb-run-toggle:hover { color: #fff; border-bottom-color: currentColor; }
 .sb-run-toggle:focus-visible { outline: 2px solid var(--sb-yellow); outline-offset: 2px; }
@@ -511,27 +719,28 @@ body {
 /* The strip under the field: the mode's settings, editable the same way, and a hint. */
 .sb-notes { display: flex; flex-wrap: wrap; align-items: center; gap: rem(4px) rem(18px); }
 .sb-setting { display: inline-flex; align-items: baseline; gap: rem(6px); }
-.sb-setting-label { color: #8a93a6; }
+.sb-setting-label { color: #a1abb4; }
 .sb-hint {
   margin-left: auto;
   font-family: var(--mantine-font-family); font-size: rem(12.5px); font-weight: 400;
-  letter-spacing: 0; text-transform: none; color: #8a93a6;
+  letter-spacing: 0; text-transform: none; color: #a1abb4;
 }
 
 /* Kick or go for 2: the better try's row is tinted green. */
-.try-table tr.is-best { background: light-dark(var(--mantine-color-turf-0), rgba(42, 169, 91, 0.12)); }
+.try-table tr.is-best { background: light-dark(var(--mantine-color-green-0), rgba(39, 156, 87, 0.14)); }
 
 /* ---------- The trainer's Leading / Trailing switch ---------- */
 
 .trainer-toggle {
   margin-bottom: var(--mantine-spacing-md);
-  padding: rem(5px);
+  padding: rem(4px);
   font-family: var(--mantine-font-family-headings);
-  box-shadow: inset 0 0 0 1px light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  background: var(--mantine-color-body);
+  box-shadow: inset 0 0 0 1px light-dark(#8f8c82, var(--mantine-color-dark-3));
 }
-.trainer-toggle .mantine-SegmentedControl-label { padding-block: rem(10px); font-size: rem(18px); letter-spacing: 0.04em; text-transform: uppercase; }
+.trainer-toggle .mantine-SegmentedControl-label { padding-block: rem(10px); font-size: rem(18px); letter-spacing: 0.05em; text-transform: uppercase; }
 .tt-side { font-weight: 700; }
-.tt-aim { font-weight: 500; opacity: 0.85; }
+.tt-aim { font-weight: 600; opacity: 0.85; }
 @media (max-width: $mantine-breakpoint-xs) { .tt-aim { display: none; } }
 
 /* ---------- The trainer's call table: collapsed on a phone ---------- */
@@ -544,7 +753,7 @@ body {
     font: inherit; font-size: var(--mantine-font-size-sm); font-weight: 600;
     color: var(--mantine-color-anchor);
   }
-  .calls-toggle:focus-visible { outline: 2px solid var(--mantine-color-pylon-6); outline-offset: 2px; border-radius: 2px; }
+  .calls-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
   .calls-toggle-chevron { width: 1ch; }
   .calls-detail:not(.open) { display: none; }
 }

@@ -57,6 +57,7 @@ TypeScript runs in strict mode plus `noUncheckedIndexedAccess`, `exactOptionalPr
 | Path | What it holds |
 | --- | --- |
 | `src/engine.ts` | Leading-team run-out simulation, and shared rule types. Pure functions. |
+| `DESIGN.md` | The visual direction, "Coach's playbook": palette, type, surfaces and signature details. |
 | `src/Scorebug.tsx` | The trainer's scorebug and field strip, edited in place. |
 | `src/TrainerToggle.tsx` | The trainer's Leading / Trailing switch. |
 | `src/TwoPointPanel.tsx` | The Kick or go for 2 tab. |

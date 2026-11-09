@@ -147,8 +147,8 @@ export function tempoNote(g: GameState, cfg: SimConfig): string {
     : `The clock is running. Plays use a hurry-up of ${cfg.hurryUp} seconds (${cfg.spikeLineup} for a spike), except when a field goal is enough and you're in range, when they drain the clock. A timeout stops it right now.`;
 }
 
-/** Red when the game's slipping away, orange while it's in the balance, green when it's in hand. */
-const meterColor = (wp: number) => (wp < 0.25 ? "red" : wp < 0.6 ? "pylon" : "turf");
+/** Red when the game's slipping away, blue while it's in the balance, green when it's in hand. */
+const meterColor = (wp: number) => (wp < 0.25 ? "red" : wp < 0.6 ? "blue" : "green");
 
 /** The win-probability meter, with the change on the last call when there was one. */
 export function WinMeter({ wp, prev, label = "Win probability" }: { wp: number; prev: number | null; label?: string }) {
@@ -162,7 +162,7 @@ export function WinMeter({ wp, prev, label = "Win probability" }: { wp: number; 
       <Group gap="sm" align="baseline" wrap="wrap">
         <span className="meter-num">{pct(wp)}</span>
         {delta != null && (
-          <Text size="sm" fw={600} c={points > 0 ? "turf" : points < 0 ? "red" : "dimmed"} className="tabular">
+          <Text size="sm" fw={600} c={points > 0 ? "green" : points < 0 ? "red" : "dimmed"} className="tabular">
             {points > 0 ? "▲" : points < 0 ? "▼" : "▬"} {points > 0 ? "+" : ""}{points} pts on the last call
           </Text>
         )}
@@ -172,7 +172,7 @@ export function WinMeter({ wp, prev, label = "Win probability" }: { wp: number; 
   );
 }
 
-const VERDICT_COLOR = { best: "turf", close: "gray", worse: "red" } as const;
+const VERDICT_COLOR = { best: "green", close: "gray", worse: "red" } as const;
 
 /**
  * What happened on the last call and how it rated. On a phone, the table of every call's win probability
@@ -214,13 +214,13 @@ export function CallTable({ values, chosen, caption, noGain = [] }: {
           <Table.Tr key={c}>
             <Table.Th scope="row" className="call-name">
               {PLAY_CALLS[c]}
-              {c === best && <Badge color="turf" ml={6} size="sm">best</Badge>}
-              {c === chosen && <Badge color="pylon" ml={6} size="sm">your call</Badge>}
+              {c === best && <Badge color="green" ml={6} size="sm">best</Badge>}
+              {c === chosen && <Badge color="blue" ml={6} size="sm">your call</Badge>}
               {noGain.includes(c) && <Badge color="gray" variant="light" ml={6} size="sm">no gain</Badge>}
             </Table.Th>
             <Table.Td className="bar-cell">
               <Progress
-                value={Math.round(v * 100)} size="md" color={c === best ? "turf" : "pylon"}
+                value={Math.round(v * 100)} size="md" color={c === best ? "green" : "blue"}
                 aria-hidden title={`${PLAY_CALLS[c]}: ${pct(v)}`}
               />
             </Table.Td>
@@ -258,7 +258,7 @@ function Recap({ entries, driveEndWp, result }: { entries: Entry[]; driveEndWp: 
   const title = <span className="eyebrow">Game recap</span>;
   if (points === 0) {
     return (
-      <Alert color="turf" variant="outline" title={title} className="recap">
+      <Alert color="green" variant="outline" title={title} className="recap">
         <Text className="verdict">{resultText(result)}</Text>
         <Text>No call swung your chances by even a point: the game was never in doubt on your drive.</Text>
       </Alert>
@@ -266,12 +266,12 @@ function Recap({ entries, driveEndWp, result }: { entries: Entry[]; driveEndWp: 
   }
 
   return (
-    <Alert color={points > 0 ? "turf" : "red"} variant="outline" title={title} className="recap">
+    <Alert color={points > 0 ? "green" : "red"} variant="outline" title={title} className="recap">
       <Stack gap={6}>
         <Text className="verdict">{resultText(result)}</Text>
         <Text>
           <strong>Biggest swing: call {swing.index + 1} of {entries.length}, {PLAY_CALLS[e.call]}</strong>{" "}
-          <Text span fw={600} c={points > 0 ? "turf" : "red"}>
+          <Text span fw={600} c={points > 0 ? "green" : "red"}>
             ({points > 0 ? "▲ +" : "▼ "}{points} pts, {pct(swing.before)} → {pct(swing.after)})
           </Text>
         </Text>

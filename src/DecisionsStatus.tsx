@@ -6,7 +6,7 @@ import type { ErrorComponentProps } from "@tanstack/react-router";
 export function DecisionsPending() {
   return (
     <Stack align="center" py="xl" gap="xs">
-      <Loader color="pylon" aria-label="Loading" />
+      <Loader color="blue" aria-label="Loading" />
       <Text c="dimmed">Loading the week's decisions…</Text>
     </Stack>
   );
