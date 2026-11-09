@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 3,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 203,
  "agreement": {
   "plays": 203,
-  "meanAbsDiff": 0.04571529603740946,
+  "meanAbsDiff": 0.04575798897665414,
   "within10": 0.896551724137931
  },
  "worst": [],
@@ -372,30 +372,30 @@
    "snapClock": 249,
    "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.403,
+   "wpCall": 0.4023333333333333,
    "best": "pass-middle",
-   "wpBest": 0.3983333333333333,
+   "wpBest": 0.39966666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.403
+     "wp": 0.4023333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.3983333333333333
+     "wp": 0.39966666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.39
+     "wp": 0.39166666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.38233333333333336
+     "wp": 0.38366666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37866666666666665
+     "wp": 0.37966666666666665
     },
     {
      "call": "run",
@@ -403,11 +403,7 @@
     },
     {
      "call": "spike",
-     "wp": 0.347
-    },
-    {
-     "call": "punt",
-     "wp": 0.306
+     "wp": 0.348
     }
    ],
    "reason": {

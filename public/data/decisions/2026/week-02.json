@@ -1,146 +1,16 @@
 {
  "season": 2026,
  "week": 2,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 125,
  "agreement": {
   "plays": 125,
-  "meanAbsDiff": 0.043274170485417054,
-  "within10": 0.864
+  "meanAbsDiff": 0.04230083715208372,
+  "within10": 0.872
  },
- "worst": [
-  {
-   "id": "2026_02_GB_NYJ-4373",
-   "gameId": "2026_02_GB_NYJ",
-   "offense": "GB",
-   "defense": "NYJ",
-   "home": "NYJ",
-   "away": "GB",
-   "date": "2026-09-20",
-   "situation": {
-    "clock": 65,
-    "running": false,
-    "down": 3,
-    "toGo": 10,
-    "ytg": 50,
-    "margin": 0,
-    "timeouts": 2,
-    "oppTimeouts": 2
-   },
-   "snapClock": 65,
-   "description": "(1:05) (Shotgun) 10-J.Love pass short right to 9-C.Watson to NYJ 45 for 5 yards (6-D.Belton).",
-   "call": "pass-sideline",
-   "wpCall": 0.6226666666666667,
-   "best": "punt",
-   "wpBest": 0.709,
-   "cost": 0.08633333333333326,
-   "values": [
-    {
-     "call": "punt",
-     "wp": 0.709
-    },
-    {
-     "call": "spike",
-     "wp": 0.709
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.6226666666666667
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.615
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.613
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5976666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.5933333333333334
-    },
-    {
-     "call": "run",
-     "wp": 0.5416666666666666
-    },
-    {
-     "call": "kneel",
-     "wp": 0.5
-    }
-   ],
-   "reason": {
-    "text": "Punting pins them deep. Failing on 4th down here would hand them a short field.",
-    "section": "fourth-down"
-   },
-   "against": null,
-   "aftermath": {
-    "story": [
-     "Green Bay turned it over on downs with 0:02 left.",
-     "The game went to overtime.",
-     "The Jets got the ball at the Jets 30 with 10:00 left in overtime and punted 56 yards to the Green Bay 34 with 7:41 left in overtime.",
-     "Green Bay got 3 first downs, reached the Jets 8, then kicked a 26-yard field goal with 5:26 left in overtime to lead 20–17.",
-     "Green Bay won 20–17 in overtime."
-    ],
-    "final": {
-     "home": 17,
-     "away": 20,
-     "overtime": true
-    }
-   },
-   "detail": {
-    "their": {
-     "wp": 0.6215,
-     "drive": [
-      {
-       "result": "Punt",
-       "share": 0.6005
-      },
-      {
-       "result": "Field goal",
-       "share": 0.242
-      },
-      {
-       "result": "Touchdown",
-       "share": 0.0605
-      },
-      {
-       "result": "Missed field goal",
-       "share": 0.0545
-      }
-     ],
-     "theyGetBall": 0.847,
-     "clockWhenTheyGetBall": 43.51623376623377,
-     "theyScore": 0.0595
-    },
-    "best": {
-     "wp": 0.70675,
-     "drive": [
-      {
-       "result": "Punt",
-       "share": 1
-      }
-     ],
-     "theyGetBall": 1,
-     "clockWhenTheyGetBall": 58,
-     "theyScore": 0
-    }
-   },
-   "playClockLeft": null,
-   "score": {
-    "offense": 17,
-    "defense": 17
-   },
-   "nflverseWp": 0.584033310413361,
-   "nflverseWpa": -0.0767622590065002,
-   "lowConfidence": false
-  }
- ],
+ "worst": [],
  "notable": [
   {
    "id": "2026_02_PHI_TEN-4066",
@@ -251,12 +121,12 @@
    "call": "run",
    "wpCall": 0.4633333333333333,
    "best": "pass-middle",
-   "wpBest": 0.47833333333333333,
-   "cost": 0.015000000000000013,
+   "wpBest": 0.4786666666666667,
+   "cost": 0.015333333333333365,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.47833333333333333
+     "wp": 0.4786666666666667
     },
     {
      "call": "pass-play-action",
@@ -264,7 +134,7 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.4653333333333333
+     "wp": 0.466
     },
     {
      "call": "pass-sideline",
@@ -276,15 +146,11 @@
     },
     {
      "call": "spike",
-     "wp": 0.45366666666666666
+     "wp": 0.454
     },
     {
      "call": "pass-deep",
      "wp": 0.445
-    },
-    {
-     "call": "punt",
-     "wp": 0.29
     }
    ],
    "reason": {
@@ -310,7 +176,7 @@
    },
    "detail": {
     "their": {
-     "wp": 0.46775,
+     "wp": 0.46825,
      "drive": [
       {
        "result": "Field goal",
@@ -331,10 +197,14 @@
      ],
      "theyGetBall": 0.837,
      "clockWhenTheyGetBall": 104.12762179742465,
-     "theyScore": 0.182
+     "theyScore": 0.182,
+     "keep": 0.9865,
+     "theirStart": 37.85470085470085,
+     "backAgain": 0.5245,
+     "clockBackAgain": 73.17434593793031
     },
     "best": {
-     "wp": 0.47175,
+     "wp": 0.472,
      "drive": [
       {
        "result": "Field goal",
@@ -355,7 +225,11 @@
      ],
      "theyGetBall": 0.836,
      "clockWhenTheyGetBall": 107.81446039340773,
-     "theyScore": 0.1865
+     "theyScore": 0.1865,
+     "keep": 0.974,
+     "theirStart": 38.20125786163522,
+     "backAgain": 0.532,
+     "clockBackAgain": 76.00715329991644
     }
    },
    "playClockLeft": null,
@@ -470,10 +344,10 @@
    "snapClock": 289,
    "description": "(4:49) 14-A.McNamara punts 51 yards to GB 18, Center-42-T.Hennessy. 23-S.Moore pushed ob at NYJ 19 for 63 yards (82-A.Smith).",
    "call": "punt",
-   "wpCall": 0.6003333333333334,
+   "wpCall": 0.601,
    "best": "pass-middle",
    "wpBest": 0.6523333333333333,
-   "cost": 0.051999999999999935,
+   "cost": 0.05133333333333334,
    "values": [
     {
      "call": "pass-middle",
@@ -481,7 +355,7 @@
     },
     {
      "call": "run",
-     "wp": 0.646
+     "wp": 0.6466666666666666
     },
     {
      "call": "pass-sideline",
@@ -493,7 +367,7 @@
     },
     {
      "call": "timeout",
-     "wp": 0.63
+     "wp": 0.6296666666666667
     },
     {
      "call": "pass-screen",
@@ -501,15 +375,15 @@
     },
     {
      "call": "punt",
-     "wp": 0.6003333333333334
+     "wp": 0.601
     },
     {
      "call": "pass-deep",
-     "wp": 0.592
+     "wp": 0.5916666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.493
+     "wp": 0.49266666666666664
     }
    ],
    "reason": {
@@ -539,7 +413,7 @@
    },
    "detail": {
     "their": {
-     "wp": 0.593,
+     "wp": 0.59325,
      "drive": [
       {
        "result": "Punt",
@@ -548,10 +422,14 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 282,
-     "theyScore": 0.5795
+     "theyScore": 0.5795,
+     "keep": 0,
+     "theirStart": 29,
+     "backAgain": 0.8275,
+     "clockBackAgain": 137.52910372608252
     },
     "best": {
-     "wp": 0.6585,
+     "wp": 0.65825,
      "drive": [
       {
        "result": "Turnover on downs",
@@ -572,7 +450,11 @@
      ],
      "theyGetBall": 0.914,
      "clockWhenTheyGetBall": 220.50328227571117,
-     "theyScore": 0.601
+     "theyScore": 0.601,
+     "keep": 0.5635,
+     "theirStart": 47.69090909090909,
+     "backAgain": 0.8175,
+     "clockBackAgain": 102.37274889568462
     }
    },
    "playClockLeft": null,
@@ -605,38 +487,38 @@
    "snapClock": 80,
    "description": "(1:20) (Shotgun) 0-B.Allen right guard to 50 for no gain (90-L.Van Ness).",
    "call": "run",
-   "wpCall": 0.6213333333333333,
+   "wpCall": 0.621,
    "best": "run",
-   "wpBest": 0.6213333333333333,
+   "wpBest": 0.621,
    "cost": 0,
    "values": [
     {
      "call": "run",
-     "wp": 0.6213333333333333
+     "wp": 0.621
     },
     {
      "call": "timeout",
-     "wp": 0.611
+     "wp": 0.6113333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.5746666666666667
-    },
-    {
-     "call": "punt",
-     "wp": 0.535
+     "wp": 0.574
     },
     {
      "call": "pass-middle",
-     "wp": 0.535
+     "wp": 0.5346666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0.5283333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5286666666666666
+     "wp": 0.5283333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5046666666666667
+     "wp": 0.504
     },
     {
      "call": "pass-deep",
@@ -644,7 +526,7 @@
     },
     {
      "call": "kneel",
-     "wp": 0.22066666666666668
+     "wp": 0.201
     }
    ],
    "reason": {

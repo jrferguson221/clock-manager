@@ -130,7 +130,8 @@ export function snapDelay(g: GameState, call: PlayCall, cfg: SimConfig = DEFAULT
 }
 
 function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig): number {
-  if (marginFor(g, g.poss) > 0) return BURN;
+  // A kneel is for running out the clock, so it always lets the play clock run, ahead or tied.
+  if (marginFor(g, g.poss) > 0 || call === "kneel") return BURN;
   if (call === "fg" || call === "punt") return cfg.fgRush;
   if (call === "spike") return cfg.spikeLineup;
   if (fgPlay(g)) return Math.min(BURN, Math.max(MIN_SNAP, fgDrainBurn(g, cfg)));
@@ -200,7 +201,8 @@ export function availableCalls(g: GameState): readonly PlayCall[] {
   // Kneeling gives up a down and time, which only helps a team that's ahead, or tied and settling for overtime.
   if (marginFor(g, g.poss) >= 0) calls.push("kneel");
   if (g.ytg <= FG_MAX_YTG) calls.push("fg");
-  if (g.ytg >= PUNT_MIN_YTG) calls.push("punt");
+  // Punts only on 4th down: teams don't quick-kick late in games.
+  if (g.ytg >= PUNT_MIN_YTG && g.down === 4) calls.push("punt");
   return calls;
 }
 

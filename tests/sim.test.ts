@@ -530,3 +530,19 @@ describe("a run the defense expects", () => {
     expect(avg(4, 200)).toBeLessThan(avg(4, 400) - 0.6);
   });
 });
+
+describe("kneels and punts", () => {
+  it("a tied team's kneel lets the play clock run, so two kneels from 0:57 end regulation", () => {
+    const tied: GameState = { ...base, clock: 57, running: false, margin: 0, ytg: 90, down: 1, toGo: 10, timeouts: { you: 0, opp: 2 } };
+    let s = step(tied, "kneel", seededRng(1)).state;
+    s = step(s, "kneel", seededRng(2)).state;
+    expect(s.over || s.clock <= 15).toBe(true);
+    expect(step(s, "kneel", seededRng(3)).state.over).toBe(true);
+  });
+
+  it("offers a punt only on 4th down", () => {
+    const at = { ...base, ytg: 60, running: false };
+    expect(availableCalls({ ...at, down: 3 })).not.toContain("punt");
+    expect(availableCalls({ ...at, down: 4 })).toContain("punt");
+  });
+});

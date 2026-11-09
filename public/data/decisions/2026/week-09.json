@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 9,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03828904733293892,
+  "meanAbsDiff": 0.03821428097779873,
   "within10": 0.9158878504672897
  },
  "worst": [
@@ -34,20 +34,20 @@
    "call": "punt",
    "wpCall": 0.201,
    "best": "pass-middle",
-   "wpBest": 0.271,
-   "cost": 0.07,
+   "wpBest": 0.2713333333333333,
+   "cost": 0.0703333333333333,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.271
+     "wp": 0.2713333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.2683333333333333
+     "wp": 0.26866666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.261
+     "wp": 0.2613333333333333
     },
     {
      "call": "run",
@@ -55,11 +55,11 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.24966666666666668
+     "wp": 0.25
     },
     {
      "call": "pass-deep",
-     "wp": 0.24166666666666667
+     "wp": 0.24233333333333335
     },
     {
      "call": "punt",
@@ -103,10 +103,14 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 256,
-     "theyScore": 0.0325
+     "theyScore": 0.0325,
+     "keep": 0,
+     "theirStart": 23,
+     "backAgain": 0.841,
+     "clockBackAgain": 164.67895362663495
     },
     "best": {
-     "wp": 0.259,
+     "wp": 0.2595,
      "drive": [
       {
        "result": "Turnover on downs",
@@ -123,7 +127,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 194.675,
-     "theyScore": 0.512
+     "theyScore": 0.512,
+     "keep": 0.523,
+     "theirStart": 50.65003326679973,
+     "backAgain": 0.7925,
+     "clockBackAgain": 133.23687346652645
     }
    },
    "playClockLeft": null,
@@ -280,10 +288,6 @@
     {
      "call": "spike",
      "wp": 0.273
-    },
-    {
-     "call": "punt",
-     "wp": 0
     }
    ],
    "reason": {
@@ -541,10 +545,6 @@
     {
      "call": "run",
      "wp": 0.09233333333333334
-    },
-    {
-     "call": "punt",
-     "wp": 0
     }
    ],
    "reason": {

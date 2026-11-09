@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
  "agreement": {
   "plays": 186,
-  "meanAbsDiff": 0.04949218621940811,
-  "within10": 0.8655913978494624
+  "meanAbsDiff": 0.04954892639228307,
+  "within10": 0.8709677419354839
  },
  "worst": [
   {
@@ -106,7 +106,11 @@
      ],
      "theyGetBall": 0.9905,
      "clockWhenTheyGetBall": 5.586572438162544,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 1,
+     "theirStart": 15.65491651205937,
+     "backAgain": 0,
+     "clockBackAgain": null
     },
     "best": {
      "wp": 0.166,
@@ -126,7 +130,11 @@
      ],
      "theyGetBall": 0.342,
      "clockWhenTheyGetBall": 3.93859649122807,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 0.657,
+     "theirStart": 20,
+     "backAgain": 0,
+     "clockBackAgain": null
     }
    },
    "playClockLeft": null,
@@ -232,7 +240,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 5,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 1,
+     "theirStart": 30,
+     "backAgain": 0,
+     "clockBackAgain": null
     },
     "best": {
      "wp": 0.48875,
@@ -256,7 +268,11 @@
      ],
      "theyGetBall": 0.8745,
      "clockWhenTheyGetBall": 2.9176672384219553,
-     "theyScore": 0.0005
+     "theyScore": 0.0005,
+     "keep": 0.7295,
+     "theirStart": 26.42570281124498,
+     "backAgain": 0,
+     "clockBackAgain": null
     }
    },
    "playClockLeft": null,
@@ -291,18 +307,18 @@
    "snapClock": 106,
    "description": "(1:46) (Shotgun) 10-J.Daniels pass short right intended for 2-E.Egbuka INTERCEPTED by 35-J.Dean at TB 43. 35-J.Dean pushed ob at TB 3 for 40 yards (10-J.Daniels).",
    "call": "pass-sideline",
-   "wpCall": 0.5966666666666667,
+   "wpCall": 0.5953333333333334,
    "best": "pass-middle",
-   "wpBest": 0.5966666666666667,
+   "wpBest": 0.5953333333333334,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.5966666666666667
+     "wp": 0.5953333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5946666666666667
+     "wp": 0.592
     },
     {
      "call": "pass-screen",
@@ -310,15 +326,15 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.5846666666666667
+     "wp": 0.5826666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.574
+     "wp": 0.5733333333333334
     },
     {
      "call": "run",
-     "wp": 0.563
+     "wp": 0.5623333333333334
     },
     {
      "call": "spike",
@@ -326,11 +342,7 @@
     },
     {
      "call": "kneel",
-     "wp": 0.495
-    },
-    {
-     "call": "punt",
-     "wp": 0.381
+     "wp": 0.49466666666666664
     }
    ],
    "reason": {
@@ -469,16 +481,16 @@
    "call": "pass-sideline",
    "wpCall": 0.3923333333333333,
    "best": "run",
-   "wpBest": 0.424,
-   "cost": 0.031666666666666676,
+   "wpBest": 0.4236666666666667,
+   "cost": 0.03133333333333338,
    "values": [
     {
      "call": "run",
-     "wp": 0.424
+     "wp": 0.4236666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.4116666666666667
+     "wp": 0.41133333333333333
     },
     {
      "call": "pass-screen",
@@ -502,11 +514,11 @@
     },
     {
      "call": "spike",
-     "wp": 0.264
+     "wp": 0.2693333333333333
     },
     {
      "call": "fg",
-     "wp": 0.257
+     "wp": 0.25966666666666666
     }
    ],
    "reason": {
@@ -550,10 +562,14 @@
      ],
      "theyGetBall": 0.588,
      "clockWhenTheyGetBall": 62.937594482237365,
-     "theyScore": 0.1195
+     "theyScore": 0.1195,
+     "keep": 0.9905,
+     "theirStart": 42.127604166666664,
+     "backAgain": 0.311,
+     "clockBackAgain": 39.90309038942479
     },
     "best": {
-     "wp": 0.4205,
+     "wp": 0.42,
      "drive": [
       {
        "result": "Field goal",
@@ -574,7 +590,11 @@
      ],
      "theyGetBall": 0.543,
      "clockWhenTheyGetBall": 52.878657663188065,
-     "theyScore": 0.069
+     "theyScore": 0.069,
+     "keep": 0.986,
+     "theirStart": 39.67914438502674,
+     "backAgain": 0.234,
+     "clockBackAgain": 33.380223171889845
     }
    },
    "playClockLeft": null,

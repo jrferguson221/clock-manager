@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 4,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 194,
  "agreement": {
   "plays": 194,
-  "meanAbsDiff": 0.04476987504759398,
+  "meanAbsDiff": 0.044819703226288136,
   "within10": 0.9175257731958762
  },
  "worst": [
@@ -102,7 +102,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 131,
-     "theyScore": 0.43
+     "theyScore": 0.43,
+     "keep": 0,
+     "theirStart": 41,
+     "backAgain": 0.909,
+     "clockBackAgain": 53.7746607994133
     },
     "best": {
      "wp": 0.809,
@@ -126,7 +130,11 @@
      ],
      "theyGetBall": 0.743,
      "clockWhenTheyGetBall": 101.7321668909825,
-     "theyScore": 0.338
+     "theyScore": 0.338,
+     "keep": 0.516,
+     "theirStart": 33.24437927663734,
+     "backAgain": 0.5095,
+     "clockBackAgain": 43.107567331806806
     }
    },
    "playClockLeft": null,
@@ -197,10 +205,6 @@
     {
      "call": "spike",
      "wp": 0.4543333333333333
-    },
-    {
-     "call": "punt",
-     "wp": 0.37733333333333335
     }
    ],
    "reason": {
@@ -373,10 +377,6 @@
     {
      "call": "spike",
      "wp": 0.30433333333333334
-    },
-    {
-     "call": "punt",
-     "wp": 0.10266666666666667
     }
    ],
    "reason": {

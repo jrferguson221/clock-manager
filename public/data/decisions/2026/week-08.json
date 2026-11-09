@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 8,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03937956635214133,
+  "meanAbsDiff": 0.03943252585369894,
   "within10": 0.9252336448598131
  },
  "worst": [
@@ -112,7 +112,11 @@
      ],
      "theyGetBall": 0.978,
      "clockWhenTheyGetBall": 18.66002044989775,
-     "theyScore": 0.0465
+     "theyScore": 0.0465,
+     "keep": 0.7595,
+     "theirStart": 8.992768595041323,
+     "backAgain": 0.1225,
+     "clockBackAgain": 7.118367346938776
     },
     "best": {
      "wp": 0.597,
@@ -132,7 +136,11 @@
      ],
      "theyGetBall": 0.955,
      "clockWhenTheyGetBall": 21.892146596858638,
-     "theyScore": 0.0665
+     "theyScore": 0.0665,
+     "keep": 0.557,
+     "theirStart": 11.321981424148607,
+     "backAgain": 0.1685,
+     "clockBackAgain": 7.810089020771513
     }
    },
    "playClockLeft": null,
@@ -230,7 +238,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 174,
-     "theyScore": 0.012
+     "theyScore": 0.012,
+     "keep": 0,
+     "theirStart": 27,
+     "backAgain": 0.7175,
+     "clockBackAgain": 124.03623693379791
     },
     "best": {
      "wp": 0.22075,
@@ -250,7 +262,11 @@
      ],
      "theyGetBall": 0.998,
      "clockWhenTheyGetBall": 130.6002004008016,
-     "theyScore": 0.452
+     "theyScore": 0.452,
+     "keep": 0.5265,
+     "theirStart": 53.5218253968254,
+     "backAgain": 0.628,
+     "clockBackAgain": 97.98358987968861
     }
    },
    "playClockLeft": null,
@@ -456,42 +472,38 @@
    "snapClock": 151,
    "description": "(2:31) (Shotgun) 10-B.Nix pass short right to 20-J.Coleman to KC 5 for 51 yards (20-N.Williams; 32-N.Bolton).",
    "call": "pass-sideline",
-   "wpCall": 0.4246666666666667,
+   "wpCall": 0.425,
    "best": "run",
-   "wpBest": 0.42933333333333334,
+   "wpBest": 0.42966666666666664,
    "cost": 0.004666666666666652,
    "values": [
     {
      "call": "run",
-     "wp": 0.42933333333333334
+     "wp": 0.42966666666666664
     },
     {
      "call": "pass-play-action",
-     "wp": 0.4246666666666667
+     "wp": 0.425
     },
     {
      "call": "pass-middle",
-     "wp": 0.42333333333333334
+     "wp": 0.4236666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.42133333333333334
+     "wp": 0.4216666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.42
+     "wp": 0.42033333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.403
+     "wp": 0.4033333333333333
     },
     {
      "call": "spike",
-     "wp": 0.3963333333333333
-    },
-    {
-     "call": "punt",
-     "wp": 0.18966666666666668
+     "wp": 0.39666666666666667
     }
    ],
    "reason": {
@@ -578,10 +590,6 @@
     {
      "call": "spike",
      "wp": 0.291
-    },
-    {
-     "call": "punt",
-     "wp": 0.07666666666666666
     }
    ],
    "reason": {

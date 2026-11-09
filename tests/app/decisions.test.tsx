@@ -86,3 +86,12 @@ it("has what happened after the call behind its own Read more, collapsed at firs
   if (story === undefined) throw new Error("week 8's top call should have a story");
   expect(html).not.toContain(story);
 });
+
+it("explains why in plain logic: what they need, what each call leads to, and what decides it", async () => {
+  const { html } = await renderAt("/decisions?week=8");
+  const text = html.replace(/<[^>]+>/g, "");
+  expect(text).toContain("Down 4 with 3:01 left, the Vikings need a touchdown.");
+  expect(text).toMatch(/Their call, a punt: The Lions take over around their own \d+/);
+  expect(text).toMatch(/The best call, going for it: the Vikings keep the ball \d+% of the time/);
+  expect(text).toMatch(/Either way the Vikings need a stop, so the field position a punt buys matters less than/);
+});

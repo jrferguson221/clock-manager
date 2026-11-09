@@ -36,6 +36,13 @@ export const callOutcomesSchema = z.object({
   clockWhenTheyGetBall: z.nullable(z.number().check(z.minimum(0))),
   /** Share of games in which they scored on that possession. */
   theyScore: probability,
+  /** Share of games in which the offense kept the ball after the call's play (a conversion, on 4th down). */
+  keep: probability,
+  /** Where they took over after a punt, miss or turnover, on average: yards from their own goal line (null if never). */
+  theirStart: z.nullable(z.number()),
+  /** Share of games in which the offense got the ball back after their possession, and the average clock then. */
+  backAgain: probability,
+  clockBackAgain: z.nullable(z.number().check(z.minimum(0))),
 });
 export type CallOutcomes = z.infer<typeof callOutcomesSchema>;
 

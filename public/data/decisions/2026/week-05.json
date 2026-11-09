@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 5,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 15,
  "evaluated": 139,
  "agreement": {
   "plays": 139,
-  "meanAbsDiff": 0.05604144636575552,
+  "meanAbsDiff": 0.056138741363581414,
   "within10": 0.8273381294964028
  },
  "worst": [
@@ -102,7 +102,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 99,
-     "theyScore": 0.5735
+     "theyScore": 0.5735,
+     "keep": 0,
+     "theirStart": 29,
+     "backAgain": 0.925,
+     "clockBackAgain": 34.64576576576576
     },
     "best": {
      "wp": 0.722,
@@ -118,7 +122,11 @@
      ],
      "theyGetBall": 0.3885,
      "clockWhenTheyGetBall": 97.56756756756756,
-     "theyScore": 0.3335
+     "theyScore": 0.3335,
+     "keep": 0.6315,
+     "theirStart": 66.96653796653797,
+     "backAgain": 0.26,
+     "clockBackAgain": 61.373557692307706
     }
    },
    "playClockLeft": null,
@@ -151,42 +159,42 @@
    "snapClock": 120,
    "description": "(2:00) 18-E.Pineiro 44 yard field goal is GOOD, Center-46-J.Weeks, Holder-15-C.Waitman.",
    "call": "fg",
-   "wpCall": 0.6116666666666667,
+   "wpCall": 0.6123333333333333,
    "best": "run",
-   "wpBest": 0.7,
-   "cost": 0.08833333333333326,
+   "wpBest": 0.6996666666666667,
+   "cost": 0.08733333333333337,
    "values": [
     {
      "call": "run",
-     "wp": 0.7
+     "wp": 0.6996666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.6553333333333333
+     "wp": 0.657
     },
     {
      "call": "pass-middle",
-     "wp": 0.641
+     "wp": 0.642
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6373333333333333
+     "wp": 0.6386666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6223333333333333
+     "wp": 0.623
     },
     {
      "call": "fg",
-     "wp": 0.6116666666666667
+     "wp": 0.6123333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.5183333333333333
+     "wp": 0.5206666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.4056666666666667
+     "wp": 0.408
     }
    ],
    "reason": {
@@ -209,7 +217,7 @@
    },
    "detail": {
     "their": {
-     "wp": 0.60425,
+     "wp": 0.605,
      "drive": [
       {
        "result": "Field goal",
@@ -222,7 +230,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 115,
-     "theyScore": 0.58
+     "theyScore": 0.58,
+     "keep": 0,
+     "theirStart": 32,
+     "backAgain": 0.824,
+     "clockBackAgain": 47.68345469255662
     },
     "best": {
      "wp": 0.697,
@@ -246,7 +258,11 @@
      ],
      "theyGetBall": 0.8715,
      "clockWhenTheyGetBall": 84.90919232485501,
-     "theyScore": 0.27
+     "theyScore": 0.27,
+     "keep": 0.6255,
+     "theirStart": 24.373626373626372,
+     "backAgain": 0.624,
+     "clockBackAgain": 43.059294871794854
     }
    },
    "playClockLeft": null,
@@ -366,14 +382,14 @@
    "snapClock": 206,
    "description": "(3:26) (Shotgun) 16-T.Lawrence pass deep right to 11-P.Washington for 27 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.29533333333333334,
+   "wpCall": 0.295,
    "best": "pass-middle",
-   "wpBest": 0.29533333333333334,
+   "wpBest": 0.295,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.29533333333333334
+     "wp": 0.295
     },
     {
      "call": "pass-play-action",
@@ -381,7 +397,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.2683333333333333
+     "wp": 0.268
     },
     {
      "call": "pass-deep",
@@ -705,7 +721,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 172.3125,
-     "theyScore": 0.5295
+     "theyScore": 0.5295,
+     "keep": 0.966,
+     "theirStart": 24.54193548387097,
+     "backAgain": 0.9115,
+     "clockBackAgain": 83.37270677149995
     },
     "best": {
      "wp": 0.5405,
@@ -725,7 +745,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 169.053,
-     "theyScore": 0.497
+     "theyScore": 0.497,
+     "keep": 0.882,
+     "theirStart": 25.00507614213198,
+     "backAgain": 0.9085,
+     "clockBackAgain": 81.21263682504737
     }
    },
    "playClockLeft": null,

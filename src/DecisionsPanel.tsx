@@ -198,6 +198,126 @@ function differences(d: Decision, detail: { their: CallOutcomes; best: CallOutco
   return out.sort((a, b) => b.size - a.size).map((x) => x.text);
 }
 
+/** A team as the explanations name it: "the Vikings". */
+const nick = (abbr: string) => `the ${teamName(abbr).split(" ").at(-1) ?? abbr}`;
+const Cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+const clockWords = (seconds: number | null) => (seconds === null ? "" : formatClock(seconds));
+const isKick = (c: PlayCall) => c === "punt" || c === "fg";
+
+/** What a team needs from a score margin: "a touchdown", "a field goal to win", … */
+function needFor(margin: number): string {
+  const behind = -margin;
+  if (behind <= 0) return "";
+  if (behind <= 2) return "a field goal to win";
+  if (behind === 3) return "a field goal to tie, or a touchdown to win";
+  if (behind <= 6) return "a touchdown";
+  if (behind === 7) return "a touchdown to tie";
+  if (behind === 8) return "a touchdown and a two-point try to tie";
+  return "two scores";
+}
+
+/** The first bullet: the score, the clock, and what each side needs. */
+function needLine(d: Decision): string {
+  const s = d.situation, us = nick(d.offense), them = nick(d.defense);
+  const clock = formatClock(s.clock);
+  if (s.margin < 0) return `Down ${-s.margin} with ${clock} left, ${us} need ${needFor(s.margin)}.`;
+  if (s.margin > 0) return `Up ${s.margin} with ${clock} left, ${us} have to keep ${them} from getting ${needFor(-s.margin)}.`;
+  return `Tied with ${clock} left: the next score probably wins it.`;
+}
+
+/** A call as a sentence names it: "a punt", "running", "a pass over the middle". */
+const CALL_PHRASE: Readonly<Record<PlayCall, string>> = {
+  timeout: "a timeout", run: "running", "pass-screen": "a screen", "pass-sideline": "a pass to the sideline",
+  "pass-middle": "a pass over the middle", "pass-play-action": "a play-action pass", "pass-deep": "a deep pass",
+  spike: "a spike", kneel: "a kneel", fg: "a field goal", punt: "a punt",
+};
+const share = (o: CallOutcomes, result: string) => o.drive.find((x) => x.result === result)?.share ?? 0;
+
+/** Where they take over, in words: "their own 27", "the Vikings' 33". */
+function takeoverSpot(d: Decision, o: CallOutcomes): string {
+  if (o.theirStart === null) return "";
+  return o.theirStart >= 50 ? `${nick(d.offense)}' ${Math.round(100 - o.theirStart)}` : `their own ${Math.round(o.theirStart)}`;
+}
+
+/** What comes after the drive: the other team's possession, and whether the offense gets another chance. */
+function afterLine(d: Decision, o: CallOutcomes, withSpot: boolean, stillNeed = false): string {
+  const us = nick(d.offense), them = nick(d.defense), m = d.situation.margin;
+  if (o.theyGetBall < 0.05) return " There's no time for another possession.";
+  const spot = withSpot && o.theirStart !== null ? ` around ${takeoverSpot(d, o)}` : "";
+  const clock = o.clockWhenTheyGetBall === null ? "" : ` with about ${clockWords(o.clockWhenTheyGetBall)} left`;
+  let text = ` ${Cap(them)} take over${spot}${clock} and ${o.theyScore < 0.03 ? "rarely score" : `score in ${pct(o.theyScore)} of games`}.`;
+  if (m <= 0 && o.backAgain >= 0.05) {
+    text += ` ${Cap(us)} get the ball back in ${pct(o.backAgain)} of games${o.clockBackAgain === null ? "" : `, with about ${clockWords(o.clockBackAgain)} left`}${m < 0 && stillNeed ? `, still needing ${needFor(m)}` : ""}.`;
+  }
+  return text;
+}
+
+/** One option's path: what it does, and what has to happen next. */
+function pathLine(d: Decision, call: PlayCall, o: CallOutcomes, mine: boolean): string {
+  const us = nick(d.offense);
+  const who = mine ? "Their call" : "The best call";
+  const fourth = d.situation.down === 4;
+  if (call === "punt") return `${who}, a punt:${afterLine(d, o, true, true)}`;
+  if (call === "fg") return `${who}, a field goal: it's good about ${pct(share(o, "Field goal"))} of the time.${afterLine(d, o, false)}`;
+  if (fourth) {
+    const scores = scored(o) >= 0.05 ? ` and score on the drive ${pct(scored(o))}` : "";
+    return `${who}, going for it: ${us} keep the ball ${pct(o.keep)} of the time${scores}. If it fails,${afterLine(d, o, true).replace(/^ The /, " the ")}`;
+  }
+  const td = share(o, "Touchdown"), fg = share(o, "Field goal");
+  const points = td + fg < 0.05 ? `${us} rarely score on this drive` : fg >= 0.05 && td >= 0.05
+    ? `${us} score a touchdown ${pct(td)} of the time and a field goal ${pct(fg)}`
+    : td >= fg ? `${us} score a touchdown ${pct(td)} of the time` : `${us} kick a field goal ${pct(fg)} of the time`;
+  return `${who}, ${CALL_PHRASE[call]}: ${points}.${afterLine(d, o, false)}`;
+}
+
+/** The bottom line: what tips it to the best call. */
+function bottomLine(d: Decision, detail: { their: CallOutcomes; best: CallOutcomes }): string {
+  const { their, best } = detail;
+  const us = nick(d.offense), them = nick(d.defense), m = d.situation.margin;
+  const result = ` ${Cap(us)} win ${pct(d.wpBest)} instead of ${pct(d.wpCall)}.`;
+  // Kicking against going for it on 4th down.
+  if (d.situation.down === 4 && isKick(d.call) !== isKick(d.best)) {
+    const go = isKick(d.best) ? their : best;
+    const kick = isKick(d.best) ? best : their;
+    const kickCall = isKick(d.best) ? d.best : d.call;
+    if (isKick(d.best)) return `So kicking is the better bet: what it buys is worth more than a ${pct(go.keep)} chance to keep the ball.${result}`;
+    const scores = scored(go) >= 0.05 ? ` and score on this drive ${pct(scored(go))}` : "";
+    if (kickCall === "fg") {
+      const after = m + 3;
+      const what = after > 0 ? `puts ${us} up ${after}` : after === 0 ? "ties it" : `cuts it to ${-after}`;
+      const clock = kick.clockWhenTheyGetBall === null ? "" : ` with about ${clockWords(kick.clockWhenTheyGetBall)} left`;
+      return `A field goal ${what} but hands ${them} the ball${clock}. Going for it keeps the ball ${pct(go.keep)} of the time${scores}, and ${them} score afterward less often (${pct(go.theyScore)} of games against ${pct(kick.theyScore)}).${result}`;
+    }
+    return m <= 0
+      ? `Either way ${us} need a stop, so the field position a punt buys matters less than the ${pct(go.keep)} chance that going for it keeps the ball${scores ? ` and the ${pct(scored(go))} chance to score on this drive` : ""}.${result}`
+      : `Keeping the ball ${pct(go.keep)} of the time keeps it away from ${them}, which is worth more than the field position a punt buys.${result}`;
+  }
+  // Otherwise, the factor that most favors the best call.
+  const reasons: { size: number; text: string }[] = [];
+  const tdBest = share(best, "Touchdown"), tdTheirs = share(their, "Touchdown");
+  if (m === -3 && tdBest - tdTheirs >= 0.03)
+    reasons.push({ size: 2 * (tdBest - tdTheirs), text: `Down 3, a touchdown wins it while a field goal only ties: ${CALL_PHRASE[d.best]} scores a touchdown ${pct(tdBest)} of the time against ${pct(tdTheirs)} with ${CALL_PHRASE[d.call]}.` });
+  if (scored(best) - scored(their) >= 0.03)
+    reasons.push({ size: scored(best) - scored(their), text: `${Cap(CALL_PHRASE[d.best])} leads to points ${pct(scored(best))} of the time against ${pct(scored(their))} with ${CALL_PHRASE[d.call]}.` });
+  if (their.theyScore - best.theyScore >= 0.03)
+    reasons.push({ size: their.theyScore - best.theyScore, text: `${Cap(them)} score afterward in ${pct(best.theyScore)} of games with ${CALL_PHRASE[d.best]}, against ${pct(their.theyScore)} with ${CALL_PHRASE[d.call]}.` });
+  if (their.clockWhenTheyGetBall !== null && best.clockWhenTheyGetBall !== null) {
+    const dc = best.clockWhenTheyGetBall - their.clockWhenTheyGetBall;
+    // Less time for them is better when ahead or tied; more time for us back is better when behind.
+    if ((m >= 0 && dc <= -3) || (m < 0 && (best.clockBackAgain ?? 0) - (their.clockBackAgain ?? 0) >= 3))
+      reasons.push({ size: Math.abs(dc) / 100, text: m >= 0
+        ? `${Cap(CALL_PHRASE[d.best])} leaves ${them} about ${Math.round(-dc)} seconds less when they get the ball.`
+        : `${Cap(CALL_PHRASE[d.best])} leaves ${us} more time if they get the ball back.` });
+  }
+  const top = reasons.sort((a, b) => b.size - a.size)[0];
+  return `${top?.text ?? `Overall, ${CALL_PHRASE[d.best]} is the better bet.`}${result}`;
+}
+
+/** The Why bullets: what they need, what their call and the best call each lead to, and what decides it. */
+function whyLogic(d: Decision, detail: { their: CallOutcomes; best: CallOutcomes }): string[] {
+  return [needLine(d), pathLine(d, d.call, detail.their, true), pathLine(d, d.best, detail.best, false), bottomLine(d, detail)];
+}
+
 /**
  * The longer explanation, collapsed by default: what their call and the best call each led to in the
  * model's simulated games, and the differences that decide it.
@@ -212,7 +332,12 @@ function WhyMore({ d, detail }: { d: Decision; detail: { their: CallOutcomes; be
       <MoreToggle open={open} controls={id} about="why" onClick={() => setOpen(!open)} />
       {open && (
         <div id={id} className="why-more-body">
-          <Text size="sm">
+          <Text size="sm" fw={600}>The rules of thumb</Text>
+          <ul className="why">
+            <li><Text size="sm" span><ReasonText reason={d.reason} link="In the guide" /></Text></li>
+            {d.against !== null && <li><Text size="sm" span><ReasonText reason={d.against} link="In the guide" /></Text></li>}
+          </ul>
+          <Text size="sm" mt="xs">
             <strong>Their call, {PLAY_CALLS[d.call].toLowerCase()}:</strong> in the model's simulated games, the drive ended in{" "}
             {driveSentence(detail.their.drive)}. {afterSentence(detail.their, them)} {d.offense} won {pct(d.wpCall)}.
           </Text>
@@ -379,10 +504,14 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
           <>
             <dt>Why</dt>
             <dd>
-              <ul className="why">
-                <li><ReasonText reason={d.reason} link="In the guide" /></li>
-                {d.against !== null && <li><ReasonText reason={d.against} link="In the guide" /></li>}
-              </ul>
+              {d.detail !== null ? (
+                <ul className="why">{whyLogic(d, d.detail).map((t) => <li key={t}>{t}</li>)}</ul>
+              ) : (
+                <ul className="why">
+                  <li><ReasonText reason={d.reason} link="In the guide" /></li>
+                  {d.against !== null && <li><ReasonText reason={d.against} link="In the guide" /></li>}
+                </ul>
+              )}
               {d.detail !== null && <WhyMore d={d} detail={d.detail} />}
             </dd>
           </>

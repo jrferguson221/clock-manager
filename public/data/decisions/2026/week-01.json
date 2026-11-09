@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 1,
- "generatedAt": "2026-11-09T22:13:06.571Z",
+ "generatedAt": "2026-11-09T22:38:03.742Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.04044902159918884,
+  "meanAbsDiff": 0.04065462907582437,
   "within10": 0.897196261682243
  },
  "worst": [
@@ -72,10 +72,6 @@
     {
      "call": "kneel",
      "wp": 0.5
-    },
-    {
-     "call": "punt",
-     "wp": 0.5
     }
    ],
    "reason": {
@@ -116,7 +112,11 @@
      ],
      "theyGetBall": 0.0155,
      "clockWhenTheyGetBall": 1,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 0.894,
+     "theirStart": 32,
+     "backAgain": 0,
+     "clockBackAgain": null
     },
     "best": {
      "wp": 0.767,
@@ -132,7 +132,11 @@
      ],
      "theyGetBall": 0,
      "clockWhenTheyGetBall": null,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 1,
+     "theirStart": null,
+     "backAgain": 0,
+     "clockBackAgain": null
     }
    },
    "playClockLeft": null,
@@ -237,7 +241,11 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 30,
-     "theyScore": 0
+     "theyScore": 0,
+     "keep": 0,
+     "theirStart": 16,
+     "backAgain": 0,
+     "clockBackAgain": null
     },
     "best": {
      "wp": 0.59,
@@ -261,7 +269,11 @@
      ],
      "theyGetBall": 0.7335,
      "clockWhenTheyGetBall": 20.331970006816633,
-     "theyScore": 0.2295
+     "theyScore": 0.2295,
+     "keep": 0.703,
+     "theirStart": 46.575788402848424,
+     "backAgain": 0.288,
+     "clockBackAgain": 13.184027777777779
     }
    },
    "playClockLeft": null,
@@ -664,7 +676,7 @@
     },
     {
      "call": "fg",
-     "wp": 0.22
+     "wp": 0.22033333333333333
     },
     {
      "call": "pass-screen",

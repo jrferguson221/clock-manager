@@ -95,19 +95,27 @@ const DETAIL_GAMES = 2000;
  */
 export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES): CallOutcomes {
   const drive = new Map<string, number>();
-  let wins = 0, theyGet = 0, clockSum = 0, theyScore = 0;
+  let wins = 0, theyGet = 0, clockSum = 0, theyScore = 0, keep = 0, startSum = 0, startN = 0, back = 0, backClock = 0;
   for (let i = 0; i < n; i++) {
     const r = seededRng(0x5eed + i * 7919);
     let s = start;
     let ended: string | null = null;
     let handedOver = false;
     let answered = false;
+    let gotBack = false;
     const first = step(s, call, r);
+    if (first.state.poss === "you" && !first.state.over && first.driveEnded === undefined) keep++;
     const track = (res: StepResult, offense: Team) => {
       if (offense === "you" && ended === null && (res.driveEnded !== undefined || res.state.poss !== "you" || res.state.over)) {
         ended = res.driveEnded ?? (res.state.over ? (res.state.margin > 0 ? "Ran out the clock" : "Time ran out") : "Ended");
       }
-      if (!handedOver && res.state.poss === "opp" && !res.state.over) { handedOver = true; theyGet++; clockSum += res.state.clock; }
+      if (!handedOver && res.state.poss === "opp" && !res.state.over) {
+        handedOver = true; theyGet++; clockSum += res.state.clock;
+        // Where they take over, counting only punts, misses and turnovers (not kickoffs after a score).
+        if (res.driveEnded !== "Touchdown" && res.driveEnded !== "Field goal") { startSum += 100 - res.state.ytg; startN++; }
+      } else if (handedOver && !gotBack && res.state.poss === "you" && !res.state.over) {
+        gotBack = true; back++; backClock += res.state.clock;
+      }
       if (offense === "opp" && handedOver && !answered && res.driveEnded !== undefined) {
         answered = true;
         if (res.driveEnded === "Touchdown" || res.driveEnded === "Field goal") theyScore++;
@@ -125,6 +133,10 @@ export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES)
     theyGetBall: theyGet / n,
     clockWhenTheyGetBall: theyGet === 0 ? null : clockSum / theyGet,
     theyScore: theyScore / n,
+    keep: keep / n,
+    theirStart: startN === 0 ? null : startSum / startN,
+    backAgain: back / n,
+    clockBackAgain: back === 0 ? null : backClock / back,
   };
 }
 
