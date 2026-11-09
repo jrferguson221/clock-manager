@@ -48,6 +48,13 @@ export const LAST_PLAY_FG_YTG = 42;
 export const DEFENSE_TIMEOUT_WINDOW = 240;
 /** Fewest seconds from the end of an in-bounds play to the next snap, even when rushing. */
 export const MIN_SNAP = 8;
+/** A tied team more than 60 yards out kneels for overtime with this many seconds left or fewer. */
+export const TIED_KNEEL_CLOCK = 60;
+/**
+ * A team that needs a touchdown throws at the end zone from 40 yards or closer with this many seconds
+ * left or fewer. Earlier than this, it works the ball; later, short throws use up downs before the clock.
+ */
+export const END_ZONE_SHOT_CLOCK = 45;
 
 // ---------------------------------------------------------------------------
 // Random numbers
@@ -646,7 +653,10 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     return "run";
   }
 
-  if (m === 0 && g.ytg > 60 && t <= 30) return "kneel"; // take it to overtime
+  // Tied, out of range, with a minute or less: kneel it out and take it to overtime. A team that starts
+  // kneeling keeps kneeling (a kneel at 0:59 leaves 0:57, still under the line), so a kneel is scored as one.
+  // Not on 4th down: that hands them the ball in range. The 4th-down rule below punts instead.
+  if (m === 0 && g.ytg > 60 && t <= TIED_KNEEL_CLOCK && g.down < 4) return "kneel";
 
   if (fgPlay(g)) {
     const floor = kickFloor(g, cfg);
@@ -663,14 +673,16 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     return "fg";
   }
 
-  // Need a touchdown, under 30 seconds, and the end zone within reach: throw at it.
-  if (m < -3 && t <= 30 && g.ytg <= 40 && !g.running) return "pass-deep";
+  // Need a touchdown, under 45 seconds, and the end zone within reach: throw at it.
+  if (m < -3 && t <= END_ZONE_SHOT_CLOCK && g.ytg <= 40 && !g.running) return "pass-deep";
 
   // Last play, or close to it, and a field goal won't do: take a shot at the end zone.
   if (t <= 12 && (m < -3 || g.ytg > 42)) return "pass-deep";
 
   if (g.down === 4) {
     if (m >= -3 && g.ytg <= 42) return "fg";
+    // Tied and out of range: punt and play for overtime, rather than hand them a short field.
+    if (m === 0 && g.ytg >= PUNT_MIN_YTG) return "punt";
     if (t > 300 && g.ytg >= 50) return "punt";
     return g.toGo <= 2 ? "run" : g.toGo >= 15 ? "pass-deep" : "pass-middle";
   }

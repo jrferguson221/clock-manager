@@ -13,7 +13,7 @@ import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
   AVOID, CLOSE, DEFAULT_SIM, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
-  GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
+  END_ZONE_SHOT_CLOCK, GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, TIED_KNEEL_CLOCK, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
 import { AnchorLink, GuideLink } from "./ReadMore";
@@ -188,7 +188,9 @@ function WinProbabilitySection() {
         <List.Item>
           <strong>After your call, both teams play by rules of thumb</strong>: the leading team kneels when that ends the
           game and runs otherwise; a team that only needs a field goal drains the clock and kicks; a trailing team throws,
-          stops the clock with timeouts and spikes, and heaves it on the last play. Real coaches can do better or worse,
+          stops the clock with timeouts and spikes, throws at the end zone from {END_ZONE_SHOT_CLOCK} seconds when it needs
+          a touchdown and is in reach, and heaves it on the last play; a tied team deep in its own end kneels with{" "}
+          {TIED_KNEEL_CLOCK} seconds or less, and punts on 4th down, to play for overtime. Real coaches can do better or worse,
           so the numbers describe sound, not perfect, play.
         </List.Item>
         <List.Item>
@@ -713,7 +715,7 @@ function LimitationsSection() {
         <List.Item>Penalties, including 10-second runoffs in the last minute, and injuries.</List.Item>
         <List.Item>Kickoff and punt returns, safeties, and fumbles on pass plays.</List.Item>
         <List.Item>Team strength: both teams are average, every week, in any weather.</List.Item>
-        <List.Item>Overtime, which is a coin flip. That's also why a tied team deep in its own end with seconds left may kneel.</List.Item>
+        <List.Item>Overtime, which is a coin flip. That's also why a tied team deep in its own end with under a minute left may kneel.</List.Item>
         <List.Item>
           The shorter play clock after timeouts and other stoppages: the app always uses {NFL_RULES.playClock} seconds.
         </List.Item>

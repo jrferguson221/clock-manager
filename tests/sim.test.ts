@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -203,6 +203,38 @@ describe("timeouts", () => {
     expect(x.verdict).toBe("worse");
     expect(x.reasons.map((r) => r.text).join(" ")).toContain("already stopped");
     expect(recommend(trailing, values).avoid.map((a) => a.call)).toContain("timeout");
+  });
+});
+
+describe("tied late in your own end", () => {
+  const tied: GameState = { ...base, margin: 0, ytg: 75, toGo: 10, down: 1, timeouts: { you: 2, opp: 2 } };
+
+  it("a kneel with under a minute left takes it to overtime: the team keeps kneeling", () => {
+    expect(wpOf(evaluateCalls({ ...tied, clock: 35, running: false }, 500), "kneel")).toBe(0.5);
+    expect(policy({ ...tied, clock: 55, running: true, down: 2 })).toBe("kneel");
+  });
+
+  it("punts on 4th down instead of kneeling it over on downs", () => {
+    expect(policy({ ...tied, clock: 40, running: true, down: 4, toGo: 11 })).toBe("punt");
+    expect(policy({ ...tied, clock: 200, running: false, down: 4, toGo: 6, ytg: 70 })).toBe("punt");
+  });
+
+  it("a free clock stop doesn't cost a tied team win probability", () => {
+    // With the clock stopped instead of running, the team could still kneel: more time can't hurt much.
+    for (const clock of [35, 50, 70]) {
+      const running = bestScored(evaluateCalls({ ...tied, clock, running: true }, 1500)).wp;
+      const stopped = bestScored(evaluateCalls({ ...tied, clock, running: false }, 1500)).wp;
+      expect(stopped).toBeGreaterThan(running - 0.02);
+    }
+  });
+});
+
+describe("needing a touchdown in range", () => {
+  it("more time never costs much: the team throws at the end zone from 0:45 in", () => {
+    const g: GameState = { ...base, running: false, ytg: 30, margin: -4, timeouts: { you: 1, opp: 2 } };
+    const wp = (clock: number) => bestScored(evaluateCalls({ ...g, clock }, 1500)).wp;
+    expect(policy({ ...g, clock: 44 })).toBe("pass-deep");
+    expect(wp(50)).toBeGreaterThan(wp(32) - 0.025);
   });
 });
 
