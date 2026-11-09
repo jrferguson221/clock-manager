@@ -3,6 +3,6 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  // Relative asset paths, so the build works at any URL path (e.g. GitHub Pages' /clock-manager/).
+  // Relative asset paths, so the build works at any URL path (e.g. GitHub Pages' /situational-football/).
   base: "./",
 });

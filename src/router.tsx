@@ -1,6 +1,6 @@
 // Each mode is a route, and its situation lives in validated URL search params, so a situation can be
 // bookmarked or shared. The site is static (GitHub Pages, under a subpath), so the app uses hash
-// history: links look like .../clock-manager/#/trailing?clock=0:58&trail=7.
+// history: links look like .../situational-football/#/trailing?clock=0:58&trail=7.
 
 import {
   createHashHistory, createRootRouteWithContext, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
