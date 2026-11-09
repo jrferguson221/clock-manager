@@ -3,6 +3,7 @@
 
 import { DOWNS, type Down, type GameState, type PlayCall } from "@situational-football/schemas";
 import type { CsvRow } from "./csv";
+import { NFL_RULES } from "../../src/engine";
 
 /** Decisions in the final 5:00 of the 4th quarter, in one-score games. */
 export const WINDOW_SECONDS = 300;
@@ -33,6 +34,12 @@ export interface Candidate {
   nflverseWpa: number | null;
   /** The score before the play: the offense's points and the defense's, or null if the data lacks it. */
   score: { offense: number; defense: number } | null;
+  /**
+   * For a timeout with the clock running: about how many seconds were left on the 40-second play clock
+   * when it was called (the play before's snap, less a typical play, minus the timeout's clock). Null for
+   * plays, and when the clock was stopped.
+   */
+  playClockLeft: number | null;
 }
 
 /** FTN's charting of a pass play: was it play-action, or a screen? Keyed by "gameId-playId". */
@@ -116,6 +123,9 @@ function stateFrom(row: CsvRow, clock: number, running: boolean, timeoutsAdded =
   };
 }
 
+/** Seconds a play takes, snap to whistle, for estimating the play clock at a timeout. */
+const TYPICAL_PLAY_SECONDS = 6;
+
 /** The score before a play, from the offense's side. */
 function scoreFrom(row: CsvRow): { offense: number; defense: number } | null {
   const offense = num(row.get("posteam_score"));
@@ -151,10 +161,14 @@ export function findCandidates(rows: readonly CsvRow[], tags: PassTags = new Map
         && next.get("posteam") === row.get("timeout_team") && inWindow(next) && row.get("qtr") === "4") {
         const running = clockRunningAfter(prev, clock);
         const state = stateFrom(next, clock, running, 1);
+        const prevSnap = prev === undefined ? null : num(prev.get("game_seconds_remaining"));
+        const playClockLeft = running && prevSnap !== null
+          ? Math.max(1, Math.min(NFL_RULES.playClock, NFL_RULES.playClock - (prevSnap - TYPICAL_PLAY_SECONDS - clock)))
+          : null;
         if (state !== null) {
           out.push({
             id: `${row.get("game_id")}-${row.get("play_id")}`, ...meta(next), state, call: "timeout", kind: "timeout",
-            description: row.get("desc"), clockKnown: running, nflverseWp: num(next.get("wp")), nflverseWpa: null,
+            description: row.get("desc"), clockKnown: running, nflverseWp: num(next.get("wp")), nflverseWpa: null, playClockLeft,
           });
         }
       }
@@ -169,7 +183,7 @@ export function findCandidates(rows: readonly CsvRow[], tags: PassTags = new Map
       if (state !== null) {
         out.push({
           id: `${row.get("game_id")}-${row.get("play_id")}`, ...meta(row), state, call, kind: "snap",
-          description: row.get("desc"), clockKnown: true, nflverseWp: num(row.get("wp")), nflverseWpa: num(row.get("wpa")),
+          description: row.get("desc"), clockKnown: true, nflverseWp: num(row.get("wp")), nflverseWpa: num(row.get("wpa")), playClockLeft: null,
         });
       }
     }

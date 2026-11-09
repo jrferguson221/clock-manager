@@ -94,9 +94,9 @@ export const SCENARIO_PRESETS = {
     scenario: "qb-throwaway", clock: "0:50", margin: -4, timeouts: 0, oppTimeouts: 3, down: 2, toGo: 10,
     side: "opp", yardLine: 30, sackYards: 8, gain: 12, extra: 6, seconds: 5,
   },
-  // Down 3 with 0:18 left and no timeouts, 1st & 10 at your 45: a 12-yard catch near the sideline.
+  // Down 3 with 0:15 left and no timeouts, 1st & 10 at your 45: a 12-yard catch near the sideline.
   "wr-sideline": {
-    scenario: "wr-sideline", clock: "0:18", margin: -3, timeouts: 0, oppTimeouts: 3, down: 1, toGo: 10,
+    scenario: "wr-sideline", clock: "0:15", margin: -3, timeouts: 0, oppTimeouts: 3, down: 1, toGo: 10,
     side: "own", yardLine: 45, sackYards: 8, gain: 12, extra: 6, seconds: 5,
   },
   // Down 3 with 0:40 left and no timeouts: the quarterback scrambles for 9 from your 45.

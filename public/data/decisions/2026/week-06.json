@@ -1,88 +1,16 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-09T21:16:37.070Z",
+ "generatedAt": "2026-11-09T21:41:28.164Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
  "agreement": {
   "plays": 186,
-  "meanAbsDiff": 0.048922945634491954,
+  "meanAbsDiff": 0.049147061725724556,
   "within10": 0.8655913978494624
  },
  "worst": [
-  {
-   "id": "2026_06_TEN_IND-4162",
-   "gameId": "2026_06_TEN_IND",
-   "offense": "IND",
-   "defense": "TEN",
-   "home": "IND",
-   "away": "TEN",
-   "date": "2026-10-18",
-   "situation": {
-    "clock": 31,
-    "running": true,
-    "down": 1,
-    "toGo": 10,
-    "ytg": 46,
-    "margin": -6,
-    "timeouts": 0,
-    "oppTimeouts": 3
-   },
-   "snapClock": 19,
-   "description": "(:19) (No Huddle) 17-D.Jones spiked the ball to stop the clock.",
-   "call": "spike",
-   "wpCall": 0.05433333333333333,
-   "best": "pass-deep",
-   "wpBest": 0.13333333333333333,
-   "cost": 0.079,
-   "values": [
-    {
-     "call": "pass-deep",
-     "wp": 0.13333333333333333
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.08766666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.07566666666666666
-    },
-    {
-     "call": "spike",
-     "wp": 0.05433333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.051
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.04633333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.014333333333333333
-    },
-    {
-     "call": "punt",
-     "wp": 0
-    }
-   ],
-   "reason": {
-    "text": "You need a big play: 46 yards with 0:31 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
-    "section": "prevent-defense"
-   },
-   "against": null,
-   "score": {
-    "offense": 20,
-    "defense": 26
-   },
-   "nflverseWp": 0.13636426627636,
-   "nflverseWpa": -0.00806334614753723,
-   "lowConfidence": false
-  },
   {
    "id": "2026_06_NO_NYG-5035",
    "gameId": "2026_06_NO_NYG",
@@ -92,7 +20,7 @@
    "away": "NO",
    "date": "2026-10-18",
    "situation": {
-    "clock": 25,
+    "clock": 23,
     "running": true,
     "down": 3,
     "toGo": 1,
@@ -147,12 +75,90 @@
     "section": "red-zone"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 27,
     "defense": 34
    },
    "nflverseWp": 0.162140399217606,
    "nflverseWpa": -0.0578835755586624,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_06_TEN_IND-4162",
+   "gameId": "2026_06_TEN_IND",
+   "offense": "IND",
+   "defense": "TEN",
+   "home": "IND",
+   "away": "TEN",
+   "date": "2026-10-18",
+   "situation": {
+    "clock": 29,
+    "running": true,
+    "down": 1,
+    "toGo": 10,
+    "ytg": 46,
+    "margin": -6,
+    "timeouts": 0,
+    "oppTimeouts": 3
+   },
+   "snapClock": 19,
+   "description": "(:19) (No Huddle) 17-D.Jones spiked the ball to stop the clock.",
+   "call": "spike",
+   "wpCall": 0.07066666666666667,
+   "best": "pass-deep",
+   "wpBest": 0.138,
+   "cost": 0.06733333333333334,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.138
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.08166666666666667
+    },
+    {
+     "call": "spike",
+     "wp": 0.07066666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.06633333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.036
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.03166666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.009333333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.0006666666666666666
+    },
+    {
+     "call": "punt",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 46 yards with 0:29 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
+    "section": "prevent-defense"
+   },
+   "against": null,
+   "playClockLeft": null,
+   "score": {
+    "offense": 20,
+    "defense": 26
+   },
+   "nflverseWp": 0.13636426627636,
+   "nflverseWpa": -0.00806334614753723,
    "lowConfidence": false
   },
   {
@@ -164,7 +170,7 @@
    "away": "SEA",
    "date": "2026-10-15",
    "situation": {
-    "clock": 23,
+    "clock": 21,
     "running": true,
     "down": 1,
     "toGo": 10,
@@ -195,7 +201,7 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.267
+     "wp": 0.26766666666666666
     },
     {
      "call": "pass-sideline",
@@ -203,11 +209,11 @@
     },
     {
      "call": "pass-middle",
-     "wp": 0.17966666666666667
+     "wp": 0.18033333333333335
     },
     {
      "call": "pass-screen",
-     "wp": 0.16
+     "wp": 0.16066666666666668
     },
     {
      "call": "run",
@@ -215,16 +221,94 @@
     }
    ],
    "reason": {
-    "text": "You need a big play: 23 yards with 0:23 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
+    "text": "You need a big play: 23 yards with 0:21 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 11,
     "defense": 14
    },
    "nflverseWp": 0.412250250577927,
    "nflverseWpa": 0.000276386737823486,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_06_WAS_SF-4087",
+   "gameId": "2026_06_WAS_SF",
+   "offense": "WAS",
+   "defense": "SF",
+   "home": "SF",
+   "away": "WAS",
+   "date": "2026-10-19",
+   "situation": {
+    "clock": 48,
+    "running": true,
+    "down": 2,
+    "toGo": 1,
+    "ytg": 45,
+    "margin": -6,
+    "timeouts": 0,
+    "oppTimeouts": 3
+   },
+   "snapClock": 38,
+   "description": "(:38) (No Huddle) 5-J.Daniels spiked the ball to stop the clock.",
+   "call": "spike",
+   "wpCall": 0.156,
+   "best": "pass-deep",
+   "wpBest": 0.217,
+   "cost": 0.061,
+   "values": [
+    {
+     "call": "pass-deep",
+     "wp": 0.217
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.194
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.17666666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.17233333333333334
+    },
+    {
+     "call": "spike",
+     "wp": 0.156
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.14466666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.14033333333333334
+    },
+    {
+     "call": "fg",
+     "wp": 0.009666666666666667
+    },
+    {
+     "call": "punt",
+     "wp": 0
+    }
+   ],
+   "reason": {
+    "text": "You need a big play: 45 yards with 0:48 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
+    "section": "prevent-defense"
+   },
+   "against": null,
+   "playClockLeft": null,
+   "score": {
+    "offense": 17,
+    "defense": 23
+   },
+   "nflverseWp": 0.232465893030167,
+   "nflverseWpa": -0.0301396250724793,
    "lowConfidence": false
   }
  ],
@@ -250,46 +334,46 @@
    "snapClock": 106,
    "description": "(1:46) (Shotgun) 10-J.Daniels pass short right intended for 2-E.Egbuka INTERCEPTED by 35-J.Dean at TB 43. 35-J.Dean pushed ob at TB 3 for 40 yards (10-J.Daniels).",
    "call": "pass-sideline",
-   "wpCall": 0.6053333333333333,
+   "wpCall": 0.598,
    "best": "pass-middle",
-   "wpBest": 0.6053333333333333,
+   "wpBest": 0.598,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6053333333333333
+     "wp": 0.598
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6053333333333333
+     "wp": 0.5963333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.5953333333333334
+     "wp": 0.5883333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.5946666666666667
+     "wp": 0.587
     },
     {
      "call": "pass-sideline",
-     "wp": 0.581
+     "wp": 0.5756666666666667
     },
     {
      "call": "run",
-     "wp": 0.5676666666666667
+     "wp": 0.5643333333333334
     },
     {
      "call": "spike",
-     "wp": 0.5123333333333333
+     "wp": 0.507
     },
     {
      "call": "kneel",
-     "wp": 0.495
+     "wp": 0.49466666666666664
     },
     {
      "call": "punt",
-     "wp": 0.38
+     "wp": 0.37966666666666665
     }
    ],
    "reason": {
@@ -297,6 +381,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 16,
     "defense": 16
@@ -365,6 +450,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 15,
     "defense": 16
@@ -394,46 +480,46 @@
    "snapClock": 91,
    "description": "(1:31) (No Huddle) 14-S.Darnold pass short left intended for 15-T.Horton INTERCEPTED by 31-K.Abrams-Draine at DEN 31. 31-K.Abrams-Draine to DEN 31 for no gain (15-T.Horton).",
    "call": "pass-sideline",
-   "wpCall": 0.388,
+   "wpCall": 0.39066666666666666,
    "best": "run",
-   "wpBest": 0.4216666666666667,
-   "cost": 0.03366666666666668,
+   "wpBest": 0.42333333333333334,
+   "cost": 0.03266666666666668,
    "values": [
     {
      "call": "run",
-     "wp": 0.4216666666666667
+     "wp": 0.42333333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.41133333333333333
+     "wp": 0.411
     },
     {
      "call": "pass-screen",
-     "wp": 0.388
+     "wp": 0.39066666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.37233333333333335
+     "wp": 0.37766666666666665
     },
     {
      "call": "pass-middle",
-     "wp": 0.36833333333333335
+     "wp": 0.373
     },
     {
      "call": "pass-sideline",
-     "wp": 0.351
+     "wp": 0.35533333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.34
+     "wp": 0.344
     },
     {
      "call": "spike",
-     "wp": 0.25233333333333335
+     "wp": 0.26033333333333336
     },
     {
      "call": "fg",
-     "wp": 0.25
+     "wp": 0.25266666666666665
     }
    ],
    "reason": {
@@ -441,6 +527,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 11,
     "defense": 14
@@ -513,6 +600,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 31,
     "defense": 31
@@ -581,6 +669,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 16,
     "defense": 19

@@ -34,16 +34,16 @@ export interface SimConfig {
   fgRush: number;
 }
 
-export const DEFAULT_SIM: SimConfig = Object.freeze({ hurryUp: 18, spikeLineup: 12, fgRush: 15 });
+export const DEFAULT_SIM: SimConfig = Object.freeze({ hurryUp: 18, spikeLineup: 10, fgRush: 15 });
 
 const WARNING = NFL_RULES.twoMinuteWarning;
 const BURN = NFL_RULES.playClock - 1; // snap with 1 second on the play clock
 /** The longest field-goal try: from the opponent's 45, a 62-yarder. */
-export const FG_MAX_YTG = 45;
+export const FG_MAX_YTG = 47;
 /** Punting is an option from 40 or more yards out. */
 export const PUNT_MIN_YTG = 40;
 /** On the last play, a team that needs only a field goal kicks from this close or closer (a 59-yarder). */
-export const LAST_PLAY_FG_YTG = 42;
+export const LAST_PLAY_FG_YTG = 47;
 /** A defense that's behind uses its timeouts after in-bounds plays in the last 4 minutes. */
 export const DEFENSE_TIMEOUT_WINDOW = 240;
 /** Fewest seconds from the end of an in-bounds play to the next snap, even when rushing. */
@@ -134,7 +134,7 @@ function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig): number {
   if (call === "fg" || call === "punt") return cfg.fgRush;
   if (call === "spike") return cfg.spikeLineup;
   if (fgPlay(g)) return Math.min(BURN, Math.max(MIN_SNAP, fgDrainBurn(g, cfg)));
-  return cfg.hurryUp;
+  return g.clock <= LATE_HURRY_WINDOW ? Math.min(cfg.hurryUp, LATE_HURRY_UP) : cfg.hurryUp;
 }
 
 /**
@@ -153,6 +153,14 @@ const kickFloor = (g: GameState, cfg: SimConfig) => (g.timeouts[g.poss] > 0 ? 20
 function savesTimeForAnswer(g: GameState, def: Team): boolean {
   return fgPlay(g) && marginFor(g, g.poss) > -3 && g.timeouts[def] > 0;
 }
+
+/**
+ * Under a minute, teams snap faster than the usual hurry-up. In 2022-2026 NFL play-by-play, a trailing team's
+ * next snap after an in-bounds completion came 18.8 seconds after the one before with 0:20-1:00 left (23.0 with
+ * 1:00-2:00). Less the 5.2-second play, that's about 13 seconds from the end of the play to the snap.
+ */
+export const LATE_HURRY_WINDOW = 60;
+export const LATE_HURRY_UP = 13;
 
 /** At the kick, a team draining for a field goal lets the clock run to this before its last timeout. */
 export const FG_TIMEOUT_AT = 3;
@@ -696,7 +704,9 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
 
   // Time for one last play, a field goal ties or wins, and it's within reach (a 59-yarder at most): kick,
   // stopping the clock first if it's running.
-  if (m <= 0 && m >= -3 && g.ytg <= LAST_PLAY_FG_YTG && t <= 12) {
+  // Without a timeout, a play that ends in bounds needs a spike before the kick: a play, the lineup and a
+  // second. With less time than that, a play only helps if it stops the clock itself, so kick now.
+  if (m <= 0 && m >= -3 && g.ytg <= LAST_PLAY_FG_YTG && t <= (to > 0 ? 12 : cfg.spikeLineup + DRAIN_PLAY_SECONDS + 1)) {
     if (!g.running) return "fg";
     if (to > 0) return "timeout";
     if (g.down <= 3 && t > cfg.spikeLineup + 1) return "spike";
@@ -868,7 +878,7 @@ export const TIE = 0.005;
  * a kick counts as less risky than going for it.
  */
 const TIE_ORDER: readonly PlayCall[] = [
-  "kneel", "run", "punt", "fg", "pass-screen", "pass-middle", "pass-sideline", "pass-play-action", "pass-deep", "spike", "timeout",
+  "kneel", "punt", "fg", "run", "pass-screen", "pass-middle", "pass-sideline", "pass-play-action", "pass-deep", "spike", "timeout",
 ];
 
 /** The best call and its win probability. */
@@ -915,6 +925,10 @@ export function bestCallReason(g: GameState, call: PlayCall, cfg: SimConfig = DE
 
 function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
   const m = marginFor(g, g.poss);
+  // Ahead on 4th down with the clock running: a stop hands them the ball with the clock stopped, so a
+  // play's value is the time that comes off before the snap.
+  if (m > 0 && g.down === 4 && g.running && (call === "run" || call === "kneel" || call.startsWith("pass-")))
+    return reason(`Let the play clock run down first: that takes ${BURN} seconds off before the snap. On 4th down, if you're stopped they get the ball with the clock stopped, so the time has to come off before the snap, not after. Converting ends the game.`, "running-out-the-clock");
   switch (call) {
     case "kneel":
       if (m > 0 && canKneelOut(g))
@@ -983,6 +997,8 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
 /** Why a call was worse than the best one, when there's a specific reason (null when it was only a bit worse). */
 export function whyNot(g: GameState, call: PlayCall): Reason | null {
   const m = marginFor(g, g.poss);
+  if (call === "timeout" && g.running && m > 0)
+    return reason(`A timeout stops the clock for them: it gives back the ${BURN} seconds you could have run off before the snap.`, "running-out-the-clock");
   if (call === "timeout" && !g.running)
     return reason("A timeout gains nothing with the clock already stopped, and spends one you may need later.", "timeouts");
   if (call === "spike" && !g.running) return reason("A spike gains nothing with the clock already stopped, and throws away a down.", "spike");

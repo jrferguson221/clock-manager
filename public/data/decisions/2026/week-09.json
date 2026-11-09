@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 9,
- "generatedAt": "2026-11-09T21:16:37.070Z",
+ "generatedAt": "2026-11-09T21:41:28.164Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.04206624723260643,
-  "within10": 0.9158878504672897
+  "meanAbsDiff": 0.04010290380894579,
+  "within10": 0.9065420560747663
  },
  "worst": [
   {
@@ -47,19 +47,19 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.24166666666666667
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.23633333333333334
+     "wp": 0.244
     },
     {
      "call": "run",
+     "wp": 0.23833333333333334
+    },
+    {
+     "call": "pass-sideline",
      "wp": 0.235
     },
     {
      "call": "pass-deep",
-     "wp": 0.21566666666666667
+     "wp": 0.21366666666666667
     },
     {
      "call": "punt",
@@ -74,6 +74,7 @@
     "text": "Punting gives the ball back when you need to score.",
     "section": "fourth-down"
    },
+   "playClockLeft": null,
    "score": {
     "offense": 9,
     "defense": 13
@@ -105,53 +106,54 @@
    "snapClock": 84,
    "description": "(1:24) (No Huddle, Shotgun) 9-B.Young sacked at DEN 44 for -8 yards (15-N.Bonitto). FUMBLES (15-N.Bonitto) [15-N.Bonitto], RECOVERED by DEN-15-N.Bonitto at DEN 44. The Replay Official reviewed the fumble ruling, and the play was Upheld. The ruling on the field stands.",
    "call": "pass-middle",
-   "wpCall": 0.4226666666666667,
-   "best": "pass-play-action",
-   "wpBest": 0.4226666666666667,
+   "wpCall": 0.4,
+   "best": "pass-screen",
+   "wpBest": 0.39866666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.4226666666666667
+     "wp": 0.4
     },
     {
      "call": "pass-screen",
-     "wp": 0.4116666666666667
+     "wp": 0.39866666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.41
+     "wp": 0.39466666666666667
     },
     {
      "call": "run",
-     "wp": 0.4073333333333333
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.407
+     "wp": 0.39266666666666666
     },
     {
      "call": "timeout",
-     "wp": 0.4046666666666667
+     "wp": 0.391
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.38966666666666666
     },
     {
      "call": "pass-deep",
-     "wp": 0.3863333333333333
+     "wp": 0.368
     },
     {
      "call": "spike",
-     "wp": 0.37266666666666665
+     "wp": 0.359
     },
     {
      "call": "fg",
-     "wp": 0.08666666666666667
+     "wp": 0.09266666666666666
     }
    ],
    "reason": {
-    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
+    "text": "They're playing soft, so a screen gets the ball out fast into open space: it completes about 86% of the time and is almost never sacked or picked off.",
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 21,
     "defense": 26
@@ -181,38 +183,38 @@
    "snapClock": 97,
    "description": "(1:37) (Shotgun) 4-D.Prescott pass deep right to 19-R.Flournoy to IND 19 for 46 yards (1-A.Gardner).",
    "call": "pass-deep",
-   "wpCall": 0.29233333333333333,
+   "wpCall": 0.31,
    "best": "pass-middle",
-   "wpBest": 0.29233333333333333,
+   "wpBest": 0.31,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.29233333333333333
+     "wp": 0.31
     },
     {
      "call": "pass-play-action",
-     "wp": 0.28933333333333333
+     "wp": 0.30833333333333335
     },
     {
      "call": "pass-sideline",
-     "wp": 0.28733333333333333
+     "wp": 0.30433333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.2853333333333333
+     "wp": 0.30033333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.27566666666666667
+     "wp": 0.29433333333333334
     },
     {
      "call": "run",
-     "wp": 0.275
+     "wp": 0.2936666666666667
     },
     {
      "call": "spike",
-     "wp": 0.26066666666666666
+     "wp": 0.273
     },
     {
      "call": "punt",
@@ -224,6 +226,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 20,
     "defense": 23
@@ -292,6 +295,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 13,
     "defense": 16
@@ -368,6 +372,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 24,
     "defense": 24
@@ -397,38 +402,38 @@
    "snapClock": 41,
    "description": "(:41) (Shotgun) 2-S.Sanders pass deep left to 3-J.Jeudy to NO 40 for 30 yards (22-M.Emerson) [99-C.Young].",
    "call": "pass-deep",
-   "wpCall": 0.143,
+   "wpCall": 0.15666666666666668,
    "best": "pass-deep",
-   "wpBest": 0.143,
+   "wpBest": 0.15666666666666668,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.143
+     "wp": 0.15666666666666668
     },
     {
      "call": "pass-play-action",
-     "wp": 0.09966666666666667
+     "wp": 0.122
     },
     {
      "call": "pass-middle",
-     "wp": 0.096
+     "wp": 0.118
     },
     {
      "call": "pass-sideline",
-     "wp": 0.08966666666666667
+     "wp": 0.10966666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.08633333333333333
+     "wp": 0.10933333333333334
     },
     {
      "call": "spike",
-     "wp": 0.06766666666666667
+     "wp": 0.09
     },
     {
      "call": "run",
-     "wp": 0.05566666666666667
+     "wp": 0.083
     },
     {
      "call": "punt",
@@ -440,6 +445,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 13,
     "defense": 16

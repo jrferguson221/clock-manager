@@ -9,8 +9,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@situational-football/schemas";
-import { bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, ranked, snapDelay, whyNot, wpOf } from "../../src/sim";
-import type { GameState } from "@situational-football/schemas";
+import {
+  availableCalls, bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, outcomeWinProbability, ranked, snapDelay, whyNot, wpOf,
+  type CallValues,
+} from "../../src/sim";
+import type { GameState, PlayCall } from "@situational-football/schemas";
 import { parseCsv } from "./csv";
 import { completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
 
@@ -39,10 +42,48 @@ export function decisionPoint(c: Candidate): GameState {
   return { ...c.state, clock: c.state.clock + snapDelay(c.state, c.call) };
 }
 
+/** Seconds a call would let run before its snap, given what's left on the play clock. */
+function burnBefore(at: GameState, call: PlayCall, playClockLeft: number): number {
+  return Math.min(snapDelay(at, call), playClockLeft - 1);
+}
+
+/** The situation at a call's snap after `burn` seconds run, stopping at the two-minute warning. */
+function snapAfter(at: GameState, burn: number): GameState {
+  const clock = at.clock > 120 && at.clock - burn <= 120 ? 120 : Math.max(0, at.clock - burn);
+  return { ...at, clock, running: false };
+}
+
+/**
+ * A timeout called with the clock running, judged against what the offense could have done with the play
+ * clock it had left: each play lets the rest of the play clock run (as much as its tempo would) and snaps;
+ * the timeout stops the clock where it was called, then the best play follows with one fewer timeout. A
+ * timeout taken with the play clock nearly out costs only the timeout itself.
+ */
+export function timeoutValues(at: GameState, playClockLeft: number, n = GAMES_PER_CALL): CallValues {
+  const plays = availableCalls(at).filter((call) => call !== "timeout").map((call) => {
+    const snap = snapAfter(at, burnBefore(at, call, playClockLeft));
+    const wp = snap.clock <= 0 ? (snap.margin > 0 ? 1 : snap.margin < 0 ? 0 : 0.5) : outcomeWinProbability(snap, call, undefined, n);
+    return { call, wp };
+  });
+  const after: GameState = { ...at, running: false, timeouts: { ...at.timeouts, you: at.timeouts.you - 1 } };
+  return [{ call: "timeout", wp: bestScored(evaluateCallsAtSnap(after, n)).wp }, ...plays];
+}
+
+/** Why a timeout was worse, given the play clock left: the seconds it gave back, when that's what it cost. */
+function timeoutAgainst(at: GameState, best: PlayCall, playClockLeft: number): Decision["against"] {
+  const seconds = burnBefore(at, best, playClockLeft);
+  if (seconds < 5 || at.margin <= 0) return null;
+  return {
+    text: `The play clock still had about ${playClockLeft} seconds on it: the timeout gave back ${seconds} seconds you could have run off before the snap.`,
+    section: "running-out-the-clock",
+  };
+}
+
 /** Score one decision, or null if the model has no matching option (e.g. a field goal from beyond its range). */
 export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null {
   const at = decisionPoint(c);
-  const values = at.running ? evaluateCalls(at, n) : evaluateCallsAtSnap(at, n);
+  const lateTimeout = c.kind === "timeout" && at.running && c.playClockLeft !== null ? c.playClockLeft : null;
+  const values = lateTimeout !== null ? timeoutValues(at, lateTimeout, n) : at.running ? evaluateCalls(at, n) : evaluateCallsAtSnap(at, n);
   if (!values.some((v) => v.call === c.call)) return null;
   const best = bestScored(values);
   // Which pass to throw (where it goes, play-action or a screen) depends on the coverage and the play
@@ -65,8 +106,10 @@ export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null
     snapClock: c.state.clock, description: c.description, call: c.call, wpCall, best: best.call, wpBest: best.wp,
     cost: Math.max(0, best.wp - wpCall),
     values: ranked(values).map((v) => ({ call: v.call, wp: v.wp })),
-    reason: bestCallReason(at, best.call),
-    against: judged === best.call ? null : whyNot(at, judged),
+    // For a timeout, the best play is explained from its own snap: the play clock it had left already ran.
+    reason: bestCallReason(lateTimeout !== null && best.call !== "timeout" ? snapAfter(at, burnBefore(at, best.call, lateTimeout)) : at, best.call),
+    against: judged === best.call ? null : lateTimeout !== null ? timeoutAgainst(at, best.call, lateTimeout) : whyNot(at, judged),
+    playClockLeft: lateTimeout,
     score: c.score,
     nflverseWp: c.nflverseWp, nflverseWpa: c.nflverseWpa, lowConfidence,
   };

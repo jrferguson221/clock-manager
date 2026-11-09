@@ -39,7 +39,7 @@ export interface DriveAssumptions {
 export const DEFAULT_ASSUMPTIONS: DriveAssumptions = Object.freeze({
   playDuration: 6,
   hurryUp: 18,
-  spikeLineup: 12,
+  spikeLineup: 10,
   yardsPerPlay: 7,
   fgRange: 35,
   stopShare: 0.5,

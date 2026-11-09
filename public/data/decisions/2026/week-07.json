@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-09T21:16:37.070Z",
+ "generatedAt": "2026-11-09T21:41:28.164Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.04371205047418165,
-  "within10": 0.9072164948453608
+  "meanAbsDiff": 0.04302768480716295,
+  "within10": 0.8969072164948454
  },
  "worst": [
   {
@@ -32,26 +32,26 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.342,
+   "wpCall": 0.3446666666666667,
    "best": "run",
-   "wpBest": 0.4206666666666667,
-   "cost": 0.07866666666666666,
+   "wpBest": 0.42133333333333334,
+   "cost": 0.07666666666666666,
    "values": [
     {
      "call": "run",
-     "wp": 0.4206666666666667
+     "wp": 0.42133333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.411
+     "wp": 0.4126666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.406
+     "wp": 0.4036666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.401
+     "wp": 0.4003333333333333
     },
     {
      "call": "pass-play-action",
@@ -59,15 +59,15 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.375
+     "wp": 0.37566666666666665
     },
     {
      "call": "fg",
-     "wp": 0.342
+     "wp": 0.3446666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.32466666666666666
+     "wp": 0.328
     }
    ],
    "reason": {
@@ -75,6 +75,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 10,
     "defense": 13
@@ -106,42 +107,42 @@
    "snapClock": 28,
    "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
    "call": "pass-sideline",
-   "wpCall": 0.717,
+   "wpCall": 0.7176666666666667,
    "best": "pass-screen",
-   "wpBest": 0.717,
+   "wpBest": 0.7176666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-screen",
-     "wp": 0.717
+     "wp": 0.7176666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.708
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.7036666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.7033333333333334
+     "wp": 0.7116666666666667
     },
     {
      "call": "run",
-     "wp": 0.699
+     "wp": 0.7063333333333334
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.7053333333333334
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.704
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6913333333333334
+     "wp": 0.693
     },
     {
      "call": "spike",
-     "wp": 0.656
+     "wp": 0.6456666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.628
+     "wp": 0.6316666666666667
     },
     {
      "call": "punt",
@@ -153,6 +154,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 24,
     "defense": 24
@@ -182,42 +184,42 @@
    "snapClock": 153,
    "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
    "call": "pass-deep",
-   "wpCall": 0.119,
+   "wpCall": 0.12166666666666667,
    "best": "pass-play-action",
-   "wpBest": 0.119,
+   "wpBest": 0.12166666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.119
+     "wp": 0.12166666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.10366666666666667
+     "wp": 0.105
     },
     {
      "call": "pass-sideline",
-     "wp": 0.10166666666666667
+     "wp": 0.101
     },
     {
      "call": "pass-deep",
-     "wp": 0.09533333333333334
+     "wp": 0.1
     },
     {
      "call": "pass-screen",
-     "wp": 0.088
-    },
-    {
-     "call": "fg",
-     "wp": 0.08233333333333333
+     "wp": 0.09
     },
     {
      "call": "run",
-     "wp": 0.08033333333333334
+     "wp": 0.08666666666666667
+    },
+    {
+     "call": "fg",
+     "wp": 0.08166666666666667
     },
     {
      "call": "punt",
-     "wp": 0.06166666666666667
+     "wp": 0.06666666666666667
     }
    ],
    "reason": {
@@ -225,6 +227,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 17,
     "defense": 24
@@ -254,50 +257,50 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.8246666666666667,
+   "wpCall": 0.8223333333333334,
    "best": "run",
-   "wpBest": 0.829,
-   "cost": 0.0043333333333333,
+   "wpBest": 0.8296666666666667,
+   "cost": 0.007333333333333303,
    "values": [
     {
      "call": "run",
-     "wp": 0.829
+     "wp": 0.8296666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.826
+     "wp": 0.824
     },
     {
      "call": "pass-middle",
-     "wp": 0.8246666666666667
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.8193333333333334
+     "wp": 0.8223333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.8133333333333334
+     "wp": 0.8213333333333334
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.819
     },
     {
      "call": "pass-sideline",
-     "wp": 0.813
+     "wp": 0.8113333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.7966666666666666
+     "wp": 0.798
     },
     {
      "call": "kneel",
-     "wp": 0.7833333333333333
+     "wp": 0.7893333333333333
     },
     {
      "call": "spike",
-     "wp": 0.7643333333333333
+     "wp": 0.7636666666666667
     },
     {
      "call": "punt",
-     "wp": 0.7373333333333333
+     "wp": 0.7356666666666667
     }
    ],
    "reason": {
@@ -308,6 +311,7 @@
     "text": "A pass risks an incompletion that stops the clock for them, and an interception.",
     "section": "running-out-the-clock"
    },
+   "playClockLeft": null,
    "score": {
     "offense": 21,
     "defense": 17
@@ -384,6 +388,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 24,
     "defense": 24
@@ -413,26 +418,26 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.342,
+   "wpCall": 0.3446666666666667,
    "best": "run",
-   "wpBest": 0.4206666666666667,
-   "cost": 0.07866666666666666,
+   "wpBest": 0.42133333333333334,
+   "cost": 0.07666666666666666,
    "values": [
     {
      "call": "run",
-     "wp": 0.4206666666666667
+     "wp": 0.42133333333333334
     },
     {
      "call": "timeout",
-     "wp": 0.411
+     "wp": 0.4126666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.406
+     "wp": 0.4036666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.401
+     "wp": 0.4003333333333333
     },
     {
      "call": "pass-play-action",
@@ -440,15 +445,15 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.375
+     "wp": 0.37566666666666665
     },
     {
      "call": "fg",
-     "wp": 0.342
+     "wp": 0.3446666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.32466666666666666
+     "wp": 0.328
     }
    ],
    "reason": {
@@ -456,6 +461,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 10,
     "defense": 13

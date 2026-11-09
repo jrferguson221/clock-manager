@@ -4,7 +4,8 @@
 import { Accordion, Alert, Badge, Card, Group, List, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { Decision, DecisionIndex, DecisionWeek } from "@situational-football/schemas";
-import { PLAY_CALLS } from "./sim";
+import { CLOSE, PLAY_CALLS } from "./sim";
+import type { PlayCall } from "@situational-football/schemas";
 import { formatClock } from "./time";
 import { ChoiceSelect, spotFrom } from "./fields";
 import { AnchorLink, GuideLink, ReasonText } from "./ReadMore";
@@ -114,7 +115,8 @@ function Method({ week }: { week: DecisionWeek }) {
             <List.Item>
               When the clock was running before a play, the call is judged from the end of the play before, so each option
               pays its own time to the snap: a spike's quick lineup, a hurry-up, or a timeout. Whether the clock was running
-              is worked out from the play before.
+              is worked out from the play before. A timeout is judged with the play clock it was called on: one taken
+              after letting the play clock run down costs no time, only the timeout.
             </List.Item>
             <List.Item>
               As a check, every situation's win probability is compared with nflverse's independent model. They agree
@@ -130,6 +132,23 @@ function Method({ week }: { week: DecisionWeek }) {
       </Accordion.Item>
     </Accordion>
   );
+}
+
+const isPass = (c: PlayCall) => c.startsWith("pass-");
+
+/**
+ * Other calls within the model's noise of the best one, so a near-tie reads as one: a pass counts once,
+ * as "A pass" at its best kind, and their own call isn't listed.
+ */
+function alsoGood(d: Decision): { label: string; wp: number }[] {
+  const out = new Map<string, number>();
+  for (const v of d.values) {
+    if (v.call === d.best || v.wp < d.wpBest - CLOSE) continue;
+    if (v.call === d.call || (isPass(v.call) && (isPass(d.call) || isPass(d.best)))) continue;
+    const label = isPass(v.call) ? "A pass" : PLAY_CALLS[v.call];
+    out.set(label, Math.max(out.get(label) ?? 0, v.wp));
+  }
+  return [...out].map(([label, wp]) => ({ label, wp })).sort((a, b) => b.wp - a.wp);
 }
 
 /** A team on the scorebug: its plate in its own color, with the score and timeouts at the decision. */
@@ -169,6 +188,13 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
         defense={bugTeam(d.defense, d.score?.defense ?? null, s.oppTimeouts)}
         margin={s.margin} clock={formatClock(s.clock)} running={s.running} down={s.down} toGo={s.toGo} ytg={s.ytg}
       />
+      {d.playClockLeft !== null && (
+        <Text size="sm" c="dimmed" mt={6}>
+          {d.playClockLeft <= 5
+            ? `They let the play clock run down to about ${d.playClockLeft} seconds before the timeout, so it cost no time: every option is judged from there.`
+            : `They called it with about ${d.playClockLeft} seconds left on the play clock: every option is judged against what that play clock allowed.`}
+        </Text>
+      )}
       {decidedEarlier && (
         <Text size="sm" c="dimmed" mt={6}>
           The clock was running, so the call is judged from the end of the play before, at {formatClock(s.clock)}. They
@@ -184,6 +210,11 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
         <dd>
           {sameCall ? "Theirs, or one as good" : <><span className="call-name">{PLAY_CALLS[d.best]}</span>: {pct(d.wpBest)} to win</>}
           {kind === "worst" && !sameCall && <> · <strong>{points(d.cost)} better</strong></>}
+          {!sameCall && alsoGood(d).length > 0 && (
+            <Text size="sm" c="dimmed" mt={4}>
+              About as good: {alsoGood(d).map((o) => `${o.label} (${pct(o.wp)})`).join(", ")}. The difference is within the model's noise.
+            </Text>
+          )}
         </dd>
 
         {!sameCall && (

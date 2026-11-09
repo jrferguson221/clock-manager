@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 4,
- "generatedAt": "2026-11-09T21:16:37.070Z",
+ "generatedAt": "2026-11-09T21:41:28.164Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 194,
  "agreement": {
   "plays": 194,
-  "meanAbsDiff": 0.04557672495474314,
-  "within10": 0.9020618556701031
+  "meanAbsDiff": 0.044143515280278225,
+  "within10": 0.9175257731958762
  },
  "worst": [
   {
@@ -32,42 +32,42 @@
    "snapClock": 136,
    "description": "(2:16) 34-D.Zvada 52 yard field goal is GOOD, Center-58-B.Mann, Holder-15-J.Stout.",
    "call": "fg",
-   "wpCall": 0.7423333333333333,
+   "wpCall": 0.7486666666666667,
    "best": "pass-middle",
-   "wpBest": 0.8193333333333334,
-   "cost": 0.07700000000000007,
+   "wpBest": 0.819,
+   "cost": 0.07033333333333325,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.8193333333333334
+     "wp": 0.819
     },
     {
      "call": "pass-sideline",
-     "wp": 0.79
+     "wp": 0.791
     },
     {
      "call": "pass-play-action",
-     "wp": 0.787
+     "wp": 0.7873333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.7593333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.7436666666666667
+     "wp": 0.7566666666666667
     },
     {
      "call": "fg",
-     "wp": 0.7423333333333333
+     "wp": 0.7486666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.7423333333333333
+     "wp": 0.7426666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.7416666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.6303333333333333
+     "wp": 0.6293333333333333
     }
    ],
    "reason": {
@@ -75,6 +75,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 27,
     "defense": 24
@@ -106,46 +107,46 @@
    "snapClock": 215,
    "description": "(3:35) (Shotgun) 15-P.Mahomes pass deep left to 2-T.Thornton to LV 5 for 55 yards (31-T.Stukes). KC-2-T.Thornton was injured during the play. PENALTY on LV-7-Q.Walker, Unnecessary Roughness, 3 yards, enforced at LV 5.",
    "call": "pass-deep",
-   "wpCall": 0.538,
+   "wpCall": 0.534,
    "best": "pass-middle",
-   "wpBest": 0.538,
+   "wpBest": 0.534,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.538
+     "wp": 0.534
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5233333333333333
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.515
+     "wp": 0.5216666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5123333333333333
+     "wp": 0.5076666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.507
     },
     {
      "call": "timeout",
-     "wp": 0.49966666666666665
-    },
-    {
-     "call": "run",
      "wp": 0.493
     },
     {
+     "call": "run",
+     "wp": 0.48966666666666664
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.4846666666666667
+     "wp": 0.485
     },
     {
      "call": "spike",
-     "wp": 0.43633333333333335
+     "wp": 0.43466666666666665
     },
     {
      "call": "punt",
-     "wp": 0.3233333333333333
+     "wp": 0.327
     }
    ],
    "reason": {
@@ -153,6 +154,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 17,
     "defense": 19
@@ -182,38 +184,38 @@
    "snapClock": 43,
    "description": "(:43) (Shotgun) 4-D.Prescott pass short middle to 88-C.Lamb for 12 yards, TOUCHDOWN.",
    "call": "pass-middle",
-   "wpCall": 0.6286666666666667,
+   "wpCall": 0.6256666666666667,
    "best": "pass-middle",
-   "wpBest": 0.6286666666666667,
+   "wpBest": 0.6256666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6286666666666667
+     "wp": 0.6256666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.623
+     "wp": 0.6173333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.6133333333333333
+     "wp": 0.609
     },
     {
      "call": "pass-sideline",
-     "wp": 0.603
+     "wp": 0.5993333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.5843333333333334
+     "wp": 0.583
     },
     {
      "call": "run",
-     "wp": 0.577
+     "wp": 0.5756666666666667
     },
     {
      "call": "spike",
-     "wp": 0.528
+     "wp": 0.526
     },
     {
      "call": "fg",
@@ -225,6 +227,7 @@
     "section": "red-zone"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 27,
     "defense": 30
@@ -254,42 +257,42 @@
    "snapClock": 74,
    "description": "(1:14) (Shotgun) 17-J.Allen pass deep left intended for 5-J.Palmer INTERCEPTED by 4-C.Woodson at NE 19. 4-C.Woodson to NE 19 for no gain (5-J.Palmer).",
    "call": "pass-deep",
-   "wpCall": 0.35533333333333333,
+   "wpCall": 0.357,
    "best": "pass-middle",
-   "wpBest": 0.35533333333333333,
+   "wpBest": 0.357,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.35533333333333333
+     "wp": 0.357
     },
     {
      "call": "pass-play-action",
-     "wp": 0.351
+     "wp": 0.35633333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3423333333333333
+     "wp": 0.344
     },
     {
      "call": "pass-screen",
-     "wp": 0.3396666666666667
+     "wp": 0.3426666666666667
     },
     {
      "call": "run",
-     "wp": 0.3383333333333333
+     "wp": 0.3396666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.32133333333333336
+     "wp": 0.3283333333333333
     },
     {
      "call": "spike",
-     "wp": 0.2986666666666667
+     "wp": 0.303
     },
     {
      "call": "punt",
-     "wp": 0.06233333333333333
+     "wp": 0.07733333333333334
     }
    ],
    "reason": {
@@ -297,6 +300,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 26,
     "defense": 29
@@ -326,38 +330,38 @@
    "snapClock": 56,
    "description": "(:56) (Shotgun) 9-J.Burrow pass short middle to 30-C.Brown to JAX 12 for 9 yards (25-R.Lane).",
    "call": "pass-middle",
-   "wpCall": 0.16933333333333334,
+   "wpCall": 0.16166666666666665,
    "best": "pass-play-action",
-   "wpBest": 0.16933333333333334,
+   "wpBest": 0.16166666666666665,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.16933333333333334
+     "wp": 0.16166666666666665
     },
     {
      "call": "pass-deep",
-     "wp": 0.16233333333333333
+     "wp": 0.15566666666666668
     },
     {
      "call": "pass-middle",
-     "wp": 0.13966666666666666
+     "wp": 0.13
     },
     {
      "call": "pass-sideline",
-     "wp": 0.12633333333333333
+     "wp": 0.12133333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.114
-    },
-    {
-     "call": "run",
-     "wp": 0.061
+     "wp": 0.10333333333333333
     },
     {
      "call": "fg",
-     "wp": 0.052
+     "wp": 0.056666666666666664
+    },
+    {
+     "call": "run",
+     "wp": 0.052333333333333336
     }
    ],
    "reason": {
@@ -365,6 +369,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 17,
     "defense": 22
@@ -394,42 +399,42 @@
    "snapClock": 154,
    "description": "(2:34) (Shotgun) 7-C.Stroud pass short right to 86-D.Schultz to DAL 25 for 2 yards. Lateral to 32-D.Montgomery pushed ob at DAL 6 for 19 yards (53-D.Winters; 23-A.Speed).",
    "call": "pass-sideline",
-   "wpCall": 0.289,
+   "wpCall": 0.291,
    "best": "pass-play-action",
-   "wpBest": 0.289,
+   "wpBest": 0.291,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.289
+     "wp": 0.291
     },
     {
      "call": "pass-middle",
-     "wp": 0.273
+     "wp": 0.27666666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.26766666666666666
+     "wp": 0.27266666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.26266666666666666
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.26033333333333336
+     "wp": 0.263
     },
     {
      "call": "run",
      "wp": 0.258
     },
     {
+     "call": "pass-screen",
+     "wp": 0.258
+    },
+    {
      "call": "fg",
-     "wp": 0.211
+     "wp": 0.20733333333333334
     },
     {
      "call": "spike",
-     "wp": 0.18133333333333335
+     "wp": 0.18533333333333332
     }
    ],
    "reason": {
@@ -437,6 +442,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 23,
     "defense": 27

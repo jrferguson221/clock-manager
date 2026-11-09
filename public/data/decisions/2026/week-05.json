@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 5,
- "generatedAt": "2026-11-09T21:16:37.070Z",
+ "generatedAt": "2026-11-09T21:41:28.164Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 15,
  "evaluated": 139,
  "agreement": {
   "plays": 139,
-  "meanAbsDiff": 0.057214607821808684,
-  "within10": 0.8129496402877698
+  "meanAbsDiff": 0.05561946195878569,
+  "within10": 0.8273381294964028
  },
  "worst": [
   {
@@ -32,42 +32,42 @@
    "snapClock": 106,
    "description": "(1:46) 9-L.Cooke punts 41 yards to PHI 28, Center-52-D.Hamilton. 85-B.Covey to PHI 38 for 10 yards (35-J.Mcleod).",
    "call": "punt",
-   "wpCall": 0.4666666666666667,
+   "wpCall": 0.4553333333333333,
    "best": "run",
-   "wpBest": 0.7203333333333334,
-   "cost": 0.2536666666666667,
+   "wpBest": 0.7253333333333334,
+   "cost": 0.2700000000000001,
    "values": [
     {
      "call": "run",
-     "wp": 0.7203333333333334
+     "wp": 0.7253333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.675
+     "wp": 0.6806666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6516666666666666
+     "wp": 0.6573333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6296666666666667
+     "wp": 0.6366666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.62
-    },
-    {
-     "call": "punt",
-     "wp": 0.4666666666666667
+     "wp": 0.6246666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.4623333333333333
+     "wp": 0.472
+    },
+    {
+     "call": "punt",
+     "wp": 0.4553333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.21733333333333332
+     "wp": 0.23533333333333334
     }
    ],
    "reason": {
@@ -78,6 +78,7 @@
     "text": "Punting gives the ball back when you still had a good chance to keep it.",
     "section": "fourth-down"
    },
+   "playClockLeft": null,
    "score": {
     "offense": 16,
     "defense": 14
@@ -107,42 +108,42 @@
    "snapClock": 120,
    "description": "(2:00) 18-E.Pineiro 44 yard field goal is GOOD, Center-46-J.Weeks, Holder-15-C.Waitman.",
    "call": "fg",
-   "wpCall": 0.6126666666666667,
+   "wpCall": 0.6123333333333333,
    "best": "run",
-   "wpBest": 0.7083333333333334,
-   "cost": 0.09566666666666668,
+   "wpBest": 0.7016666666666667,
+   "cost": 0.08933333333333338,
    "values": [
     {
      "call": "run",
-     "wp": 0.7083333333333334
+     "wp": 0.7016666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.6643333333333333
+     "wp": 0.655
     },
     {
      "call": "pass-middle",
-     "wp": 0.645
-    },
-    {
-     "call": "pass-play-action",
      "wp": 0.643
     },
     {
+     "call": "pass-play-action",
+     "wp": 0.6386666666666667
+    },
+    {
      "call": "pass-sideline",
-     "wp": 0.6266666666666667
+     "wp": 0.6243333333333333
     },
     {
      "call": "fg",
-     "wp": 0.6126666666666667
+     "wp": 0.6123333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.5233333333333333
+     "wp": 0.5186666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.4003333333333333
+     "wp": 0.404
     }
    ],
    "reason": {
@@ -150,91 +151,13 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 29,
     "defense": 29
    },
    "nflverseWp": 0.581214010715485,
    "nflverseWpa": 0.0732331275939941,
-   "lowConfidence": false
-  },
-  {
-   "id": "2026_05_BUF_LA-4392",
-   "gameId": "2026_05_BUF_LA",
-   "offense": "LA",
-   "defense": "BUF",
-   "home": "LA",
-   "away": "BUF",
-   "date": "2026-10-12",
-   "situation": {
-    "clock": 26,
-    "running": true,
-    "down": 1,
-    "toGo": 1,
-    "ytg": 1,
-    "margin": -7,
-    "timeouts": 1,
-    "oppTimeouts": 3
-   },
-   "snapClock": 8,
-   "description": "(:08) (No Huddle, Shotgun) 23-K.Williams left guard for 1 yard, TOUCHDOWN.",
-   "call": "run",
-   "wpCall": 0.2826666666666667,
-   "best": "timeout",
-   "wpBest": 0.34933333333333333,
-   "cost": 0.06666666666666665,
-   "values": [
-    {
-     "call": "timeout",
-     "wp": 0.34933333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.2826666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.25633333333333336
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.224
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.22066666666666668
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.20833333333333334
-    },
-    {
-     "call": "spike",
-     "wp": 0.18766666666666668
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.16766666666666666
-    },
-    {
-     "call": "fg",
-     "wp": 0.005333333333333333
-    }
-   ],
-   "reason": {
-    "text": "The clock was running with 0:26 left. A timeout saves the 18 seconds a hurry-up snap would burn.",
-    "section": "timeouts"
-   },
-   "against": {
-    "text": "A play that ends in bounds keeps the clock running when you're short on time.",
-    "section": "clock-rules"
-   },
-   "score": {
-    "offense": 27,
-    "defense": 34
-   },
-   "nflverseWp": 0.24088753759861,
-   "nflverseWpa": 0.172015441733801,
    "lowConfidence": false
   }
  ],
@@ -303,6 +226,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 16,
     "defense": 17
@@ -332,38 +256,38 @@
    "snapClock": 206,
    "description": "(3:26) (Shotgun) 16-T.Lawrence pass deep right to 11-P.Washington for 27 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.289,
+   "wpCall": 0.291,
    "best": "pass-middle",
-   "wpBest": 0.289,
+   "wpBest": 0.291,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.289
+     "wp": 0.291
     },
     {
      "call": "pass-play-action",
-     "wp": 0.27566666666666667
+     "wp": 0.2786666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.2633333333333333
+     "wp": 0.26566666666666666
     },
     {
      "call": "pass-deep",
-     "wp": 0.24933333333333332
+     "wp": 0.249
     },
     {
      "call": "pass-screen",
-     "wp": 0.23533333333333334
+     "wp": 0.235
     },
     {
      "call": "run",
-     "wp": 0.22466666666666665
+     "wp": 0.225
     },
     {
      "call": "fg",
-     "wp": 0.19666666666666666
+     "wp": 0.198
     }
    ],
    "reason": {
@@ -371,6 +295,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 10,
     "defense": 14
@@ -400,46 +325,46 @@
    "snapClock": 260,
    "description": "(4:20) 7-G.Smith sacked at CLE 48 for -9 yards (49-C.Schwesinger). FUMBLES (49-C.Schwesinger) [49-C.Schwesinger], RECOVERED by CLE-98-A.Huntington at NYJ 48. 98-A.Huntington to NYJ 43 for 5 yards (66-J.Tippmann; 70-A.Membou).",
    "call": "pass-play-action",
-   "wpCall": 0.607,
+   "wpCall": 0.6056666666666667,
    "best": "pass-screen",
-   "wpBest": 0.607,
+   "wpBest": 0.6056666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-screen",
-     "wp": 0.607
+     "wp": 0.6056666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.5896666666666667
+     "wp": 0.581
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5816666666666667
+     "wp": 0.5793333333333334
     },
     {
      "call": "run",
-     "wp": 0.5773333333333334
+     "wp": 0.5776666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5766666666666667
+     "wp": 0.5666666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.558
+     "wp": 0.559
     },
     {
      "call": "timeout",
-     "wp": 0.5523333333333333
+     "wp": 0.546
     },
     {
      "call": "spike",
-     "wp": 0.5383333333333333
+     "wp": 0.5323333333333333
     },
     {
      "call": "fg",
-     "wp": 0.43366666666666664
+     "wp": 0.43966666666666665
     }
    ],
    "reason": {
@@ -447,6 +372,7 @@
     "section": "play-model"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 10,
     "defense": 12
@@ -515,6 +441,7 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 14,
     "defense": 16
@@ -544,42 +471,42 @@
    "snapClock": 187,
    "description": "(3:07) (Shotgun) 0-B.Allen left tackle for 22 yards, TOUCHDOWN.",
    "call": "run",
-   "wpCall": 0.5003333333333333,
+   "wpCall": 0.5073333333333333,
    "best": "pass-play-action",
-   "wpBest": 0.545,
+   "wpBest": 0.552,
    "cost": 0.04466666666666674,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.545
+     "wp": 0.552
     },
     {
      "call": "pass-deep",
-     "wp": 0.528
+     "wp": 0.5373333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.527
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5246666666666666
+     "wp": 0.5333333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.5226666666666666
+     "wp": 0.525
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5236666666666666
     },
     {
      "call": "run",
-     "wp": 0.5003333333333333
+     "wp": 0.5073333333333333
     },
     {
      "call": "fg",
-     "wp": 0.461
+     "wp": 0.464
     },
     {
      "call": "spike",
-     "wp": 0.46
+     "wp": 0.4633333333333333
     }
    ],
    "reason": {
@@ -587,6 +514,7 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "playClockLeft": null,
    "score": {
     "offense": 10,
     "defense": 12

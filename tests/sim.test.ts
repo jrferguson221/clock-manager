@@ -28,7 +28,7 @@ describe("step", () => {
 
   it("a spike costs a down and stops the clock", () => {
     const r = step(base, "spike", rng());
-    expect(r.state).toMatchObject({ clock: 92, down: 2, running: false }); // 105 - 12 - 1
+    expect(r.state).toMatchObject({ clock: 94, down: 2, running: false }); // 105 - 10 - 1
   });
 
   it("ends the game when the clock runs out before the snap", () => {
@@ -234,7 +234,8 @@ describe("needing a touchdown in range", () => {
     const g: GameState = { ...base, running: false, ytg: 30, margin: -4, timeouts: { you: 1, opp: 2 } };
     const wp = (clock: number) => bestScored(evaluateCalls({ ...g, clock }, 1500)).wp;
     expect(policy({ ...g, clock: 44 })).toBe("pass-deep");
-    expect(wp(50)).toBeGreaterThan(wp(32) - 0.025);
+    // A little lower with more time: a touchdown with 0:40 left gives them time to answer with a field goal.
+    expect(wp(50)).toBeGreaterThan(wp(32) - 0.035);
   });
 });
 

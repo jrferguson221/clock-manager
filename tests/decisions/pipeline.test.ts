@@ -88,8 +88,8 @@ describe("scoring", () => {
     const [c] = findCandidates([play({ play_id: "1", play_type: "run", game_seconds_remaining: "100" }), play({ play_id: "2", play_type: "qb_spike", game_seconds_remaining: "80" })]).slice(1);
     if (c === undefined) throw new Error("no spike found");
     expect(c.call).toBe("spike");
-    // A trailing team spikes about 12 seconds after the play ends.
-    expect(decisionPoint(c)).toMatchObject({ clock: 92, running: true });
+    // A trailing team spikes about 10 seconds after the play ends.
+    expect(decisionPoint(c)).toMatchObject({ clock: 90, running: true });
   });
 
   it("judges every pass as one decision, credited with the best kind of pass", () => {
@@ -130,5 +130,27 @@ describe("the score and the case against the call", () => {
     const d = scoreDecision(c, 200);
     expect(d?.against?.text).toBe("Punting gives the ball back when you need to score.");
     expect(d?.score).toEqual({ offense: 17, defense: 20 });
+  });
+});
+
+describe("an offensive timeout with the clock running", () => {
+  // Ahead by 3 on 4th & 13 at their 23: the play before snapped at 1:57, the timeout came at 1:14.
+  const rows = () => [
+    play({ play_id: "1", play_type: "run", game_seconds_remaining: "117", posteam: "DAL", defteam: "ARI", score_differential: "3", down: "3", ydstogo: "16", yardline_100: "26", posteam_timeouts_remaining: "2", defteam_timeouts_remaining: "0" }),
+    play({ play_id: "2", play_type: "no_play", posteam: "", timeout: "1", timeout_team: "DAL", game_seconds_remaining: "74" }),
+    play({ play_id: "3", play_type: "field_goal", game_seconds_remaining: "74", posteam: "DAL", defteam: "ARI", score_differential: "3", down: "4", ydstogo: "13", yardline_100: "23", posteam_timeouts_remaining: "1", defteam_timeouts_remaining: "0" }),
+  ];
+
+  it("estimates the play clock left: about 3 seconds after letting it run", () => {
+    const c = findCandidates(rows()).find((x) => x.call === "timeout");
+    expect(c?.playClockLeft).toBe(3);
+  });
+
+  it("costs only the timeout when the play clock was nearly out", () => {
+    const c = findCandidates(rows()).find((x) => x.call === "timeout");
+    if (c === undefined) throw new Error("no timeout found");
+    const d = scoreDecision(c, 400);
+    expect(d?.cost ?? 1).toBeLessThan(0.02);
+    expect(d?.playClockLeft).toBe(3);
   });
 });

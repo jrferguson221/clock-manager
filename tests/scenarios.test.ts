@@ -29,7 +29,7 @@ describe("scenarios", () => {
     expect(a.reason.section).toBe("clock-rules");
   });
 
-  it("WR: at 0:18 with no timeouts get out of bounds; at 0:24 the extra yards reach field-goal range", () => {
+  it("WR: at 0:15 with no timeouts get out of bounds; at 0:24 there's time to turn upfield, spike and kick", () => {
     const late = analyzeScenario("wr-sideline", presetInput("wr-sideline"), 1000, 200);
     expect(late.better).toBe(0);
     expect(late.options[0].id).toBe("out-of-bounds");

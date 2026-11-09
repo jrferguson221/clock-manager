@@ -10,7 +10,7 @@ it("the player-decisions page opens on the QB scenario with its verdict and flip
 });
 
 it("opens each scenario from the URL, and is in the mode tabs", async () => {
-  const wr = await renderAt("/scenarios?scenario=wr-sideline&clock=0:18&margin=-3&timeouts=0&side=own&yardLine=45");
+  const wr = await renderAt("/scenarios?scenario=wr-sideline&clock=0:15&margin=-3&timeouts=0&side=own&yardLine=45");
   expect(wr.html).toContain("Get out of bounds or turn upfield?");
   expect(wr.html).toContain("Extra yards by turning upfield");
   const rb = await renderAt("/scenarios?scenario=rb-score&clock=1:05&margin=0&timeouts=2&oppTimeouts=2&down=1&yardLine=25");

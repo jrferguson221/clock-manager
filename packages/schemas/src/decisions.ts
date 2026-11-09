@@ -55,6 +55,8 @@ export const decisionSchema = z.object({
   reason: z.object({ text: z.string(), section: guideSectionSchema }),
   /** Why their call was worse than the best one, when the model has a specific reason. */
   against: z.nullable(z.object({ text: z.string(), section: guideSectionSchema })),
+  /** For a timeout with the clock running: about how many seconds were left on the play clock. */
+  playClockLeft: z.nullable(z.int().check(z.minimum(1), z.maximum(40))),
   /** The actual score before the play: the offense's points and the defense's. */
   score: z.nullable(z.object({ offense: z.int().check(z.minimum(0)), defense: z.int().check(z.minimum(0)) })),
   /** nflverse's win probability for the offense before the play, for comparison. */
