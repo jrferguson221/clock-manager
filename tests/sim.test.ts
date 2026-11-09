@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, snapDelay, FG_TIMEOUT_AT, DEFAULT_SIM, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -460,5 +460,47 @@ describe("kick or go for two", () => {
     const v = evaluateTry(after(-2, 0));
     expect(v.byPoints).toEqual([0, 0, 0.5]);
     expect(v.two).toBeCloseTo(SPECIAL_TEAMS.twoPoint * 0.5, 5);
+  });
+});
+
+describe("draining for a field goal", () => {
+  const inRange: GameState = { ...base, clock: 55, running: true, down: 1, toGo: 10, ytg: 25, margin: -2, timeouts: { you: 1, opp: 3 } };
+
+  it("spreads the clock over the downs left instead of burning it all before one snap", () => {
+    // 55 seconds, three snaps before a 4th-down kick: about 8 seconds a snap, not 35 before the first.
+    expect(snapDelay(inRange, "run")).toBeLessThanOrEqual(10);
+    expect(snapDelay({ ...inRange, down: 3, clock: 30 }, "run")).toBe(10);
+  });
+
+  it("lets the clock run down to 0:03 before its last timeout, at the kick", () => {
+    const atKick = step({ ...inRange, clock: 14, down: 2 }, "timeout", seededRng(1));
+    expect(atKick.state.clock).toBe(FG_TIMEOUT_AT);
+    // Earlier, a timeout stops the clock where it is.
+    expect(step(inRange, "timeout", seededRng(1)).state.clock).toBe(55);
+  });
+
+  it("keeps its timeout and drains rather than stopping the clock early", () => {
+    const values = evaluateCalls(inRange, 1500);
+    expect(wpOf(values, "run")).toBeGreaterThan(wpOf(values, "timeout") - 0.01);
+    expect(wpOf(values, "fg")).toBeLessThan(wpOf(values, "run") - 0.05);
+  });
+});
+
+describe("a defense facing a field-goal drain", () => {
+  const draining: GameState = { ...base, clock: 70, running: false, down: 1, toGo: 10, ytg: 20, margin: -2, timeouts: { you: 2, opp: 3 } };
+  /** The defense's timeouts after one in-bounds run, from a situation. */
+  const afterRun = (g: GameState) => step(g, "run", seededRng(3), DEFAULT_SIM, { yards: 2, seconds: 5, outOfBounds: false, incomplete: false }).state;
+
+  it("stops the clock to save time for its answer when the kick would beat it", () => {
+    const s = afterRun(draining);
+    expect(s.timeouts.opp).toBe(2);
+    expect(s.running).toBe(false);
+    expect(afterRun({ ...draining, margin: 0 }).timeouts.opp).toBe(2);
+  });
+
+  it("keeps its timeouts when the kick would only tie", () => {
+    const s = afterRun({ ...draining, margin: -3 });
+    expect(s.timeouts.opp).toBe(3);
+    expect(s.running).toBe(true);
   });
 });

@@ -12,7 +12,7 @@ import { NFL_RULES, PLAY_TYPES, runOutThreshold, DOWNS } from "./engine";
 import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
-  AVOID, CLOSE, DEFAULT_SIM, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
+  AVOID, CLOSE, DEFAULT_SIM, FG_TIMEOUT_AT, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
   END_ZONE_SHOT_CLOCK, GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, TIED_KNEEL_CLOCK, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
@@ -401,7 +401,9 @@ function TimeoutsSection() {
         <List.Item>
           <strong>Defenses use theirs too.</strong> A defense that's behind calls timeout after in-bounds plays in the last{" "}
           {DEFENSE_TIMEOUT_WINDOW / 60} minutes, to save time for its own offense, unless the two-minute warning is about
-          to stop the clock anyway.
+          to stop the clock anyway. So does a defense that's ahead or tied when the other team is draining for a field
+          goal that would beat it: it stops the clock after each run to keep time for its answer. If the kick would only
+          tie, it keeps them: a tie only means overtime.
         </List.Item>
       </List>
     </Section>
@@ -507,8 +509,15 @@ function FieldGoalSection() {
       <Text>When a field goal ties or wins and you're in range, the clock becomes the main opponent:</Text>
       <List spacing={4}>
         <List.Item>
-          <strong>Drain it, then kick.</strong> Run safe in-bounds plays to burn time, stop the clock with a timeout with
-          a few seconds left, and kick, so they get little or no time back. Kicking early leaves them time to answer.
+          <strong>Drain it, then kick.</strong> Run safe in-bounds plays to burn time, let the clock run down to about{" "}
+          {FG_TIMEOUT_AT} seconds, then call timeout and kick, so they get little or no time back. Kicking early leaves
+          them time to answer.
+        </List.Item>
+        <List.Item>
+          <strong>Spread the clock over your downs.</strong> Don't burn it all before one snap: let the play clock run
+          part of the way on each down, so you still get every play before the kick. Each run can gain yards and shorten
+          the kick, and the last one still ends with the clock nearly gone. Expect the defense to call timeouts after
+          your runs if your kick would beat them; it still pays to drain, but they'll get some time back.
         </List.Item>
         <List.Item>
           <strong>Keep a timeout for the kick.</strong> Without one, you need a spike (a down, about{" "}
