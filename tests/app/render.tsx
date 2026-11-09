@@ -28,3 +28,14 @@ export async function renderAt(path: string, decisions: DecisionsData = localDec
   const html = renderToString(<App router={router} />).replaceAll("<!-- -->", "");
   return { html, router, redirectedTo };
 }
+
+/** The text of the selected option in the select labelled `label`, as rendered. */
+export function picked(html: string, label: string): string | undefined {
+  const select = html.match(new RegExp(`<select[^>]*aria-label="${label}"[^>]*>(.*?)</select>`))?.[1];
+  return select?.match(/<option[^>]*selected=""[^>]*>([^<]*)<\/option>/)?.[1];
+}
+
+/** The game clock field's value, as rendered. */
+export function clockValue(html: string): string | undefined {
+  return html.match(/<input[^>]*aria-label="Game clock"[^>]*>/)?.[0].match(/value="([^"]*)"/)?.[1];
+}

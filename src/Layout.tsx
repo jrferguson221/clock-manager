@@ -6,9 +6,9 @@ import {
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 
+/** The header's tabs. The trainer's tab covers both its pages: leading and trailing, switched at the top. */
 const MODES = [
-  { to: "/", short: "Leading", label: "Leading: run out the clock" },
-  { to: "/trailing", short: "Trailing", label: "Trailing: drive to score" },
+  { to: "/", short: "Trainer", label: "Play-calling trainer", also: "/trailing" },
   { to: "/best-call", short: "Best call", label: "Best call" },
   { to: "/two-point", short: "Go for 2?", label: "Kick or go for 2" },
   { to: "/scenarios", short: "Players", label: "Player decisions" },
@@ -19,7 +19,7 @@ const MODES = [
 export default function Layout() {
   const pathname = useLocation({ select: (l) => l.pathname });
   const navigate = useNavigate();
-  const active = MODES.find((m) => m.to === pathname)?.to ?? null;
+  const active = MODES.find((m) => m.to === pathname || ("also" in m && m.also === pathname))?.to ?? null;
 
   // On a phone the tabs scroll sideways: keep the current one in view.
   useEffect(() => {

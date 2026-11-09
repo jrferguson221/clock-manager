@@ -1,23 +1,31 @@
 import { useMemo } from "react";
 import { Accordion, Alert, Badge, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { TrailingSearch } from "@situational-football/schemas";
+import { LIMITS, type LimitedField, type TrailingSearch } from "@situational-football/schemas";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
-import { ChoiceSelect, NumberField, clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
-import SituationForm, { ModeLayout, sharedFromGame } from "./SituationForm";
+import { clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
+import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
-import Scorebug from "./Scorebug";
+import Scorebug, { BugSelect } from "./Scorebug";
 import Trainer from "./Trainer";
+import TrainerToggle from "./TrainerToggle";
 
 const route = getRouteApi("/trailing");
 
-const TRAIL_OPTIONS = Array.from({ length: 17 }, (_, i) => ({ value: i, label: i === 0 ? "Tied" : String(i) }));
+/** The score, as the scorebug shows it, from tied to down 16. Values are your margin: 0 to -16. */
+const TRAIL_OPTIONS = Array.from({ length: 17 }, (_, i) => ({ value: -i, label: i === 0 ? "Tied" : `Down ${i}` }));
+const rangeOptions = (field: LimitedField) => {
+  const { min, max } = LIMITS[field];
+  return Array.from({ length: max - min + 1 }, (_, i) => ({ value: min + i, label: String(min + i) }));
+};
+const YPP_OPTIONS = rangeOptions("yardsPerPlay");
+const HURRY_OPTIONS = rangeOptions("hurryUp");
 
 export default function TrailingPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
-  const set = (patch: Partial<TrailingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const set = (patch: Partial<TrailingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const gameClock = clock.seconds;
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
@@ -45,14 +53,20 @@ export default function TrailingPanel() {
   const sim = useDebouncedByKey(game, `${JSON.stringify(game)}/${hurryUp}`);
   const cfg = useMemo(() => ({ ...DEFAULT_SIM, hurryUp }), [hurryUp]);
 
-  const form = (
-    <SituationForm
-      situation={s} set={set} clock={clock} oppTimeoutsLabel="Their timeouts"
-      score={<ChoiceSelect label="You trail by" value={s.trail} options={TRAIL_OPTIONS} onChange={(trail) => set({ trail })} />}
-      extras={
+  const scorebug = (
+    <Scorebug
+      situation={s} set={set} clock={clock}
+      margin={-s.trail} marginOptions={TRAIL_OPTIONS} onMargin={(m) => set({ trail: -m })}
+      settings={
         <>
-          <NumberField label="Yards per play" field="yardsPerPlay" value={yardsPerPlay} onChange={(n) => set({ ypp: n })} />
-          <NumberField label="Hurry-up time (s)" field="hurryUp" value={hurryUp} onChange={(n) => set({ hurryUp: n })} />
+          <span className="sb-setting">
+            <BugSelect label="Yards per play" value={yardsPerPlay} options={YPP_OPTIONS} onChange={(ypp) => set({ ypp })}>{yardsPerPlay}</BugSelect>
+            <span className="sb-setting-label">yards a play</span>
+          </span>
+          <span className="sb-setting">
+            <BugSelect label="Hurry-up time in seconds" value={hurryUp} options={HURRY_OPTIONS} onChange={(n) => set({ hurryUp: n })}>{hurryUp}s</BugSelect>
+            <span className="sb-setting-label">hurry-up</span>
+          </span>
         </>
       }
     />
@@ -60,10 +74,8 @@ export default function TrailingPanel() {
 
   return (
     <ModeLayout
-      intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." form={form} mustEdit={gameClock == null}
-      scorebug={(edit) => (
-        <Scorebug {...s} margin={-s.trail} notes={[`${yardsPerPlay} yards a play`, `${hurryUp}s hurry-up`]} onEdit={edit} />
-      )}
+      toggle={<TrainerToggle current="trailing" situation={s} points={s.trail} />}
+      intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 1:45.</Alert>

@@ -14,3 +14,12 @@ it("shows a not-found page with a way home for unknown paths", async () => {
   const { html } = await renderAt("/nowhere");
   expect(html).toContain("Page not found");
 });
+
+it("one trainer tab covers both leading and trailing, with a switch between them", async () => {
+  const { html } = await renderAt("/trailing?clock=0:00");
+  const selected = html.match(/<button[^>]*aria-selected="true"[^>]*>(.*?)<\/button>/s);
+  expect(selected?.[1]).toContain("Play-calling trainer");
+  expect(html).not.toContain(">Leading: run out the clock<");
+  expect(html).toContain('aria-label="Are you leading or trailing?"');
+  expect(html).toMatch(/value="trailing"[^>]*checked=""|checked=""[^>]*value="trailing"/);
+});

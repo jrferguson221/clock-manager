@@ -1,5 +1,5 @@
 import { expect, it } from "bun:test";
-import { renderAt } from "./render";
+import { picked, renderAt } from "./render";
 
 it("trailing mode renders next-call advice, the plays budget and the play caller", async () => {
   const { html } = await renderAt("/trailing");
@@ -16,11 +16,16 @@ it("needs a touchdown when the URL says you trail by 7", async () => {
   expect(html).toContain("Plays to reach the end zone at 9 yards a play");
 });
 
-it("shows the situation as a scorebug with the drive settings under it", async () => {
-  const { html } = await renderAt("/trailing?trail=7&ypp=9&side=opp&yardLine=8&toGo=8&down=3");
-  expect(html).toContain("Down 7");
-  expect(html).toContain("3rd &amp; Goal");
-  expect(html).toContain("Opp 8");
-  expect(html).toContain("9 yards a play · 18s hurry-up");
-  expect(html).toContain("Edit the situation");
+it("shows the situation as a scorebug you edit in place, with the drive settings under it", async () => {
+  const { html } = await renderAt("/trailing?trail=7&ypp=9&side=opp&yardLine=8&toGo=8&down=3&oppTimeouts=1");
+  expect(picked(html, "Score")).toBe("Down 7");
+  expect(picked(html, "Down")).toBe("3rd");
+  expect(picked(html, "Yards to go")).toBe("Goal");
+  expect(picked(html, "Ball on")).toBe("Opp 8");
+  expect(picked(html, "Yards per play")).toBe("9");
+  expect(picked(html, "Hurry-up time in seconds")).toBe("18");
+  // Each timeout bar is a toggle, on while that timeout is left.
+  expect(html).toContain('aria-label="Them: 1 timeout left"');
+  expect(html).toMatch(/aria-pressed="true"[^>]*aria-label="Their timeout 1"/);
+  expect(html).toMatch(/aria-pressed="false"[^>]*aria-label="Their timeout 2"/);
 });
