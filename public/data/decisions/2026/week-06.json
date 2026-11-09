@@ -1,7 +1,7 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-09T22:38:03.742Z",
+ "generatedAt": "2026-11-09T23:11:18.825Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
@@ -110,7 +110,34 @@
      "keep": 1,
      "theirStart": 15.65491651205937,
      "backAgain": 0,
-     "clockBackAgain": null
+     "clockBackAgain": null,
+     "theyFieldGoal": 0,
+     "theyTouchdown": 0,
+     "handedOverNow": 0,
+     "nowClock": null,
+     "nowStart": null,
+     "byFirstDowns": [
+      {
+       "share": 1,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      }
+     ]
     },
     "best": {
      "wp": 0.166,
@@ -134,7 +161,34 @@
      "keep": 0.657,
      "theirStart": 20,
      "backAgain": 0,
-     "clockBackAgain": null
+     "clockBackAgain": null,
+     "theyFieldGoal": 0,
+     "theyTouchdown": 0,
+     "handedOverNow": 0.1245,
+     "nowClock": 4,
+     "nowStart": 20,
+     "byFirstDowns": [
+      {
+       "share": 1,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      }
+     ]
     }
    },
    "playClockLeft": null,
@@ -244,7 +298,34 @@
      "keep": 1,
      "theirStart": 30,
      "backAgain": 0,
-     "clockBackAgain": null
+     "clockBackAgain": null,
+     "theyFieldGoal": 0,
+     "theyTouchdown": 0,
+     "handedOverNow": 0,
+     "nowClock": null,
+     "nowStart": null,
+     "byFirstDowns": [
+      {
+       "share": 1,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      }
+     ]
     },
     "best": {
      "wp": 0.48875,
@@ -272,7 +353,34 @@
      "keep": 0.7295,
      "theirStart": 26.42570281124498,
      "backAgain": 0,
-     "clockBackAgain": null
+     "clockBackAgain": null,
+     "theyFieldGoal": 0,
+     "theyTouchdown": 0.0005,
+     "handedOverNow": 0.0445,
+     "nowClock": 7,
+     "nowStart": 20,
+     "byFirstDowns": [
+      {
+       "share": 0.9296740994854202,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0.07032590051457976,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      },
+      {
+       "share": 0,
+       "back": 0,
+       "clock": null
+      }
+     ]
     }
    },
    "playClockLeft": null,
@@ -566,7 +674,34 @@
      "keep": 0.9905,
      "theirStart": 42.127604166666664,
      "backAgain": 0.311,
-     "clockBackAgain": 39.90309038942479
+     "clockBackAgain": 39.90309038942479,
+     "theyFieldGoal": 0.085,
+     "theyTouchdown": 0.0345,
+     "handedOverNow": 0.0035,
+     "nowClock": 86,
+     "nowStart": 27,
+     "byFirstDowns": [
+      {
+       "share": 0.42431972789115646,
+       "back": 0.6072144288577155,
+       "clock": 49.57664099743308
+      },
+      {
+       "share": 0.17091836734693877,
+       "back": 0.1791044776119403,
+       "clock": 36.7037037037037
+      },
+      {
+       "share": 0.16326530612244897,
+       "back": 0.578125,
+       "clock": 36.71321321321321
+      },
+      {
+       "share": 0.24149659863945577,
+       "back": 0.6056338028169014,
+       "clock": 25.59011627906976
+      }
+     ]
     },
     "best": {
      "wp": 0.42,
@@ -594,7 +729,34 @@
      "keep": 0.986,
      "theirStart": 39.67914438502674,
      "backAgain": 0.234,
-     "clockBackAgain": 33.380223171889845
+     "clockBackAgain": 33.380223171889845,
+     "theyFieldGoal": 0.0485,
+     "theyTouchdown": 0.0205,
+     "handedOverNow": 0.012,
+     "nowClock": 86,
+     "nowStart": 38,
+     "byFirstDowns": [
+      {
+       "share": 0.5451197053406999,
+       "back": 0.4577702702702703,
+       "clock": 39.425379253792535
+      },
+      {
+       "share": 0.1685082872928177,
+       "back": 0.17486338797814208,
+       "clock": 25.375
+      },
+      {
+       "share": 0.13720073664825047,
+       "back": 0.4966442953020134,
+       "clock": 29.42192192192192
+      },
+      {
+       "share": 0.14917127071823205,
+       "back": 0.5617283950617284,
+       "clock": 21.411477411477414
+      }
+     ]
     }
    },
    "playClockLeft": null,

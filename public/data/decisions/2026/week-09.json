@@ -1,7 +1,7 @@
 {
  "season": 2026,
  "week": 9,
- "generatedAt": "2026-11-09T22:38:03.742Z",
+ "generatedAt": "2026-11-09T23:11:18.825Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
@@ -107,7 +107,34 @@
      "keep": 0,
      "theirStart": 23,
      "backAgain": 0.841,
-     "clockBackAgain": 164.67895362663495
+     "clockBackAgain": 164.67895362663495,
+     "theyFieldGoal": 0.0295,
+     "theyTouchdown": 0.003,
+     "handedOverNow": 1,
+     "nowClock": 256,
+     "nowStart": 23,
+     "byFirstDowns": [
+      {
+       "share": 0.451,
+       "back": 1,
+       "clock": 199.01552106430154
+      },
+      {
+       "share": 0.2355,
+       "back": 1,
+       "clock": 154.28025477707007
+      },
+      {
+       "share": 0.153,
+       "back": 0.8496732026143791,
+       "clock": 85.29230769230769
+      },
+      {
+       "share": 0.1605,
+       "back": 0.1526479750778816,
+       "clock": 53.795918367346935
+      }
+     ]
     },
     "best": {
      "wp": 0.2595,
@@ -131,7 +158,34 @@
      "keep": 0.523,
      "theirStart": 50.65003326679973,
      "backAgain": 0.7925,
-     "clockBackAgain": 133.23687346652645
+     "clockBackAgain": 133.23687346652645,
+     "theyFieldGoal": 0.4145,
+     "theyTouchdown": 0.0975,
+     "handedOverNow": 0.477,
+     "nowClock": 258,
+     "nowStart": 63.932914046121596,
+     "byFirstDowns": [
+      {
+       "share": 0.39,
+       "back": 0.9717948717948718,
+       "clock": 165.7994722955145
+      },
+      {
+       "share": 0.2385,
+       "back": 0.8658280922431866,
+       "clock": 129.91525423728814
+      },
+      {
+       "share": 0.1895,
+       "back": 0.6886543535620053,
+       "clock": 100.96487867177524
+      },
+      {
+       "share": 0.182,
+       "back": 0.42032967032967034,
+       "clock": 35.932098765432094
+      }
+     ]
     }
    },
    "playClockLeft": null,

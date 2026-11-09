@@ -95,7 +95,12 @@ const DETAIL_GAMES = 2000;
  */
 export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES): CallOutcomes {
   const drive = new Map<string, number>();
-  let wins = 0, theyGet = 0, clockSum = 0, theyScore = 0, keep = 0, startSum = 0, startN = 0, back = 0, backClock = 0;
+  let wins = 0, theyGet = 0, clockSum = 0, theyScore = 0, theyFg = 0, theyTd = 0, keep = 0, startSum = 0, startN = 0;
+  let back = 0, backClock = 0;
+  // The call's own play handing them the ball: a punt, a failed 4th down, a turnover.
+  let now = 0, nowClock = 0, nowStart = 0;
+  // Their first possession, by first downs they got (0, 1, 2, 3 or more): how often, and whether and when we got it back.
+  const byFd = [0, 1, 2, 3].map(() => ({ n: 0, back: 0, clock: 0 }));
   for (let i = 0; i < n; i++) {
     const r = seededRng(0x5eed + i * 7919);
     let s = start;
@@ -103,8 +108,13 @@ export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES)
     let handedOver = false;
     let answered = false;
     let gotBack = false;
+    let gotBackClock = 0;
+    let fd = 0;
     const first = step(s, call, r);
     if (first.state.poss === "you" && !first.state.over && first.driveEnded === undefined) keep++;
+    if (first.state.poss === "opp" && !first.state.over && first.driveEnded !== "Touchdown" && first.driveEnded !== "Field goal") {
+      now++; nowClock += first.state.clock; nowStart += 100 - first.state.ytg;
+    }
     const track = (res: StepResult, offense: Team) => {
       if (offense === "you" && ended === null && (res.driveEnded !== undefined || res.state.poss !== "you" || res.state.over)) {
         ended = res.driveEnded ?? (res.state.over ? (res.state.margin > 0 ? "Ran out the clock" : "Time ran out") : "Ended");
@@ -114,16 +124,25 @@ export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES)
         // Where they take over, counting only punts, misses and turnovers (not kickoffs after a score).
         if (res.driveEnded !== "Touchdown" && res.driveEnded !== "Field goal") { startSum += 100 - res.state.ytg; startN++; }
       } else if (handedOver && !gotBack && res.state.poss === "you" && !res.state.over) {
-        gotBack = true; back++; backClock += res.state.clock;
+        gotBack = true; back++; backClock += res.state.clock; gotBackClock = res.state.clock;
       }
-      if (offense === "opp" && handedOver && !answered && res.driveEnded !== undefined) {
-        answered = true;
-        if (res.driveEnded === "Touchdown" || res.driveEnded === "Field goal") theyScore++;
+      // Their first possession: count first downs, and how it ended.
+      if (offense === "opp" && handedOver && !answered) {
+        if (res.state.poss === "opp" && res.state.down === 1 && res.driveEnded === undefined) fd++;
+        if (res.driveEnded !== undefined) {
+          answered = true;
+          if (res.driveEnded === "Touchdown") { theyScore++; theyTd++; }
+          if (res.driveEnded === "Field goal") { theyScore++; theyFg++; }
+        }
       }
     };
     track(first, "you");
     s = first.state;
     wins += playOut(s, r, DEFAULT_SIM, track);
+    if (handedOver) {
+      const bucket = byFd[Math.min(3, fd)];
+      if (bucket !== undefined) { bucket.n++; if (gotBack) { bucket.back++; bucket.clock += gotBackClock; } }
+    }
     const key = ended ?? (s.over ? "Time ran out" : "Ended");
     drive.set(key, (drive.get(key) ?? 0) + 1);
   }
@@ -133,10 +152,16 @@ export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES)
     theyGetBall: theyGet / n,
     clockWhenTheyGetBall: theyGet === 0 ? null : clockSum / theyGet,
     theyScore: theyScore / n,
+    theyFieldGoal: theyFg / n,
+    theyTouchdown: theyTd / n,
     keep: keep / n,
     theirStart: startN === 0 ? null : startSum / startN,
     backAgain: back / n,
     clockBackAgain: back === 0 ? null : backClock / back,
+    handedOverNow: now / n,
+    nowClock: now === 0 ? null : nowClock / now,
+    nowStart: now === 0 ? null : nowStart / now,
+    byFirstDowns: byFd.map((b) => ({ share: theyGet === 0 ? 0 : b.n / theyGet, back: b.n === 0 ? 0 : b.back / b.n, clock: b.back === 0 ? null : b.clock / b.back })),
   };
 }
 

@@ -93,5 +93,10 @@ it("explains why in plain logic: what they need, what each call leads to, and wh
   expect(text).toContain("Down 4 with 3:01 left, the Vikings need a touchdown.");
   expect(text).toMatch(/Their call, a punt: The Lions take over around their own \d+/);
   expect(text).toMatch(/The best call, going for it: the Vikings keep the ball \d+% of the time/);
-  expect(text).toMatch(/Either way the Vikings need a stop, so the field position a punt buys matters less than/);
+  // The stop: each first down costs time, and some number of them runs out the clock.
+  expect(text).toMatch(/every first down the Lions get costs time: the Vikings got the ball back after a three-and-out \(\d+% of the time\), with about \d:\d\d left/);
+  expect(text).toMatch(/With two first downs, the Lions can usually run out the clock/);
+  // A failed try stops the clock, and a field goal after it still leaves a tying touchdown.
+  expect(text).toMatch(/If it fails \(\d+%\), the clock stops: the Lions take over around the Vikings(?:'|&#x27;) \d+/);
+  expect(text).toMatch(/a Lions field goal still leaves the Vikings just a touchdown to tie/);
 });

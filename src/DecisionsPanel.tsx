@@ -252,16 +252,54 @@ function afterLine(d: Decision, o: CallOutcomes, withSpot: boolean, stillNeed = 
   return text;
 }
 
+/** "no first downs (a three-and-out)", "one first down", "two first downs" */
+const FD_WORDS = ["a three-and-out", "one first down", "two first downs", "three first downs"];
+
+/**
+ * For a team that needs the ball back: how the stop has to go. Each first down they give up costs time,
+ * and some number of them lets the other team run out the clock.
+ */
+function stopClause(d: Decision, o: CallOutcomes): string {
+  const us = nick(d.offense), them = nick(d.defense);
+  const buckets = o.byFirstDowns;
+  const runOut = buckets.findIndex((b) => b.share >= 0.03 && b.back < 0.3);
+  const parts = buckets.slice(0, runOut < 0 ? buckets.length : runOut)
+    .map((b, k) => (b.share >= 0.05 && b.clock !== null ? `after ${FD_WORDS[k] ?? `${k} first downs`} (${pct(b.share)} of the time), with about ${clockWords(b.clock)} left` : ""))
+    .filter((x) => x !== "");
+  if (parts.length === 0) return "";
+  const end = runOut > 0 ? ` With ${FD_WORDS[runOut] ?? `${runOut} first downs`}, ${them} can usually run out the clock.` : "";
+  return ` ${Cap(us)} need a stop, and every first down ${them} get costs time: ${us} got the ball back ${parts.join("; ")}.${end}`;
+}
+
+/** Their scoring after they take over, and what it leaves the offense needing. */
+function theirScoring(d: Decision, o: CallOutcomes): string {
+  const us = nick(d.offense), them = nick(d.defense), m = d.situation.margin;
+  if (o.theyFieldGoal + o.theyTouchdown < 0.03) return ` ${Cap(them)} rarely score.`;
+  if (m > 0) return ` ${Cap(them)} kick a field goal in ${pct(o.theyFieldGoal)} of games and score a touchdown in ${pct(o.theyTouchdown)}.`;
+  const afterFg = needFor(m - 3), afterTd = needFor(m - 7);
+  const fg = o.theyFieldGoal >= 0.02 ? `kick a field goal in ${pct(o.theyFieldGoal)} of games (${us} would still need just ${afterFg})` : "";
+  const td = o.theyTouchdown >= 0.02 ? `score a touchdown in ${pct(o.theyTouchdown)} (${afterTd === "two scores" ? "putting it two scores away" : `then ${us} need ${afterTd}`})` : "";
+  const parts = [fg, td].filter((x) => x !== "");
+  return parts.length === 0 ? ` ${Cap(them)} rarely score.` : ` ${Cap(them)} ${parts.join(" and ")}.`;
+}
+
 /** One option's path: what it does, and what has to happen next. */
 function pathLine(d: Decision, call: PlayCall, o: CallOutcomes, mine: boolean): string {
-  const us = nick(d.offense);
+  const us = nick(d.offense), them = nick(d.defense), m = d.situation.margin;
   const who = mine ? "Their call" : "The best call";
   const fourth = d.situation.down === 4;
-  if (call === "punt") return `${who}, a punt:${afterLine(d, o, true, true)}`;
+  const spotOf = (start: number | null) => (start === null ? "" : start >= 50 ? `${us}' ${Math.round(100 - start)}` : `their own ${Math.round(start)}`);
+  if (call === "punt") {
+    const takeover = ` ${Cap(them)} take over around ${spotOf(o.nowStart)} with ${clockWords(o.nowClock)} left.`;
+    return `${who}, a punt:${takeover}${m <= 0 ? stopClause(d, o) : ""}${theirScoring(d, o)}`;
+  }
   if (call === "fg") return `${who}, a field goal: it's good about ${pct(share(o, "Field goal"))} of the time.${afterLine(d, o, false)}`;
   if (fourth) {
     const scores = scored(o) >= 0.05 ? ` and score on the drive ${pct(scored(o))}` : "";
-    return `${who}, going for it: ${us} keep the ball ${pct(o.keep)} of the time${scores}. If it fails,${afterLine(d, o, true).replace(/^ The /, " the ")}`;
+    const fails = o.handedOverNow >= 0.05 && o.nowClock !== null
+      ? ` If it fails (${pct(o.handedOverNow)}), the clock stops: ${them} take over around ${spotOf(o.nowStart)} with about ${clockWords(o.nowClock)} left${o.nowStart !== null && o.nowStart >= 60 ? ", already close to field-goal range" : ""}.${theirScoring(d, o)}`
+      : "";
+    return `${who}, going for it: ${us} keep the ball ${pct(o.keep)} of the time${scores}.${fails}`;
   }
   const td = share(o, "Touchdown"), fg = share(o, "Field goal");
   const points = td + fg < 0.05 ? `${us} rarely score on this drive` : fg >= 0.05 && td >= 0.05
@@ -286,10 +324,16 @@ function bottomLine(d: Decision, detail: { their: CallOutcomes; best: CallOutcom
       const after = m + 3;
       const what = after > 0 ? `puts ${us} up ${after}` : after === 0 ? "ties it" : `cuts it to ${-after}`;
       const clock = kick.clockWhenTheyGetBall === null ? "" : ` with about ${clockWords(kick.clockWhenTheyGetBall)} left`;
-      return `A field goal ${what} but hands ${them} the ball${clock}. Going for it keeps the ball ${pct(go.keep)} of the time${scores}, and ${them} score afterward less often (${pct(go.theyScore)} of games against ${pct(kick.theyScore)}).${result}`;
+      const goScores = scored(go) >= 0.05 ? ` and scores on the drive ${pct(scored(go))} of the time` : "";
+      return `A field goal ${what} but hands ${them} the ball${clock}. Going for it keeps the ball ${pct(go.keep)} of the time${goScores}, and ${them} score afterward less often (${pct(go.theyScore)} of games against ${pct(kick.theyScore)}).${result}`;
     }
+    const punt = kick;
+    const runOut = punt.byFirstDowns.findIndex((b) => b.share >= 0.03 && b.back < 0.3);
+    const threat = runOut > 0 ? `, and ${them} can run out the clock with ${FD_WORDS[runOut] ?? `${runOut} first downs`}` : "";
+    const fgStillOk = m < 0 && needFor(m - 3) !== "two scores" && go.theyFieldGoal > go.theyTouchdown
+      ? ` And if the try fails, a ${them.replace(/^the /, "")} field goal still leaves ${us} just ${needFor(m - 3)}.` : "";
     return m <= 0
-      ? `Either way ${us} need a stop, so the field position a punt buys matters less than the ${pct(go.keep)} chance that going for it keeps the ball${scores ? ` and the ${pct(scored(go))} chance to score on this drive` : ""}.${result}`
+      ? `Either way ${us} need a stop${threat}. So the field position a punt buys matters less than the ${pct(go.keep)} chance that going for it keeps the ball${scores ? ` and the ${pct(scored(go))} chance to score on this drive` : ""}.${fgStillOk}${result}`
       : `Keeping the ball ${pct(go.keep)} of the time keeps it away from ${them}, which is worth more than the field position a punt buys.${result}`;
   }
   // Otherwise, the factor that most favors the best call.
