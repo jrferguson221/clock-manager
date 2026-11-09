@@ -34,7 +34,7 @@ describe("simulateRunOut", () => {
 
   it("stops a running clock at the two-minute warning", () => {
     const r = simulateRunOut({ gameClock: 140, down: 1, defTimeouts: 0, clockRunning: true });
-    expect(r.timeline[0]).toMatchObject({ event: "Two-minute warning", clock: 120 });
+    expect(r.timeline[0]).toMatchObject({ who: "game", event: "Two-minute warning", clock: 120 });
   });
 
   it("triggers the warning after a play that crosses 2:00", () => {

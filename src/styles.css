@@ -757,3 +757,70 @@ nav[aria-label="Guide sections"] .mantine-List-item {
   .calls-toggle-chevron { width: 1ch; }
   .calls-detail:not(.open) { display: none; }
 }
+
+/* ---------- Timelines: a sideline sheet ---------- */
+/* The clock runs down a center spine; their moves sit left of it, yours right, both turned toward it.
+   The rules (two-minute warning, final whistle) span the sheet as a band. */
+
+.tl { --tl-spine: var(--sheet-rule); --tl-clock-w: rem(76px); margin-top: var(--mantine-spacing-xs); }
+.tl .tl-clock { width: var(--tl-clock-w); text-align: center; }
+
+.tl thead th {
+  padding: 0 rem(14px) rem(6px);
+  vertical-align: bottom; line-height: 1.2;
+  border-bottom: 2px solid var(--sheet-rule);
+  font-family: var(--mantine-font-family-headings);
+  font-size: rem(13px); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+.tl thead th.them { text-align: right; }
+.tl thead th.you { text-align: left; color: var(--mantine-color-blue-light-color); }
+
+/* Each row: dashed rule under it, like the call table, and the spine through the middle. */
+.tl .tl-row td { border-bottom: 1px dashed var(--mantine-color-default-border); vertical-align: middle; }
+.tl .tl-row td.tl-clock {
+  background: linear-gradient(var(--tl-spine), var(--tl-spine)) center / 2px 100% no-repeat;
+  padding: rem(8px) 0;
+}
+.tl-clock-tag {
+  display: inline-block; min-width: rem(52px);
+  padding: rem(2px) rem(6px);
+  border: 1px solid var(--sheet-rule); border-radius: 2px;
+  background: var(--mantine-color-body);
+  font-family: var(--mantine-font-family-headings);
+  font-size: rem(17px); font-weight: 700; letter-spacing: 0.02em; line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.tl .tl-side { padding: rem(8px) rem(14px); line-height: 1.3; }
+.tl .tl-side.them { text-align: right; }
+.tl .tl-side.you { text-align: left; }
+.tl-side .tl-event, .tl-side .tl-detail { display: block; }
+.tl-event { font-weight: 600; }
+.tl-detail { font-size: var(--mantine-font-size-sm); color: var(--mantine-color-dimmed); }
+.tl-row.you .tl-event { color: var(--mantine-color-blue-light-color); }
+
+/* The rules span the sheet: a quieter band with the clock first. */
+.tl .tl-rule td {
+  padding: rem(7px) rem(14px);
+  background: light-dark(#f1efe7, #2b343d);
+  border-top: 1px solid var(--mantine-color-default-border);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  text-align: center;
+}
+.tl-rule-text { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: rem(2px) rem(10px); }
+.tl-rule .tl-event {
+  font-family: var(--mantine-font-family-headings);
+  font-size: rem(15px); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.tl-rule-clock {
+  font-family: var(--mantine-font-family-headings);
+  font-size: rem(15px); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: $mantine-breakpoint-xs) {
+  .tl { --tl-clock-w: rem(62px); }
+  .tl .tl-side { padding-inline: rem(8px); }
+  .tl thead th { padding-inline: rem(8px); }
+  .tl-clock-tag { min-width: rem(46px); font-size: rem(15px); padding-inline: rem(4px); }
+}

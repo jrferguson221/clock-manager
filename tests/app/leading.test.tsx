@@ -7,7 +7,10 @@ it("leading mode renders a verdict, timeline and the play caller", async () => {
   const { html } = await renderAt("/");
   // Default: 2:30, 1st down, 3 defensive timeouts, clock running → can't run it out
   expect(html).toContain("You can&#x27;t run it out");
-  expect(html).toContain("<table");
+  // The timeline is a sideline sheet: their moves left of the clock, yours right of it.
+  expect(html).toMatch(/<th[^>]*>Them<\/th><th[^>]*>Clock<\/th><th[^>]*>You<\/th>/);
+  expect(html).toMatch(/class="[^"]*tl-row you[^"]*"[\s\S]*?tl-side you[^>]*><span class="tl-event">Snap, 1st down/);
+  expect(html).toMatch(/class="[^"]*tl-row them[^"]*"><td[^>]*tl-side them[^>]*><span class="tl-event">Defense timeout/);
   expect(html).toContain("Win probability");
   expect(html).toContain("Call the play");
   // The situation is a scorebug you edit in place: its values are controls, not a separate form.

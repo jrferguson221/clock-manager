@@ -157,24 +157,57 @@ export function BallOnInput({ side, yardLine, onChange }: {
   );
 }
 
+/** One side's entry on the timeline: what happened, and the detail under it. */
+function TimelineEntry({ e }: { e: TimelineEvent }) {
+  return (
+    <>
+      <span className="tl-event">{e.event}</span>
+      <span className="tl-detail">{e.note}</span>
+    </>
+  );
+}
+
+/**
+ * A timeline as a sideline sheet: the game clock runs down the middle, the other team's moves sit to
+ * its left and yours to its right, and what the rules do (the two-minute warning, the final whistle)
+ * spans the sheet. A real table, so a screen reader reads each row as them, clock, you.
+ */
 export function Timeline({ events }: { events: TimelineEvent[] }) {
   return (
-    <Table.ScrollContainer minWidth={420}>
-      <Table striped highlightOnHover className="tabular">
-        <Table.Thead>
-          <Table.Tr><Table.Th>Clock</Table.Th><Table.Th>Event</Table.Th><Table.Th>Detail</Table.Th></Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {events.map((e, i) => (
-            <Table.Tr key={i}>
-              <Table.Td className="clock-cell">{formatClock(e.clock)}</Table.Td>
-              <Table.Td>{e.event}</Table.Td>
-              <Table.Td c="dimmed">{e.note}</Table.Td>
+    <Table className="tl" layout="fixed" withRowBorders={false} verticalSpacing={0} horizontalSpacing={0}>
+      <Table.Thead>
+        <Table.Tr>
+          <Table.Th className="tl-side them" scope="col">Them</Table.Th>
+          <Table.Th className="tl-clock" scope="col">Clock</Table.Th>
+          <Table.Th className="tl-side you" scope="col">You</Table.Th>
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>
+        {events.map((e, i) => {
+          const clock = formatClock(e.clock);
+          if (e.who === "game") {
+            return (
+              <Table.Tr key={i} className="tl-rule">
+                <Table.Td colSpan={3}>
+                  <span className="tl-rule-text">
+                    <span className="tl-rule-clock">{clock}</span>
+                    <span className="tl-event">{e.event}</span>
+                    <span className="tl-detail">{e.note}</span>
+                  </span>
+                </Table.Td>
+              </Table.Tr>
+            );
+          }
+          return (
+            <Table.Tr key={i} className={`tl-row ${e.who}`}>
+              <Table.Td className="tl-side them">{e.who === "them" && <TimelineEntry e={e} />}</Table.Td>
+              <Table.Td className="tl-clock"><span className="tl-clock-tag">{clock}</span></Table.Td>
+              <Table.Td className="tl-side you">{e.who === "you" && <TimelineEntry e={e} />}</Table.Td>
             </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    </Table.ScrollContainer>
+          );
+        })}
+      </Table.Tbody>
+    </Table>
   );
 }
 

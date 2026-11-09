@@ -52,7 +52,11 @@ export interface Situation {
   snapAt?: number;
 }
 
+/** Who an event belongs to: the team with the ball, the other team, or the game itself (the rules). */
+export type Actor = "you" | "them" | "game";
+
 export interface TimelineEvent {
+  who: Actor;
   event: string;
   /** Game clock after the event. */
   clock: number;
@@ -85,7 +89,7 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
   let timeoutsUsed = 0;
   let snaps = 0;
   const timeline: TimelineEvent[] = [];
-  const log = (event: string, note: string) => timeline.push({ event, clock: t, note });
+  const log = (who: Actor, event: string, note: string) => timeline.push({ who, event, clock: t, note });
   const result = (endsGame: boolean): RunOutResult => ({ endsGame, timeLeft: t, snaps, timeoutsUsed, timeline });
 
   const crossesWarning = (before: number, after: number) => warningCrossed(rules, warningUsed, before, after);
@@ -101,13 +105,13 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
         t = warning;
         warningUsed = true;
         running = false;
-        log("Two-minute warning", "clock stops before the snap");
+        log("game", "Two-minute warning", "clock stops before the snap");
       } else if (burn > 0) {
-        log("Play clock runs", `${burn}s burned before the snap`);
+        log("you", "Play clock runs", `${burn}s burned before the snap`);
       }
     }
     if (t <= 0) {
-      log("Game over", "clock expired before the snap");
+      log("game", "Game over", "clock expired before the snap");
       return result(true);
     }
 
@@ -115,13 +119,13 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
     const before = t;
     t = Math.max(0, t - playDuration);
     snaps++;
-    log(`Snap, ${ordinal(down)} down`, `play takes ${playDuration}s`);
+    log("you", `Snap, ${ordinal(down)} down`, `play takes ${playDuration}s`);
     if (t <= 0) {
-      log("Game over", "clock expired during the play");
+      log("game", "Game over", "clock expired during the play");
       return result(true);
     }
     if (down === 4) {
-      log("Turnover on downs", "defense takes over");
+      log("them", "Turnover on downs", "defense takes over");
       return result(false);
     }
 
@@ -130,12 +134,12 @@ export function simulateRunOut(s: Situation, rules: Rules = NFL_RULES): RunOutRe
     if (crossesWarning(before, t) !== null) {
       warningUsed = true;
       running = false;
-      log("Two-minute warning", "clock stops after the play");
+      log("game", "Two-minute warning", "clock stops after the play");
     } else if (defTO > 0) {
       defTO--;
       timeoutsUsed++;
       running = false;
-      log("Defense timeout", `${defTO} left`);
+      log("them", "Defense timeout", `${defTO} left`);
     } else {
       running = true;
     }

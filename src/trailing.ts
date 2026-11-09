@@ -1,7 +1,7 @@
 // Trailing-team drive planning: how many plays fit in the time left, and what to call next.
 // Pure functions, no React or DOM access. All times are in whole seconds.
 
-import { NFL_RULES, warningCrossed, type Down, type Rules, type TimelineEvent } from "./engine";
+import { NFL_RULES, warningCrossed, type Actor, type Down, type Rules, type TimelineEvent } from "./engine";
 
 export type ScoreNeeded = "td" | "fg";
 
@@ -95,7 +95,7 @@ export function driveBudget(
   let warningUsed = s.warningUsed ?? (warnAt == null || t <= warnAt);
   const reserve = s.need === "fg" && to > 0 ? 1 : 0;
   const timeline: TimelineEvent[] = [];
-  const log = (event: string, note: string) => timeline.push({ event, clock: t, note });
+  const log = (who: Actor, event: string, note: string) => timeline.push({ who, event, clock: t, note });
   const crossesWarning = (before: number, after: number) => warningCrossed(rules, warningUsed, before, after);
 
   // A kick fits if the clock is stopped, a timeout can stop it, or there's time to spike first.
@@ -112,13 +112,13 @@ export function driveBudget(
       if (warning !== null) {
         t = warning;
         warningUsed = true;
-        log("Two-minute warning", "free stop: no timeout needed");
+        log("game", "Two-minute warning", "free stop: no timeout needed");
       } else if (to > reserve) {
         to--;
-        log("Timeout", `${to} left`);
+        log("you", "Timeout", `${to} left`);
       } else {
         t = Math.max(0, afterHurry);
-        log("Hurry up", `${a.hurryUp}s to the next snap`);
+        log("you", "Hurry up", `${a.hurryUp}s to the next snap`);
       }
       running = false;
       if (t <= 0) break;
@@ -129,19 +129,19 @@ export function driveBudget(
     t = Math.max(0, t - a.playDuration);
     plays++;
     const stops = playStopsClock(mode, plays, a.stopShare);
-    log(`Play ${plays}`, stops ? "out of bounds or incomplete" : "ends in bounds");
+    log("you", `Play ${plays}`, stops ? "out of bounds or incomplete" : "ends in bounds");
     if (t <= 0) break;
 
     running = !stops;
     if (crossesWarning(before, t) !== null) {
       warningUsed = true;
       running = false;
-      log("Two-minute warning", "clock stops after the play");
+      log("game", "Two-minute warning", "clock stops after the play");
     }
     if (canKick()) kickable = plays;
   }
 
-  if (s.need === "fg" && kickable >= 0) log("Field goal", reserve ? "after the saved timeout" : "after a stop");
+  if (s.need === "fg" && kickable >= 0) log("you", "Field goal", reserve ? "after the saved timeout" : "after a stop");
   return { plays: s.need === "td" ? plays : kickable, timeline };
 }
 
