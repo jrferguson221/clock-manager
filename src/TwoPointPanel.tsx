@@ -1,12 +1,13 @@
 // Kick or go for two: you've just scored a touchdown. Which try gives you the better chance to win?
 
 import { useMemo } from "react";
-import { Alert, Card, Table, Text, SimpleGrid } from "@mantine/core";
+import { Alert, Card, Table, Text } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { TwoPointSearch } from "@situational-football/schemas";
 import { evaluateTry, CLOSE, SPECIAL_TEAMS, TRY_CALLS, type GameState, type TryCall, type TryValues } from "./sim";
-import { ChoiceSelect, ClockInput, Segmented, TIMEOUT_OPTIONS, useClockField, useDebouncedByKey } from "./fields";
+import { useClockField, useDebouncedByKey } from "./fields";
 import { ModeLayout } from "./SituationForm";
+import Scorebug from "./Scorebug";
 import { WinMeter } from "./Trainer";
 import { GuideLink } from "./ReadMore";
 
@@ -42,20 +43,21 @@ export default function TwoPointPanel() {
   const sim = useDebouncedByKey(game, JSON.stringify(game));
   const values = useMemo(() => (sim.value == null ? null : evaluateTry(sim.value)), [sim.value]);
 
-  const form = (
-    <Card component="form" onSubmit={(e) => e.preventDefault()} aria-label="Situation" padding="lg">
-      <Text className="eyebrow" mb="sm">After the touchdown</Text>
-      <SimpleGrid cols={{ base: 1, xs: 2, lg: 1 }} spacing="md" verticalSpacing="md">
-        <ClockInput label="Time left" text={clock.text} error={clock.error} onType={clock.onType} />
-        <ChoiceSelect label="Score, counting the touchdown" value={s.margin} options={MARGINS} onChange={(margin) => set({ margin })} />
-        <Segmented label="Your timeouts" value={s.timeouts} options={TIMEOUT_OPTIONS} onChange={(n) => set({ timeouts: n })} />
-        <Segmented label="Their timeouts" value={s.oppTimeouts} options={TIMEOUT_OPTIONS} onChange={(n) => set({ oppTimeouts: n })} />
-      </SimpleGrid>
-    </Card>
+  const scorebug = (
+    <Scorebug
+      situation={{ timeouts: s.timeouts, oppTimeouts: s.oppTimeouts }} set={set} clock={clock} clockNote="After the touchdown"
+      margin={s.margin} marginOptions={MARGINS} onMargin={(margin) => set({ margin })} scoreLabel="Score with the TD"
+      noBall={
+        <span className="sb-try">
+          <span className="sb-cap">The try</span>
+          <span className="sb-big">Kick or go for 2</span>
+        </span>
+      }
+    />
   );
 
   return (
-    <ModeLayout intro="You've just scored a touchdown. Kick the extra point or go for 2? Enter the score with the touchdown counted and the time left." form={form}>
+    <ModeLayout intro="You've just scored a touchdown. Kick the extra point or go for 2? Set the score with the touchdown counted and the time left." scorebug={scorebug}>
       {values == null || game == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 3:00.</Alert>
       ) : (

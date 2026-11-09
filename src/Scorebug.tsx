@@ -9,15 +9,41 @@ import { DOWNS } from "./engine";
 import { spotFrom, type Option } from "./fields";
 import type { SharedSituation } from "./SituationForm";
 
+/**
+ * What the bug shows and edits. Every mode has a clock, a score and timeouts; the clock's state and the
+ * ball (down, distance and spot) are there only when the mode has them.
+ */
+export interface BugSituation {
+  timeouts: number;
+  oppTimeouts: number;
+  /** Whether the clock is running. Omit when it's fixed, and say how in `clockNote`. */
+  running?: boolean;
+  /** Down, distance and spot. Omit when there's no snap: the try after a touchdown. */
+  ball?: { down: Down; toGo: number; side: Side; yardLine: number };
+}
+export type BugPatch = Partial<{ timeouts: number; oppTimeouts: number; running: boolean; down: Down; toGo: number; side: Side; yardLine: number }>;
+
+/** A mode's situation fields, as the bug takes them. */
+export const bugSituation = (s: SharedSituation): BugSituation => ({
+  timeouts: s.timeouts, oppTimeouts: s.oppTimeouts, running: s.running,
+  ball: { down: s.down, toGo: s.toGo, side: s.side, yardLine: s.yardLine },
+});
+
 export interface ScorebugProps {
-  situation: SharedSituation;
-  set: (patch: Partial<SharedSituation>) => void;
+  situation: BugSituation;
+  set: (patch: BugPatch) => void;
   /** The clock field: its text as typed, any error, and where typing goes. */
   clock: { text: string; error: string | null; onType: (raw: string) => void };
+  /** Under the clock when its state is fixed, e.g. "At the snap". */
+  clockNote?: string;
   /** Your points minus theirs, the choices the mode allows, and how to change it. */
   margin: number;
   marginOptions: readonly Option<number>[];
   onMargin: (margin: number) => void;
+  /** The score's caption, e.g. "Score with the TD". */
+  scoreLabel?: string;
+  /** What fills the down-and-distance cell when there's no ball. */
+  noBall?: ReactNode;
   /** Mode settings, shown in the strip under the bug: BugSelects. */
   settings?: ReactNode;
 }
@@ -165,20 +191,17 @@ function FieldStrip({ marks, onBall }: { marks: FieldMarks; onBall: (yardsFromOw
   );
 }
 
-export default function Scorebug({ situation: s, set, clock, margin, marginOptions, onMargin, settings }: ScorebugProps) {
-  const marks = fieldMarks(s.side, s.yardLine, s.toGo);
-  const ytg = 100 - marks.ball;
-  // Distances that fit before the goal line, then "Goal".
-  const distances: Option<number>[] = [
-    ...Array.from({ length: Math.min(99, ytg - 1) }, (_, i) => ({ value: i + 1, label: String(i + 1) })),
-    { value: ytg, label: "Goal" },
-  ];
+export default function Scorebug({
+  situation: s, set, clock, clockNote, margin, marginOptions, onMargin, scoreLabel = "Score", noBall, settings,
+}: ScorebugProps) {
   const score = marginOptions.find((o) => o.value === margin)?.label ?? String(margin);
   const tone = margin > 0 ? "ahead" : margin < 0 ? "behind" : "tied";
   const placeBall = (yards: number) => set(spotFrom(100 - yards));
+  const marks = s.ball === undefined ? null : fieldMarks(s.ball.side, s.ball.yardLine, s.ball.toGo);
+  const running = s.running;
 
   return (
-    <section className="scorebug" aria-label="Situation">
+    <section className={marks === null ? "scorebug no-ball" : "scorebug"} aria-label="Situation">
       <div className="sb-bar">
         <div className="sb-team you">
           <span className="sb-name">
@@ -188,8 +211,8 @@ export default function Scorebug({ situation: s, set, clock, margin, marginOptio
           <Timeouts left={s.timeouts} team="You" onChange={(n) => set({ timeouts: n })} />
         </div>
         <div className={`sb-margin ${tone}`}>
-          <span className="sb-cap">Score</span>
-          <BugSelect label="Score" value={margin} options={marginOptions} onChange={onMargin} className="sb-big">{score}</BugSelect>
+          <span className="sb-cap">{scoreLabel}</span>
+          <BugSelect label={scoreLabel} value={margin} options={marginOptions} onChange={onMargin} className="sb-big">{score}</BugSelect>
         </div>
         <div className="sb-team opp">
           <span className="sb-name">Them</span>
@@ -199,7 +222,7 @@ export default function Scorebug({ situation: s, set, clock, margin, marginOptio
           <span className="sb-qtr">4th</span>
           <span className="sb-clock-stack">
             <span className="sb-big sb-time">
-              <span className={s.running ? "sb-dot running" : "sb-dot"} aria-hidden />
+              {running !== undefined && <span className={running ? "sb-dot running" : "sb-dot"} aria-hidden />}
               <input
                 className={clock.error === null ? "sb-clock-input" : "sb-clock-input invalid"}
                 value={clock.text} onChange={(e) => clock.onType(e.currentTarget.value)}
@@ -208,32 +231,57 @@ export default function Scorebug({ situation: s, set, clock, margin, marginOptio
                 inputMode="numeric" autoComplete="off" placeholder="M:SS" size={5}
               />
             </span>
-            <button
-              type="button" className="sb-cap sb-run-toggle" aria-pressed={s.running}
-              title={s.running ? "Stop the clock" : "Start the clock"} onClick={() => set({ running: !s.running })}
-            >
-              {clock.error === null ? (s.running ? "Clock running" : "Clock stopped") : "Enter M:SS"}
-            </button>
+            {clock.error !== null ? (
+              <span className="sb-cap sb-clock-error">Enter M:SS</span>
+            ) : running === undefined ? (
+              <span className="sb-cap">{clockNote}</span>
+            ) : (
+              <button
+                type="button" className="sb-cap sb-run-toggle" aria-pressed={running}
+                title={running ? "Stop the clock" : "Start the clock"} onClick={() => set({ running: !running })}
+              >
+                {running ? "Clock running" : "Clock stopped"}
+              </button>
+            )}
           </span>
         </div>
         <div className="sb-down">
-          <span className="sb-big sb-dd">
-            <BugSelect label="Down" value={s.down} options={DOWN_OPTIONS} onChange={(down) => set({ down })}>{ORDINALS[s.down - 1]}</BugSelect>
-            <span aria-hidden>&amp;</span>
-            <BugSelect label="Yards to go" value={Math.min(s.toGo, ytg)} options={distances} onChange={(toGo) => set({ toGo })}>
-              {marks.goal ? "Goal" : s.toGo}
-            </BugSelect>
-          </span>
-          <BugSelect label="Ball on" value={marks.ball} options={SPOT_OPTIONS} onChange={placeBall} className="sb-cap sb-spot">
-            {spotName(marks.ball)}
-          </BugSelect>
+          {s.ball === undefined || marks === null ? noBall : (
+            <BallCell ball={s.ball} marks={marks} set={set} placeBall={placeBall} />
+          )}
         </div>
       </div>
-      <FieldStrip marks={marks} onBall={placeBall} />
+      {marks !== null && <FieldStrip marks={marks} onBall={placeBall} />}
       <div className="sb-notes">
         {settings}
         <span className="sb-hint">Tap any part of the scorebug to change it</span>
       </div>
     </section>
+  );
+}
+
+/** Down and distance over the ball spot, each a picker. */
+function BallCell({ ball, marks, set, placeBall }: {
+  ball: NonNullable<BugSituation["ball"]>; marks: FieldMarks; set: (patch: BugPatch) => void; placeBall: (yards: number) => void;
+}) {
+  const ytg = 100 - marks.ball;
+  // Distances that fit before the goal line, then "Goal".
+  const distances: Option<number>[] = [
+    ...Array.from({ length: Math.min(99, ytg - 1) }, (_, i) => ({ value: i + 1, label: String(i + 1) })),
+    { value: ytg, label: "Goal" },
+  ];
+  return (
+    <>
+      <span className="sb-big sb-dd">
+        <BugSelect label="Down" value={ball.down} options={DOWN_OPTIONS} onChange={(down) => set({ down })}>{ORDINALS[ball.down - 1]}</BugSelect>
+        <span aria-hidden>&amp;</span>
+        <BugSelect label="Yards to go" value={Math.min(ball.toGo, ytg)} options={distances} onChange={(toGo) => set({ toGo })}>
+          {marks.goal ? "Goal" : ball.toGo}
+        </BugSelect>
+      </span>
+      <BugSelect label="Ball on" value={marks.ball} options={SPOT_OPTIONS} onChange={placeBall} className="sb-cap sb-spot">
+        {spotName(marks.ball)}
+      </BugSelect>
+    </>
   );
 }

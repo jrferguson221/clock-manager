@@ -31,7 +31,8 @@ export async function renderAt(path: string, decisions: DecisionsData = localDec
 
 /** The text of the selected option in the select labelled `label`, as rendered. */
 export function picked(html: string, label: string): string | undefined {
-  const select = html.match(new RegExp(`<select[^>]*aria-label="${label}"[^>]*>(.*?)</select>`))?.[1];
+  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const select = html.match(new RegExp(`<select[^>]*aria-label="${escaped}"[^>]*>(.*?)</select>`))?.[1];
   return select?.match(/<option[^>]*selected=""[^>]*>([^<]*)<\/option>/)?.[1];
 }
 

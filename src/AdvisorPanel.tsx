@@ -3,10 +3,11 @@
 import { useMemo } from "react";
 import { Alert, Card, List, Stack, Text } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { BestCallSearch } from "@situational-football/schemas";
+import { LIMITS, type BestCallSearch } from "@situational-football/schemas";
 import { noGainCalls, evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } from "./sim";
-import { ChoiceSelect, NumberField, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
-import SituationForm, { ModeLayout } from "./SituationForm";
+import { useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
+import { ModeLayout } from "./SituationForm";
+import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
 import { CallTable, WinMeter, tempoNote } from "./Trainer";
 import { GuideLink, ReasonText } from "./ReadMore";
 
@@ -18,6 +19,10 @@ const MARGINS = Array.from({ length: 33 }, (_, i) => {
   return { value: m, label: m > 0 ? `Up ${m}` : m < 0 ? `Down ${-m}` : "Tied" };
 });
 const pct = (x: number) => `${Math.round(x * 100)}%`;
+const HURRY_OPTIONS = Array.from({ length: LIMITS.hurryUp.max - LIMITS.hurryUp.min + 1 }, (_, i) => {
+  const n = LIMITS.hurryUp.min + i;
+  return { value: n, label: `${n}s` };
+});
 
 export default function AdvisorPanel() {
   const s = route.useSearch();
@@ -42,16 +47,21 @@ export default function AdvisorPanel() {
     return { ended: false as const, game: g, cfg, values, rec: recommend(g, values, cfg) };
   }, [sim.value]);
 
-  const form = (
-    <SituationForm
-      situation={s} set={set} clock={clock} oppTimeoutsLabel="Their timeouts"
-      score={<ChoiceSelect label="Score" value={s.margin} options={MARGINS} onChange={(margin) => set({ margin })} />}
-      extras={<NumberField label="Hurry-up time (s)" field="hurryUp" value={s.hurryUp} onChange={(n) => set({ hurryUp: n })} />}
+  const scorebug = (
+    <Scorebug
+      situation={bugSituation(s)} set={set} clock={clock}
+      margin={s.margin} marginOptions={MARGINS} onMargin={(margin) => set({ margin })}
+      settings={
+        <span className="sb-setting">
+          <BugSelect label="Hurry-up time in seconds" value={s.hurryUp} options={HURRY_OPTIONS} onChange={(hurryUp) => set({ hurryUp })}>{s.hurryUp}s</BugSelect>
+          <span className="sb-setting-label">hurry-up</span>
+        </span>
+      }
     />
   );
 
   return (
-    <ModeLayout intro="Enter any situation where you have the ball and see the best call, and why." form={form}>
+    <ModeLayout intro="Set any situation where you have the ball and see the best call, and why." scorebug={scorebug}>
       {analysis == null || game == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 1:45.</Alert>
       ) : analysis.ended ? (

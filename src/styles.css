@@ -189,24 +189,7 @@ p, li { text-wrap: pretty; }
 
 /* ---------- Layout ---------- */
 
-@media (min-width: $mantine-breakpoint-lg) {
-  .form-column {
-    position: sticky;
-    top: var(--mantine-spacing-md);
-  }
-}
-
 .grow { flex: 1; min-width: 0; }
-
-.clock-input {
-  font-family: var(--mantine-font-family-headings);
-  font-size: rem(24px);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-}
-
-.running-switch { align-self: center; }
 
 /* ---------- Results ---------- */
 
@@ -824,3 +807,13 @@ nav[aria-label="Guide sections"] .mantine-List-item {
   .tl thead th { padding-inline: rem(8px); }
   .tl-clock-tag { min-width: rem(46px); font-size: rem(15px); padding-inline: rem(4px); }
 }
+
+/* The clock's caption when the text isn't a clock. */
+.sb-clock-error { color: #ffa8a8; }
+
+/* With no snap (the try after a touchdown), the down cell says what's being decided instead. */
+.sb-try { display: flex; flex-direction: column; align-items: center; gap: rem(5px); }
+.sb-try .sb-big { color: var(--sb-yellow); }
+
+/* Player decisions: which decision, above the scorebug. */
+.decision-picker { max-width: rem(560px); margin-bottom: var(--mantine-spacing-md); }

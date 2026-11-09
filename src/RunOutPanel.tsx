@@ -8,7 +8,7 @@ import { formatClock } from "./time";
 import { Timeline, clampTo, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
-import Scorebug, { BugSelect } from "./Scorebug";
+import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
 import Trainer from "./Trainer";
 import TrainerToggle from "./TrainerToggle";
 
@@ -40,7 +40,7 @@ export default function RunOutPanel() {
 
   const scorebug = (
     <Scorebug
-      situation={s} set={set} clock={clock}
+      situation={bugSituation(s)} set={set} clock={clock}
       margin={s.lead} marginOptions={LEAD_OPTIONS} onMargin={(lead) => set({ lead })}
       settings={
         <span className="sb-setting">

@@ -1,5 +1,5 @@
 import { expect, it } from "bun:test";
-import { renderAt } from "./render";
+import { picked, renderAt } from "./render";
 
 it("recommends going for 2 when the touchdown leaves you up 1", async () => {
   const { html } = await renderAt("/two-point");
@@ -21,4 +21,12 @@ it("recommends the kick when the touchdown ties the game", async () => {
 it("replaces invalid search params with defaults", async () => {
   const { redirectedTo } = await renderAt("/two-point?margin=40&clock=xyz&timeouts=1");
   expect(redirectedTo).toBe("/two-point?timeouts=1");
+});
+
+it("shows the score, clock and timeouts in a scorebug with no ball: the try comes before any snap", async () => {
+  const { html } = await renderAt("/two-point?margin=-2&clock=1:00");
+  expect(picked(html, "Score with the TD")).toBe("Down 2");
+  expect(html).toContain("After the touchdown");
+  expect(html).not.toContain('aria-label="Down"');
+  expect(html).not.toContain("Field position:");
 });

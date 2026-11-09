@@ -1,5 +1,5 @@
 import { expect, it } from "bun:test";
-import { renderAt } from "./render";
+import { picked, renderAt } from "./render";
 
 it("the player-decisions page opens on the QB scenario with its verdict and flip table", async () => {
   const { html } = await renderAt("/scenarios");
@@ -30,4 +30,13 @@ it("offers every decision in the picker, labelled by player", async () => {
     "RB: Score, or go down short of the goal line?", "RB: Stay in bounds, or fight for the extra yards?", "Coach: Kneel, or run it?"]) {
     expect(html).toContain(label);
   }
+});
+
+it("sets the situation at the snap in the scorebug, with the scenario's own inputs under it", async () => {
+  const { html } = await renderAt("/scenarios?scenario=qb-throwaway");
+  expect(html).toContain("At the snap");
+  expect(html).not.toContain("Clock running");
+  expect(picked(html, "The sack would lose (yards)")).toBe("8");
+  expect(picked(html, "Seconds the play takes")).toBe("5");
+  expect(html).toMatch(/<option value="qb-throwaway" selected="">/);
 });

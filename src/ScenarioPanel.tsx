@@ -3,27 +3,29 @@
 import { useMemo, type ReactNode } from "react";
 import { Alert, Badge, Card, Group, Progress, SimpleGrid, Stack, Table, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import { SCENARIO_IDS, SCENARIO_PRESETS, type ScenarioId, type ScenarioSearch } from "@situational-football/schemas";
-import { DOWNS } from "./engine";
+import { LIMITS, SCENARIO_IDS, SCENARIO_PRESETS, type LimitedField, type ScenarioId, type ScenarioSearch } from "@situational-football/schemas";
 import type { GameState } from "./sim";
 import { analyzeScenario, SCENARIOS, type ScenarioAnalysis } from "./scenarios";
 import { formatClock } from "./time";
-import {
-  BallOnInput, ChoiceSelect, ClockInput, NumberField, Segmented, TIMEOUT_OPTIONS, useClockField, useDebouncedByKey, yardsToGoalFrom,
-} from "./fields";
+import { ChoiceSelect, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout } from "./SituationForm";
+import Scorebug, { BugSelect } from "./Scorebug";
 import { ReasonText } from "./ReadMore";
 
 const route = getRouteApi("/scenarios");
 
 const DECISION_OPTIONS = SCENARIO_IDS.map((id) => ({ value: id, label: `${SCENARIOS[id].role}: ${SCENARIOS[id].title}` }));
-const DOWN_OPTIONS = DOWNS.map((d) => ({ value: d, label: ["1st", "2nd", "3rd", "4th"][d - 1] ?? String(d) }));
 /** Score options from down 16 to up 16. Positive means you lead. */
 const MARGINS = Array.from({ length: 33 }, (_, i) => {
   const m = 16 - i;
   return { value: m, label: m > 0 ? `Up ${m}` : m < 0 ? `Down ${-m}` : "Tied" };
 });
 const pct = (x: number) => `${Math.round(x * 100)}%`;
+/** Every whole number a scenario input allows. */
+const rangeOptions = (field: LimitedField) => {
+  const { min, max } = LIMITS[field];
+  return Array.from({ length: max - min + 1 }, (_, i) => ({ value: min + i, label: String(min + i) }));
+};
 
 export default function ScenarioPanel() {
   const s = route.useSearch();
@@ -48,37 +50,33 @@ export default function ScenarioPanel() {
     return analyzeScenario(scenario, { game: g, ...rest });
   }, [sim.value]);
 
-  const form = (
-    <Card component="form" onSubmit={(e) => e.preventDefault()} aria-label="Situation" padding="lg">
-      <Text className="eyebrow" mb="sm">The decision</Text>
+  /** The scenario's own inputs, as pickers in the strip under the bug. */
+  const extras = (["sackYards", "gain", "extra", "seconds"] as const).flatMap((field) => {
+    const label = def.fields[field];
+    if (label === undefined) return [];
+    return [(
+      <span key={field} className="sb-setting">
+        <span className="sb-setting-label">{label}</span>
+        <BugSelect label={label} value={s[field]} options={rangeOptions(field)} onChange={(n) => set({ [field]: n })}>{s[field]}</BugSelect>
+      </span>
+    )];
+  });
+  const scorebug = (
+    <Scorebug
+      situation={{ timeouts: s.timeouts, oppTimeouts: s.oppTimeouts, ball: { down: s.down, toGo: s.toGo, side: s.side, yardLine: s.yardLine } }}
+      set={set} clock={clock} clockNote="At the snap"
+      margin={s.margin} marginOptions={MARGINS} onMargin={(margin) => set({ margin })}
+      settings={extras}
+    />
+  );
+  const picker = (
+    <div className="decision-picker">
       <ChoiceSelect label="Decision" value={s.scenario} options={DECISION_OPTIONS} onChange={choose} />
-      <Text className="eyebrow" mt="lg" mb="sm">Situation at the snap</Text>
-      <SimpleGrid cols={{ base: 1, xs: 2, lg: 1 }} spacing="md" verticalSpacing="md">
-        <ClockInput text={clock.text} error={clock.error} onType={clock.onType} />
-        <ChoiceSelect label="Score" value={s.margin} options={MARGINS} onChange={(margin) => set({ margin })} />
-        <Segmented label="Your timeouts" value={s.timeouts} options={TIMEOUT_OPTIONS} onChange={(n) => set({ timeouts: n })} />
-        <Segmented label="Their timeouts" value={s.oppTimeouts} options={TIMEOUT_OPTIONS} onChange={(n) => set({ oppTimeouts: n })} />
-        <Segmented label="Down" value={s.down} options={DOWN_OPTIONS} onChange={(d) => set({ down: d })} />
-        <NumberField label="To go" field="toGo" value={s.toGo} onChange={(n) => set({ toGo: n })} />
-        <BallOnInput side={s.side} yardLine={s.yardLine} onChange={(side, yardLine) => set({ side, yardLine })} />
-        {def.fields.sackYards !== undefined && (
-          <NumberField label={def.fields.sackYards} field="sackYards" value={s.sackYards} onChange={(n) => set({ sackYards: n })} />
-        )}
-        {def.fields.gain !== undefined && (
-          <NumberField label={def.fields.gain} field="gain" value={s.gain} onChange={(n) => set({ gain: n })} />
-        )}
-        {def.fields.extra !== undefined && (
-          <NumberField label={def.fields.extra} field="extra" value={s.extra} onChange={(n) => set({ extra: n })} />
-        )}
-        {def.fields.seconds !== undefined && (
-          <NumberField label={def.fields.seconds} field="seconds" value={s.seconds} onChange={(n) => set({ seconds: n })} />
-        )}
-      </SimpleGrid>
-    </Card>
+    </div>
   );
 
   return (
-    <ModeLayout intro="Decisions players make in the middle of a play, and what they're worth late in a game." form={form}>
+    <ModeLayout toggle={picker} intro="Decisions players make in the middle of a play, and what they're worth late in a game." scorebug={scorebug}>
       <Stack gap="md">
         <Card>
           <Text className="eyebrow">{def.role === "Coach" ? "Play call" : `${def.role} decision`}</Text>
