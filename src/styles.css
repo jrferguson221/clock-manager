@@ -533,3 +533,18 @@ body {
 .tt-side { font-weight: 700; }
 .tt-aim { font-weight: 500; opacity: 0.85; }
 @media (max-width: $mantine-breakpoint-xs) { .tt-aim { display: none; } }
+
+/* ---------- The trainer's call table: collapsed on a phone ---------- */
+
+.calls-toggle { display: none; }
+@media (max-width: $mantine-breakpoint-sm) {
+  .calls-toggle {
+    display: inline-flex; align-items: center; gap: rem(6px);
+    padding: rem(6px) 0; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: var(--mantine-font-size-sm); font-weight: 600;
+    color: var(--mantine-color-anchor);
+  }
+  .calls-toggle:focus-visible { outline: 2px solid var(--mantine-color-pylon-6); outline-offset: 2px; border-radius: 2px; }
+  .calls-toggle-chevron { width: 1ch; }
+  .calls-detail:not(.open) { display: none; }
+}

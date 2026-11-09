@@ -1,7 +1,7 @@
 // Play-calling trainer shared by both modes: win probability, the call buttons, and an
 // explanation after each call of what the best decision would have been.
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, Group, List, Progress, SimpleGrid, Stack, Table, Text } from "@mantine/core";
 import { noGainCalls,
   availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
@@ -93,7 +93,7 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
     <Stack component="section" gap="md" aria-label="Play caller">
       <WinMeter wp={wp} prev={prevWp} />
 
-      {last && <Explainer entry={last} />}
+      {last && <Explainer key={entries.length} entry={last} />}
 
       {ended ? (
         <Card className="accent-card">
@@ -174,14 +174,27 @@ export function WinMeter({ wp, prev, label = "Win probability" }: { wp: number; 
 
 const VERDICT_COLOR = { best: "turf", close: "gray", worse: "red" } as const;
 
+/**
+ * What happened on the last call and how it rated. On a phone, the table of every call's win probability
+ * starts collapsed behind a toggle, so the call buttons stay close; on wider screens it's always shown
+ * (CSS decides, so there's no flash while the page works out the screen size).
+ */
 function Explainer({ entry }: { entry: Entry }) {
   const { explanation: x, values, call } = entry;
+  const [open, setOpen] = useState(false);
+  const tableId = useId();
   return (
     <Alert color={VERDICT_COLOR[x.verdict]} variant="outline" className="explainer" title={<span className="eyebrow">Last play</span>}>
       <Text>{entry.text}</Text>
       <Text className="verdict" mt="xs">{x.verdict === "worse" ? "✗ " : "✓ "}{x.headline}</Text>
       <List size="sm" spacing={2} mb="sm">{x.reasons.map((r, i) => <List.Item key={i}><ReasonText reason={r} /></List.Item>)}</List>
-      <CallTable values={values} chosen={call} caption="Win probability by call, before the play" noGain={noGainCalls(entry.before)} />
+      <button type="button" className="calls-toggle" aria-expanded={open} aria-controls={tableId} onClick={() => setOpen(!open)}>
+        <span className="calls-toggle-chevron" aria-hidden>{open ? "▾" : "▸"}</span>
+        {open ? "Hide" : "Show"} win probability for every call
+      </button>
+      <div id={tableId} className={open ? "calls-detail open" : "calls-detail"}>
+        <CallTable values={values} chosen={call} caption="Win probability by call, before the play" noGain={noGainCalls(entry.before)} />
+      </div>
     </Alert>
   );
 }
