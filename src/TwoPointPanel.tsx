@@ -19,13 +19,14 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 /** Beyond the fourth quarter the model's late-game play-calling doesn't hold. */
 const MAX_CLOCK = 15 * 60;
 
-/** One sentence on what each result does to the score. */
-function why(margin: number, values: TryValues): string {
-  const one = scoreLabel(margin + 1).toLowerCase();
-  const two = scoreLabel(margin + 2).toLowerCase();
-  const none = scoreLabel(margin).toLowerCase();
-  const [w0, w1, w2] = values.byPoints;
-  return `A good kick leaves you ${one} (${pct(w1)} to win), a good 2-point try ${two} (${pct(w2)}), and a miss ${none} (${pct(w0)}).`;
+/** A result's win probability, with the score it leaves. */
+function Outcome({ wp, margin }: { wp: number; margin: number }) {
+  return (
+    <>
+      {pct(wp)}
+      <Text size="xs" c="dimmed">{scoreLabel(margin)}</Text>
+    </>
+  );
 }
 
 export default function TwoPointPanel() {
@@ -82,32 +83,48 @@ function TryResult({ values, margin, clock, pending }: { values: TryValues; marg
             ? `Both are within the model's noise (${pct(values.kick)} to kick, ${pct(values.two)} to go for 2). Either is reasonable.`
             : `${pct(wp)} to win, against ${pct(values[other])} if you ${other === "two" ? "go for 2" : "kick"}: ${Math.round(edge * 1000) / 10} points better.`}
         </Text>
-        <Text c="dimmed" mt="xs">{why(margin, values)}</Text>
       </Card>
 
       <WinMeter wp={wp} prev={null} label="Win probability with the better try" />
 
       <Card>
         <Text className="eyebrow">Both options</Text>
-        <Table className="tabular" withRowBorders={false} verticalSpacing={4} horizontalSpacing="sm">
-          <Table.Thead>
-            <Table.Tr><Table.Th>Try</Table.Th><Table.Th>Succeeds</Table.Th><Table.Th>Win probability</Table.Th></Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            <Table.Tr>
-              <Table.Th scope="row">{TRY_CALLS.kick}</Table.Th>
-              <Table.Td>{pct(SPECIAL_TEAMS.extraPoint)}</Table.Td><Table.Td>{pct(values.kick)}</Table.Td>
-            </Table.Tr>
-            <Table.Tr>
-              <Table.Th scope="row">{TRY_CALLS.two}</Table.Th>
-              <Table.Td>{pct(SPECIAL_TEAMS.twoPoint)}</Table.Td><Table.Td>{pct(values.two)}</Table.Td>
-            </Table.Tr>
-          </Table.Tbody>
-        </Table>
+        <Table.ScrollContainer minWidth={330}>
+          <Table className="tabular try-table" withRowBorders={false} verticalSpacing={6} horizontalSpacing="xs">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Try</Table.Th>
+                <Table.Th>Success</Table.Th>
+                <Table.Th>Win if good</Table.Th>
+                <Table.Th>Win if not</Table.Th>
+                <Table.Th>Overall</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {(["kick", "two"] as const).map((call) => {
+                const points = call === "kick" ? 1 : 2;
+                return (
+                  <Table.Tr key={call} className={call === values.best && !close ? "is-best" : undefined}>
+                    <Table.Th scope="row">{call === "kick" ? "Extra point" : "2-point try"}</Table.Th>
+                    <Table.Td>{pct(call === "kick" ? SPECIAL_TEAMS.extraPoint : SPECIAL_TEAMS.twoPoint)}</Table.Td>
+                    <Table.Td><Outcome wp={values.byPoints[points]} margin={margin + points} /></Table.Td>
+                    <Table.Td><Outcome wp={values.byPoints[0]} margin={margin} /></Table.Td>
+                    <Table.Td fw={700}>{pct(values[call])}</Table.Td>
+                  </Table.Tr>
+                );
+              })}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+        <Text size="sm" c="dimmed" mt={4}>
+          Under each win probability is the score that result leaves. Overall weighs the two by the success rate.
+        </Text>
         <Text mt="sm">
           {values.breakEven === null
             ? "Two points don't help here, so kick."
-            : values.breakEven >= 1
+            : values.breakEven < 0.05
+              ? "Going for 2 is the better call even if your team rarely converts: the extra point barely helps here."
+              : values.breakEven >= 1
               ? "Going for 2 only makes sense if you'd convert every time."
               : `Going for 2 is the better call if your team converts at least ${pct(values.breakEven)} of the time (the league converts ${pct(SPECIAL_TEAMS.twoPoint)}).`}
         </Text>

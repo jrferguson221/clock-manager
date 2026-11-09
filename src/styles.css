@@ -314,3 +314,6 @@ body {
   .sb-value { font-size: rem(24px); }
   .sb-clock .sb-value { font-size: rem(28px); }
 }
+
+/* Kick or go for 2: the better try's row is tinted green. */
+.try-table tr.is-best { background: light-dark(var(--mantine-color-turf-0), rgba(42, 169, 91, 0.12)); }
