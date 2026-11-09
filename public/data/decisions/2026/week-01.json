@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 1,
- "generatedAt": "2026-11-09T21:41:28.164Z",
+ "generatedAt": "2026-11-09T21:47:33.895Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.037868382519093684,
+  "meanAbsDiff": 0.03801255619024568,
   "within10": 0.9158878504672897
  },
  "worst": [
@@ -115,24 +115,24 @@
    "call": "punt",
    "wpCall": 0.5,
    "best": "run",
-   "wpBest": 0.5963333333333334,
-   "cost": 0.09633333333333338,
+   "wpBest": 0.596,
+   "cost": 0.09599999999999997,
    "values": [
     {
      "call": "run",
-     "wp": 0.5963333333333334
+     "wp": 0.596
     },
     {
      "call": "pass-screen",
-     "wp": 0.5576666666666666
+     "wp": 0.5573333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.521
+     "wp": 0.5203333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5136666666666667
+     "wp": 0.5123333333333333
     },
     {
      "call": "punt",
@@ -140,7 +140,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.48533333333333334
+     "wp": 0.485
     },
     {
      "call": "pass-deep",
@@ -148,7 +148,7 @@
     },
     {
      "call": "kneel",
-     "wp": 0.175
+     "wp": 0.176
     }
    ],
    "reason": {
@@ -191,30 +191,30 @@
    "snapClock": 26,
    "description": "(:26) (Shotgun) 10-D.Maye pass deep right intended for 13-M.Hollins INTERCEPTED by 29-J.Jobe [0-D.Lawrence] at SEA -3. Touchback.",
    "call": "pass-sideline",
-   "wpCall": 0.5633333333333334,
+   "wpCall": 0.5606666666666666,
    "best": "pass-deep",
-   "wpBest": 0.5633333333333334,
+   "wpBest": 0.5606666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.5633333333333334
+     "wp": 0.5606666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.5446666666666666
+     "wp": 0.544
     },
     {
      "call": "pass-screen",
-     "wp": 0.5333333333333333
+     "wp": 0.534
     },
     {
      "call": "pass-play-action",
-     "wp": 0.53
+     "wp": 0.5286666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.528
+     "wp": 0.5273333333333333
     },
     {
      "call": "run",
@@ -264,18 +264,18 @@
    "snapClock": 101,
    "description": "(1:41) (Shotgun) 17-J.Allen pass deep middle to 5-J.Palmer for 34 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.496,
+   "wpCall": 0.49833333333333335,
    "best": "pass-play-action",
-   "wpBest": 0.496,
+   "wpBest": 0.49833333333333335,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.496
+     "wp": 0.49833333333333335
     },
     {
      "call": "pass-middle",
-     "wp": 0.4716666666666667
+     "wp": 0.475
     },
     {
      "call": "pass-deep",
@@ -287,19 +287,19 @@
     },
     {
      "call": "run",
-     "wp": 0.4563333333333333
+     "wp": 0.45566666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.444
+     "wp": 0.44733333333333336
     },
     {
      "call": "spike",
-     "wp": 0.4033333333333333
+     "wp": 0.402
     },
     {
      "call": "fg",
-     "wp": 0.4026666666666667
+     "wp": 0.4013333333333333
     }
    ],
    "reason": {
@@ -355,12 +355,12 @@
      "wp": 0.19466666666666665
     },
     {
-     "call": "pass-middle",
-     "wp": 0.155
+     "call": "pass-sideline",
+     "wp": 0.16666666666666666
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.13733333333333334
+     "call": "pass-middle",
+     "wp": 0.155
     },
     {
      "call": "pass-screen",
@@ -483,42 +483,42 @@
    "snapClock": 120,
    "description": "(2:00) (Shotgun) 10-D.Maye pass short right to 13-M.Hollins to SEA 36 for 11 yards (13-E.Jones).",
    "call": "pass-sideline",
-   "wpCall": 0.26033333333333336,
+   "wpCall": 0.26066666666666666,
    "best": "pass-play-action",
-   "wpBest": 0.26033333333333336,
+   "wpBest": 0.26066666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.26033333333333336
+     "wp": 0.26066666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.22833333333333333
+     "wp": 0.22966666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.22533333333333333
+     "wp": 0.226
     },
     {
      "call": "pass-deep",
      "wp": 0.22133333333333333
     },
     {
+     "call": "pass-screen",
+     "wp": 0.20866666666666667
+    },
+    {
      "call": "fg",
      "wp": 0.208
     },
     {
-     "call": "pass-screen",
-     "wp": 0.20733333333333334
-    },
-    {
      "call": "run",
-     "wp": 0.149
+     "wp": 0.15033333333333335
     },
     {
      "call": "punt",
-     "wp": 0.13433333333333333
+     "wp": 0.135
     }
    ],
    "reason": {

@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 2,
- "generatedAt": "2026-11-09T21:41:28.164Z",
+ "generatedAt": "2026-11-09T21:47:33.895Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 125,
  "agreement": {
   "plays": 125,
-  "meanAbsDiff": 0.0433917993083795,
+  "meanAbsDiff": 0.04356234476749101,
   "within10": 0.864
  },
  "worst": [
@@ -32,10 +32,10 @@
    "snapClock": 65,
    "description": "(1:05) (Shotgun) 10-J.Love pass short right to 9-C.Watson to NYJ 45 for 5 yards (6-D.Belton).",
    "call": "pass-sideline",
-   "wpCall": 0.6236666666666667,
+   "wpCall": 0.6226666666666667,
    "best": "punt",
    "wpBest": 0.709,
-   "cost": 0.08533333333333326,
+   "cost": 0.08633333333333326,
    "values": [
     {
      "call": "punt",
@@ -47,15 +47,15 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6236666666666667
+     "wp": 0.6226666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.6146666666666667
+     "wp": 0.615
     },
     {
      "call": "pass-middle",
-     "wp": 0.614
+     "wp": 0.613
     },
     {
      "call": "pass-sideline",
@@ -63,11 +63,11 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.5936666666666667
+     "wp": 0.5933333333333334
     },
     {
      "call": "run",
-     "wp": 0.542
+     "wp": 0.5416666666666666
     },
     {
      "call": "kneel",
@@ -109,46 +109,46 @@
    "snapClock": 289,
    "description": "(4:49) 14-A.McNamara punts 51 yards to GB 18, Center-42-T.Hennessy. 23-S.Moore pushed ob at NYJ 19 for 63 yards (82-A.Smith).",
    "call": "punt",
-   "wpCall": 0.606,
+   "wpCall": 0.607,
    "best": "pass-middle",
-   "wpBest": 0.6743333333333333,
+   "wpBest": 0.6753333333333333,
    "cost": 0.06833333333333336,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6743333333333333
+     "wp": 0.6753333333333333
     },
     {
      "call": "run",
-     "wp": 0.6686666666666666
+     "wp": 0.6666666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6593333333333333
+     "wp": 0.6606666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6563333333333333
+     "wp": 0.6573333333333333
     },
     {
      "call": "timeout",
-     "wp": 0.6493333333333333
+     "wp": 0.6496666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.6426666666666667
+     "wp": 0.6423333333333333
     },
     {
      "call": "punt",
-     "wp": 0.606
+     "wp": 0.607
     },
     {
      "call": "pass-deep",
-     "wp": 0.5986666666666667
+     "wp": 0.6006666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.49733333333333335
+     "wp": 0.497
     }
    ],
    "reason": {
@@ -264,42 +264,42 @@
    "snapClock": 232,
    "description": "(3:52) (Shotgun) 8-O.Hampton up the middle to LV 46 for 2 yards (17-N.Dean). FUMBLES (17-N.Dean), RECOVERED by LV-11-J.Chinn at LV 41. 11-J.Chinn to LAC 16 for 43 yards (10-J.Herbert).",
    "call": "run",
-   "wpCall": 0.4573333333333333,
+   "wpCall": 0.45766666666666667,
    "best": "pass-middle",
-   "wpBest": 0.467,
-   "cost": 0.009666666666666712,
+   "wpBest": 0.4666666666666667,
+   "cost": 0.009000000000000008,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.467
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.459
+     "wp": 0.4666666666666667
     },
     {
      "call": "run",
+     "wp": 0.45766666666666667
+    },
+    {
+     "call": "pass-screen",
      "wp": 0.4573333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.4563333333333333
+     "wp": 0.45666666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.45066666666666666
+     "wp": 0.4503333333333333
     },
     {
      "call": "spike",
-     "wp": 0.44066666666666665
+     "wp": 0.44133333333333336
     },
     {
      "call": "pass-deep",
-     "wp": 0.42966666666666664
+     "wp": 0.431
     },
     {
      "call": "punt",
-     "wp": 0.25166666666666665
+     "wp": 0.25266666666666665
     }
    ],
    "reason": {
@@ -337,14 +337,14 @@
    "snapClock": 22,
    "description": "(:22) (Shotgun) 6-B.Mayfield pass incomplete deep middle to 2-E.Egbuka.",
    "call": "pass-deep",
-   "wpCall": 0.21833333333333332,
+   "wpCall": 0.21733333333333332,
    "best": "pass-deep",
-   "wpBest": 0.21833333333333332,
+   "wpBest": 0.21733333333333332,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.21833333333333332
+     "wp": 0.21733333333333332
     },
     {
      "call": "pass-play-action",
@@ -406,46 +406,46 @@
    "snapClock": 289,
    "description": "(4:49) 14-A.McNamara punts 51 yards to GB 18, Center-42-T.Hennessy. 23-S.Moore pushed ob at NYJ 19 for 63 yards (82-A.Smith).",
    "call": "punt",
-   "wpCall": 0.606,
+   "wpCall": 0.607,
    "best": "pass-middle",
-   "wpBest": 0.6743333333333333,
+   "wpBest": 0.6753333333333333,
    "cost": 0.06833333333333336,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6743333333333333
+     "wp": 0.6753333333333333
     },
     {
      "call": "run",
-     "wp": 0.6686666666666666
+     "wp": 0.6666666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.6593333333333333
+     "wp": 0.6606666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.6563333333333333
+     "wp": 0.6573333333333333
     },
     {
      "call": "timeout",
-     "wp": 0.6493333333333333
+     "wp": 0.6496666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.6426666666666667
+     "wp": 0.6423333333333333
     },
     {
      "call": "punt",
-     "wp": 0.606
+     "wp": 0.607
     },
     {
      "call": "pass-deep",
-     "wp": 0.5986666666666667
+     "wp": 0.6006666666666667
     },
     {
      "call": "kneel",
-     "wp": 0.49733333333333335
+     "wp": 0.497
     }
    ],
    "reason": {
@@ -486,38 +486,38 @@
    "snapClock": 80,
    "description": "(1:20) (Shotgun) 0-B.Allen right guard to 50 for no gain (90-L.Van Ness).",
    "call": "run",
-   "wpCall": 0.624,
+   "wpCall": 0.6213333333333333,
    "best": "run",
-   "wpBest": 0.624,
+   "wpBest": 0.6213333333333333,
    "cost": 0,
    "values": [
     {
      "call": "run",
-     "wp": 0.624
+     "wp": 0.6213333333333333
     },
     {
      "call": "timeout",
-     "wp": 0.6143333333333333
+     "wp": 0.611
     },
     {
      "call": "pass-screen",
-     "wp": 0.576
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.5373333333333333
+     "wp": 0.5746666666666667
     },
     {
      "call": "punt",
-     "wp": 0.5366666666666666
+     "wp": 0.535
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.535
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5303333333333333
+     "wp": 0.5286666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.506
+     "wp": 0.5046666666666667
     },
     {
      "call": "pass-deep",
@@ -525,7 +525,7 @@
     },
     {
      "call": "kneel",
-     "wp": 0.21966666666666668
+     "wp": 0.22066666666666668
     }
    ],
    "reason": {

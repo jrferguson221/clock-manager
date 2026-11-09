@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 8,
- "generatedAt": "2026-11-09T21:41:28.164Z",
+ "generatedAt": "2026-11-09T21:47:33.895Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.038724095568675926,
+  "meanAbsDiff": 0.03867104137112092,
   "within10": 0.9252336448598131
  },
  "worst": [
@@ -32,42 +32,42 @@
    "snapClock": 35,
    "description": "(:35) 9-K.Walker right end to DEN 1 for 3 yards (2-P.Surtain).",
    "call": "run",
-   "wpCall": 0.478,
+   "wpCall": 0.4706666666666667,
    "best": "pass-middle",
-   "wpBest": 0.6093333333333333,
-   "cost": 0.1313333333333333,
+   "wpBest": 0.6003333333333334,
+   "cost": 0.1296666666666667,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6093333333333333
+     "wp": 0.6003333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.594
+     "wp": 0.586
     },
     {
      "call": "pass-sideline",
-     "wp": 0.588
+     "wp": 0.583
     },
     {
      "call": "timeout",
-     "wp": 0.5773333333333334
+     "wp": 0.5703333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.5516666666666666
-    },
-    {
-     "call": "run",
-     "wp": 0.478
+     "wp": 0.5453333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.4756666666666667
+     "wp": 0.471
+    },
+    {
+     "call": "run",
+     "wp": 0.4706666666666667
     },
     {
      "call": "spike",
-     "wp": 0.3933333333333333
+     "wp": 0.3873333333333333
     },
     {
      "call": "fg",
@@ -112,22 +112,22 @@
    "snapClock": 181,
    "description": "(3:01) 19-B.Thorson punts 50 yards to DET 17, Center-42-A.DePaola, fair catch by 86-D.Carter.",
    "call": "punt",
-   "wpCall": 0.11166666666666666,
+   "wpCall": 0.11233333333333333,
    "best": "pass-middle",
-   "wpBest": 0.212,
-   "cost": 0.10033333333333333,
+   "wpBest": 0.21433333333333332,
+   "cost": 0.102,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.212
+     "wp": 0.21433333333333332
     },
     {
      "call": "pass-play-action",
-     "wp": 0.205
+     "wp": 0.20666666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.19766666666666666
+     "wp": 0.19933333333333333
     },
     {
      "call": "pass-deep",
@@ -135,15 +135,15 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.16833333333333333
+     "wp": 0.168
     },
     {
      "call": "run",
-     "wp": 0.15033333333333335
+     "wp": 0.15166666666666667
     },
     {
      "call": "punt",
-     "wp": 0.11166666666666666
+     "wp": 0.11233333333333333
     }
    ],
    "reason": {
@@ -209,7 +209,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.202
+     "wp": 0.232
     },
     {
      "call": "pass-screen",
@@ -330,12 +330,12 @@
    "call": "pass-sideline",
    "wpCall": 0.425,
    "best": "run",
-   "wpBest": 0.42533333333333334,
-   "cost": 0.00033333333333335213,
+   "wpBest": 0.4256666666666667,
+   "cost": 0.0006666666666667043,
    "values": [
     {
      "call": "run",
-     "wp": 0.42533333333333334
+     "wp": 0.4256666666666667
     },
     {
      "call": "pass-play-action",
@@ -347,15 +347,15 @@
     },
     {
      "call": "pass-screen",
-     "wp": 0.42033333333333334
+     "wp": 0.4196666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.41733333333333333
+     "wp": 0.4166666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.402
+     "wp": 0.40166666666666667
     },
     {
      "call": "spike",
@@ -363,7 +363,7 @@
     },
     {
      "call": "punt",
-     "wp": 0.15766666666666668
+     "wp": 0.15833333333333333
     }
    ],
    "reason": {
@@ -401,14 +401,14 @@
    "snapClock": 92,
    "description": "(1:32) (No Huddle, Shotgun) 15-P.Mahomes pass short right to 87-T.Kelce to DEN 18 for 32 yards (26-D.Key).",
    "call": "pass-sideline",
-   "wpCall": 0.331,
+   "wpCall": 0.3303333333333333,
    "best": "pass-middle",
    "wpBest": 0.32966666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.331
+     "wp": 0.3303333333333333
     },
     {
      "call": "pass-middle",
@@ -416,15 +416,15 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.329
+     "wp": 0.32866666666666666
     },
     {
      "call": "timeout",
-     "wp": 0.32766666666666666
+     "wp": 0.328
     },
     {
      "call": "run",
-     "wp": 0.315
+     "wp": 0.31366666666666665
     },
     {
      "call": "pass-screen",
@@ -432,15 +432,15 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.30266666666666664
+     "wp": 0.3006666666666667
     },
     {
      "call": "spike",
-     "wp": 0.2876666666666667
+     "wp": 0.287
     },
     {
      "call": "punt",
-     "wp": 0.052333333333333336
+     "wp": 0.06066666666666667
     }
    ],
    "reason": {
@@ -493,7 +493,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.13933333333333334
+     "wp": 0.178
     },
     {
      "call": "pass-play-action",
