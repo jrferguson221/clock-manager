@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.04273266831439797,
+  "meanAbsDiff": 0.04297819217926858,
   "within10": 0.8969072164948454
  },
  "worst": [
@@ -32,42 +32,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3453333333333333,
+   "wpCall": 0.355,
    "best": "run",
-   "wpBest": 0.4206666666666667,
-   "cost": 0.07533333333333336,
+   "wpBest": 0.433,
+   "cost": 0.07800000000000001,
    "values": [
     {
      "call": "run",
-     "wp": 0.4206666666666667
+     "wp": 0.433
     },
     {
      "call": "timeout",
-     "wp": 0.4126666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.4046666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.402
+     "wp": 0.42533333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.40066666666666667
+     "wp": 0.423
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.42233333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.42033333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37766666666666665
-    },
-    {
-     "call": "fg",
-     "wp": 0.3453333333333333
+     "wp": 0.402
     },
     {
      "call": "pass-deep",
-     "wp": 0.3293333333333333
+     "wp": 0.35533333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.355
     }
    ],
    "reason": {
@@ -75,6 +75,62 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Indianapolis missed a 48-yard field goal with 4:27 left.",
+     "Minnesota got the ball at the Minnesota 38 with 4:22 left, got 1 first down, reached the Indianapolis 28, then kicked a 52-yard field goal with 1:44 left to lead 16–10.",
+     "Indianapolis got the ball at the Indianapolis 31 with 1:39 left, got 1 first down and threw an interception with 1:15 left.",
+     "Minnesota got the ball at the Indianapolis 41 with 1:08 left and knelt to run out the clock.",
+     "Minnesota won 16–10."
+    ],
+    "final": {
+     "home": 16,
+     "away": 10,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.36625,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.7635
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.2365
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 262,
+     "theyScore": 0.357
+    },
+    "best": {
+     "wp": 0.42925,
+     "drive": [
+      {
+       "result": "Turnover on downs",
+       "share": 0.3565
+      },
+      {
+       "result": "Field goal",
+       "share": 0.342
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.2335
+      },
+      {
+       "result": "Fumble",
+       "share": 0.044
+      }
+     ],
+     "theyGetBall": 0.918,
+     "clockWhenTheyGetBall": 148.88043149358504,
+     "theyScore": 0.1575
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 10,
@@ -154,6 +210,18 @@
     "section": "play-model"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cleveland got 1 first down, reached the Tennessee 14, then kicked a 32-yard field goal with 0:03 left to lead 27–24.",
+     "Cleveland won 27–24."
+    ],
+    "final": {
+     "home": 24,
+     "away": 27,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -184,42 +252,42 @@
    "snapClock": 153,
    "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
    "call": "pass-deep",
-   "wpCall": 0.121,
+   "wpCall": 0.12666666666666668,
    "best": "pass-play-action",
-   "wpBest": 0.121,
+   "wpBest": 0.12666666666666668,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.121
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.10433333333333333
+     "wp": 0.12666666666666668
     },
     {
      "call": "pass-sideline",
-     "wp": 0.10066666666666667
+     "wp": 0.11
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.10833333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.09966666666666667
+     "wp": 0.10533333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.09
-    },
-    {
-     "call": "run",
-     "wp": 0.08733333333333333
+     "wp": 0.09833333333333333
     },
     {
      "call": "fg",
-     "wp": 0.08266666666666667
+     "wp": 0.09633333333333334
+    },
+    {
+     "call": "run",
+     "wp": 0.094
     },
     {
      "call": "punt",
-     "wp": 0.06866666666666667
+     "wp": 0.08333333333333333
     }
    ],
    "reason": {
@@ -227,6 +295,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Tennessee got 3 first downs, reached the Cleveland 1, then scored a touchdown with 1:01 left to tie it at 24.",
+     "Cleveland got the ball at the Cleveland 31 with 0:58 left, got 2 first downs, reached the Tennessee 14, then kicked a 32-yard field goal with 0:03 left to lead 27–24.",
+     "Cleveland won 27–24."
+    ],
+    "final": {
+     "home": 24,
+     "away": 27,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 17,
@@ -257,50 +338,50 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.82,
+   "wpCall": 0.808,
    "best": "run",
-   "wpBest": 0.828,
-   "cost": 0.008000000000000007,
+   "wpBest": 0.8053333333333333,
+   "cost": 0,
    "values": [
     {
-     "call": "run",
-     "wp": 0.828
-    },
-    {
      "call": "timeout",
-     "wp": 0.8236666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.82
+     "wp": 0.8086666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.82
+     "wp": 0.808
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.8063333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.8053333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.818
+     "wp": 0.8023333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.81
+     "wp": 0.7993333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.797
+     "wp": 0.7803333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.7896666666666666
+     "wp": 0.7796666666666666
     },
     {
      "call": "spike",
-     "wp": 0.7613333333333333
+     "wp": 0.7466666666666667
     },
     {
      "call": "punt",
-     "wp": 0.736
+     "wp": 0.7276666666666667
     }
    ],
    "reason": {
@@ -311,6 +392,20 @@
     "text": "A pass risks an incompletion that stops the clock for them, and an interception.",
     "section": "running-out-the-clock"
    },
+   "aftermath": {
+    "story": [
+     "Miami got 1 first down and scored a touchdown with 4:55 left to lead 28–17.",
+     "The Jets got the ball at the Jets 35 with 4:44 left, got 2 first downs, reached the Miami 1, then scored a touchdown with 3:24 left to make it 25–28.",
+     "Miami got the ball at the Miami 28 with 3:24 left, got 2 first downs and ran out the clock, while the Jets used 2 timeouts.",
+     "Miami won 28–25."
+    ],
+    "final": {
+     "home": 25,
+     "away": 28,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 21,
@@ -388,6 +483,18 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cleveland kicked a 32-yard field goal with 0:03 left to lead 27–24.",
+     "Cleveland won 27–24."
+    ],
+    "final": {
+     "home": 24,
+     "away": 27,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -418,42 +525,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.3453333333333333,
+   "wpCall": 0.355,
    "best": "run",
-   "wpBest": 0.4206666666666667,
-   "cost": 0.07533333333333336,
+   "wpBest": 0.433,
+   "cost": 0.07800000000000001,
    "values": [
     {
      "call": "run",
-     "wp": 0.4206666666666667
+     "wp": 0.433
     },
     {
      "call": "timeout",
-     "wp": 0.4126666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.4046666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.402
+     "wp": 0.42533333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.40066666666666667
+     "wp": 0.423
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.42233333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.42033333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37766666666666665
-    },
-    {
-     "call": "fg",
-     "wp": 0.3453333333333333
+     "wp": 0.402
     },
     {
      "call": "pass-deep",
-     "wp": 0.3293333333333333
+     "wp": 0.35533333333333333
+    },
+    {
+     "call": "fg",
+     "wp": 0.355
     }
    ],
    "reason": {
@@ -461,6 +568,62 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Indianapolis missed a 48-yard field goal with 4:27 left.",
+     "Minnesota got the ball at the Minnesota 38 with 4:22 left, got 1 first down, reached the Indianapolis 28, then kicked a 52-yard field goal with 1:44 left to lead 16–10.",
+     "Indianapolis got the ball at the Indianapolis 31 with 1:39 left, got 1 first down and threw an interception with 1:15 left.",
+     "Minnesota got the ball at the Indianapolis 41 with 1:08 left and knelt to run out the clock.",
+     "Minnesota won 16–10."
+    ],
+    "final": {
+     "home": 16,
+     "away": 10,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.36625,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.7635
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.2365
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 262,
+     "theyScore": 0.357
+    },
+    "best": {
+     "wp": 0.42925,
+     "drive": [
+      {
+       "result": "Turnover on downs",
+       "share": 0.3565
+      },
+      {
+       "result": "Field goal",
+       "share": 0.342
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.2335
+      },
+      {
+       "result": "Fumble",
+       "share": 0.044
+      }
+     ],
+     "theyGetBall": 0.918,
+     "clockWhenTheyGetBall": 148.88043149358504,
+     "theyScore": 0.1575
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 10,

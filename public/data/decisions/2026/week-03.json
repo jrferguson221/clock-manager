@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 3,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 203,
  "agreement": {
   "plays": 203,
-  "meanAbsDiff": 0.043475745222177974,
+  "meanAbsDiff": 0.04571529603740946,
   "within10": 0.896551724137931
  },
  "worst": [],
@@ -76,6 +76,19 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Tennessee threw an interception with 0:24 left.",
+     "The Giants got the ball at the Giants 10 with 0:17 left and knelt to run out the clock.",
+     "The Giants won 12–7."
+    ],
+    "final": {
+     "home": 12,
+     "away": 7,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 7,
@@ -149,6 +162,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cincinnati lost a fumble with 0:53 left.",
+     "Pittsburgh got the ball at the Cincinnati 49 with 0:44 left and knelt to run out the clock.",
+     "Pittsburgh won 30–27."
+    ],
+    "final": {
+     "home": 30,
+     "away": 27,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 27,
@@ -222,6 +248,18 @@
     "section": "hail-mary"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "The Rams threw an interception with 0:02 left.",
+     "Denver won 30–26."
+    ],
+    "final": {
+     "home": 30,
+     "away": 26,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 26,
@@ -291,6 +329,19 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Indianapolis kicked a 53-yard field goal with 0:21 left to lead 19–17.",
+     "Houston got the ball at the Houston 31 with 0:16 left, got 1 first down and ran out of time, while Indianapolis used a timeout.",
+     "Indianapolis won 19–17."
+    ],
+    "final": {
+     "home": 19,
+     "away": 17,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 16,
@@ -321,42 +372,42 @@
    "snapClock": 249,
    "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.385,
+   "wpCall": 0.403,
    "best": "pass-middle",
-   "wpBest": 0.38433333333333336,
+   "wpBest": 0.3983333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.385
+     "wp": 0.403
     },
     {
      "call": "pass-middle",
-     "wp": 0.38433333333333336
+     "wp": 0.3983333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.372
+     "wp": 0.39
     },
     {
      "call": "pass-screen",
-     "wp": 0.365
+     "wp": 0.38233333333333336
     },
     {
      "call": "pass-sideline",
-     "wp": 0.36033333333333334
+     "wp": 0.37866666666666665
     },
     {
      "call": "run",
-     "wp": 0.35333333333333333
+     "wp": 0.367
     },
     {
      "call": "spike",
-     "wp": 0.3263333333333333
+     "wp": 0.347
     },
     {
      "call": "punt",
-     "wp": 0.263
+     "wp": 0.306
     }
    ],
    "reason": {
@@ -367,6 +418,20 @@
     "text": "A deep pass completes only about 30% of the time and risks a sack or an interception; shorter throws were the better bet here.",
     "section": "play-model"
    },
+   "aftermath": {
+    "story": [
+     "Seattle gave up a defensive touchdown with 4:09 left.",
+     "Seattle got the ball at the Seattle 32 with 3:57 left, got 5 first downs, reached the Washington 7, then scored a touchdown with 2:55 left to make it 31–33.",
+     "Washington got the ball at the Washington 33 with 2:51 left, got 2 first downs, reached the Seattle 35, then ran out the clock, while Seattle used 3 timeouts.",
+     "Washington won 33–31."
+    ],
+    "final": {
+     "home": 33,
+     "away": 31,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,

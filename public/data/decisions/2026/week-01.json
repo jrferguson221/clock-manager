@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 1,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03801255619024568,
-  "within10": 0.9158878504672897
+  "meanAbsDiff": 0.04044902159918884,
+  "within10": 0.897196261682243
  },
  "worst": [
   {
@@ -83,6 +83,58 @@
     "section": "spike"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "New Orleans missed a 62-yard field goal with 0:02 left.",
+     "The game went to overtime.",
+     "Detroit got the ball at the Detroit 30 with 10:00 left in overtime, got 5 first downs, reached the New Orleans 4, then scored a touchdown with 5:07 left in overtime to lead 31–24.",
+     "New Orleans got the ball at the New Orleans 20 with 5:04 left in overtime, got 4 first downs, reached the Detroit 2, then scored a touchdown with 1:34 left in overtime to make it 30–31.",
+     "Detroit won 31–30 in overtime."
+    ],
+    "final": {
+     "home": 31,
+     "away": 30,
+     "overtime": true
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.66625,
+     "drive": [
+      {
+       "result": "Time ran out",
+       "share": 0.424
+      },
+      {
+       "result": "Field goal",
+       "share": 0.3325
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.228
+      }
+     ],
+     "theyGetBall": 0.0155,
+     "clockWhenTheyGetBall": 1,
+     "theyScore": 0
+    },
+    "best": {
+     "wp": 0.767,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.534
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.466
+      }
+     ],
+     "theyGetBall": 0,
+     "clockWhenTheyGetBall": null,
+     "theyScore": 0
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -159,6 +211,59 @@
     "text": "Punting gives the ball back when you need to score.",
     "section": "fourth-down"
    },
+   "aftermath": {
+    "story": [
+     "Detroit punted 56 yards to the New Orleans 20 with 0:37 left.",
+     "New Orleans got 2 first downs and missed a 62-yard field goal with 0:02 left.",
+     "The game went to overtime.",
+     "Detroit got the ball at the Detroit 30 with 10:00 left in overtime, got 5 first downs, reached the New Orleans 4, then scored a touchdown with 5:07 left in overtime to lead 31–24.",
+     "New Orleans got the ball at the New Orleans 20 with 5:04 left in overtime, got 4 first downs, reached the Detroit 2, then scored a touchdown with 1:34 left in overtime to make it 30–31.",
+     "Detroit won 31–30 in overtime."
+    ],
+    "final": {
+     "home": 31,
+     "away": 30,
+     "overtime": true
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.5,
+     "drive": [
+      {
+       "result": "Punt",
+       "share": 1
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 30,
+     "theyScore": 0
+    },
+    "best": {
+     "wp": 0.59,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.384
+      },
+      {
+       "result": "Turnover on downs",
+       "share": 0.287
+      },
+      {
+       "result": "Punt",
+       "share": 0.1175
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.093
+      }
+     ],
+     "theyGetBall": 0.7335,
+     "clockWhenTheyGetBall": 20.331970006816633,
+     "theyScore": 0.2295
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -234,6 +339,19 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "New England threw an interception with 0:26 left.",
+     "Seattle got the ball at the Seattle 20 with 0:21 left and knelt to run out the clock.",
+     "Seattle won 13–10."
+    ],
+    "final": {
+     "home": 13,
+     "away": 10,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 10,
@@ -264,42 +382,42 @@
    "snapClock": 101,
    "description": "(1:41) (Shotgun) 17-J.Allen pass deep middle to 5-J.Palmer for 34 yards, TOUCHDOWN.",
    "call": "pass-deep",
-   "wpCall": 0.49833333333333335,
+   "wpCall": 0.5043333333333333,
    "best": "pass-play-action",
-   "wpBest": 0.49833333333333335,
+   "wpBest": 0.5043333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.49833333333333335
+     "wp": 0.5043333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.475
+     "wp": 0.48233333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.4643333333333333
+     "wp": 0.472
     },
     {
      "call": "pass-screen",
-     "wp": 0.45866666666666667
+     "wp": 0.4666666666666667
     },
     {
      "call": "run",
-     "wp": 0.45566666666666666
+     "wp": 0.45766666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.44733333333333336
+     "wp": 0.45466666666666666
     },
     {
      "call": "spike",
-     "wp": 0.402
+     "wp": 0.408
     },
     {
      "call": "fg",
-     "wp": 0.4013333333333333
+     "wp": 0.4053333333333333
     }
    ],
    "reason": {
@@ -307,6 +425,20 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Buffalo got 1 first down, reached the Houston 2, then scored a touchdown with 1:36 left to lead 36–31.",
+     "Houston got the ball at the Houston 29 with 1:36 left, got 3 first downs, reached the Buffalo 9, then lost a fumble with 0:16 left.",
+     "Buffalo got the ball at the Buffalo 24 with 0:09 left and knelt to run out the clock.",
+     "Buffalo won 36–31."
+    ],
+    "final": {
+     "home": 31,
+     "away": 36,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 30,
@@ -380,6 +512,19 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Houston lost a fumble with 0:16 left.",
+     "Buffalo got the ball at the Buffalo 24 with 0:09 left and knelt to run out the clock.",
+     "Buffalo won 36–31."
+    ],
+    "final": {
+     "home": 31,
+     "away": 36,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 31,
@@ -453,6 +598,19 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Houston reached the Buffalo 9 and lost a fumble with 0:16 left.",
+     "Buffalo got the ball at the Buffalo 24 with 0:09 left and knelt to run out the clock.",
+     "Buffalo won 36–31."
+    ],
+    "final": {
+     "home": 31,
+     "away": 36,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 31,
@@ -483,42 +641,42 @@
    "snapClock": 120,
    "description": "(2:00) (Shotgun) 10-D.Maye pass short right to 13-M.Hollins to SEA 36 for 11 yards (13-E.Jones).",
    "call": "pass-sideline",
-   "wpCall": 0.26066666666666666,
+   "wpCall": 0.26766666666666666,
    "best": "pass-play-action",
-   "wpBest": 0.26066666666666666,
+   "wpBest": 0.26766666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.26066666666666666
+     "wp": 0.26766666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.22966666666666666
+     "wp": 0.236
     },
     {
      "call": "pass-sideline",
-     "wp": 0.226
+     "wp": 0.23333333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.22133333333333333
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.20866666666666667
+     "wp": 0.23033333333333333
     },
     {
      "call": "fg",
-     "wp": 0.208
+     "wp": 0.22
     },
     {
-     "call": "run",
-     "wp": 0.15033333333333335
+     "call": "pass-screen",
+     "wp": 0.22
     },
     {
      "call": "punt",
-     "wp": 0.135
+     "wp": 0.167
+    },
+    {
+     "call": "run",
+     "wp": 0.16266666666666665
     }
    ],
    "reason": {
@@ -526,6 +684,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "New England got 2 first downs, reached the Seattle 16, then threw an interception with 0:26 left.",
+     "Seattle got the ball at the Seattle 20 with 0:21 left and knelt to run out the clock.",
+     "Seattle won 13–10."
+    ],
+    "final": {
+     "home": 13,
+     "away": 10,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 10,

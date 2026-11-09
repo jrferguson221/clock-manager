@@ -24,6 +24,30 @@ export const decisionSituationSchema = z.object({
 });
 export type DecisionSituation = z.infer<typeof decisionSituationSchema>;
 
+/** What a call led to across the model's simulated games: how the drive ended, and what came after. */
+export const callOutcomesSchema = z.object({
+  /** The offense's win probability with the call. */
+  wp: probability,
+  /** How the offense's drive ended, most common first: e.g. "Field goal" 0.82. */
+  drive: z.array(z.object({ result: z.string(), share: probability })),
+  /** Share of games in which the other team got the ball back before the end. */
+  theyGetBall: probability,
+  /** Average game clock, in seconds, when they got it (null if they never did). */
+  clockWhenTheyGetBall: z.nullable(z.number().check(z.minimum(0))),
+  /** Share of games in which they scored on that possession. */
+  theyScore: probability,
+});
+export type CallOutcomes = z.infer<typeof callOutcomesSchema>;
+
+const scoreAfter = { home: z.int().check(z.minimum(0)), away: z.int().check(z.minimum(0)) };
+
+/** What actually happened after a decision, from the play-by-play: a few plain sentences, and the final score. */
+export const aftermathSchema = z.object({
+  story: z.array(z.string()),
+  final: z.object({ ...scoreAfter, overtime: z.boolean() }),
+});
+export type Aftermath = z.infer<typeof aftermathSchema>;
+
 export const decisionSchema = z.object({
   /** Stable id: game id and play id. */
   id: z.string(),
@@ -55,6 +79,10 @@ export const decisionSchema = z.object({
   reason: z.object({ text: z.string(), section: guideSectionSchema }),
   /** Why their call was worse than the best one, when the model has a specific reason. */
   against: z.nullable(z.object({ text: z.string(), section: guideSectionSchema })),
+  /** What happened after the call, for the longer result. Null when the play-by-play can't place it. */
+  aftermath: z.nullable(aftermathSchema),
+  /** Their call and the best call, played out: for the longer explanation. Null when they're the same. */
+  detail: z.nullable(z.object({ their: callOutcomesSchema, best: callOutcomesSchema })),
   /** For a timeout with the clock running: about how many seconds were left on the play clock. */
   playClockLeft: z.nullable(z.int().check(z.minimum(1), z.maximum(40))),
   /** The actual score before the play: the offense's points and the defense's. */

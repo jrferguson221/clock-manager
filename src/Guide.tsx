@@ -12,7 +12,7 @@ import { NFL_RULES, PLAY_TYPES, runOutThreshold, DOWNS } from "./engine";
 import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
 import {
   bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
-  AVOID, CLOSE, DEFAULT_SIM, FG_TIMEOUT_AT, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
+  AVOID, CLOSE, DEFAULT_SIM, EXPECTED_RUN_WINDOW, FG_TIMEOUT_AT, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
   END_ZONE_SHOT_CLOCK, GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, TIED_KNEEL_CLOCK, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
 import { formatClock } from "./time";
@@ -251,6 +251,7 @@ function PlayModelSection() {
       : `${o.minYards}+ yards, about ${Math.round(o.minYards + o.extraYards)} on average`, pct(o.outOfBounds), pct(o.sack), pct(o.interception)];
   });
   const run = runShape("normal", 75);
+  const expected = runShape("normal", 75, null, true);
 
   return (
     <Section id="play-model">
@@ -275,7 +276,9 @@ function PlayModelSection() {
         <List.Item>
           <strong>Run:</strong> about {run.mean.toFixed(1)} yards typically, with a {pct(run.breakaway)} chance of a
           breakaway for more. Runs rarely go out of bounds (7%), so they usually keep the clock running, and are lost to a
-          fumble about 1% of the time.
+          fumble about 1% of the time. When you're ahead in the last {EXPECTED_RUN_WINDOW / 60} minutes the defense expects
+          the run and loads up to stop it: about {expected.mean.toFixed(1)} yards typically, with a {pct(expected.breakaway)}{" "}
+          chance of a breakaway, so runs are stuffed more often (about 22% at or behind the line, against 16%).
         </List.Item>
         <List.Item>
           <strong>Kneel:</strong> loses a yard and takes {PLAY_TYPES.kneel.duration} seconds, with no risk. The clock keeps

@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 4,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 194,
  "agreement": {
   "plays": 194,
-  "meanAbsDiff": 0.04371714628649123,
-  "within10": 0.9226804123711341
+  "meanAbsDiff": 0.04476987504759398,
+  "within10": 0.9175257731958762
  },
  "worst": [
   {
@@ -32,42 +32,42 @@
    "snapClock": 136,
    "description": "(2:16) 34-D.Zvada 52 yard field goal is GOOD, Center-58-B.Mann, Holder-15-J.Stout.",
    "call": "fg",
-   "wpCall": 0.7486666666666667,
+   "wpCall": 0.7496666666666667,
    "best": "pass-middle",
-   "wpBest": 0.8156666666666667,
-   "cost": 0.06699999999999995,
+   "wpBest": 0.8136666666666666,
+   "cost": 0.06399999999999995,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.8156666666666667
+     "wp": 0.8136666666666666
     },
     {
      "call": "pass-sideline",
-     "wp": 0.7883333333333333
+     "wp": 0.7833333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.7856666666666666
+     "wp": 0.7823333333333333
     },
     {
      "call": "pass-deep",
-     "wp": 0.755
+     "wp": 0.7556666666666667
     },
     {
      "call": "fg",
-     "wp": 0.7486666666666667
-    },
-    {
-     "call": "run",
-     "wp": 0.742
+     "wp": 0.7496666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.7396666666666667
+     "wp": 0.7373333333333333
+    },
+    {
+     "call": "run",
+     "wp": 0.732
     },
     {
      "call": "kneel",
-     "wp": 0.6273333333333333
+     "wp": 0.6256666666666667
     }
    ],
    "reason": {
@@ -75,6 +75,60 @@
     "section": "play-model"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "The Giants kicked a 52-yard field goal with 2:16 left to lead 30–24.",
+     "Arizona got the ball at the Arizona 33 with 2:11 left, got 3 first downs, reached the Giants 4, then gave up a defensive touchdown with 0:11 left.",
+     "The Giants won 36–24."
+    ],
+    "final": {
+     "home": 36,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.74175,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.74
+      },
+      {
+       "result": "Missed field goal",
+       "share": 0.26
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 131,
+     "theyScore": 0.43
+    },
+    "best": {
+     "wp": 0.809,
+     "drive": [
+      {
+       "result": "Turnover on downs",
+       "share": 0.4415
+      },
+      {
+       "result": "Ran out the clock",
+       "share": 0.257
+      },
+      {
+       "result": "Field goal",
+       "share": 0.18
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.0515
+      }
+     ],
+     "theyGetBall": 0.743,
+     "clockWhenTheyGetBall": 101.7321668909825,
+     "theyScore": 0.338
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 27,
@@ -107,46 +161,46 @@
    "snapClock": 215,
    "description": "(3:35) (Shotgun) 15-P.Mahomes pass deep left to 2-T.Thornton to LV 5 for 55 yards (31-T.Stukes). KC-2-T.Thornton was injured during the play. PENALTY on LV-7-Q.Walker, Unnecessary Roughness, 3 yards, enforced at LV 5.",
    "call": "pass-deep",
-   "wpCall": 0.5346666666666666,
+   "wpCall": 0.5396666666666666,
    "best": "pass-middle",
-   "wpBest": 0.5346666666666666,
+   "wpBest": 0.5396666666666666,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.5346666666666666
+     "wp": 0.5396666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5223333333333333
+     "wp": 0.5283333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.5083333333333333
+     "wp": 0.52
     },
     {
      "call": "pass-sideline",
-     "wp": 0.508
-    },
-    {
-     "call": "timeout",
-     "wp": 0.49166666666666664
+     "wp": 0.516
     },
     {
      "call": "run",
-     "wp": 0.48933333333333334
+     "wp": 0.503
     },
     {
      "call": "pass-deep",
-     "wp": 0.486
+     "wp": 0.49866666666666665
+    },
+    {
+     "call": "timeout",
+     "wp": 0.49433333333333335
     },
     {
      "call": "spike",
-     "wp": 0.43666666666666665
+     "wp": 0.4543333333333333
     },
     {
      "call": "punt",
-     "wp": 0.325
+     "wp": 0.37733333333333335
     }
    ],
    "reason": {
@@ -154,6 +208,23 @@
     "section": "play-model"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Kansas City got 2 first downs, reached the Las Vegas 2, then scored a touchdown with 3:21 left to lead 23–19.",
+     "Las Vegas got the ball with 3:21 left, got 1 first down and lost a fumble that was returned for a touchdown with 3:10 left.",
+     "Las Vegas got the ball at the Las Vegas 35 with 3:02 left, got 3 first downs, reached the Kansas City 2, then scored a touchdown with 1:46 left to make it 27–30.",
+     "Kansas City got the ball at the Kansas City 45 with 1:46 left and punted 52 yards to the Las Vegas 1 with 1:26 left.",
+     "Las Vegas got 3 first downs and threw an interception with 0:10 left.",
+     "Kansas City got the ball at the Kansas City 39 with 0:01 left and knelt to run out the clock.",
+     "Kansas City won 30–27."
+    ],
+    "final": {
+     "home": 27,
+     "away": 30,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 17,
@@ -227,6 +298,19 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Dallas got 1 first down and scored a touchdown with 0:43 left to lead 34–30.",
+     "Houston got the ball at the Houston 28 with 0:40 left, got 1 first down and ran out of time, while Dallas used a timeout.",
+     "Dallas won 34–30."
+    ],
+    "final": {
+     "home": 30,
+     "away": 34,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 27,
@@ -257,34 +341,34 @@
    "snapClock": 74,
    "description": "(1:14) (Shotgun) 17-J.Allen pass deep left intended for 5-J.Palmer INTERCEPTED by 4-C.Woodson at NE 19. 4-C.Woodson to NE 19 for no gain (5-J.Palmer).",
    "call": "pass-deep",
-   "wpCall": 0.3576666666666667,
+   "wpCall": 0.3606666666666667,
    "best": "pass-middle",
-   "wpBest": 0.3576666666666667,
+   "wpBest": 0.3606666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.3576666666666667
+     "wp": 0.3606666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.356
+     "wp": 0.357
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3453333333333333
+     "wp": 0.3473333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.3433333333333333
+     "wp": 0.345
     },
     {
      "call": "run",
-     "wp": 0.3396666666666667
+     "wp": 0.34
     },
     {
      "call": "pass-deep",
-     "wp": 0.3303333333333333
+     "wp": 0.33066666666666666
     },
     {
      "call": "spike",
@@ -292,7 +376,7 @@
     },
     {
      "call": "punt",
-     "wp": 0.07933333333333334
+     "wp": 0.10266666666666667
     }
    ],
    "reason": {
@@ -300,6 +384,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Buffalo threw an interception with 1:14 left.",
+     "New England got the ball at the New England 19 with 1:05 left, got 1 first down and ran out the clock, while Buffalo used 3 timeouts.",
+     "New England won 29–26."
+    ],
+    "final": {
+     "home": 26,
+     "away": 29,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 26,
@@ -369,6 +466,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cincinnati turned it over on downs with 0:56 left.",
+     "Jacksonville got the ball at the Jacksonville 12 with 0:50 left and knelt to run out the clock.",
+     "Jacksonville won 22–17."
+    ],
+    "final": {
+     "home": 17,
+     "away": 22,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 17,
@@ -399,42 +509,42 @@
    "snapClock": 154,
    "description": "(2:34) (Shotgun) 7-C.Stroud pass short right to 86-D.Schultz to DAL 25 for 2 yards. Lateral to 32-D.Montgomery pushed ob at DAL 6 for 19 yards (53-D.Winters; 23-A.Speed).",
    "call": "pass-sideline",
-   "wpCall": 0.292,
+   "wpCall": 0.30966666666666665,
    "best": "pass-play-action",
-   "wpBest": 0.292,
+   "wpBest": 0.30966666666666665,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.292
+     "wp": 0.30966666666666665
     },
     {
      "call": "pass-middle",
-     "wp": 0.27666666666666667
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.27266666666666667
+     "wp": 0.2986666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.2643333333333333
+     "wp": 0.28933333333333333
     },
     {
-     "call": "run",
-     "wp": 0.25933333333333336
+     "call": "pass-deep",
+     "wp": 0.287
     },
     {
      "call": "pass-screen",
-     "wp": 0.25833333333333336
+     "wp": 0.2786666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.268
     },
     {
      "call": "fg",
-     "wp": 0.20833333333333334
+     "wp": 0.24766666666666667
     },
     {
      "call": "spike",
-     "wp": 0.18366666666666667
+     "wp": 0.20133333333333334
     }
    ],
    "reason": {
@@ -442,6 +552,20 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Houston got 2 first downs, reached the Dallas 6, then scored a touchdown with 2:26 left to lead 30–27.",
+     "Dallas got the ball at the Dallas 26 with 2:23 left, got 5 first downs, reached the Houston 12, then scored a touchdown with 0:43 left to lead 34–30.",
+     "Houston got the ball at the Houston 28 with 0:40 left, got 1 first down and ran out of time, while Dallas used a timeout.",
+     "Dallas won 34–30."
+    ],
+    "final": {
+     "home": 30,
+     "away": 34,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 23,

@@ -8,14 +8,14 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { decisionIndexSchema, decisionWeekSchema, type Decision, type DecisionWeek } from "@situational-football/schemas";
+import { decisionIndexSchema, decisionWeekSchema, type CallOutcomes, type Decision, type DecisionWeek } from "@situational-football/schemas";
 import {
-  availableCalls, bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, outcomeWinProbability, ranked, snapDelay, whyNot, wpOf,
-  type CallValues,
+  availableCalls, bestCallReason, bestScored, evaluateCalls, evaluateCallsAtSnap, outcomeWinProbability, playOut, ranked, seededRng,
+  snapDelay, step, whyNot, wpOf, DEFAULT_SIM, type CallValues, type StepResult,
 } from "../../src/sim";
-import type { GameState, PlayCall } from "@situational-football/schemas";
+import type { GameState, PlayCall, Team } from "@situational-football/schemas";
 import { parseCsv } from "./csv";
-import { completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
+import { aftermathOf, completeWeeks, findCandidates, passTagsFrom, type Candidate, type PassTag } from "./plays";
 
 export const SOURCE_PBP = "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0";
 export const SOURCE_FTN = "Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0";
@@ -69,6 +69,12 @@ export function timeoutValues(at: GameState, playClockLeft: number, n = GAMES_PE
   return [{ call: "timeout", wp: bestScored(evaluateCallsAtSnap(after, n)).wp }, ...plays];
 }
 
+/** Where a call starts from: for the options to a timeout called late in the play clock, their own snap. */
+function startFor(at: GameState, call: PlayCall, playClockLeft: number | null): GameState {
+  if (playClockLeft === null || call === "timeout") return at;
+  return snapAfter(at, burnBefore(at, call, playClockLeft));
+}
+
 /** Why a timeout was worse, given the play clock left: the seconds it gave back, when that's what it cost. */
 function timeoutAgainst(at: GameState, best: PlayCall, playClockLeft: number): Decision["against"] {
   const seconds = burnBefore(at, best, playClockLeft);
@@ -76,6 +82,49 @@ function timeoutAgainst(at: GameState, best: PlayCall, playClockLeft: number): D
   return {
     text: `The play clock still had about ${playClockLeft} seconds on it: the timeout gave back ${seconds} seconds you could have run off before the snap.`,
     section: "running-out-the-clock",
+  };
+}
+
+/** Games simulated per call for the longer explanation. */
+const DETAIL_GAMES = 2000;
+
+/**
+ * What a call leads to from a situation: how the offense's drive ends, whether and when the other team gets
+ * the ball back, how often it scores then, and the offense's win probability. `start` is the state the call
+ * is made from (for a timeout's alternatives, their own snap).
+ */
+export function callOutcomes(start: GameState, call: PlayCall, n = DETAIL_GAMES): CallOutcomes {
+  const drive = new Map<string, number>();
+  let wins = 0, theyGet = 0, clockSum = 0, theyScore = 0;
+  for (let i = 0; i < n; i++) {
+    const r = seededRng(0x5eed + i * 7919);
+    let s = start;
+    let ended: string | null = null;
+    let handedOver = false;
+    let answered = false;
+    const first = step(s, call, r);
+    const track = (res: StepResult, offense: Team) => {
+      if (offense === "you" && ended === null && (res.driveEnded !== undefined || res.state.poss !== "you" || res.state.over)) {
+        ended = res.driveEnded ?? (res.state.over ? (res.state.margin > 0 ? "Ran out the clock" : "Time ran out") : "Ended");
+      }
+      if (!handedOver && res.state.poss === "opp" && !res.state.over) { handedOver = true; theyGet++; clockSum += res.state.clock; }
+      if (offense === "opp" && handedOver && !answered && res.driveEnded !== undefined) {
+        answered = true;
+        if (res.driveEnded === "Touchdown" || res.driveEnded === "Field goal") theyScore++;
+      }
+    };
+    track(first, "you");
+    s = first.state;
+    wins += playOut(s, r, DEFAULT_SIM, track);
+    const key = ended ?? (s.over ? "Time ran out" : "Ended");
+    drive.set(key, (drive.get(key) ?? 0) + 1);
+  }
+  return {
+    wp: wins / n,
+    drive: [...drive].map(([result, k]) => ({ result, share: k / n })).sort((a, b) => b.share - a.share).filter((d) => d.share >= 0.03).slice(0, 4),
+    theyGetBall: theyGet / n,
+    clockWhenTheyGetBall: theyGet === 0 ? null : clockSum / theyGet,
+    theyScore: theyScore / n,
   };
 }
 
@@ -110,24 +159,57 @@ export function scoreDecision(c: Candidate, n = GAMES_PER_CALL): Decision | null
     reason: bestCallReason(lateTimeout !== null && best.call !== "timeout" ? snapAfter(at, burnBefore(at, best.call, lateTimeout)) : at, best.call),
     against: judged === best.call ? null : lateTimeout !== null ? timeoutAgainst(at, best.call, lateTimeout) : whyNot(at, judged),
     playClockLeft: lateTimeout,
+    // Filled in for the decisions that make the lists: see withDetail and the week's aftermath.
+    detail: null,
+    aftermath: null,
     score: c.score,
     nflverseWp: c.nflverseWp, nflverseWpa: c.nflverseWpa, lowConfidence,
+  };
+}
+
+/** The situation a decision was judged from, back in the model's terms. */
+function stateOf(d: Decision): GameState {
+  const s = d.situation;
+  return {
+    clock: s.clock, running: s.running, poss: "you", down: s.down, toGo: s.toGo, ytg: s.ytg, margin: s.margin,
+    timeouts: { you: s.timeouts, opp: s.oppTimeouts }, over: false,
+  };
+}
+
+/** A listed decision with its longer explanation: their call and the best call, played out. */
+export function withDetail(d: Decision, n = DETAIL_GAMES): Decision {
+  // A pass is judged as the best kind of pass, so that's the one to play out.
+  const judged = PASSES.has(d.call)
+    ? d.values.filter((v) => PASSES.has(v.call)).reduce((a, b) => (b.wp > a.wp ? b : a)).call
+    : d.call;
+  if (judged === d.best || d.cost < 0.005) return d;
+  const at = stateOf(d);
+  return {
+    ...d,
+    detail: {
+      their: callOutcomes(startFor(at, judged, d.playClockLeft), judged, n),
+      best: callOutcomes(startFor(at, d.best, d.playClockLeft), d.best, n),
+    },
   };
 }
 
 /** A week's file from its scored decisions. */
 export function buildWeek(
   season: number, week: number, decisions: readonly Decision[], games: number, generatedAt: string, source: string,
+  /** What happened after each listed decision, from the week's play-by-play. */
+  aftermath: (d: Decision) => Decision["aftermath"] = () => null,
 ): DecisionWeek {
   const compared = decisions.flatMap((d) => (d.nflverseWp === null ? [] : [Math.abs(d.wpBest - d.nflverseWp)]));
   const worst = decisions
     .filter((d) => !d.lowConfidence && d.cost >= FLAG_THRESHOLD)
     .sort((a, b) => b.cost - a.cost)
-    .slice(0, WORST_PER_WEEK);
+    .slice(0, WORST_PER_WEEK)
+    .map((d) => ({ ...withDetail(d), aftermath: aftermath(d) }));
   const notable = decisions
     .filter((d) => d.nflverseWpa !== null)
     .sort((a, b) => Math.abs(b.nflverseWpa ?? 0) - Math.abs(a.nflverseWpa ?? 0))
-    .slice(0, NOTABLE_PER_WEEK);
+    .slice(0, NOTABLE_PER_WEEK)
+    .map((d) => ({ ...withDetail(d), aftermath: aftermath(d) }));
   return decisionWeekSchema.parse({
     season, week, generatedAt, source, games, evaluated: decisions.length,
     agreement: {
@@ -191,7 +273,7 @@ async function main() {
       return d === null ? [] : [d];
     });
     const source = chartedWeeks.has(week) ? `${SOURCE_PBP}. ${SOURCE_FTN}` : SOURCE_PBP;
-    const file = buildWeek(season, week, decisions, games, generatedAt, source);
+    const file = buildWeek(season, week, decisions, games, generatedAt, source, (d) => aftermathOf(weekRows, d.id));
     await writeFile(join(out, String(season), `week-${String(week).padStart(2, "0")}.json`), `${JSON.stringify(file, null, 1)}\n`);
     index.push({ week, worst: file.worst.length });
     console.error(`  week ${week}: ${games} games, ${decisions.length} decisions scored, ${file.worst.length} flagged, models within 10 points on ${Math.round(file.agreement.within10 * 100)}% (${((performance.now() - started) / 1000).toFixed(1)}s)`);

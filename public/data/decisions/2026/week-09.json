@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 9,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03947050505505171,
-  "within10": 0.897196261682243
+  "meanAbsDiff": 0.03828904733293892,
+  "within10": 0.9158878504672897
  },
  "worst": [
   {
@@ -32,38 +32,38 @@
    "snapClock": 263,
    "description": "(4:23) 17-R.Wright punts 46 yards to CLE 17, Center-49-Z.Wood, fair catch by 1-K.Concepcion.",
    "call": "punt",
-   "wpCall": 0.176,
+   "wpCall": 0.201,
    "best": "pass-middle",
-   "wpBest": 0.25766666666666665,
-   "cost": 0.08166666666666667,
+   "wpBest": 0.271,
+   "cost": 0.07,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.25766666666666665
+     "wp": 0.271
     },
     {
      "call": "pass-play-action",
-     "wp": 0.255
+     "wp": 0.2683333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.24433333333333335
+     "wp": 0.261
     },
     {
      "call": "run",
-     "wp": 0.23866666666666667
+     "wp": 0.25366666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.236
+     "wp": 0.24966666666666668
     },
     {
      "call": "pass-deep",
-     "wp": 0.214
+     "wp": 0.24166666666666667
     },
     {
      "call": "punt",
-     "wp": 0.176
+     "wp": 0.201
     }
    ],
    "reason": {
@@ -73,6 +73,58 @@
    "against": {
     "text": "Punting gives the ball back when you need to score.",
     "section": "fourth-down"
+   },
+   "aftermath": {
+    "story": [
+     "New Orleans punted 46 yards to the Cleveland 17 with 4:23 left.",
+     "Cleveland punted 59 yards to the New Orleans 45 with 2:00 left.",
+     "New Orleans got 3 first downs, reached the Cleveland 2, then scored a touchdown with 1:00 left to lead 16–13.",
+     "Cleveland got the ball at the Cleveland 26 with 0:58 left, got 1 first down, reached the New Orleans 33, then kicked a 51-yard field goal with 0:12 left to tie it at 16.",
+     "New Orleans got the ball at the New Orleans 35 with 0:08 left and knelt to run out the clock.",
+     "The game went to overtime.",
+     "New Orleans got the ball at the New Orleans 26 with 10:00 left in overtime, got 4 first downs, reached the Cleveland 15, then scored a touchdown with 4:23 left in overtime to lead 23–16.",
+     "Cleveland got the ball at the Cleveland 33 with 4:17 left in overtime, got 3 first downs, reached the New Orleans 2, then scored a touchdown with 1:00 left in overtime to make it 22–23.",
+     "New Orleans won 23–22 in overtime."
+    ],
+    "final": {
+     "home": 23,
+     "away": 22,
+     "overtime": true
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.20125,
+     "drive": [
+      {
+       "result": "Punt",
+       "share": 1
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 256,
+     "theyScore": 0.0325
+    },
+    "best": {
+     "wp": 0.259,
+     "drive": [
+      {
+       "result": "Turnover on downs",
+       "share": 0.648
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.2485
+      },
+      {
+       "result": "Interception",
+       "share": 0.093
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 194.675,
+     "theyScore": 0.512
+    }
    },
    "playClockLeft": null,
    "score": {
@@ -117,7 +169,7 @@
     },
     {
      "call": "pass-play-action",
-     "wp": 0.393
+     "wp": 0.39366666666666666
     },
     {
      "call": "run",
@@ -137,7 +189,7 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.36
+     "wp": 0.36133333333333334
     },
     {
      "call": "spike",
@@ -145,7 +197,7 @@
     },
     {
      "call": "fg",
-     "wp": 0.09333333333333334
+     "wp": 0.098
     }
    ],
    "reason": {
@@ -153,6 +205,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Carolina lost a fumble with 1:24 left.",
+     "Denver got the ball at the Denver 44 with 1:18 left, got 1 first down and ran out the clock, while Carolina used 2 timeouts.",
+     "Denver won 26–21."
+    ],
+    "final": {
+     "home": 21,
+     "away": 26,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 21,
@@ -226,6 +291,20 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Dallas got 3 first downs, reached the Indianapolis 1, then scored a touchdown with 1:10 left to lead 27–23.",
+     "Indianapolis got the ball at the Indianapolis 26 with 1:08 left and threw an interception with 0:41 left.",
+     "Dallas got the ball at the Indianapolis 37 with 0:35 left and knelt to run out the clock.",
+     "Dallas won 27–23."
+    ],
+    "final": {
+     "home": 23,
+     "away": 27,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 20,
@@ -295,6 +374,22 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cleveland kicked a 51-yard field goal with 0:12 left to tie it at 16.",
+     "New Orleans got the ball at the New Orleans 35 with 0:08 left and knelt to run out the clock.",
+     "The game went to overtime.",
+     "New Orleans got the ball at the New Orleans 26 with 10:00 left in overtime, got 4 first downs, reached the Cleveland 15, then scored a touchdown with 4:23 left in overtime to lead 23–16.",
+     "Cleveland got the ball at the Cleveland 33 with 4:17 left in overtime, got 3 first downs, reached the New Orleans 2, then scored a touchdown with 1:00 left in overtime to make it 22–23.",
+     "New Orleans won 23–22 in overtime."
+    ],
+    "final": {
+     "home": 23,
+     "away": 22,
+     "overtime": true
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 13,
@@ -372,6 +467,18 @@
     "section": "field-goal-endgame"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Chicago kicked a 38-yard field goal with 0:03 left to lead 27–24.",
+     "Chicago won 27–24."
+    ],
+    "final": {
+     "home": 27,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -445,6 +552,22 @@
     "section": "play-model"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Cleveland got 1 first down, reached the New Orleans 33, then kicked a 51-yard field goal with 0:12 left to tie it at 16.",
+     "New Orleans got the ball at the New Orleans 35 with 0:08 left and knelt to run out the clock.",
+     "The game went to overtime.",
+     "New Orleans got the ball at the New Orleans 26 with 10:00 left in overtime, got 4 first downs, reached the Cleveland 15, then scored a touchdown with 4:23 left in overtime to lead 23–16.",
+     "Cleveland got the ball at the Cleveland 33 with 4:17 left in overtime, got 3 first downs, reached the New Orleans 2, then scored a touchdown with 1:00 left in overtime to make it 22–23.",
+     "New Orleans won 23–22 in overtime."
+    ],
+    "final": {
+     "home": 23,
+     "away": 22,
+     "overtime": true
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 13,

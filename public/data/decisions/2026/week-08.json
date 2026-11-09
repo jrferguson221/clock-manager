@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 8,
- "generatedAt": "2026-11-09T21:47:33.895Z",
+ "generatedAt": "2026-11-09T22:13:06.571Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03867104137112092,
+  "meanAbsDiff": 0.03937956635214133,
   "within10": 0.9252336448598131
  },
  "worst": [
@@ -82,6 +82,59 @@
     "text": "A play that ends in bounds keeps the clock running when you're short on time.",
     "section": "clock-rules"
    },
+   "aftermath": {
+    "story": [
+     "Kansas City reached the Denver 1 and turned it over on downs with 0:04 left.",
+     "Denver won 28–24."
+    ],
+    "final": {
+     "home": 28,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.4735,
+     "drive": [
+      {
+       "result": "Touchdown",
+       "share": 0.503
+      },
+      {
+       "result": "Turnover on downs",
+       "share": 0.3755
+      },
+      {
+       "result": "Interception",
+       "share": 0.1095
+      }
+     ],
+     "theyGetBall": 0.978,
+     "clockWhenTheyGetBall": 18.66002044989775,
+     "theyScore": 0.0465
+    },
+    "best": {
+     "wp": 0.597,
+     "drive": [
+      {
+       "result": "Touchdown",
+       "share": 0.639
+      },
+      {
+       "result": "Turnover on downs",
+       "share": 0.257
+      },
+      {
+       "result": "Interception",
+       "share": 0.104
+      }
+     ],
+     "theyGetBall": 0.955,
+     "clockWhenTheyGetBall": 21.892146596858638,
+     "theyScore": 0.0665
+    }
+   },
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -112,38 +165,38 @@
    "snapClock": 181,
    "description": "(3:01) 19-B.Thorson punts 50 yards to DET 17, Center-42-A.DePaola, fair catch by 86-D.Carter.",
    "call": "punt",
-   "wpCall": 0.11233333333333333,
+   "wpCall": 0.125,
    "best": "pass-middle",
-   "wpBest": 0.21433333333333332,
-   "cost": 0.102,
+   "wpBest": 0.21966666666666668,
+   "cost": 0.09466666666666668,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.21433333333333332
+     "wp": 0.21966666666666668
     },
     {
      "call": "pass-play-action",
-     "wp": 0.20666666666666667
+     "wp": 0.21166666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.19933333333333333
+     "wp": 0.207
     },
     {
      "call": "pass-deep",
-     "wp": 0.19133333333333333
+     "wp": 0.194
     },
     {
      "call": "pass-screen",
-     "wp": 0.168
+     "wp": 0.17766666666666667
     },
     {
      "call": "run",
-     "wp": 0.15166666666666667
+     "wp": 0.16633333333333333
     },
     {
      "call": "punt",
-     "wp": 0.11233333333333333
+     "wp": 0.125
     }
    ],
    "reason": {
@@ -153,6 +206,52 @@
    "against": {
     "text": "Punting gives the ball back when you need to score.",
     "section": "fourth-down"
+   },
+   "aftermath": {
+    "story": [
+     "Minnesota punted 50 yards to the Detroit 17 with 3:01 left.",
+     "Detroit got 3 first downs and ran out the clock, while Minnesota used 3 timeouts.",
+     "Detroit won 19–15."
+    ],
+    "final": {
+     "home": 19,
+     "away": 15,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.12725,
+     "drive": [
+      {
+       "result": "Punt",
+       "share": 1
+      }
+     ],
+     "theyGetBall": 1,
+     "clockWhenTheyGetBall": 174,
+     "theyScore": 0.012
+    },
+    "best": {
+     "wp": 0.22075,
+     "drive": [
+      {
+       "result": "Turnover on downs",
+       "share": 0.65
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.242
+      },
+      {
+       "result": "Interception",
+       "share": 0.101
+      }
+     ],
+     "theyGetBall": 0.998,
+     "clockWhenTheyGetBall": 130.6002004008016,
+     "theyScore": 0.452
+    }
    },
    "playClockLeft": null,
    "score": {
@@ -229,6 +328,23 @@
     "section": "hail-mary"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Arizona got 1 first down and scored a touchdown with 0:10 left to tie it at 30.",
+     "Dallas got the ball at the Dallas 35 with 0:06 left and ran out the clock.",
+     "The game went to overtime.",
+     "Arizona got the ball at the Arizona 35 with 10:00 left in overtime and punted 48 yards to the Dallas 29 with 8:40 left in overtime.",
+     "Dallas punted 52 yards to the Arizona 32 with 7:13 left in overtime.",
+     "Arizona got 2 first downs, reached the Dallas 24, then kicked a 42-yard field goal with 2:58 left in overtime to lead 33–30.",
+     "Arizona won 33–30 in overtime."
+    ],
+    "final": {
+     "home": 30,
+     "away": 33,
+     "overtime": true
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -298,6 +414,18 @@
     "section": "red-zone"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Kansas City turned it over on downs with 0:04 left.",
+     "Denver won 28–24."
+    ],
+    "final": {
+     "home": 28,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -328,42 +456,42 @@
    "snapClock": 151,
    "description": "(2:31) (Shotgun) 10-B.Nix pass short right to 20-J.Coleman to KC 5 for 51 yards (20-N.Williams; 32-N.Bolton).",
    "call": "pass-sideline",
-   "wpCall": 0.425,
+   "wpCall": 0.4246666666666667,
    "best": "run",
-   "wpBest": 0.4256666666666667,
-   "cost": 0.0006666666666667043,
+   "wpBest": 0.42933333333333334,
+   "cost": 0.004666666666666652,
    "values": [
     {
      "call": "run",
-     "wp": 0.4256666666666667
+     "wp": 0.42933333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.425
+     "wp": 0.4246666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.421
+     "wp": 0.42333333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.4196666666666667
+     "wp": 0.42133333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4166666666666667
+     "wp": 0.42
     },
     {
      "call": "pass-deep",
-     "wp": 0.40166666666666667
+     "wp": 0.403
     },
     {
      "call": "spike",
-     "wp": 0.38966666666666666
+     "wp": 0.3963333333333333
     },
     {
      "call": "punt",
-     "wp": 0.15833333333333333
+     "wp": 0.18966666666666668
     }
    ],
    "reason": {
@@ -371,6 +499,19 @@
     "section": "play-model"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Denver got 2 first downs, reached the Kansas City 5, then scored a touchdown with 2:00 left to lead 28–24.",
+     "Kansas City got the ball at the Kansas City 44 with 1:56 left, got 2 first downs, reached the Denver 1, then turned it over on downs with 0:04 left.",
+     "Denver won 28–24."
+    ],
+    "final": {
+     "home": 28,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 21,
@@ -416,7 +557,7 @@
     },
     {
      "call": "pass-sideline",
-     "wp": 0.32866666666666666
+     "wp": 0.329
     },
     {
      "call": "timeout",
@@ -432,15 +573,15 @@
     },
     {
      "call": "pass-deep",
-     "wp": 0.3006666666666667
+     "wp": 0.3016666666666667
     },
     {
      "call": "spike",
-     "wp": 0.287
+     "wp": 0.291
     },
     {
      "call": "punt",
-     "wp": 0.06066666666666667
+     "wp": 0.07666666666666666
     }
    ],
    "reason": {
@@ -448,6 +589,18 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "Kansas City got 2 first downs, reached the Denver 1, then turned it over on downs with 0:04 left.",
+     "Denver won 28–24."
+    ],
+    "final": {
+     "home": 28,
+     "away": 24,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 24,
@@ -521,6 +674,19 @@
     "section": "prevent-defense"
    },
    "against": null,
+   "aftermath": {
+    "story": [
+     "The Jets threw an interception with 0:14 left.",
+     "Las Vegas got the ball at the Las Vegas 20 with 0:07 left and knelt to run out the clock.",
+     "Las Vegas won 38–33."
+    ],
+    "final": {
+     "home": 33,
+     "away": 38,
+     "overtime": false
+    }
+   },
+   "detail": null,
    "playClockLeft": null,
    "score": {
     "offense": 33,

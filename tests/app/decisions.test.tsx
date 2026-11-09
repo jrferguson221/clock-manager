@@ -57,3 +57,32 @@ it("shows each call as situation, their call, best call, why, then the result, w
   expect(order.every((i) => i > 0)).toBe(true);
   expect([...order].sort((a, b) => a - b)).toEqual(order);
 });
+
+it("has a longer explanation behind Read more, collapsed at first", async () => {
+  const week = await localDecisions.week(2026, 8);
+  const top = week.worst[0];
+  if (top === undefined || top.detail === null) throw new Error("week 8's top call should have the longer explanation");
+  const { html } = await renderAt("/decisions?week=8");
+  expect(html).toContain('aria-expanded="false"');
+  expect(html).toContain(">Read more</button>");
+  // Collapsed: the walk-through isn't rendered until it's opened.
+  expect(html).not.toContain("What makes the difference");
+});
+
+it("names other options that also beat their call by a wide margin", async () => {
+  // Week 8's top call: KC ran when a pass was best, and a timeout would also have beaten the run.
+  const { html } = await renderAt("/decisions?week=8");
+  expect(html).toContain("Also better than their call:");
+  expect(html).toMatch(/<strong>Timeout<\/strong> \(\d+%, \d+ points better\): The clock was running with 0:48 left. A timeout saves the 13 seconds/);
+});
+
+it("has what happened after the call behind its own Read more, collapsed at first", async () => {
+  const { html } = await renderAt("/decisions?week=8");
+  expect(html).toContain('aria-label="Read more about what happened"');
+  expect(html).toContain('aria-label="Read more about why"');
+  // Collapsed: the story isn't rendered until it's opened.
+  const week = await localDecisions.week(2026, 8);
+  const story = week.worst[0]?.aftermath?.story[0];
+  if (story === undefined) throw new Error("week 8's top call should have a story");
+  expect(html).not.toContain(story);
+});

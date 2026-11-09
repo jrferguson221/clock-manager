@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { decisionWeekSchema } from "@situational-football/schemas";
 import { parseCsv, type CsvRow } from "../../scripts/decisions/csv";
-import { callFor, clockRunningAfter, completeWeeks, findCandidates, passTagsFrom } from "../../scripts/decisions/plays";
+import { aftermathOf, callFor, clockRunningAfter, completeWeeks, findCandidates, passTagsFrom, spotWords, teamShort, trimDesc } from "../../scripts/decisions/plays";
 import { buildWeek, decisionPoint, scoreDecision, FLAG_THRESHOLD } from "../../scripts/decisions/build";
 
 /** A play-by-play row from just the columns a test cares about. */
@@ -152,5 +152,37 @@ describe("an offensive timeout with the clock running", () => {
     const d = scoreDecision(c, 400);
     expect(d?.cost ?? 1).toBeLessThan(0.02);
     expect(d?.playClockLeft).toBe(3);
+  });
+});
+
+describe("what happened after a decision", () => {
+  const drive = (fields: Record<string, string>) => play({ fixed_drive: "22", fixed_drive_result: "Turnover on downs", total_home_score: "20", total_away_score: "17", home_score: "20", away_score: "17", ...fields });
+  const rows = () => [
+    drive({ play_id: "1", play_type: "run", desc: "(:35) 9-K.Walker right end to DEN 1 for 3 yards.", game_seconds_remaining: "35", yardline_100: "4" }),
+    drive({ play_id: "2", play_type: "pass", desc: "(:15) (Shotgun) 15-P.Mahomes pass incomplete short right.", game_seconds_remaining: "15", yardline_100: "1" }),
+    drive({ play_id: "3", play_type: "pass", desc: "(:04) (Shotgun) 15-P.Mahomes sacked at DEN 12 for -6 yards.", game_seconds_remaining: "4", yardline_100: "6" }),
+    play({ play_id: "4", fixed_drive: "23", posteam: "DEN", defteam: "KC", fixed_drive_result: "End of half", play_type: "qb_kneel", desc: "(:03) 10-B.Nix kneels to DEN 11 for -1 yards.", game_seconds_remaining: "3", total_home_score: "20", total_away_score: "17", home_score: "20", away_score: "17" }),
+  ];
+
+  it("trims the clock and formation off play descriptions", () => {
+    expect(trimDesc("(:15) (Shotgun) 15-P.Mahomes pass incomplete.")).toBe("15-P.Mahomes pass incomplete.");
+  });
+
+  it("tells what happened in plain sentences: the drive, each drive after it, the final score", () => {
+    const a = aftermathOf(rows(), "2026_08_KC_DEN-1");
+    expect(a?.story).toEqual([
+      "Kansas City reached the Denver 1 and turned it over on downs with 0:04 left.",
+      "Denver got the ball with 0:03 left and knelt to run out the clock.",
+      "Denver won 20–17.",
+    ]);
+    expect(a?.final).toEqual({ home: 20, away: 17, overtime: false });
+  });
+
+  it("names teams the way a sentence would, and their yard lines", () => {
+    expect(teamShort("MIN")).toBe("Minnesota");
+    expect(teamShort("NYG")).toBe("the Giants");
+    expect(spotWords("DET 17")).toBe("the Detroit 17");
+    expect(spotWords("NYJ 30")).toBe("the Jets 30");
+    expect(spotWords("50")).toBe("midfield");
   });
 });

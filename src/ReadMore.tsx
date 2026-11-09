@@ -26,11 +26,14 @@ export function GuideLink({ section, children }: { section: GuideSection; childr
   );
 }
 
-/** An explanation, followed by a "Read more" link to the guide section behind it. */
-export function ReasonText({ reason }: { reason: Reason }) {
+/**
+ * An explanation, followed by a link to the guide section behind it: "Read more" by default, or another
+ * label where "Read more" already means something else nearby.
+ */
+export function ReasonText({ reason, link = "Read more" }: { reason: Reason; link?: string }) {
   return (
     <>
-      {reason.text} <GuideLink section={reason.section}>Read more</GuideLink>
+      {reason.text} <GuideLink section={reason.section}>{link}</GuideLink>
     </>
   );
 }

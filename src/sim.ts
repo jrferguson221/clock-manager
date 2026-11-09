@@ -364,6 +364,16 @@ export function passOdds(coverage: Coverage, call: PassCall, ytg: number): PassO
 /** Average run gain by coverage: prevent gives up a little more on the ground. */
 const RUN_MEAN: Readonly<Record<Coverage, number>> = Object.freeze({ normal: 3.6, obvious: 3.6, prevent: 4.3 });
 
+/**
+ * A run the defense expects: the offense is ahead in the last five minutes, so the defense loads up to stop
+ * it. Fitted to 2022-2026 1st- and 2nd-down runs by a team ahead by 1-8 in the last 5:00, in the open field:
+ * 4.0 yards a carry, 22% stuffed at or behind the line and 9% going for 10 or more (against 4.7, 16% and 11.5%
+ * earlier in close games). Near the goal line the packed-line shape applies as usual.
+ */
+const EXPECTED_RUN: RunShape = Object.freeze({ mean: 3.2, sd: 3.7, breakaway: 0.055 });
+/** A run is expected when the team with the ball is ahead with this many seconds left or fewer. */
+export const EXPECTED_RUN_WINDOW = 300;
+
 /** Standard normal CDF (Abramowitz–Stegun 7.1.26, error under 1.5e-7). */
 function normalCdf(z: number): number {
   const x = Math.abs(z) / Math.SQRT2;
@@ -391,8 +401,8 @@ interface RunShape {
  * Runs by field position. Inside the 5 the defense packs the line: short gains, no breakaways. From
  * there runs blend back to the open-field shape by the 12.
  */
-export function runShape(coverage: Coverage, ytg: number, sticksToGo: number | null = null): RunShape {
-  const open: RunShape = { mean: RUN_MEAN[coverage], sd: 3.2, breakaway: 0.1 };
+export function runShape(coverage: Coverage, ytg: number, sticksToGo: number | null = null, expected = false): RunShape {
+  const open: RunShape = expected ? EXPECTED_RUN : { mean: RUN_MEAN[coverage], sd: 3.2, breakaway: 0.1 };
   if (ytg <= 5) return { mean: 0.7 + 0.3 * ytg, sd: 2.2, breakaway: 0 };
   const t = Math.min(1, (ytg - 5) / 7);
   const lerp = (goalLine: number, field: number) => goalLine + (field - goalLine) * t;
@@ -426,6 +436,7 @@ function rollHailMary(ytg: number, r: Rng): PlayOutcome {
 
 function rollPlay(
   call: PlayCall, r: Rng, coverage: Coverage, ytg: number, sticksToGo: number | null, sticks: SticksBand | null, mustStop = false,
+  runExpected = false,
 ): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false };
   switch (call) {
@@ -435,7 +446,7 @@ function rollPlay(
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
       if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
-      const shape = runShape(coverage, ytg, sticksToGo);
+      const shape = runShape(coverage, ytg, sticksToGo, runExpected);
       let yards = Math.round(shape.mean + shape.sd * gauss(r));
       if (r() < shape.breakaway) yards += Math.round(6 + expo(r, 9));
       yards = Math.max(-6, yards);
@@ -638,7 +649,8 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   const play = forced ?? (call === "pass-deep" && snapClock <= HAIL_MARY.maxClock && g.ytg <= HAIL_MARY.maxYtg
     ? rollHailMary(g.ytg, r)
-    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg, sticksRunFor(g), sticksBand(g), mustGetOut(g, snapClock)));
+    : rollPlay(call, r, coverageFor(g, snapClock), g.ytg, sticksRunFor(g), sticksBand(g), mustGetOut(g, snapClock),
+      marginFor(g, g.poss) > 0 && snapClock <= EXPECTED_RUN_WINDOW));
   t = Math.max(0, t - play.seconds);
   const what = `${notes.join(" ")} ${describePlay(call, play)}`.trim();
 
@@ -965,7 +977,7 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
       );
     case "timeout":
       if (fgPlay(g)) return reason("Stop the clock now so there's time to get the kick off.", "field-goal-endgame");
-      return reason(`The clock was running with ${formatClock(g.clock)} left. A timeout saves the ${cfg.hurryUp} seconds a hurry-up snap would burn.`, "timeouts");
+      return reason(`The clock was running with ${formatClock(g.clock)} left. A timeout saves the ${g.clock <= LATE_HURRY_WINDOW ? Math.min(cfg.hurryUp, LATE_HURRY_UP) : cfg.hurryUp} seconds a hurry-up snap would burn.`, "timeouts");
     case "spike":
       return reason(`A spike stops the clock about ${cfg.spikeLineup} seconds after the play and saves a timeout, at the cost of a down.`, "spike");
     case "pass-sideline": {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, snapDelay, FG_TIMEOUT_AT, DEFAULT_SIM, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, runShape, snapDelay, FG_TIMEOUT_AT, DEFAULT_SIM, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -503,5 +503,30 @@ describe("a defense facing a field-goal drain", () => {
     const s = afterRun({ ...draining, margin: -3 });
     expect(s.timeouts.opp).toBe(3);
     expect(s.running).toBe(true);
+  });
+});
+
+describe("a run the defense expects", () => {
+  it("gains less when the offense is ahead late: about 4 yards, more often stuffed", () => {
+    const usual = runShape("normal", 75);
+    const expected = runShape("normal", 75, null, true);
+    expect(expected.mean).toBeLessThan(usual.mean);
+    expect(expected.breakaway).toBeLessThan(usual.breakaway);
+    // Near the goal line, the packed-line shape is the same for everyone.
+    expect(runShape("normal", 3, null, true)).toEqual(runShape("normal", 3));
+  });
+
+  it("applies to a leading team in the last five minutes, and not to a trailing one", () => {
+    const avg = (margin: number, clock: number) => {
+      let yards = 0;
+      for (let i = 0; i < 4000; i++) {
+        const g: GameState = { ...base, clock, running: false, margin, ytg: 70, down: 1, toGo: 10 };
+        const res = step(g, "run", seededRng(i));
+        yards += res.state.poss === "you" ? 70 - res.state.ytg : 0;
+      }
+      return yards / 4000;
+    };
+    expect(avg(4, 200)).toBeLessThan(avg(-4, 200) - 0.6);
+    expect(avg(4, 200)).toBeLessThan(avg(4, 400) - 0.6);
   });
 });

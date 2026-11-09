@@ -1,11 +1,12 @@
 // Decisions of the week: the costliest late-game calls in a week of NFL games, by the app's model,
 // and the plays that swung games most. The data comes from the route's loader, already validated.
 
+import { useId, useState } from "react";
 import { Accordion, Alert, Badge, Card, Group, List, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import type { Decision, DecisionIndex, DecisionWeek } from "@situational-football/schemas";
-import { CLOSE, PLAY_CALLS } from "./sim";
-import type { PlayCall } from "@situational-football/schemas";
+import type { Aftermath, CallOutcomes, Decision, DecisionIndex, DecisionWeek } from "@situational-football/schemas";
+import { bestCallReason, CLOSE, PLAY_CALLS } from "./sim";
+import type { GameState, PlayCall } from "@situational-football/schemas";
 import { formatClock } from "./time";
 import { ChoiceSelect, spotFrom } from "./fields";
 import { AnchorLink, GuideLink, ReasonText } from "./ReadMore";
@@ -151,6 +152,148 @@ function alsoGood(d: Decision): { label: string; wp: number }[] {
   return [...out].map(([label, wp]) => ({ label, wp })).sort((a, b) => b.wp - a.wp);
 }
 
+/** How a drive result reads in a sentence. */
+const RESULT_PHRASE: Readonly<Record<string, string>> = {
+  Touchdown: "a touchdown", "Field goal": "a field goal", "Missed field goal": "a missed field goal", Punt: "a punt",
+  "Turnover on downs": "a turnover on downs", Interception: "an interception", Fumble: "a lost fumble",
+  "Ran out the clock": "running out the clock", "Time ran out": "time running out",
+};
+const phrase = (result: string) => RESULT_PHRASE[result] ?? result.toLowerCase();
+
+/** "a touchdown 50% of the time, a turnover on downs 38% and an interception 11%" */
+function driveSentence(drive: CallOutcomes["drive"]): string {
+  const parts = drive.map((x, i) => `${phrase(x.result)} ${pct(x.share)}${i === 0 ? " of the time" : ""}`);
+  return parts.length <= 1 ? (parts[0] ?? "") : `${parts.slice(0, -1).join(", ")} and ${parts.at(-1) ?? ""}`;
+}
+
+/** What happened after the drive: whether they got the ball back, with how long, and how often they scored. */
+function afterSentence(o: CallOutcomes, them: string): string {
+  if (o.theyGetBall < 0.03) return `${them} almost never got the ball back.`;
+  const clock = o.clockWhenTheyGetBall === null ? "" : `, with about ${formatClock(o.clockWhenTheyGetBall)} left on average`;
+  return `${them} got the ball back in ${pct(o.theyGetBall)} of games${clock}, and scored on that possession in ${pct(o.theyScore)} of all games.`;
+}
+
+/** Points the offense scored on the drive: a touchdown or a field goal. */
+const scored = (o: CallOutcomes) => o.drive.filter((x) => x.result === "Touchdown" || x.result === "Field goal").reduce((a, x) => a + x.share, 0);
+
+/** The differences that decide it, biggest first, in plain words. */
+function differences(d: Decision, detail: { their: CallOutcomes; best: CallOutcomes }): string[] {
+  const { their, best } = detail;
+  const them = d.defense;
+  const out: { size: number; text: string }[] = [];
+  const dScore = scored(best) - scored(their);
+  if (Math.abs(dScore) >= 0.03)
+    out.push({ size: Math.abs(dScore), text: `The drive ends in points in ${pct(scored(best))} of games, against ${pct(scored(their))}.` });
+  if (their.clockWhenTheyGetBall !== null && best.clockWhenTheyGetBall !== null) {
+    const dClock = best.clockWhenTheyGetBall - their.clockWhenTheyGetBall;
+    if (Math.abs(dClock) >= 3)
+      out.push({ size: Math.abs(dClock) / 100, text: `${them} gets the ball back with about ${Math.round(Math.abs(dClock))} seconds ${dClock > 0 ? "more" : "less"} on the clock.` });
+  }
+  const dTheyScore = best.theyScore - their.theyScore;
+  if (Math.abs(dTheyScore) >= 0.03)
+    out.push({ size: Math.abs(dTheyScore), text: `${them} scores afterward in ${pct(best.theyScore)} of games, against ${pct(their.theyScore)}.` });
+  const dBall = best.theyGetBall - their.theyGetBall;
+  if (Math.abs(dBall) >= 0.05)
+    out.push({ size: Math.abs(dBall), text: `${them} gets the ball back in ${pct(best.theyGetBall)} of games, against ${pct(their.theyGetBall)}.` });
+  return out.sort((a, b) => b.size - a.size).map((x) => x.text);
+}
+
+/**
+ * The longer explanation, collapsed by default: what their call and the best call each led to in the
+ * model's simulated games, and the differences that decide it.
+ */
+function WhyMore({ d, detail }: { d: Decision; detail: { their: CallOutcomes; best: CallOutcomes } }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const them = d.defense;
+  const diffs = differences(d, detail);
+  return (
+    <div className="why-more">
+      <MoreToggle open={open} controls={id} about="why" onClick={() => setOpen(!open)} />
+      {open && (
+        <div id={id} className="why-more-body">
+          <Text size="sm">
+            <strong>Their call, {PLAY_CALLS[d.call].toLowerCase()}:</strong> in the model's simulated games, the drive ended in{" "}
+            {driveSentence(detail.their.drive)}. {afterSentence(detail.their, them)} {d.offense} won {pct(d.wpCall)}.
+          </Text>
+          <Text size="sm" mt="xs">
+            <strong>The model's call, {PLAY_CALLS[d.best].toLowerCase()}:</strong> the drive ended in{" "}
+            {driveSentence(detail.best.drive)}. {afterSentence(detail.best, them)} {d.offense} won {pct(d.wpBest)}.
+          </Text>
+          {diffs.length > 0 && (
+            <>
+              <Text size="sm" mt="xs" fw={600}>What makes the difference</Text>
+              <ul className="why">{diffs.map((t) => <li key={t}><Text size="sm" span>{t}</Text></li>)}</ul>
+            </>
+          )}
+          <Text size="xs" c="dimmed" mt="xs">
+            Both calls are played out from the same situation, with both teams following the model's rules of thumb
+            afterward. Percentages are shares of those games.
+          </Text>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** How much better than their call another option has to be to be worth naming. */
+const ALSO_BETTER = 0.03;
+
+/**
+ * Other options clearly better than their call (by 3 points or more) that aren't the best call or already
+ * "about as good": e.g. a timeout that beat a run, even if a pass was best. A pass counts once.
+ */
+function alsoBetter(d: Decision): { label: string; wp: number; call: PlayCall }[] {
+  const near = new Set(alsoGood(d).map((o) => o.label));
+  const out = new Map<string, { wp: number; call: PlayCall }>();
+  for (const v of d.values) {
+    if (v.call === d.best || v.call === d.call || v.wp < d.wpCall + ALSO_BETTER) continue;
+    if (isPass(v.call) && (isPass(d.call) || isPass(d.best))) continue;
+    const label = isPass(v.call) ? "A pass" : PLAY_CALLS[v.call];
+    if (near.has(label)) continue;
+    // A pass is explained as its best kind.
+    if ((out.get(label)?.wp ?? -1) < v.wp) out.set(label, { wp: v.wp, call: v.call });
+  }
+  return [...out].map(([label, o]) => ({ label, ...o })).sort((a, b) => b.wp - a.wp);
+}
+
+/** The situation a decision was judged from, in the model's terms, for explaining other options. */
+function stateOf(d: Decision): GameState {
+  const s = d.situation;
+  return {
+    clock: s.clock, running: s.running, poss: "you", down: s.down, toGo: s.toGo, ytg: s.ytg, margin: s.margin,
+    timeouts: { you: s.timeouts, opp: s.oppTimeouts }, over: false,
+  };
+}
+
+/** "Read more" / "Read less", with a label that says which part of the card it opens. */
+function MoreToggle({ open, controls, about, onClick }: { open: boolean; controls: string; about: string; onClick: () => void }) {
+  return (
+    <button
+      type="button" className="why-more-toggle" aria-expanded={open} aria-controls={controls} onClick={onClick}
+      aria-label={`${open ? "Read less" : "Read more"} about ${about}`}
+    >
+      {open ? "Read less" : "Read more"}
+    </button>
+  );
+}
+
+/** What actually happened after the call, in a few plain sentences: collapsed by default. */
+function ResultMore({ after }: { after: Aftermath }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  return (
+    <div className="why-more">
+      <MoreToggle open={open} controls={id} about="what happened" onClick={() => setOpen(!open)} />
+      {open && (
+        <div id={id} className="why-more-body">
+          <Text size="sm">{after.story.join(" ")}</Text>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** A team on the scorebug: its plate in its own color, with the score and timeouts at the decision. */
 function bugTeam(abbr: string, points: number | null, timeouts: number) {
   // The daytime accent: the team's own color whenever it holds up on white, so a solid plate shows the real
@@ -215,6 +358,21 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
               About as good: {alsoGood(d).map((o) => `${o.label} (${pct(o.wp)})`).join(", ")}. The difference is within the model's noise.
             </Text>
           )}
+          {!sameCall && alsoBetter(d).length > 0 && (
+            <>
+              <Text size="sm" c="dimmed" mt={4}>Also better than their call:</Text>
+              <ul className="why also-better">
+                {alsoBetter(d).map((o) => (
+                  <li key={o.label}>
+                    <Text size="sm" span>
+                      <strong>{o.label}</strong> ({pct(o.wp)}, {points(o.wp - d.wpCall)} better):{" "}
+                      <ReasonText reason={bestCallReason(stateOf(d), o.call)} link="In the guide" />
+                    </Text>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </dd>
 
         {!sameCall && (
@@ -222,9 +380,10 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
             <dt>Why</dt>
             <dd>
               <ul className="why">
-                <li><ReasonText reason={d.reason} /></li>
-                {d.against !== null && <li><ReasonText reason={d.against} /></li>}
+                <li><ReasonText reason={d.reason} link="In the guide" /></li>
+                {d.against !== null && <li><ReasonText reason={d.against} link="In the guide" /></li>}
               </ul>
+              {d.detail !== null && <WhyMore d={d} detail={d.detail} />}
             </dd>
           </>
         )}
@@ -232,6 +391,7 @@ function DecisionCard({ d, rank, kind }: { d: Decision; rank?: number; kind: "wo
         <dt>Result</dt>
         <dd>
           <Text className="play-desc">“{d.description}”</Text>
+          {d.aftermath !== null && <ResultMore after={d.aftermath} />}
           {(d.nflverseWp !== null || d.nflverseWpa !== null) && (
             <Text size="sm" c="dimmed" mt={4}>
               {d.nflverseWp !== null && <>nflverse's win probability before the play: {pct(d.nflverseWp)}. </>}
