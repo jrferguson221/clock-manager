@@ -28,7 +28,7 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 export default function ScenarioPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
-  const set = (patch: Partial<ScenarioSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const set = (patch: Partial<ScenarioSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   // Switching players loads that scenario's starting situation, as a new history entry so Back returns.
   const choose = (id: ScenarioId) => void navigate({ search: SCENARIO_PRESETS[id] });
   const clock = useClockField(s.clock, (c) => set({ clock: c }));

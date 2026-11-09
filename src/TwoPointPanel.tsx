@@ -32,7 +32,7 @@ function Outcome({ wp, margin }: { wp: number; margin: number }) {
 export default function TwoPointPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
-  const set = (patch: Partial<TwoPointSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const set = (patch: Partial<TwoPointSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
 
   const game: GameState | null = clock.seconds == null ? null : {

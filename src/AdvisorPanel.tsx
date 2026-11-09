@@ -22,7 +22,7 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 export default function AdvisorPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
-  const set = (patch: Partial<BestCallSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
+  const set = (patch: Partial<BestCallSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const ytg = yardsToGoalFrom(s.side, s.yardLine);
 
