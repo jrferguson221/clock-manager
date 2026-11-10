@@ -30,7 +30,7 @@ export interface DriveAssumptions {
   spikeLineup: number;
   /** Average yards gained per play. */
   yardsPerPlay: number;
-  /** Yards from the goal line you're willing to kick from (35 = a 52-yard try). */
+  /** Yards from the goal line you're willing to kick from (35 = a 53-yard try). */
   fgRange: number;
   /** Share of plays that stop the clock (incomplete or out of bounds) in a typical drive. */
   stopShare: number;
@@ -45,8 +45,7 @@ export const DEFAULT_ASSUMPTIONS: DriveAssumptions = Object.freeze({
   stopShare: 0.5,
 });
 
-/** Field-goal try distance from a spot: end zone (10) plus the hold (7). */
-export const fgDistance = (yardsToGoal: number) => yardsToGoal + 17;
+export { fgDistance } from "./sim";
 
 /** Plays needed to score a TD, or to reach field-goal range (0 if already there). */
 export function playsNeeded(s: DriveSituation, a: DriveAssumptions = DEFAULT_ASSUMPTIONS): number {

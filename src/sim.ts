@@ -38,18 +38,25 @@ export const DEFAULT_SIM: SimConfig = Object.freeze({ hurryUp: 18, spikeLineup: 
 
 const WARNING = NFL_RULES.twoMinuteWarning;
 const BURN = NFL_RULES.playClock - 1; // snap with 1 second on the play clock
-/** The longest field-goal try: from the opponent's 45, a 62-yarder. */
+/** The longest field-goal try: from the opponent's 47, a 65-yarder. */
 export const FG_MAX_YTG = 47;
 /** Punting is an option from 40 or more yards out. */
 export const PUNT_MIN_YTG = 40;
-/** On the last play, a team that needs only a field goal kicks from this close or closer (a 59-yarder). */
+/** On the last play, a team that needs only a field goal kicks from this close or closer (a 65-yarder). */
 export const LAST_PLAY_FG_YTG = 47;
 /** A defense that's behind uses its timeouts after in-bounds plays in the last 4 minutes. */
 export const DEFENSE_TIMEOUT_WINDOW = 240;
 /** Fewest seconds from the end of an in-bounds play to the next snap, even when rushing. */
 export const MIN_SNAP = 8;
-/** A tied team more than 60 yards out kneels for overtime with this many seconds left or fewer. */
-export const TIED_KNEEL_CLOCK = 60;
+/**
+ * A tied team more than 60 yards out kneels for overtime with this many seconds left or fewer. Real teams
+ * in that spot play on with 0:30 to 1:00 left (0 of 74 kneeled, 2022-26) and win about 59%, against 50% for overtime.
+ */
+export const TIED_KNEEL_CLOCK = 30;
+/** A field-goal try is this much longer than the yards to the goal line: the end zone (10) plus the hold (8). */
+export const FG_EXTRA_YARDS = 18;
+/** The length of a field-goal try from this many yards out. */
+export const fgDistance = (ytg: number) => ytg + FG_EXTRA_YARDS;
 /**
  * A team that needs a touchdown throws at the end zone from 40 yards or closer with this many seconds
  * left or fewer. Earlier than this, it works the ball; later, short throws use up downs before the clock.
@@ -92,9 +99,9 @@ export const FG_MAKE_BY_DISTANCE: readonly (readonly [number, number])[] = [
   [20, 0.995], [32, 0.967], [37, 0.91], [42, 0.839], [47, 0.764], [52, 0.732], [57, 0.648], [62, 0.481], [67, 0.3],
 ];
 
-/** Field-goal make chance for a try from this spot (distance = yards to the goal line + 17). */
+/** Field-goal make chance for a try from this spot (distance = yards to the goal line + 18). */
 export function fgMakeChance(ytg: number): number {
-  const distance = ytg + 17;
+  const distance = fgDistance(ytg);
   const first = FG_MAKE_BY_DISTANCE[0];
   const last = FG_MAKE_BY_DISTANCE.at(-1);
   if (first === undefined || last === undefined) return 0;
@@ -320,8 +327,8 @@ export const PASS_ODDS: Readonly<Record<Coverage, Readonly<Record<PassCall, Pass
     // Throws underneath complete as usual and gain a little more; catches near the sideline get out of bounds.
     "pass-sideline": { sack: 0.06, interception: 0.024, complete: 0.629, minYards: 3, extraYards: 7, outOfBounds: 0.32 },
     "pass-middle": { sack: 0.06, interception: 0.017, complete: 0.654, minYards: 4, extraYards: 7.5, outOfBounds: 0.03 },
-    // The deep field is what prevent protects: 31% complete, 5% intercepted.
-    "pass-deep": { sack: 0.08, interception: 0.047, complete: 0.276, minYards: 20, extraYards: 11.5, outOfBounds: 0.24 },
+    // The deep field is what prevent protects: 31% complete, and 8% intercepted on real late drives (2022-26).
+    "pass-deep": { sack: 0.08, interception: 0.075, complete: 0.276, minYards: 20, extraYards: 11.5, outOfBounds: 0.24 },
     "pass-play-action": { sack: 0.09, interception: 0.02, complete: 0.593, minYards: 3, extraYards: 10.5, outOfBounds: 0.2 },
     "pass-screen": { sack: 0.005, interception: 0.005, complete: 0.864, minYards: -2, extraYards: 8.3, outOfBounds: 0.15 },
   },
@@ -420,21 +427,31 @@ export function runShape(coverage: Coverage, ytg: number, sticksToGo: number | n
 export const sticksRunFor = (g: GameState): number | null => (g.down >= 3 && g.toGo < OBVIOUS_TO_GO ? g.toGo : null);
 
 /** A last-play deep pass from this close is a heave into the end zone rather than a normal deep throw. */
-export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12 });
+export const HAIL_MARY = Object.freeze({ maxClock: 10, maxYtg: 60, interception: 0.12, sack: 0.13 });
 
-/** Touchdown chance of an end-zone heave from this far out: about 20% from 25 yards, 10% from 45, 4% from 60. */
+/**
+ * Touchdown chance of an end-zone heave from this far out: about 9% from 25 yards, 4% from 45, 2% from 60.
+ * Real last-play heaves (2022-26) scored about 2% of the time, and 5% of the throws that reached the end zone.
+ */
 export function hailMaryChance(ytg: number): number {
-  return Math.min(0.22, Math.max(0.04, 0.32 - 0.005 * ytg));
+  return Math.max(0.02, 0.15 - 0.0025 * ytg);
 }
 
 function rollHailMary(ytg: number, r: Rng): PlayOutcome {
   const base = { outOfBounds: false, incomplete: false, seconds: 6 };
   const u = r();
-  // A pick in the end zone is a touchback.
+  // A pick in the end zone is a touchback. The passer is sacked on about one heave in eight.
   if (u < HAIL_MARY.interception) return { ...base, yards: ytg, turnover: "interception" };
-  if (u < HAIL_MARY.interception + hailMaryChance(ytg)) return { ...base, yards: ytg };
+  if (u < HAIL_MARY.interception + HAIL_MARY.sack) return { ...base, yards: -8, seconds: 6, sack: true };
+  if (u < HAIL_MARY.interception + HAIL_MARY.sack + hailMaryChance(ytg)) return { ...base, yards: ytg };
   return { ...base, yards: 0, incomplete: true };
 }
+
+/**
+ * Lost fumbles, per run, per sack and per catch: real runs by a leading team late lose one about 0.5% of
+ * the time, and strip-sacks and fumbles after the catch end about 4% of real late drives (2022-26).
+ */
+export const LOST_FUMBLE = Object.freeze({ run: 0.005, sack: 0.05, catch: 0.005 });
 
 function rollPlay(
   call: PlayCall, r: Rng, coverage: Coverage, ytg: number, sticksToGo: number | null, sticks: SticksBand | null, mustStop = false,
@@ -447,7 +464,7 @@ function rollPlay(
     case "spike":
       return { ...base, yards: 0, seconds: 1, incomplete: true };
     case "run": {
-      if (r() < 0.012) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
+      if (r() < LOST_FUMBLE.run) return { ...base, yards: 1, seconds: 5, turnover: "fumble" };
       const shape = runShape(coverage, ytg, sticksToGo, runExpected);
       let yards = Math.round(shape.mean + shape.sd * gauss(r));
       if (r() < shape.breakaway) yards += Math.round(6 + expo(r, 9));
@@ -466,10 +483,14 @@ function rollPlay(
       const deep = call === "pass-deep";
       const slow = deep || call === "pass-play-action" ? 1 : 0;
       const u = r();
-      if (u < odds.sack) return { ...base, yards: deep ? -8 : -7, seconds: 5 + slow, sack: true };
+      if (u < odds.sack) {
+        const yards = deep ? -8 : -7;
+        return { ...base, yards, seconds: 5 + slow, sack: true, ...(r() < LOST_FUMBLE.sack ? { turnover: "fumble" as const } : {}) };
+      }
       if (u < odds.sack + odds.interception) return { ...base, yards: deep ? 25 : 12, seconds: 5 + slow, turnover: "interception" };
       if (u < odds.sack + odds.interception + odds.complete) {
         const yards = Math.round(odds.minYards + expo(r, odds.extraYards));
+        if (r() < LOST_FUMBLE.catch) return { ...base, yards: Math.max(0, yards - 2), seconds: Math.round(4 + slow + yards / 10), turnover: "fumble" };
         const outOfBounds = call === "pass-sideline" && mustStop ? Math.max(odds.outOfBounds, NO_TIMEOUT_SIDELINE_OOB) : odds.outOfBounds;
         return { ...base, yards, seconds: Math.round(4 + slow + yards / 10), outOfBounds: r() < outOfBounds };
       }
@@ -485,7 +506,7 @@ function rollPlay(
 function describePlay(call: PlayCall, p: PlayOutcome): string {
   if (call === "kneel") return "Kneel";
   if (call === "spike") return "Spike";
-  if (p.turnover === "fumble") return "Run: fumble, lost";
+  if (p.turnover === "fumble") return p.sack ? `${PLAY_CALLS[call]}: strip-sack, lost` : `${PLAY_CALLS[call]}: fumble, lost`;
   if (p.turnover === "interception") return `${PLAY_CALLS[call]}: intercepted`;
   if (p.sack) return `${PLAY_CALLS[call]}: sacked for ${-p.yards}`;
   if (p.incomplete) return `${PLAY_CALLS[call]}: incomplete`;
@@ -524,14 +545,25 @@ export const SPECIAL_TEAMS = Object.freeze({
   extraPoint: 0.954,
   /** Two-point try success: 48.1% over the same seasons (about 570 tries). */
   twoPoint: 0.481,
-  /** Onside kick recovery by the kicking team. */
-  onsideRecovery: 0.12,
-  /** A team still behind after scoring tries an onside kick with this many seconds left or fewer. */
-  onsideWindow: 300,
-  /** Kickoffs are touchbacks to the receiving team's 30. */
-  touchbackYardLine: 30,
-  /** Net punt distance. */
-  puntNet: 40,
+  /** Onside kick recovery by the kicking team: 5.5% for trailing teams in the last 5:00 (182 kicks, 2022-26). */
+  onsideRecovery: 0.055,
+  /**
+   * A team still behind after scoring kicks onside with this many seconds left or fewer, or `onsideWindowShort`
+   * with one timeout or none, or anywhere in the last `onsideWindowLong` when down 9 or more. Real teams down
+   * 1-8 never kicked onside from 3:00 to 5:00, and with 3 timeouts never did inside 5:00 (0 of 82).
+   */
+  onsideWindow: 120,
+  onsideWindowShort: 180,
+  onsideWindowLong: 300,
+  /** Late kickoffs under the 2025 rules: the receiving team starts at about its 32, after about 4 seconds of return. */
+  kickoffStart: 32,
+  kickoffSeconds: 4,
+  /** Net punt distance from your own 40 or deeper (44.4 yards, 2022-26). */
+  puntNet: 44,
+  /** Net punt distance from midfield in, where the punter kicks for placement. */
+  shortPuntNet: 40,
+  /** A punt from the opponent's 40-49 pins them at about their 11 (63% are downed inside the 10). */
+  puntPinnedAt: 11,
 });
 
 // ---------------------------------------------------------------------------
@@ -550,6 +582,16 @@ export const GO_FOR_TWO_MARGINS: readonly number[] = [-10, -8, -5, -4, -2, 1, 5]
 
 /** The rule-of-thumb try both teams follow in the simulations. */
 export const tryPolicy = (marginAfterSix: number): TryCall => (GO_FOR_TWO_MARGINS.includes(marginAfterSix) ? "two" : "kick");
+
+/**
+ * Where the receiving team starts after a punt from this many yards out: 44 net from deep, shading to 40 at
+ * midfield, and pinned at about their 11 from closer in.
+ */
+export function puntLanding(ytg: number): number {
+  const deep = Math.min(1, Math.max(0, (ytg - 50) / 10));
+  const net = SPECIAL_TEAMS.shortPuntNet + deep * (SPECIAL_TEAMS.puntNet - SPECIAL_TEAMS.shortPuntNet);
+  return Math.max(SPECIAL_TEAMS.puntPinnedAt, Math.round(ytg - net));
+}
 
 /** Points, the try after a touchdown, then the kickoff (onside if the kicking team is still behind late). */
 function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: GameState; text: string } {
@@ -575,7 +617,11 @@ function score(g: GameState, clock: number, points: 3 | 6, r: Rng): { state: Gam
 function kickoff(scored: GameState, clock: number, text: string, r: Rng): { state: GameState; text: string } {
   if (clock <= 0) return { state: { ...scored, clock: 0, running: false, over: true }, text: `${text}.` };
   const kickerMargin = marginFor(scored, scored.poss);
-  if (kickerMargin < 0 && clock <= SPECIAL_TEAMS.onsideWindow) {
+  const kickerTimeouts = scored.timeouts[scored.poss];
+  const onside = kickerMargin < 0 && (clock <= SPECIAL_TEAMS.onsideWindow
+    || (clock <= SPECIAL_TEAMS.onsideWindowShort && kickerTimeouts <= 1)
+    || (clock <= SPECIAL_TEAMS.onsideWindowLong && kickerMargin <= -9));
+  if (onside) {
     const t = Math.max(0, clock - 3);
     if (r() < SPECIAL_TEAMS.onsideRecovery) {
       // The kicking team recovers around its own 45 and keeps the ball.
@@ -584,7 +630,11 @@ function kickoff(scored: GameState, clock: number, text: string, r: Rng): { stat
     }
     return { state: changePossession(scored, t, 45), text: `${text}. Onside kick fails.` };
   }
-  return { state: changePossession(scored, clock, 100 - SPECIAL_TEAMS.touchbackYardLine), text: `${text}. Kickoff, touchback.` };
+  const t = Math.max(0, clock - SPECIAL_TEAMS.kickoffSeconds);
+  return {
+    state: changePossession(scored, t, 100 - SPECIAL_TEAMS.kickoffStart),
+    text: `${text}. Kickoff, returned to their ${SPECIAL_TEAMS.kickoffStart}.`,
+  };
 }
 
 /**
@@ -628,7 +678,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   if (call === "fg") {
     const end = Math.max(0, t - 5);
-    const distance = g.ytg + 17;
+    const distance = fgDistance(g.ytg);
     if (r() < fgMakeChance(g.ytg)) {
       const s = score(g, end, 3, r);
       return { state: s.state, text: `${notes.join(" ")} ${distance}-yard try: ${s.text}`.trim(), driveEnded: "Field goal" };
@@ -640,8 +690,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
 
   if (call === "punt") {
     const end = Math.max(0, t - 7);
-    const landing = g.ytg - SPECIAL_TEAMS.puntNet;
-    const theirYtg = landing < 8 ? 80 : 100 - landing;
+    const theirYtg = 100 - puntLanding(g.ytg);
     return {
       state: changePossession(g, end, theirYtg),
       text: `${notes.join(" ")} Punt at ${formatClock(snapClock)}. They start at their ${100 - theirYtg}.`.trim(),
@@ -729,7 +778,7 @@ export function policy(g: GameState, cfg: SimConfig = DEFAULT_SIM): PlayCall {
     return "run";
   }
 
-  // Time for one last play, a field goal ties or wins, and it's within reach (a 59-yarder at most): kick,
+  // Time for one last play, a field goal ties or wins, and it's within reach (a 65-yarder at most): kick,
   // stopping the clock first if it's running.
   // Without a timeout, a play that ends in bounds needs a spike before the kick: a play, the lineup and a
   // second. With less time than that, a play only helps if it stops the clock itself, so kick now.
@@ -1014,7 +1063,7 @@ function whyBest(g: GameState, call: PlayCall, cfg: SimConfig): Reason {
     case "fg": {
       const after = m + 3;
       const effect = after > 0 && m <= 0 ? "wins it" : after === 0 ? "ties it" : "adds to the lead";
-      return reason(`A ${g.ytg + 17}-yard try is good about ${pct(fgMakeChance(g.ytg))} of the time, and it ${effect}.`, "field-goal-endgame");
+      return reason(`A ${fgDistance(g.ytg)}-yard try is good about ${pct(fgMakeChance(g.ytg))} of the time, and it ${effect}.`, "field-goal-endgame");
     }
     case "punt":
       return reason("Punting pins them deep. Failing on 4th down here would hand them a short field.", "fourth-down");

@@ -1,14 +1,14 @@
 {
  "season": 2026,
  "week": 9,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 15,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03821428097779873,
-  "within10": 0.9158878504672897
+  "meanAbsDiff": 0.04513832690021329,
+  "within10": 0.897196261682243
  },
  "worst": [
   {
@@ -32,38 +32,38 @@
    "snapClock": 263,
    "description": "(4:23) 17-R.Wright punts 46 yards to CLE 17, Center-49-Z.Wood, fair catch by 1-K.Concepcion.",
    "call": "punt",
-   "wpCall": 0.201,
+   "wpCall": 0.183,
    "best": "pass-middle",
-   "wpBest": 0.2713333333333333,
-   "cost": 0.0703333333333333,
+   "wpBest": 0.25666666666666665,
+   "cost": 0.07366666666666666,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.2713333333333333
+     "wp": 0.25666666666666665
     },
     {
      "call": "pass-play-action",
-     "wp": 0.26866666666666666
+     "wp": 0.25333333333333335
     },
     {
      "call": "pass-screen",
-     "wp": 0.2613333333333333
-    },
-    {
-     "call": "run",
-     "wp": 0.25366666666666665
+     "wp": 0.23866666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.25
+     "wp": 0.238
+    },
+    {
+     "call": "run",
+     "wp": 0.22466666666666665
     },
     {
      "call": "pass-deep",
-     "wp": 0.24233333333333335
+     "wp": 0.21433333333333332
     },
     {
      "call": "punt",
-     "wp": 0.201
+     "wp": 0.183
     }
    ],
    "reason": {
@@ -94,7 +94,7 @@
    },
    "detail": {
     "their": {
-     "wp": 0.20125,
+     "wp": 0.1855,
      "drive": [
       {
        "result": "Punt",
@@ -103,87 +103,87 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 256,
-     "theyScore": 0.0325,
+     "theyScore": 0.0225,
      "keep": 0,
-     "theirStart": 23,
-     "backAgain": 0.841,
-     "clockBackAgain": 164.67895362663495,
-     "theyFieldGoal": 0.0295,
-     "theyTouchdown": 0.003,
+     "theirStart": 19,
+     "backAgain": 0.833,
+     "clockBackAgain": 162.04441776710684,
+     "theyFieldGoal": 0.02,
+     "theyTouchdown": 0.0025,
      "handedOverNow": 1,
      "nowClock": 256,
-     "nowStart": 23,
+     "nowStart": 19,
      "byFirstDowns": [
       {
-       "share": 0.451,
+       "share": 0.4425,
        "back": 1,
-       "clock": 199.01552106430154
+       "clock": 197.7909604519774
       },
       {
-       "share": 0.2355,
+       "share": 0.2345,
        "back": 1,
-       "clock": 154.28025477707007
+       "clock": 151.84008528784648
       },
       {
-       "share": 0.153,
-       "back": 0.8496732026143791,
-       "clock": 85.29230769230769
+       "share": 0.1575,
+       "back": 0.8412698412698413,
+       "clock": 80.32075471698113
       },
       {
-       "share": 0.1605,
-       "back": 0.1526479750778816,
-       "clock": 53.795918367346935
+       "share": 0.1655,
+       "back": 0.1419939577039275,
+       "clock": 51.5531914893617
       }
      ]
     },
     "best": {
-     "wp": 0.2595,
+     "wp": 0.25125,
      "drive": [
       {
        "result": "Turnover on downs",
-       "share": 0.648
+       "share": 0.6365
       },
       {
        "result": "Touchdown",
-       "share": 0.2485
+       "share": 0.245
       },
       {
        "result": "Interception",
-       "share": 0.093
+       "share": 0.0895
       }
      ],
      "theyGetBall": 1,
-     "clockWhenTheyGetBall": 194.675,
-     "theyScore": 0.512,
-     "keep": 0.523,
-     "theirStart": 50.65003326679973,
-     "backAgain": 0.7925,
-     "clockBackAgain": 133.23687346652645,
-     "theyFieldGoal": 0.4145,
-     "theyTouchdown": 0.0975,
-     "handedOverNow": 0.477,
-     "nowClock": 258,
-     "nowStart": 63.932914046121596,
+     "clockWhenTheyGetBall": 193.163,
+     "theyScore": 0.521,
+     "keep": 0.519,
+     "theirStart": 50.591390728476824,
+     "backAgain": 0.773,
+     "clockBackAgain": 130.8746586172201,
+     "theyFieldGoal": 0.433,
+     "theyTouchdown": 0.088,
+     "handedOverNow": 0.481,
+     "nowClock": 257.9968814968815,
+     "nowStart": 63.83991683991684,
      "byFirstDowns": [
       {
-       "share": 0.39,
-       "back": 0.9717948717948718,
-       "clock": 165.7994722955145
+       "share": 0.377,
+       "back": 0.9681697612732095,
+       "clock": 162.43013698630136
       },
       {
-       "share": 0.2385,
-       "back": 0.8658280922431866,
-       "clock": 129.91525423728814
+       "share": 0.244,
+       "back": 0.8422131147540983,
+       "clock": 128.82968369829683
       },
       {
-       "share": 0.1895,
-       "back": 0.6886543535620053,
-       "clock": 100.96487867177524
+       "share": 0.2005,
+       "back": 0.683291770573566,
+       "clock": 95.60989456609894
       },
       {
-       "share": 0.182,
-       "back": 0.42032967032967034,
-       "clock": 35.932098765432094
+       "share": 0.1785,
+       "back": 0.36694677871148457,
+       "clock": 35.20695504664969
       }
      ]
     }
@@ -220,50 +220,50 @@
    "snapClock": 84,
    "description": "(1:24) (No Huddle, Shotgun) 9-B.Young sacked at DEN 44 for -8 yards (15-N.Bonitto). FUMBLES (15-N.Bonitto) [15-N.Bonitto], RECOVERED by DEN-15-N.Bonitto at DEN 44. The Replay Official reviewed the fumble ruling, and the play was Upheld. The ruling on the field stands.",
    "call": "pass-middle",
-   "wpCall": 0.39366666666666666,
-   "best": "pass-screen",
-   "wpBest": 0.39366666666666666,
+   "wpCall": 0.38133333333333336,
+   "best": "pass-middle",
+   "wpBest": 0.37766666666666665,
    "cost": 0,
    "values": [
     {
-     "call": "pass-screen",
-     "wp": 0.39366666666666666
-    },
-    {
      "call": "pass-play-action",
-     "wp": 0.39366666666666666
-    },
-    {
-     "call": "run",
-     "wp": 0.38766666666666666
-    },
-    {
-     "call": "timeout",
-     "wp": 0.386
+     "wp": 0.38133333333333336
     },
     {
      "call": "pass-middle",
-     "wp": 0.38533333333333336
+     "wp": 0.37766666666666665
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.38333333333333336
+     "call": "timeout",
+     "wp": 0.374
+    },
+    {
+     "call": "run",
+     "wp": 0.373
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.36633333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.36133333333333334
+     "wp": 0.35133333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.344
     },
     {
      "call": "spike",
-     "wp": 0.3566666666666667
+     "wp": 0.314
     },
     {
      "call": "fg",
-     "wp": 0.098
+     "wp": 0.050666666666666665
     }
    ],
    "reason": {
-    "text": "They're playing soft, so a screen gets the ball out fast into open space: it completes about 86% of the time and is almost never sacked or picked off.",
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
     "section": "prevent-defense"
    },
    "against": null,
@@ -310,45 +310,48 @@
    "snapClock": 97,
    "description": "(1:37) (Shotgun) 4-D.Prescott pass deep right to 19-R.Flournoy to IND 19 for 46 yards (1-A.Gardner).",
    "call": "pass-deep",
-   "wpCall": 0.31033333333333335,
-   "best": "pass-middle",
-   "wpBest": 0.31033333333333335,
+   "wpCall": 0.30233333333333334,
+   "best": "pass-play-action",
+   "wpBest": 0.30033333333333334,
    "cost": 0,
    "values": [
     {
-     "call": "pass-middle",
-     "wp": 0.31033333333333335
+     "call": "pass-deep",
+     "wp": 0.30233333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.31
+     "wp": 0.30033333333333334
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.304
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.301
-    },
-    {
-     "call": "run",
-     "wp": 0.29633333333333334
-    },
-    {
-     "call": "pass-screen",
+     "call": "pass-middle",
      "wp": 0.296
     },
     {
+     "call": "pass-sideline",
+     "wp": 0.2886666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.2876666666666667
+    },
+    {
+     "call": "run",
+     "wp": 0.281
+    },
+    {
      "call": "spike",
-     "wp": 0.273
+     "wp": 0.2633333333333333
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
    },
-   "against": null,
+   "against": {
+    "text": "They're ahead late and playing prevent, with safeties deep: a deep pass completes only about 28% of the time and is picked off about 8%. Shorter throws were the better bet.",
+    "section": "prevent-defense"
+   },
    "aftermath": {
     "story": [
      "Dallas got 3 first downs, reached the Indianapolis 1, then scored a touchdown with 1:10 left to lead 27–23.",
@@ -393,42 +396,42 @@
    "snapClock": 12,
    "description": "(:12) 25-A.Szmyt 51 yard field goal is GOOD, Center-50-R.Sunahara, Holder-13-C.Bojorquez.",
    "call": "fg",
-   "wpCall": 0.37566666666666665,
+   "wpCall": 0.37266666666666665,
    "best": "fg",
-   "wpBest": 0.37566666666666665,
+   "wpBest": 0.37266666666666665,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.37566666666666665
+     "wp": 0.37266666666666665
     },
     {
      "call": "pass-deep",
-     "wp": 0.121
+     "wp": 0.11866666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.109
+     "wp": 0.10166666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.06733333333333333
+     "wp": 0.065
     },
     {
      "call": "pass-screen",
-     "wp": 0.029333333333333333
+     "wp": 0.027
     },
     {
      "call": "run",
-     "wp": 0.01633333333333333
+     "wp": 0.016666666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.014666666666666666
+     "wp": 0.013
     }
    ],
    "reason": {
-    "text": "A 50-yard try is good about 74% of the time, and it ties it.",
+    "text": "A 51-yard try is good about 74% of the time, and it ties it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -478,42 +481,42 @@
    "snapClock": 3,
    "description": "(:03) 8-C.Santos 38 yard field goal is GOOD, Center-46-S.Daly, Holder-19-T.Taylor. Penalty on TB-91-A.Robinson, Unnecessary Roughness, declined.",
    "call": "fg",
-   "wpCall": 0.953,
+   "wpCall": 0.9463333333333334,
    "best": "fg",
-   "wpBest": 0.953,
+   "wpBest": 0.9463333333333334,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.953
-    },
-    {
-     "call": "spike",
-     "wp": 0.953
-    },
-    {
-     "call": "kneel",
      "wp": 0.9463333333333334
     },
     {
+     "call": "spike",
+     "wp": 0.9463333333333334
+    },
+    {
+     "call": "kneel",
+     "wp": 0.9366666666666666
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.6093333333333333
+     "wp": 0.553
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5513333333333333
+     "wp": 0.551
     },
     {
      "call": "pass-screen",
-     "wp": 0.5346666666666666
+     "wp": 0.5343333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.5323333333333333
+     "wp": 0.532
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5223333333333333
+     "wp": 0.522
     },
     {
      "call": "run",
@@ -521,7 +524,7 @@
     }
    ],
    "reason": {
-    "text": "A 37-yard try is good about 91% of the time, and it wins it.",
+    "text": "A 38-yard try is good about 90% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -567,38 +570,38 @@
    "snapClock": 41,
    "description": "(:41) (Shotgun) 2-S.Sanders pass deep left to 3-J.Jeudy to NO 40 for 30 yards (22-M.Emerson) [99-C.Young].",
    "call": "pass-deep",
-   "wpCall": 0.161,
+   "wpCall": 0.15733333333333333,
    "best": "pass-deep",
-   "wpBest": 0.161,
+   "wpBest": 0.15733333333333333,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.161
+     "wp": 0.15733333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.13333333333333333
+     "wp": 0.11966666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.12966666666666668
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.12166666666666667
+     "wp": 0.112
     },
     {
      "call": "pass-sideline",
-     "wp": 0.12033333333333333
+     "wp": 0.10933333333333334
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.10266666666666667
     },
     {
      "call": "spike",
-     "wp": 0.09833333333333333
+     "wp": 0.08933333333333333
     },
     {
      "call": "run",
-     "wp": 0.09233333333333334
+     "wp": 0.078
     }
    ],
    "reason": {

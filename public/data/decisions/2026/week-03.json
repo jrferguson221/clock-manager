@@ -1,16 +1,392 @@
 {
  "season": 2026,
  "week": 3,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 16,
  "evaluated": 203,
  "agreement": {
   "plays": 203,
-  "meanAbsDiff": 0.04575798897665414,
-  "within10": 0.896551724137931
+  "meanAbsDiff": 0.04471465172499954,
+  "within10": 0.8817733990147784
  },
- "worst": [],
+ "worst": [
+  {
+   "id": "2026_03_LA_DEN-4546",
+   "gameId": "2026_03_LA_DEN",
+   "offense": "DEN",
+   "defense": "LA",
+   "home": "DEN",
+   "away": "LA",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 65,
+    "running": false,
+    "down": 2,
+    "toGo": 5,
+    "ytg": 5,
+    "margin": -3,
+    "timeouts": 3,
+    "oppTimeouts": 1
+   },
+   "snapClock": 65,
+   "description": "(1:05) (Shotgun) 10-B.Nix pass incomplete short left to 14-C.Sutton.",
+   "call": "pass-sideline",
+   "wpCall": 0.6146666666666667,
+   "best": "run",
+   "wpBest": 0.6823333333333333,
+   "cost": 0.06766666666666665,
+   "values": [
+    {
+     "call": "run",
+     "wp": 0.6823333333333333
+    },
+    {
+     "call": "pass-middle",
+     "wp": 0.6146666666666667
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.611
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.6086666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5976666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.499
+    },
+    {
+     "call": "spike",
+     "wp": 0.43833333333333335
+    },
+    {
+     "call": "fg",
+     "wp": 0.36
+    }
+   ],
+   "reason": {
+    "text": "A field goal is enough and you're in range. A run drains the clock and protects the ball before the kick.",
+    "section": "field-goal-endgame"
+   },
+   "against": null,
+   "aftermath": {
+    "story": [
+     "Denver got 1 first down, reached the Rams 1, then scored a touchdown with 0:48 left to lead 30–26.",
+     "The Rams got the ball at the Rams 33 with 0:47 left, got 3 first downs, reached the Denver 14, then threw an interception with 0:02 left.",
+     "Denver won 30–26."
+    ],
+    "final": {
+     "home": 30,
+     "away": 26,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.6215,
+     "drive": [
+      {
+       "result": "Touchdown",
+       "share": 0.4875
+      },
+      {
+       "result": "Field goal",
+       "share": 0.4695
+      }
+     ],
+     "theyGetBall": 0.9095,
+     "clockWhenTheyGetBall": 51.15832875206157,
+     "theyScore": 0.187,
+     "keep": 0.5405,
+     "theirStart": 17.548780487804876,
+     "backAgain": 0.5595,
+     "clockBackAgain": 18.28686327077748,
+     "theyFieldGoal": 0.121,
+     "theyTouchdown": 0.066,
+     "handedOverNow": 0.0345,
+     "nowClock": 59.95652173913044,
+     "nowStart": 19.07246376811594,
+     "byFirstDowns": [
+      {
+       "share": 0.2682792743265531,
+       "back": 0.9077868852459017,
+       "clock": 25.670428893905193
+      },
+      {
+       "share": 0.20065970313358988,
+       "back": 0.4684931506849315,
+       "clock": 13.912280701754385
+      },
+      {
+       "share": 0.2517866959868059,
+       "back": 0.5676855895196506,
+       "clock": 15.488461538461538
+      },
+      {
+       "share": 0.2792743265530511,
+       "back": 0.4822834645669291,
+       "clock": 10.959183673469388
+      }
+     ]
+    },
+    "best": {
+     "wp": 0.67925,
+     "drive": [
+      {
+       "result": "Field goal",
+       "share": 0.567
+      },
+      {
+       "result": "Touchdown",
+       "share": 0.422
+      }
+     ],
+     "theyGetBall": 0.497,
+     "clockWhenTheyGetBall": 29.875251509054326,
+     "theyScore": 0.033,
+     "keep": 0.8505,
+     "theirStart": 5.294117647058823,
+     "backAgain": 0.135,
+     "clockBackAgain": 17.385185185185186,
+     "theyFieldGoal": 0.01,
+     "theyTouchdown": 0.023,
+     "handedOverNow": 0.004,
+     "nowClock": 60,
+     "nowStart": 4,
+     "byFirstDowns": [
+      {
+       "share": 0.44969818913480886,
+       "back": 0.2505592841163311,
+       "clock": 21.928571428571427
+      },
+      {
+       "share": 0.14386317907444668,
+       "back": 0.34965034965034963,
+       "clock": 13.32
+      },
+      {
+       "share": 0.2625754527162978,
+       "back": 0.21839080459770116,
+       "clock": 17.05263157894737
+      },
+      {
+       "share": 0.14386317907444668,
+       "back": 0.35664335664335667,
+       "clock": 11.764705882352942
+      }
+     ]
+    }
+   },
+   "playClockLeft": null,
+   "score": {
+    "offense": 23,
+    "defense": 26
+   },
+   "nflverseWp": 0.644825339317322,
+   "nflverseWpa": -0.0426464080810547,
+   "lowConfidence": false
+  },
+  {
+   "id": "2026_03_ARI_SF-4346",
+   "gameId": "2026_03_ARI_SF",
+   "offense": "SF",
+   "defense": "ARI",
+   "home": "SF",
+   "away": "ARI",
+   "date": "2026-09-27",
+   "situation": {
+    "clock": 123,
+    "running": false,
+    "down": 2,
+    "toGo": 10,
+    "ytg": 54,
+    "margin": 2,
+    "timeouts": 3,
+    "oppTimeouts": 2
+   },
+   "snapClock": 123,
+   "description": "(2:03) (Shotgun) 23-C.McCaffrey up the middle to ARI 42 for 12 yards (31-W.Williams).",
+   "call": "run",
+   "wpCall": 0.7193333333333334,
+   "best": "pass-middle",
+   "wpBest": 0.78,
+   "cost": 0.06066666666666665,
+   "values": [
+    {
+     "call": "pass-middle",
+     "wp": 0.78
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.7646666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.7586666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.75
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.743
+    },
+    {
+     "call": "run",
+     "wp": 0.7193333333333334
+    },
+    {
+     "call": "kneel",
+     "wp": 0.6626666666666666
+    },
+    {
+     "call": "spike",
+     "wp": 0.6486666666666666
+    }
+   ],
+   "reason": {
+    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "section": "play-model"
+   },
+   "against": null,
+   "aftermath": {
+    "story": [
+     "San Francisco got 3 first downs, reached the Arizona 20, then scored a touchdown with 1:36 left to lead 36–27.",
+     "Arizona got the ball at the Arizona 34 with 1:31 left, got 2 first downs, reached the San Francisco 31, then kicked a 49-yard field goal with 0:39 left to make it 30–36.",
+     "San Francisco got the ball at the Arizona 45 with 0:34 left and knelt to run out the clock.",
+     "San Francisco won 36–30."
+    ],
+    "final": {
+     "home": 36,
+     "away": 30,
+     "overtime": false
+    }
+   },
+   "detail": {
+    "their": {
+     "wp": 0.7135,
+     "drive": [
+      {
+       "result": "Punt",
+       "share": 0.6965
+      },
+      {
+       "result": "Ran out the clock",
+       "share": 0.1995
+      },
+      {
+       "result": "Field goal",
+       "share": 0.053
+      }
+     ],
+     "theyGetBall": 0.8005,
+     "clockWhenTheyGetBall": 96.33291692692067,
+     "theyScore": 0.3075,
+     "keep": 0.996,
+     "theirStart": 13.23806321452589,
+     "backAgain": 0.637,
+     "clockBackAgain": 39.70761381475667,
+     "theyFieldGoal": 0.254,
+     "theyTouchdown": 0.0535,
+     "handedOverNow": 0.004,
+     "nowClock": 118,
+     "nowStart": 53,
+     "byFirstDowns": [
+      {
+       "share": 0.2254840724547158,
+       "back": 0.7922437673130194,
+       "clock": 74.66783216783217
+      },
+      {
+       "share": 0.11867582760774516,
+       "back": 0.7368421052631579,
+       "clock": 45.792857142857144
+      },
+      {
+       "share": 0.18988132417239226,
+       "back": 0.756578947368421,
+       "clock": 41.78913043478261
+      },
+      {
+       "share": 0.46595877576514677,
+       "back": 0.8284182305630027,
+       "clock": 21.375404530744337
+      }
+     ]
+    },
+    "best": {
+     "wp": 0.7675,
+     "drive": [
+      {
+       "result": "Punt",
+       "share": 0.5215
+      },
+      {
+       "result": "Ran out the clock",
+       "share": 0.2615
+      },
+      {
+       "result": "Field goal",
+       "share": 0.102
+      },
+      {
+       "result": "Turnover on downs",
+       "share": 0.033
+      }
+     ],
+     "theyGetBall": 0.7385,
+     "clockWhenTheyGetBall": 90.97224102911306,
+     "theyScore": 0.259,
+     "keep": 0.9625,
+     "theirStart": 16.32853717026379,
+     "backAgain": 0.556,
+     "clockBackAgain": 38.69229616306954,
+     "theyFieldGoal": 0.204,
+     "theyTouchdown": 0.055,
+     "handedOverNow": 0.037,
+     "nowClock": 117.97297297297297,
+     "nowStart": 43.067567567567565,
+     "byFirstDowns": [
+      {
+       "share": 0.22816519972918078,
+       "back": 0.7952522255192879,
+       "clock": 67.3731343283582
+      },
+      {
+       "share": 0.14218009478672985,
+       "back": 0.719047619047619,
+       "clock": 37.29801324503311
+      },
+      {
+       "share": 0.2207176709546378,
+       "back": 0.6717791411042945,
+       "clock": 41.885844748858446
+      },
+      {
+       "share": 0.40893703452945157,
+       "back": 0.7847682119205298,
+       "clock": 21.444796061884666
+      }
+     ]
+    }
+   },
+   "playClockLeft": null,
+   "score": {
+    "offense": 29,
+    "defense": 27
+   },
+   "nflverseWp": 0.897771775722504,
+   "nflverseWpa": 0.0234245657920837,
+   "lowConfidence": false
+  }
+ ],
  "notable": [
   {
    "id": "2026_03_TEN_NYG-4070",
@@ -33,42 +409,42 @@
    "snapClock": 24,
    "description": "(:24) (Shotgun) 1-C.Ward pass short left intended for 5-E.Ayomanor INTERCEPTED by 8-J.Holland at NYG -4. Touchback. PENALTY on NYG-3-A.Carter, Unsportsmanlike Conduct, 10 yards, enforced at NYG 20.",
    "call": "pass-sideline",
-   "wpCall": 0.6023333333333334,
+   "wpCall": 0.5673333333333334,
    "best": "pass-middle",
-   "wpBest": 0.6023333333333334,
+   "wpBest": 0.5673333333333334,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6023333333333334
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.5556666666666666
+     "wp": 0.5673333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5513333333333333
+     "wp": 0.5256666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.5193333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.528
+     "wp": 0.49133333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.4716666666666667
+     "wp": 0.43933333333333335
     },
     {
      "call": "run",
-     "wp": 0.437
+     "wp": 0.4036666666666667
     },
     {
      "call": "spike",
-     "wp": 0.384
+     "wp": 0.38133333333333336
     },
     {
      "call": "fg",
-     "wp": 0.043333333333333335
+     "wp": 0.018
     }
    ],
    "reason": {
@@ -119,46 +495,46 @@
    "snapClock": 53,
    "description": "(:53) (Shotgun) 9-J.Burrow sacked at PIT 46 for -8 yards (99-D.Harmon). FUMBLES (99-D.Harmon) [99-D.Harmon], RECOVERED by PIT-69-S.Joseph at CIN 49.",
    "call": "pass-play-action",
-   "wpCall": 0.4573333333333333,
-   "best": "pass-screen",
-   "wpBest": 0.4563333333333333,
+   "wpCall": 0.466,
+   "best": "pass-play-action",
+   "wpBest": 0.466,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.4573333333333333
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.4563333333333333
+     "wp": 0.466
     },
     {
      "call": "pass-deep",
-     "wp": 0.453
+     "wp": 0.4653333333333333
     },
     {
      "call": "pass-middle",
-     "wp": 0.44266666666666665
+     "wp": 0.4563333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.43533333333333335
+     "wp": 0.444
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.443
     },
     {
      "call": "run",
-     "wp": 0.433
+     "wp": 0.43566666666666665
     },
     {
      "call": "spike",
-     "wp": 0.4116666666666667
+     "wp": 0.4026666666666667
     },
     {
      "call": "fg",
-     "wp": 0.3473333333333333
+     "wp": 0.268
     }
    ],
    "reason": {
-    "text": "They're playing soft, so a screen gets the ball out fast into open space: it completes about 86% of the time and is almost never sacked or picked off.",
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 59% of the time here, for 3+ yards.",
     "section": "prevent-defense"
    },
    "against": null,
@@ -205,34 +581,34 @@
    "snapClock": 2,
    "description": "(:02) (Shotgun) 9-M.Stafford pass deep right intended for 17-D.Adams INTERCEPTED by 9-T.Hufanga at DEN -1. Touchback.",
    "call": "pass-sideline",
-   "wpCall": 0.21866666666666668,
-   "best": "pass-deep",
-   "wpBest": 0.21866666666666668,
+   "wpCall": 0.11,
+   "best": "pass-play-action",
+   "wpBest": 0.11,
    "cost": 0,
    "values": [
     {
+     "call": "pass-play-action",
+     "wp": 0.11
+    },
+    {
      "call": "pass-deep",
-     "wp": 0.21866666666666668
+     "wp": 0.108
     },
     {
      "call": "spike",
-     "wp": 0.21866666666666668
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.11066666666666666
+     "wp": 0.108
     },
     {
      "call": "pass-middle",
-     "wp": 0.092
+     "wp": 0.09133333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.07866666666666666
+     "wp": 0.078
     },
     {
      "call": "pass-sideline",
-     "wp": 0.048
+     "wp": 0.04733333333333333
     },
     {
      "call": "run",
@@ -244,8 +620,8 @@
     }
    ],
    "reason": {
-    "text": "With 0:02 left and 19 yards to go, there's time for one shot: throw it to the end zone. A heave from here scores about 22% of the time.",
-    "section": "hail-mary"
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 58% of the time here, for 3+ yards.",
+    "section": "play-model"
    },
    "against": null,
    "aftermath": {
@@ -290,42 +666,42 @@
    "snapClock": 21,
    "description": "(:21) 3-S.Shrader 53 yard field goal is GOOD, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.6593333333333333,
+   "wpCall": 0.6473333333333333,
    "best": "fg",
-   "wpBest": 0.6593333333333333,
+   "wpBest": 0.6473333333333333,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.6593333333333333
+     "wp": 0.6473333333333333
     },
     {
      "call": "run",
-     "wp": 0.5326666666666666
+     "wp": 0.5293333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.49533333333333335
+     "wp": 0.486
     },
     {
      "call": "pass-middle",
-     "wp": 0.43933333333333335
+     "wp": 0.43066666666666664
     },
     {
      "call": "pass-play-action",
-     "wp": 0.4256666666666667
+     "wp": 0.4186666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.386
+     "wp": 0.38133333333333336
     },
     {
      "call": "pass-deep",
-     "wp": 0.258
+     "wp": 0.2633333333333333
     }
    ],
    "reason": {
-    "text": "A 53-yard try is good about 72% of the time, and it wins it.",
+    "text": "A 54-yard try is good about 70% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -372,48 +748,45 @@
    "snapClock": 249,
    "description": "(4:09) 14-S.Darnold pass short middle intended for 88-A.Barner INTERCEPTED by 56-K.Medrano at 50. 56-K.Medrano for 50 yards, TOUCHDOWN. PENALTY on WAS, Unsportsmanlike Conduct, 15 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.4023333333333333,
-   "best": "pass-middle",
-   "wpBest": 0.39966666666666667,
+   "wpCall": 0.38033333333333336,
+   "best": "pass-deep",
+   "wpBest": 0.38033333333333336,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.4023333333333333
+     "wp": 0.38033333333333336
     },
     {
      "call": "pass-middle",
-     "wp": 0.39966666666666667
+     "wp": 0.37233333333333335
     },
     {
      "call": "pass-play-action",
-     "wp": 0.39166666666666666
+     "wp": 0.37033333333333335
     },
     {
      "call": "pass-screen",
-     "wp": 0.38366666666666666
+     "wp": 0.3636666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.37966666666666665
+     "wp": 0.3586666666666667
     },
     {
      "call": "run",
-     "wp": 0.367
+     "wp": 0.354
     },
     {
      "call": "spike",
-     "wp": 0.348
+     "wp": 0.329
     }
    ],
    "reason": {
-    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "text": "You need a big play: 49 yards with 4:09 left is too far to go in small chunks. A deep pass completes about 30% of the time, for 20+ yards.",
     "section": "play-model"
    },
-   "against": {
-    "text": "A deep pass completes only about 30% of the time and risks a sack or an interception; shorter throws were the better bet here.",
-    "section": "play-model"
-   },
+   "against": null,
    "aftermath": {
     "story": [
      "Seattle gave up a defensive touchdown with 4:09 left.",

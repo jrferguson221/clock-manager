@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 7,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 97,
  "agreement": {
   "plays": 97,
-  "meanAbsDiff": 0.04299223748822393,
+  "meanAbsDiff": 0.04578620530751977,
   "within10": 0.8969072164948454
  },
  "worst": [
@@ -32,42 +32,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.35533333333333333,
+   "wpCall": 0.363,
    "best": "run",
-   "wpBest": 0.43366666666666664,
-   "cost": 0.07833333333333331,
+   "wpBest": 0.42766666666666664,
+   "cost": 0.06466666666666665,
    "values": [
     {
      "call": "run",
-     "wp": 0.43366666666666664
-    },
-    {
-     "call": "timeout",
-     "wp": 0.42533333333333334
+     "wp": 0.42766666666666664
     },
     {
      "call": "pass-play-action",
-     "wp": 0.423
+     "wp": 0.405
     },
     {
      "call": "pass-middle",
-     "wp": 0.4226666666666667
+     "wp": 0.403
     },
     {
      "call": "pass-screen",
-     "wp": 0.421
+     "wp": 0.39966666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.3983333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4013333333333333
+     "wp": 0.3863333333333333
     },
     {
      "call": "fg",
-     "wp": 0.35533333333333333
+     "wp": 0.363
     },
     {
      "call": "pass-deep",
-     "wp": 0.3546666666666667
+     "wp": 0.348
     }
    ],
    "reason": {
@@ -91,104 +91,100 @@
    },
    "detail": {
     "their": {
-     "wp": 0.36625,
+     "wp": 0.358,
      "drive": [
       {
        "result": "Field goal",
-       "share": 0.7635
+       "share": 0.758
       },
       {
        "result": "Missed field goal",
-       "share": 0.2365
+       "share": 0.242
       }
      ],
      "theyGetBall": 1,
-     "clockWhenTheyGetBall": 262,
-     "theyScore": 0.357,
+     "clockWhenTheyGetBall": 258.968,
+     "theyScore": 0.3865,
      "keep": 0,
      "theirStart": 37,
-     "backAgain": 0.9425,
-     "clockBackAgain": 162.62151488358387,
-     "theyFieldGoal": 0.2505,
-     "theyTouchdown": 0.1065,
-     "handedOverNow": 0.2365,
+     "backAgain": 0.9395,
+     "clockBackAgain": 157.68898941517355,
+     "theyFieldGoal": 0.2595,
+     "theyTouchdown": 0.127,
+     "handedOverNow": 0.242,
      "nowClock": 262,
      "nowStart": 37,
      "byFirstDowns": [
       {
-       "share": 0.337,
+       "share": 0.3245,
        "back": 1,
-       "clock": 211.73442136498517
+       "clock": 208.39137134052388
       },
       {
-       "share": 0.2235,
+       "share": 0.234,
        "back": 1,
-       "clock": 169.3288590604027
+       "clock": 165.67094017094018
       },
       {
-       "share": 0.171,
-       "back": 0.9590643274853801,
-       "clock": 142.29573170731706
+       "share": 0.1605,
+       "back": 0.9532710280373832,
+       "clock": 139.48366013071896
       },
       {
-       "share": 0.2685,
-       "back": 0.8119180633147114,
-       "clock": 95.1136595310907
+       "share": 0.281,
+       "back": 0.8113879003558719,
+       "clock": 89.55177875243663
       }
      ]
     },
     "best": {
-     "wp": 0.43,
+     "wp": 0.42925,
      "drive": [
       {
        "result": "Turnover on downs",
-       "share": 0.3565
+       "share": 0.3605
       },
       {
        "result": "Field goal",
-       "share": 0.342
+       "share": 0.358
       },
       {
        "result": "Touchdown",
-       "share": 0.2335
-      },
-      {
-       "result": "Fumble",
-       "share": 0.044
+       "share": 0.2395
       }
      ],
-     "theyGetBall": 0.918,
-     "clockWhenTheyGetBall": 148.88043149358504,
-     "theyScore": 0.1575,
-     "keep": 0.6275,
-     "theirStart": 28.99881656804734,
-     "backAgain": 0.649,
-     "clockBackAgain": 113.82374593391542,
-     "theyFieldGoal": 0.0815,
-     "theyTouchdown": 0.076,
-     "handedOverNow": 0.3685,
-     "nowClock": 238.9674355495251,
-     "nowStart": 30.23202170963365,
+     "theyGetBall": 0.915,
+     "clockWhenTheyGetBall": 145.07821797207035,
+     "theyScore": 0.174,
+     "keep": 0.6315,
+     "theirStart": 29.60549313358302,
+     "backAgain": 0.6605,
+     "clockBackAgain": 107.15194717806375,
+     "theyFieldGoal": 0.0985,
+     "theyTouchdown": 0.0755,
+     "handedOverNow": 0.3645,
+     "nowClock": 238.98902606310014,
+     "nowStart": 30.26474622770919,
      "byFirstDowns": [
       {
-       "share": 0.41612200435729846,
-       "back": 0.7460732984293194,
-       "clock": 158.4035087719298
+       "share": 0.40710382513661203,
+       "back": 0.7530201342281879,
+       "clock": 152.87413349178055
       },
       {
-       "share": 0.15250544662309368,
-       "back": 0.875,
-       "clock": 126.343537414966
+       "share": 0.15027322404371585,
+       "back": 0.8654545454545455,
+       "clock": 125.59967320261437
       },
       {
-       "share": 0.1443355119825708,
-       "back": 0.7094339622641509,
-       "clock": 69.3667257683215
+       "share": 0.16065573770491803,
+       "back": 0.7210884353741497,
+       "clock": 63.8569182389937
       },
       {
-       "share": 0.28703703703703703,
-       "back": 0.5597722960151803,
-       "clock": 45.620715630885115
+       "share": 0.2819672131147541,
+       "back": 0.6007751937984496,
+       "clock": 39.85465949820788
       }
      ]
     }
@@ -225,46 +221,46 @@
    "snapClock": 28,
    "description": "(:28) (Shotgun) 4-D.Watson pass short left to 44-H.Fannin to TEN 19 for 36 yards (23-K.Winston).",
    "call": "pass-sideline",
-   "wpCall": 0.7176666666666667,
-   "best": "pass-screen",
-   "wpBest": 0.7176666666666667,
+   "wpCall": 0.7113333333333334,
+   "best": "run",
+   "wpBest": 0.71,
    "cost": 0,
    "values": [
     {
      "call": "pass-screen",
-     "wp": 0.7176666666666667
+     "wp": 0.7113333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.7116666666666667
+     "wp": 0.7113333333333334
     },
     {
      "call": "run",
-     "wp": 0.7063333333333334
+     "wp": 0.71
     },
     {
      "call": "pass-middle",
-     "wp": 0.7053333333333334
+     "wp": 0.7063333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.704
+     "wp": 0.7056666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.693
+     "wp": 0.6946666666666667
     },
     {
      "call": "spike",
-     "wp": 0.6456666666666667
+     "wp": 0.646
     },
     {
      "call": "kneel",
-     "wp": 0.6316666666666667
+     "wp": 0.634
     }
    ],
    "reason": {
-    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
+    "text": "A run gains steady yards with little risk, and you have time to spare.",
     "section": "play-model"
    },
    "against": null,
@@ -310,42 +306,42 @@
    "snapClock": 153,
    "description": "(2:33) (Shotgun) 1-C.Ward pass deep middle to 5-E.Ayomanor to CLE 17 for 26 yards (33-R.Hickman) [54-S.Williams].",
    "call": "pass-deep",
-   "wpCall": 0.12633333333333333,
+   "wpCall": 0.11,
    "best": "pass-play-action",
-   "wpBest": 0.12633333333333333,
+   "wpBest": 0.11,
    "cost": 0,
    "values": [
     {
      "call": "pass-play-action",
-     "wp": 0.12633333333333333
+     "wp": 0.11
     },
     {
      "call": "pass-sideline",
-     "wp": 0.11066666666666666
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.108
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.10566666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.099
-    },
-    {
-     "call": "fg",
-     "wp": 0.09633333333333334
-    },
-    {
-     "call": "run",
      "wp": 0.09366666666666666
     },
     {
+     "call": "pass-middle",
+     "wp": 0.09333333333333334
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.08866666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.085
+    },
+    {
+     "call": "run",
+     "wp": 0.07866666666666666
+    },
+    {
+     "call": "fg",
+     "wp": 0.057
+    },
+    {
      "call": "punt",
-     "wp": 0.08333333333333333
+     "wp": 0.05633333333333333
     }
    ],
    "reason": {
@@ -396,46 +392,46 @@
    "snapClock": 295,
    "description": "(4:55) 2-M.Willis pass short left to 7-C.Douglas for 63 yards, TOUCHDOWN. PENALTY on NYJ-21-B.Stephens, Roughing the Passer, 8 yards, enforced between downs.",
    "call": "pass-play-action",
-   "wpCall": 0.808,
+   "wpCall": 0.8226666666666667,
    "best": "run",
-   "wpBest": 0.8053333333333333,
+   "wpBest": 0.822,
    "cost": 0,
    "values": [
     {
-     "call": "timeout",
-     "wp": 0.8086666666666666
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.808
-    },
-    {
      "call": "pass-screen",
-     "wp": 0.8063333333333333
+     "wp": 0.8226666666666667
     },
     {
      "call": "run",
-     "wp": 0.8053333333333333
+     "wp": 0.822
     },
     {
-     "call": "pass-play-action",
-     "wp": 0.8023333333333333
+     "call": "pass-middle",
+     "wp": 0.8216666666666667
     },
     {
-     "call": "pass-sideline",
-     "wp": 0.7993333333333333
+     "call": "timeout",
+     "wp": 0.8156666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.7803333333333333
+     "wp": 0.8103333333333333
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.8086666666666666
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.8083333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.7796666666666666
+     "wp": 0.795
     },
     {
      "call": "spike",
-     "wp": 0.7466666666666667
+     "wp": 0.7853333333333333
     }
    ],
    "reason": {
@@ -490,50 +486,50 @@
    "snapClock": 3,
    "description": "(:03) 25-A.Szmyt 32 yard field goal is GOOD, Center-50-R.Sunahara, Holder-13-C.Bojorquez.",
    "call": "fg",
-   "wpCall": 0.9823333333333333,
-   "best": "kneel",
+   "wpCall": 0.9813333333333333,
+   "best": "fg",
    "wpBest": 0.9813333333333333,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.9823333333333333
-    },
-    {
-     "call": "spike",
-     "wp": 0.9823333333333333
-    },
-    {
-     "call": "kneel",
      "wp": 0.9813333333333333
     },
     {
-     "call": "pass-deep",
-     "wp": 0.6093333333333333
+     "call": "spike",
+     "wp": 0.9813333333333333
+    },
+    {
+     "call": "kneel",
+     "wp": 0.9743333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.581
+     "wp": 0.5803333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.574
+     "wp": 0.5736666666666667
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.562
     },
     {
      "call": "pass-screen",
-     "wp": 0.5616666666666666
+     "wp": 0.5613333333333334
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5476666666666666
+     "wp": 0.5473333333333333
     },
     {
      "call": "run",
-     "wp": 0.5236666666666666
+     "wp": 0.524
     }
    ],
    "reason": {
-    "text": "A field goal is enough and you're in range. A kneel drains the clock with no risk of a fumble, at the cost of a yard on the kick.",
+    "text": "A 32-yard try is good about 97% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -579,42 +575,42 @@
    "snapClock": 267,
    "description": "(4:27) 3-S.Shrader 48 yard field goal is No Good, Wide Right, Center-46-L.Rhodes, Holder-8-R.Sanchez.",
    "call": "fg",
-   "wpCall": 0.35533333333333333,
+   "wpCall": 0.363,
    "best": "run",
-   "wpBest": 0.43366666666666664,
-   "cost": 0.07833333333333331,
+   "wpBest": 0.42766666666666664,
+   "cost": 0.06466666666666665,
    "values": [
     {
      "call": "run",
-     "wp": 0.43366666666666664
-    },
-    {
-     "call": "timeout",
-     "wp": 0.42533333333333334
+     "wp": 0.42766666666666664
     },
     {
      "call": "pass-play-action",
-     "wp": 0.423
+     "wp": 0.405
     },
     {
      "call": "pass-middle",
-     "wp": 0.4226666666666667
+     "wp": 0.403
     },
     {
      "call": "pass-screen",
-     "wp": 0.421
+     "wp": 0.39966666666666667
+    },
+    {
+     "call": "timeout",
+     "wp": 0.3983333333333333
     },
     {
      "call": "pass-sideline",
-     "wp": 0.4013333333333333
+     "wp": 0.3863333333333333
     },
     {
      "call": "fg",
-     "wp": 0.35533333333333333
+     "wp": 0.363
     },
     {
      "call": "pass-deep",
-     "wp": 0.3546666666666667
+     "wp": 0.348
     }
    ],
    "reason": {
@@ -638,104 +634,100 @@
    },
    "detail": {
     "their": {
-     "wp": 0.36625,
+     "wp": 0.358,
      "drive": [
       {
        "result": "Field goal",
-       "share": 0.7635
+       "share": 0.758
       },
       {
        "result": "Missed field goal",
-       "share": 0.2365
+       "share": 0.242
       }
      ],
      "theyGetBall": 1,
-     "clockWhenTheyGetBall": 262,
-     "theyScore": 0.357,
+     "clockWhenTheyGetBall": 258.968,
+     "theyScore": 0.3865,
      "keep": 0,
      "theirStart": 37,
-     "backAgain": 0.9425,
-     "clockBackAgain": 162.62151488358387,
-     "theyFieldGoal": 0.2505,
-     "theyTouchdown": 0.1065,
-     "handedOverNow": 0.2365,
+     "backAgain": 0.9395,
+     "clockBackAgain": 157.68898941517355,
+     "theyFieldGoal": 0.2595,
+     "theyTouchdown": 0.127,
+     "handedOverNow": 0.242,
      "nowClock": 262,
      "nowStart": 37,
      "byFirstDowns": [
       {
-       "share": 0.337,
+       "share": 0.3245,
        "back": 1,
-       "clock": 211.73442136498517
+       "clock": 208.39137134052388
       },
       {
-       "share": 0.2235,
+       "share": 0.234,
        "back": 1,
-       "clock": 169.3288590604027
+       "clock": 165.67094017094018
       },
       {
-       "share": 0.171,
-       "back": 0.9590643274853801,
-       "clock": 142.29573170731706
+       "share": 0.1605,
+       "back": 0.9532710280373832,
+       "clock": 139.48366013071896
       },
       {
-       "share": 0.2685,
-       "back": 0.8119180633147114,
-       "clock": 95.1136595310907
+       "share": 0.281,
+       "back": 0.8113879003558719,
+       "clock": 89.55177875243663
       }
      ]
     },
     "best": {
-     "wp": 0.43,
+     "wp": 0.42925,
      "drive": [
       {
        "result": "Turnover on downs",
-       "share": 0.3565
+       "share": 0.3605
       },
       {
        "result": "Field goal",
-       "share": 0.342
+       "share": 0.358
       },
       {
        "result": "Touchdown",
-       "share": 0.2335
-      },
-      {
-       "result": "Fumble",
-       "share": 0.044
+       "share": 0.2395
       }
      ],
-     "theyGetBall": 0.918,
-     "clockWhenTheyGetBall": 148.88043149358504,
-     "theyScore": 0.1575,
-     "keep": 0.6275,
-     "theirStart": 28.99881656804734,
-     "backAgain": 0.649,
-     "clockBackAgain": 113.82374593391542,
-     "theyFieldGoal": 0.0815,
-     "theyTouchdown": 0.076,
-     "handedOverNow": 0.3685,
-     "nowClock": 238.9674355495251,
-     "nowStart": 30.23202170963365,
+     "theyGetBall": 0.915,
+     "clockWhenTheyGetBall": 145.07821797207035,
+     "theyScore": 0.174,
+     "keep": 0.6315,
+     "theirStart": 29.60549313358302,
+     "backAgain": 0.6605,
+     "clockBackAgain": 107.15194717806375,
+     "theyFieldGoal": 0.0985,
+     "theyTouchdown": 0.0755,
+     "handedOverNow": 0.3645,
+     "nowClock": 238.98902606310014,
+     "nowStart": 30.26474622770919,
      "byFirstDowns": [
       {
-       "share": 0.41612200435729846,
-       "back": 0.7460732984293194,
-       "clock": 158.4035087719298
+       "share": 0.40710382513661203,
+       "back": 0.7530201342281879,
+       "clock": 152.87413349178055
       },
       {
-       "share": 0.15250544662309368,
-       "back": 0.875,
-       "clock": 126.343537414966
+       "share": 0.15027322404371585,
+       "back": 0.8654545454545455,
+       "clock": 125.59967320261437
       },
       {
-       "share": 0.1443355119825708,
-       "back": 0.7094339622641509,
-       "clock": 69.3667257683215
+       "share": 0.16065573770491803,
+       "back": 0.7210884353741497,
+       "clock": 63.8569182389937
       },
       {
-       "share": 0.28703703703703703,
-       "back": 0.5597722960151803,
-       "clock": 45.620715630885115
+       "share": 0.2819672131147541,
+       "back": 0.6007751937984496,
+       "clock": 39.85465949820788
       }
      ]
     }

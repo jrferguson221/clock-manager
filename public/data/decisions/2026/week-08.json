@@ -1,13 +1,13 @@
 {
  "season": 2026,
  "week": 8,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 107,
  "agreement": {
   "plays": 107,
-  "meanAbsDiff": 0.03943252585369894,
+  "meanAbsDiff": 0.04086263629266082,
   "within10": 0.9252336448598131
  },
  "worst": [
@@ -32,46 +32,46 @@
    "snapClock": 35,
    "description": "(:35) 9-K.Walker right end to DEN 1 for 3 yards (2-P.Surtain).",
    "call": "run",
-   "wpCall": 0.4706666666666667,
+   "wpCall": 0.47533333333333333,
    "best": "pass-middle",
-   "wpBest": 0.6003333333333334,
-   "cost": 0.1296666666666667,
+   "wpBest": 0.5936666666666667,
+   "cost": 0.11833333333333335,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.6003333333333334
+     "wp": 0.5936666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.586
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.583
+     "wp": 0.582
     },
     {
      "call": "timeout",
-     "wp": 0.5703333333333334
+     "wp": 0.5786666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.574
     },
     {
      "call": "pass-screen",
-     "wp": 0.5453333333333333
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.471
+     "wp": 0.554
     },
     {
      "call": "run",
-     "wp": 0.4706666666666667
+     "wp": 0.47533333333333333
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.4666666666666667
     },
     {
      "call": "spike",
-     "wp": 0.3873333333333333
+     "wp": 0.37566666666666665
     },
     {
      "call": "fg",
-     "wp": 0.062
+     "wp": 0.028666666666666667
     }
    ],
    "reason": {
@@ -95,104 +95,104 @@
    },
    "detail": {
     "their": {
-     "wp": 0.4735,
+     "wp": 0.48075,
      "drive": [
       {
        "result": "Touchdown",
-       "share": 0.503
+       "share": 0.499
       },
       {
        "result": "Turnover on downs",
-       "share": 0.3755
+       "share": 0.3735
       },
       {
        "result": "Interception",
-       "share": 0.1095
+       "share": 0.1105
       }
      ],
-     "theyGetBall": 0.978,
-     "clockWhenTheyGetBall": 18.66002044989775,
-     "theyScore": 0.0465,
-     "keep": 0.7595,
-     "theirStart": 8.992768595041323,
-     "backAgain": 0.1225,
-     "clockBackAgain": 7.118367346938776,
-     "theyFieldGoal": 0.0355,
-     "theyTouchdown": 0.011,
-     "handedOverNow": 0.012,
+     "theyGetBall": 0.9725,
+     "clockWhenTheyGetBall": 16.790745501285347,
+     "theyScore": 0.03,
+     "keep": 0.767,
+     "theirStart": 8.992805755395683,
+     "backAgain": 0.0725,
+     "clockBackAgain": 7.220689655172414,
+     "theyFieldGoal": 0.0255,
+     "theyTouchdown": 0.0045,
+     "handedOverNow": 0.004,
      "nowClock": 30,
      "nowStart": 3,
      "byFirstDowns": [
       {
-       "share": 0.6922290388548057,
-       "back": 0.0930576070901034,
-       "clock": 8.452380952380953
+       "share": 0.7197943444730077,
+       "back": 0.054285714285714284,
+       "clock": 8.368421052631579
       },
       {
-       "share": 0.2147239263803681,
-       "back": 0.21428571428571427,
-       "clock": 5.333333333333333
+       "share": 0.20976863753213368,
+       "back": 0.12745098039215685,
+       "clock": 5.826923076923077
       },
       {
-       "share": 0.07822085889570553,
-       "back": 0.1895424836601307,
-       "clock": 6.862068965517241
+       "share": 0.05861182519280206,
+       "back": 0.14912280701754385,
+       "clock": 6.352941176470588
       },
       {
-       "share": 0.014826175869120654,
+       "share": 0.011825192802056555,
        "back": 0,
        "clock": null
       }
      ]
     },
     "best": {
-     "wp": 0.597,
+     "wp": 0.5945,
      "drive": [
       {
        "result": "Touchdown",
-       "share": 0.639
+       "share": 0.6285
       },
       {
        "result": "Turnover on downs",
-       "share": 0.257
+       "share": 0.251
       },
       {
        "result": "Interception",
-       "share": 0.104
+       "share": 0.106
       }
      ],
-     "theyGetBall": 0.955,
-     "clockWhenTheyGetBall": 21.892146596858638,
-     "theyScore": 0.0665,
-     "keep": 0.557,
-     "theirStart": 11.321981424148607,
-     "backAgain": 0.1685,
-     "clockBackAgain": 7.810089020771513,
-     "theyFieldGoal": 0.0535,
-     "theyTouchdown": 0.013,
-     "handedOverNow": 0.0265,
-     "nowClock": 30,
-     "nowStart": 20,
+     "theyGetBall": 0.958,
+     "clockWhenTheyGetBall": 19.31471816283925,
+     "theyScore": 0.057,
+     "keep": 0.553,
+     "theirStart": 11.48882265275708,
+     "backAgain": 0.119,
+     "clockBackAgain": 7.9411764705882355,
+     "theyFieldGoal": 0.048,
+     "theyTouchdown": 0.009,
+     "handedOverNow": 0.0345,
+     "nowClock": 29.956521739130434,
+     "nowStart": 18.956521739130434,
      "byFirstDowns": [
       {
-       "share": 0.5717277486910994,
-       "back": 0.15293040293040294,
-       "clock": 9.293413173652695
+       "share": 0.6450939457202505,
+       "back": 0.11488673139158576,
+       "clock": 9.450704225352112
       },
       {
-       "share": 0.2806282722513089,
-       "back": 0.20149253731343283,
-       "clock": 6.444444444444445
+       "share": 0.25730688935281837,
+       "back": 0.15010141987829614,
+       "clock": 5.95945945945946
       },
       {
-       "share": 0.11727748691099477,
-       "back": 0.26785714285714285,
-       "clock": 6.116666666666666
+       "share": 0.08194154488517745,
+       "back": 0.14012738853503184,
+       "clock": 4.863636363636363
       },
       {
-       "share": 0.030366492146596858,
-       "back": 0.034482758620689655,
-       "clock": 8.5
+       "share": 0.015657620041753653,
+       "back": 0,
+       "clock": null
       }
      ]
     }
@@ -227,38 +227,38 @@
    "snapClock": 181,
    "description": "(3:01) 19-B.Thorson punts 50 yards to DET 17, Center-42-A.DePaola, fair catch by 86-D.Carter.",
    "call": "punt",
-   "wpCall": 0.125,
+   "wpCall": 0.117,
    "best": "pass-middle",
-   "wpBest": 0.21966666666666668,
-   "cost": 0.09466666666666668,
+   "wpBest": 0.20533333333333334,
+   "cost": 0.08833333333333333,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.21966666666666668
+     "wp": 0.20533333333333334
     },
     {
      "call": "pass-play-action",
-     "wp": 0.21166666666666667
+     "wp": 0.205
     },
     {
      "call": "pass-sideline",
-     "wp": 0.207
+     "wp": 0.195
     },
     {
      "call": "pass-deep",
-     "wp": 0.194
+     "wp": 0.19133333333333333
     },
     {
      "call": "pass-screen",
-     "wp": 0.17766666666666667
+     "wp": 0.17233333333333334
     },
     {
      "call": "run",
-     "wp": 0.16633333333333333
+     "wp": 0.15133333333333332
     },
     {
      "call": "punt",
-     "wp": 0.125
+     "wp": 0.117
     }
    ],
    "reason": {
@@ -283,7 +283,7 @@
    },
    "detail": {
     "their": {
-     "wp": 0.12725,
+     "wp": 0.12025,
      "drive": [
       {
        "result": "Punt",
@@ -292,87 +292,91 @@
      ],
      "theyGetBall": 1,
      "clockWhenTheyGetBall": 174,
-     "theyScore": 0.012,
+     "theyScore": 0.008,
      "keep": 0,
-     "theirStart": 27,
-     "backAgain": 0.7175,
-     "clockBackAgain": 124.03623693379791,
-     "theyFieldGoal": 0.011,
-     "theyTouchdown": 0.001,
+     "theirStart": 23,
+     "backAgain": 0.7105,
+     "clockBackAgain": 121.64250527797326,
+     "theyFieldGoal": 0.0075,
+     "theyTouchdown": 0.0005,
      "handedOverNow": 1,
      "nowClock": 174,
-     "nowStart": 27,
+     "nowStart": 23,
      "byFirstDowns": [
       {
-       "share": 0.451,
+       "share": 0.4425,
        "back": 1,
-       "clock": 154.93458980044346
+       "clock": 154.43841807909604
       },
       {
-       "share": 0.234,
+       "share": 0.2345,
        "back": 1,
-       "clock": 75.13888888888889
+       "clock": 71.32196162046908
       },
       {
-       "share": 0.2725,
-       "back": 0.11743119266055047,
-       "clock": 47.296875
+       "share": 0.28,
+       "back": 0.11785714285714285,
+       "clock": 41.28787878787879
       },
       {
-       "share": 0.0425,
-       "back": 0.011764705882352941,
-       "clock": 49
+       "share": 0.043,
+       "back": 0.011627906976744186,
+       "clock": 1
       }
      ]
     },
     "best": {
-     "wp": 0.22075,
+     "wp": 0.2105,
      "drive": [
       {
        "result": "Turnover on downs",
-       "share": 0.65
+       "share": 0.634
       },
       {
        "result": "Touchdown",
-       "share": 0.242
+       "share": 0.239
       },
       {
        "result": "Interception",
-       "share": 0.101
+       "share": 0.094
+      },
+      {
+       "result": "Fumble",
+       "share": 0.0325
       }
      ],
-     "theyGetBall": 0.998,
-     "clockWhenTheyGetBall": 130.6002004008016,
-     "theyScore": 0.452,
-     "keep": 0.5265,
-     "theirStart": 53.5218253968254,
-     "backAgain": 0.628,
-     "clockBackAgain": 97.98358987968861,
-     "theyFieldGoal": 0.387,
-     "theyTouchdown": 0.065,
-     "handedOverNow": 0.4735,
-     "nowClock": 176,
-     "nowStart": 67.93980992608236,
+     "theyGetBall": 0.9985,
+     "clockWhenTheyGetBall": 129.69904857285928,
+     "theyScore": 0.455,
+     "keep": 0.5225,
+     "theirStart": 53.71757735352205,
+     "backAgain": 0.6145,
+     "clockBackAgain": 94.57634933550311,
+     "theyFieldGoal": 0.3915,
+     "theyTouchdown": 0.0635,
+     "handedOverNow": 0.4775,
+     "nowClock": 175.99685863874345,
+     "nowStart": 67.84607329842932,
      "byFirstDowns": [
       {
-       "share": 0.44438877755511025,
-       "back": 0.7632468996617813,
-       "clock": 127.80354505169868
+       "share": 0.4361542313470205,
+       "back": 0.764638346727899,
+       "clock": 123.52552552552552
       },
       {
-       "share": 0.23697394789579157,
-       "back": 0.7040169133192389,
-       "clock": 79.44044044044044
+       "share": 0.2383575363044567,
+       "back": 0.7058823529411765,
+       "clock": 73.30059523809524
       },
       {
-       "share": 0.17334669338677355,
-       "back": 0.33236994219653176,
-       "clock": 62.89613526570049
+       "share": 0.18828242363545317,
+       "back": 0.3271276595744681,
+       "clock": 61.724932249322485
       },
       {
-       "share": 0.14529058116232466,
-       "back": 0.4517241379310345,
-       "clock": 21.814249363867688
+       "share": 0.13720580871306962,
+       "back": 0.3795620437956204,
+       "clock": 16.78044871794872
       }
      ]
     }
@@ -409,47 +413,47 @@
    "snapClock": 10,
    "description": "(:10) (Shotgun) 15-G.Minshew pass short middle to 14-Mi.Wilson for 13 yards, TOUCHDOWN.",
    "call": "pass-middle",
-   "wpCall": 0.342,
-   "best": "pass-deep",
-   "wpBest": 0.342,
+   "wpCall": 0.233,
+   "best": "pass-play-action",
+   "wpBest": 0.233,
    "cost": 0,
    "values": [
     {
-     "call": "pass-deep",
-     "wp": 0.342
-    },
-    {
-     "call": "spike",
-     "wp": 0.342
-    },
-    {
      "call": "pass-play-action",
-     "wp": 0.268
+     "wp": 0.233
     },
     {
      "call": "pass-middle",
-     "wp": 0.235
+     "wp": 0.20566666666666666
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.204
+    },
+    {
+     "call": "spike",
+     "wp": 0.204
     },
     {
      "call": "pass-sideline",
-     "wp": 0.232
+     "wp": 0.182
     },
     {
      "call": "pass-screen",
-     "wp": 0.19466666666666665
+     "wp": 0.167
     },
     {
      "call": "run",
-     "wp": 0.06866666666666667
+     "wp": 0.063
     },
     {
      "call": "fg",
-     "wp": 0.004666666666666667
+     "wp": 0.0013333333333333333
     }
    ],
    "reason": {
-    "text": "With 0:10 left and 13 yards to go, there's time for one shot: throw it to the end zone. A heave from here scores about 22% of the time.",
-    "section": "hail-mary"
+    "text": "A run fake pulls the linebackers up and opens the middle of the field: play-action completes about 51% of the time here, for 3+ yards.",
+    "section": "play-model"
    },
    "against": null,
    "aftermath": {
@@ -499,30 +503,30 @@
    "snapClock": 4,
    "description": "(:04) (Shotgun) 15-P.Mahomes sacked at DEN 12 for -6 yards (97-M.Roach).",
    "call": "pass-middle",
-   "wpCall": 0.35933333333333334,
+   "wpCall": 0.3566666666666667,
    "best": "pass-middle",
-   "wpBest": 0.35933333333333334,
+   "wpBest": 0.3566666666666667,
    "cost": 0,
    "values": [
     {
      "call": "pass-middle",
-     "wp": 0.35933333333333334
+     "wp": 0.3566666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.32
+     "wp": 0.31733333333333336
     },
     {
      "call": "pass-sideline",
-     "wp": 0.2966666666666667
+     "wp": 0.294
     },
     {
      "call": "pass-screen",
-     "wp": 0.22333333333333333
+     "wp": 0.222
     },
     {
      "call": "pass-deep",
-     "wp": 0.21866666666666668
+     "wp": 0.144
     },
     {
      "call": "run",
@@ -580,43 +584,43 @@
    "snapClock": 151,
    "description": "(2:31) (Shotgun) 10-B.Nix pass short right to 20-J.Coleman to KC 5 for 51 yards (20-N.Williams; 32-N.Bolton).",
    "call": "pass-sideline",
-   "wpCall": 0.425,
-   "best": "run",
-   "wpBest": 0.42966666666666664,
-   "cost": 0.004666666666666652,
+   "wpCall": 0.4246666666666667,
+   "best": "pass-middle",
+   "wpBest": 0.42033333333333334,
+   "cost": 0,
    "values": [
     {
-     "call": "run",
-     "wp": 0.42966666666666664
-    },
-    {
      "call": "pass-play-action",
-     "wp": 0.425
+     "wp": 0.4246666666666667
     },
     {
      "call": "pass-middle",
-     "wp": 0.4236666666666667
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.4216666666666667
-    },
-    {
-     "call": "pass-sideline",
      "wp": 0.42033333333333334
     },
     {
+     "call": "run",
+     "wp": 0.413
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.4126666666666667
+    },
+    {
      "call": "pass-deep",
+     "wp": 0.4076666666666667
+    },
+    {
+     "call": "pass-screen",
      "wp": 0.4033333333333333
     },
     {
      "call": "spike",
-     "wp": 0.39666666666666667
+     "wp": 0.374
     }
    ],
    "reason": {
-    "text": "A run gains steady yards with little risk, and you have time to spare.",
-    "section": "play-model"
+    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
+    "section": "prevent-defense"
    },
    "against": null,
    "aftermath": {
@@ -662,47 +666,47 @@
    "snapClock": 92,
    "description": "(1:32) (No Huddle, Shotgun) 15-P.Mahomes pass short right to 87-T.Kelce to DEN 18 for 32 yards (26-D.Key).",
    "call": "pass-sideline",
-   "wpCall": 0.3303333333333333,
-   "best": "pass-middle",
-   "wpBest": 0.32966666666666666,
-   "cost": 0,
+   "wpCall": 0.293,
+   "best": "run",
+   "wpBest": 0.295,
+   "cost": 0.0020000000000000018,
    "values": [
     {
-     "call": "pass-play-action",
-     "wp": 0.3303333333333333
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.32966666666666666
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.329
+     "call": "run",
+     "wp": 0.295
     },
     {
      "call": "timeout",
-     "wp": 0.328
+     "wp": 0.2946666666666667
     },
     {
-     "call": "run",
-     "wp": 0.31366666666666665
+     "call": "pass-middle",
+     "wp": 0.293
     },
     {
-     "call": "pass-screen",
-     "wp": 0.305
+     "call": "pass-play-action",
+     "wp": 0.289
     },
     {
      "call": "pass-deep",
-     "wp": 0.3016666666666667
+     "wp": 0.2886666666666667
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.2876666666666667
+    },
+    {
+     "call": "pass-screen",
+     "wp": 0.2793333333333333
     },
     {
      "call": "spike",
-     "wp": 0.291
+     "wp": 0.238
     }
    ],
    "reason": {
-    "text": "They're ahead late, so they're playing prevent: deep and soft. Throws over the middle complete about 65% of the time against it.",
-    "section": "prevent-defense"
+    "text": "A run gains steady yards with little risk of a turnover.",
+    "section": "play-model"
    },
    "against": null,
    "aftermath": {
@@ -747,42 +751,42 @@
    "snapClock": 14,
    "description": "(:14) (Shotgun) 7-G.Smith pass deep left intended for 5-G.Wilson INTERCEPTED by 11-J.Chinn [98-M.Crosby] at LV -6. Touchback.",
    "call": "pass-deep",
-   "wpCall": 0.24133333333333334,
+   "wpCall": 0.144,
    "best": "pass-deep",
-   "wpBest": 0.24133333333333334,
+   "wpBest": 0.144,
    "cost": 0,
    "values": [
     {
      "call": "pass-deep",
-     "wp": 0.24133333333333334
+     "wp": 0.144
     },
     {
      "call": "spike",
-     "wp": 0.23866666666666667
+     "wp": 0.144
     },
     {
      "call": "pass-sideline",
-     "wp": 0.178
+     "wp": 0.076
     },
     {
      "call": "pass-play-action",
-     "wp": 0.132
+     "wp": 0.07533333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.086
+     "wp": 0.042666666666666665
     },
     {
      "call": "pass-screen",
-     "wp": 0.07866666666666666
+     "wp": 0.036
     },
     {
      "call": "run",
-     "wp": 0.026
+     "wp": 0.016
     },
     {
      "call": "fg",
-     "wp": 0.0026666666666666666
+     "wp": 0.0013333333333333333
     }
    ],
    "reason": {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import {
-  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, seededRng, step, winProbability, evaluateTry, policy, runShape, snapDelay, FG_TIMEOUT_AT, DEFAULT_SIM, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
+  availableCalls, bestCall, bestScored, TIE, evaluateCallsAtSnap, PASS_ODDS, biggestSwing, noGainCalls, ranked, compression, coverageFor, goalLineRunChance, passOdds, recommend, wpOf, evaluateCalls, explain, fgMakeChance, FG_EXTRA_YARDS, seededRng, step, winProbability, evaluateTry, policy, runShape, snapDelay, FG_TIMEOUT_AT, DEFAULT_SIM, tryPolicy, CLOSE, SPECIAL_TEAMS, type GameState,
 } from "../src/sim";
 
 const base: GameState = {
@@ -209,9 +209,14 @@ describe("timeouts", () => {
 describe("tied late in your own end", () => {
   const tied: GameState = { ...base, margin: 0, ytg: 75, toGo: 10, down: 1, timeouts: { you: 2, opp: 2 } };
 
-  it("a kneel with under a minute left takes it to overtime: the team keeps kneeling", () => {
-    expect(wpOf(evaluateCalls({ ...tied, clock: 35, running: false }, 500), "kneel")).toBe(0.5);
-    expect(policy({ ...tied, clock: 55, running: true, down: 2 })).toBe("kneel");
+  it("a kneel with under 30 seconds left takes it to overtime: the team keeps kneeling", () => {
+    expect(wpOf(evaluateCalls({ ...tied, clock: 25, running: false }, 500), "kneel")).toBe(0.5);
+    expect(policy({ ...tied, clock: 28, running: true, down: 2 })).toBe("kneel");
+  });
+
+  it("plays on with 0:30 to 1:00 left, as real tied teams do (and win about 59%)", () => {
+    expect(policy({ ...tied, clock: 55, running: false, down: 1 })).not.toBe("kneel");
+    expect(bestScored(evaluateCalls({ ...tied, clock: 55, running: false }, 1500)).wp).toBeGreaterThan(0.53);
   });
 
   it("punts on 4th down instead of kneeling it over on downs", () => {
@@ -240,7 +245,7 @@ describe("needing a touchdown in range", () => {
 });
 
 describe("Hail Mary", () => {
-  it("a last-play heave scores about 1 in 10 from 45 yards and about 1 in 5 from 25", () => {
+  it("a last-play heave scores about 1 in 25 from 45 yards and about 1 in 11 from 25, as in 2022-26", () => {
     const rate = (ytg: number) => {
       let tds = 0;
       for (let i = 0; i < 4000; i++) {
@@ -249,10 +254,10 @@ describe("Hail Mary", () => {
       }
       return tds / 4000;
     };
-    expect(rate(45)).toBeGreaterThan(0.07);
-    expect(rate(45)).toBeLessThan(0.13);
-    expect(rate(25)).toBeGreaterThan(0.16);
-    expect(rate(25)).toBeLessThan(0.24);
+    expect(rate(45)).toBeGreaterThan(0.02);
+    expect(rate(45)).toBeLessThan(0.06);
+    expect(rate(25)).toBeGreaterThan(0.06);
+    expect(rate(25)).toBeLessThan(0.12);
   });
 });
 
@@ -375,10 +380,10 @@ describe("3rd and 4th & short", () => {
 
 describe("field goals and long yardage, as calibrated", () => {
   it("make kicks at the 2022-26 NFL rates: about 73% from 50-54, 65% from 55-59", () => {
-    expect(fgMakeChance(52 - 17)).toBeCloseTo(0.732, 3);
-    expect(fgMakeChance(57 - 17)).toBeCloseTo(0.648, 3);
-    expect(fgMakeChance(54 - 17)).toBeGreaterThan(fgMakeChance(57 - 17));
-    expect(fgMakeChance(54 - 17)).toBeLessThan(fgMakeChance(52 - 17));
+    expect(fgMakeChance(52 - FG_EXTRA_YARDS)).toBeCloseTo(0.732, 3);
+    expect(fgMakeChance(57 - FG_EXTRA_YARDS)).toBeCloseTo(0.648, 3);
+    expect(fgMakeChance(54 - FG_EXTRA_YARDS)).toBeGreaterThan(fgMakeChance(57 - FG_EXTRA_YARDS));
+    expect(fgMakeChance(54 - FG_EXTRA_YARDS)).toBeLessThan(fgMakeChance(52 - FG_EXTRA_YARDS));
     expect(fgMakeChance(1)).toBeGreaterThan(0.99);
   });
 
@@ -436,8 +441,11 @@ describe("kick or go for two", () => {
       expect(evaluateTry(after(-2, clock)).best).toBe("two");
       expect(evaluateTry(after(1, clock)).best).toBe("two");
       expect(evaluateTry(after(0, clock)).best).toBe("kick");
-      expect(evaluateTry(after(-1, clock)).best).toBe("kick");
     }
+    for (const clock of [180, 120, 30]) expect(evaluateTry(after(-1, clock)).best).toBe("kick");
+    // Down 1 with 5:00 left it's a toss-up.
+    const early = evaluateTry(after(-1, 300));
+    expect(Math.abs(early.two - early.kick)).toBeLessThan(0.01);
   });
 
   it("the simulations' rule agrees with the evaluator wherever the edge is clear", () => {

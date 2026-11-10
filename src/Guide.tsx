@@ -9,9 +9,9 @@ import { Accordion, Card, Grid, List, Stack, Table, Text, Title } from "@mantine
 import { getRouteApi } from "@tanstack/react-router";
 import { GUIDE_SECTIONS, type GuideSection } from "@situational-football/schemas";
 import { NFL_RULES, PLAY_TYPES, runOutThreshold, DOWNS } from "./engine";
-import { DEFAULT_ASSUMPTIONS, fgDistance } from "./trailing";
+import { DEFAULT_ASSUMPTIONS } from "./trailing";
 import {
-  bestScored, compression, evaluateCalls, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability,
+  bestScored, compression, evaluateCalls, fgDistance, fgMakeChance, goalLineRunChance, hailMaryChance, passOdds, runShape, winProbability, FG_EXTRA_YARDS,
   AVOID, CLOSE, DEFAULT_SIM, EXPECTED_RUN_WINDOW, FG_TIMEOUT_AT, DEFENSE_TIMEOUT_WINDOW, FG_MAX_YTG, HAIL_MARY, MIN_SNAP, PASS_ODDS, PREVENT_WINDOW, PUNT_MIN_YTG,
   END_ZONE_SHOT_CLOCK, GO_FOR_TWO_MARGINS, OBVIOUS_TO_GO, TIED_KNEEL_CLOCK, OBVIOUS_WINDOW, PLAY_CALLS, RED_ZONE, SPECIAL_TEAMS, TIE, type GameState, type PassCall,
 } from "./sim";
@@ -497,17 +497,17 @@ function DriveBudgetSection() {
 }
 
 function FieldGoalSection() {
-  const distances = [20, 30, 40, 45, 50, 55, 60, FG_MAX_YTG + 17];
+  const distances = [20, 30, 40, 45, 50, 55, 60, fgDistance(FG_MAX_YTG)];
   return (
     <Section id="field-goal-endgame">
       <Text>
-        A try is the distance to the goal line plus 17 yards: 10 for the end zone and 7 for the hold. The longest try the
-        app allows is {FG_MAX_YTG + 17} yards.
+        A try is the distance to the goal line plus {FG_EXTRA_YARDS} yards: 10 for the end zone and 8 for the hold. The
+        longest try the app allows is {fgDistance(FG_MAX_YTG)} yards.
       </Text>
       <NumberTable
         caption="Field-goal make chance by distance"
         head={["Distance", ...distances.map((d) => `${d}`)]}
-        rows={[["Good", ...distances.map((d) => pct(fgMakeChance(d - 17)))]]}
+        rows={[["Good", ...distances.map((d) => pct(fgMakeChance(d - FG_EXTRA_YARDS)))]]}
       />
       <Text>When a field goal ties or wins and you're in range, the clock becomes the main opponent:</Text>
       <List spacing={4}>
@@ -609,7 +609,7 @@ function HailMarySection() {
         {HAIL_MARY.maxYtg} yards is a heave into the end zone: several receivers, a crowd of defenders, a jump ball.
       </Text>
       <NumberTable
-        caption={`Hail Mary touchdown chance (intercepted about ${pct(HAIL_MARY.interception)} of the time)`}
+        caption={`Hail Mary touchdown chance (intercepted about ${pct(HAIL_MARY.interception)} of the time, sacked ${pct(HAIL_MARY.sack)})`}
         head={["Yards to go", ...spots.map(String)]}
         rows={[["Touchdown", ...spots.map((y) => pct(hailMaryChance(y)))]]}
       />
@@ -627,8 +627,9 @@ function FourthDownSection() {
       <Text>On 4th down there are three choices: kick a field goal, punt, or go for it.</Text>
       <List spacing={4}>
         <List.Item>
-          <strong>Punts</strong> net {SPECIAL_TEAMS.puntNet} yards (a touchback if they'd reach the end zone) and are an
-          option from {PUNT_MIN_YTG} or more yards out. Going for it and failing hands them the ball where you stopped.
+          <strong>Punts</strong> net {SPECIAL_TEAMS.puntNet} yards from your own 40 or deeper, a little less from midfield,
+          and from the opponent's side pin them at about their {SPECIAL_TEAMS.puntPinnedAt}. They're an option from{" "}
+          {PUNT_MIN_YTG} or more yards out. Going for it and failing hands them the ball where you stopped.
         </List.Item>
         <List.Item>
           <strong>The team that's ahead</strong> kicks a field goal from the opponent's 35 or closer, punts from{" "}
@@ -704,12 +705,16 @@ function ScoringSection() {
           <GuideLink section="two-point">kick or go for two</GuideLink>.
         </List.Item>
         <List.Item>
-          <strong>Kickoffs</strong> are touchbacks: the receiving team starts at its {SPECIAL_TEAMS.touchbackYardLine}.
+          <strong>Kickoffs:</strong> the receiving team starts at about its {SPECIAL_TEAMS.kickoffStart}, after{" "}
+          {SPECIAL_TEAMS.kickoffSeconds} seconds of return (late kickoffs under the 2025 rules).
         </List.Item>
         <List.Item>
-          <strong>Onside kicks:</strong> a team still behind after scoring, with {SPECIAL_TEAMS.onsideWindow / 60} minutes
-          or less left, kicks onside. It recovers {pct(SPECIAL_TEAMS.onsideRecovery)} of the time, around its own 45;
-          otherwise the other team gets a short field.
+          <strong>Onside kicks:</strong> a team still behind after scoring kicks onside with{" "}
+          {formatClock(SPECIAL_TEAMS.onsideWindow)} or less left, {formatClock(SPECIAL_TEAMS.onsideWindowShort)} or less
+          with one timeout or none, or {formatClock(SPECIAL_TEAMS.onsideWindowLong)} or less when down 9 or more. Before
+          that, it kicks deep and counts on its defense and timeouts. An onside kick is recovered{" "}
+          {pct(SPECIAL_TEAMS.onsideRecovery)} of the time, around the kicking team's 45; otherwise the other team gets a
+          short field.
         </List.Item>
       </List>
     </Section>
@@ -725,9 +730,9 @@ function LimitationsSection() {
       </Text>
       <List spacing={4}>
         <List.Item>Penalties, including 10-second runoffs in the last minute, and injuries.</List.Item>
-        <List.Item>Kickoff and punt returns, safeties, and fumbles on pass plays.</List.Item>
+        <List.Item>Return touchdowns, blocked kicks and safeties.</List.Item>
         <List.Item>Team strength: both teams are average, every week, in any weather.</List.Item>
-        <List.Item>Overtime, which is a coin flip. That's also why a tied team deep in its own end with under a minute left may kneel.</List.Item>
+        <List.Item>Overtime, which is a coin flip. That's also why a tied team deep in its own end with under 30 seconds left may kneel.</List.Item>
         <List.Item>
           The shorter play clock after timeouts and other stoppages: the app always uses {NFL_RULES.playClock} seconds.
         </List.Item>

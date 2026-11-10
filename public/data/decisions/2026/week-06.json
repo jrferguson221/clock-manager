@@ -1,398 +1,16 @@
 {
  "season": 2026,
  "week": 6,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "source": "Play-by-play data: nflverse (github.com/nflverse/nflverse-data), CC-BY 4.0. Play-action and screen charting: FTN Data via nflverse (ftnfantasy.com/data), CC-BY-SA 4.0",
  "games": 14,
  "evaluated": 186,
  "agreement": {
   "plays": 186,
-  "meanAbsDiff": 0.04954892639228307,
-  "within10": 0.8709677419354839
+  "meanAbsDiff": 0.04757781243991894,
+  "within10": 0.8817204301075269
  },
- "worst": [
-  {
-   "id": "2026_06_NO_NYG-5035",
-   "gameId": "2026_06_NO_NYG",
-   "offense": "NYG",
-   "defense": "NO",
-   "home": "NYG",
-   "away": "NO",
-   "date": "2026-10-18",
-   "situation": {
-    "clock": 23,
-    "running": true,
-    "down": 3,
-    "toGo": 1,
-    "ytg": 14,
-    "margin": -7,
-    "timeouts": 0,
-    "oppTimeouts": 2
-   },
-   "snapClock": 13,
-   "description": "(:13) (No Huddle) 18-J.McCarthy spiked the ball to stop the clock.",
-   "call": "spike",
-   "wpCall": 0.09166666666666666,
-   "best": "pass-deep",
-   "wpBest": 0.16766666666666666,
-   "cost": 0.076,
-   "values": [
-    {
-     "call": "pass-deep",
-     "wp": 0.16766666666666666
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.117
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.10666666666666667
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.103
-    },
-    {
-     "call": "spike",
-     "wp": 0.09166666666666666
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.08866666666666667
-    },
-    {
-     "call": "run",
-     "wp": 0.015666666666666666
-    },
-    {
-     "call": "fg",
-     "wp": 0.004666666666666667
-    }
-   ],
-   "reason": {
-    "text": "From the 14 there's no deep field: a deep pass is a throw into the end zone, and it scores about 22% of the time.",
-    "section": "red-zone"
-   },
-   "against": null,
-   "aftermath": {
-    "story": [
-     "The Giants reached the New Orleans 14 and turned it over on downs with 0:12 left.",
-     "New Orleans got the ball at the New Orleans 14 with 0:06 left and knelt to run out the clock.",
-     "New Orleans won 34–27."
-    ],
-    "final": {
-     "home": 27,
-     "away": 34,
-     "overtime": false
-    }
-   },
-   "detail": {
-    "their": {
-     "wp": 0.0905,
-     "drive": [
-      {
-       "result": "Turnover on downs",
-       "share": 0.7515
-      },
-      {
-       "result": "Touchdown",
-       "share": 0.1915
-      },
-      {
-       "result": "Interception",
-       "share": 0.057
-      }
-     ],
-     "theyGetBall": 0.9905,
-     "clockWhenTheyGetBall": 5.586572438162544,
-     "theyScore": 0,
-     "keep": 1,
-     "theirStart": 15.65491651205937,
-     "backAgain": 0,
-     "clockBackAgain": null,
-     "theyFieldGoal": 0,
-     "theyTouchdown": 0,
-     "handedOverNow": 0,
-     "nowClock": null,
-     "nowStart": null,
-     "byFirstDowns": [
-      {
-       "share": 1,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      }
-     ]
-    },
-    "best": {
-     "wp": 0.166,
-     "drive": [
-      {
-       "result": "Turnover on downs",
-       "share": 0.4465
-      },
-      {
-       "result": "Touchdown",
-       "share": 0.349
-      },
-      {
-       "result": "Interception",
-       "share": 0.2045
-      }
-     ],
-     "theyGetBall": 0.342,
-     "clockWhenTheyGetBall": 3.93859649122807,
-     "theyScore": 0,
-     "keep": 0.657,
-     "theirStart": 20,
-     "backAgain": 0,
-     "clockBackAgain": null,
-     "theyFieldGoal": 0,
-     "theyTouchdown": 0,
-     "handedOverNow": 0.1245,
-     "nowClock": 4,
-     "nowStart": 20,
-     "byFirstDowns": [
-      {
-       "share": 1,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      }
-     ]
-    }
-   },
-   "playClockLeft": null,
-   "score": {
-    "offense": 27,
-    "defense": 34
-   },
-   "nflverseWp": 0.162140399217606,
-   "nflverseWpa": -0.0578835755586624,
-   "lowConfidence": false
-  },
-  {
-   "id": "2026_06_SEA_DEN-4359",
-   "gameId": "2026_06_SEA_DEN",
-   "offense": "SEA",
-   "defense": "DEN",
-   "home": "DEN",
-   "away": "SEA",
-   "date": "2026-10-15",
-   "situation": {
-    "clock": 21,
-    "running": true,
-    "down": 1,
-    "toGo": 10,
-    "ytg": 23,
-    "margin": -3,
-    "timeouts": 0,
-    "oppTimeouts": 3
-   },
-   "snapClock": 11,
-   "description": "(:11) (No Huddle) 14-S.Darnold spiked the ball to stop the clock.",
-   "call": "spike",
-   "wpCall": 0.43,
-   "best": "pass-deep",
-   "wpBest": 0.49133333333333334,
-   "cost": 0.06133333333333335,
-   "values": [
-    {
-     "call": "pass-deep",
-     "wp": 0.49133333333333334
-    },
-    {
-     "call": "fg",
-     "wp": 0.43
-    },
-    {
-     "call": "spike",
-     "wp": 0.43
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.30433333333333334
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.26766666666666666
-    },
-    {
-     "call": "pass-middle",
-     "wp": 0.18033333333333335
-    },
-    {
-     "call": "pass-screen",
-     "wp": 0.16066666666666668
-    },
-    {
-     "call": "run",
-     "wp": 0.044333333333333336
-    }
-   ],
-   "reason": {
-    "text": "You need a big play: 23 yards with 0:21 left is too far to go in small chunks. A deep pass completes about 28% of the time, for 20+ yards.",
-    "section": "prevent-defense"
-   },
-   "against": null,
-   "aftermath": {
-    "story": [
-     "Seattle reached the Denver 16 and kicked a 34-yard field goal with 0:07 left to tie it at 14.",
-     "Denver got the ball at the Denver 35 with 0:03 left and knelt to run out the clock.",
-     "The game went to overtime.",
-     "Seattle got the ball at the Seattle 13 with 10:00 left in overtime, got 1 first down and threw an interception with 7:17 left in overtime.",
-     "Denver got the ball at the Seattle 43 with 7:11 left in overtime, reached the Seattle 35 and kicked a 53-yard field goal with 4:57 left in overtime to lead 17–14.",
-     "Denver won 17–14 in overtime."
-    ],
-    "final": {
-     "home": 17,
-     "away": 14,
-     "overtime": true
-    }
-   },
-   "detail": {
-    "their": {
-     "wp": 0.428,
-     "drive": [
-      {
-       "result": "Field goal",
-       "share": 0.856
-      },
-      {
-       "result": "Missed field goal",
-       "share": 0.144
-      }
-     ],
-     "theyGetBall": 1,
-     "clockWhenTheyGetBall": 5,
-     "theyScore": 0,
-     "keep": 1,
-     "theirStart": 30,
-     "backAgain": 0,
-     "clockBackAgain": null,
-     "theyFieldGoal": 0,
-     "theyTouchdown": 0,
-     "handedOverNow": 0,
-     "nowClock": null,
-     "nowStart": null,
-     "byFirstDowns": [
-      {
-       "share": 1,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      }
-     ]
-    },
-    "best": {
-     "wp": 0.48875,
-     "drive": [
-      {
-       "result": "Field goal",
-       "share": 0.5265
-      },
-      {
-       "result": "Touchdown",
-       "share": 0.226
-      },
-      {
-       "result": "Time ran out",
-       "share": 0.123
-      },
-      {
-       "result": "Missed field goal",
-       "share": 0.08
-      }
-     ],
-     "theyGetBall": 0.8745,
-     "clockWhenTheyGetBall": 2.9176672384219553,
-     "theyScore": 0.0005,
-     "keep": 0.7295,
-     "theirStart": 26.42570281124498,
-     "backAgain": 0,
-     "clockBackAgain": null,
-     "theyFieldGoal": 0,
-     "theyTouchdown": 0.0005,
-     "handedOverNow": 0.0445,
-     "nowClock": 7,
-     "nowStart": 20,
-     "byFirstDowns": [
-      {
-       "share": 0.9296740994854202,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0.07032590051457976,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      },
-      {
-       "share": 0,
-       "back": 0,
-       "clock": null
-      }
-     ]
-    }
-   },
-   "playClockLeft": null,
-   "score": {
-    "offense": 11,
-    "defense": 14
-   },
-   "nflverseWp": 0.412250250577927,
-   "nflverseWpa": 0.000276386737823486,
-   "lowConfidence": false
-  }
- ],
+ "worst": [],
  "notable": [
   {
    "id": "2026_06_PIT_TB-4008",
@@ -415,49 +33,52 @@
    "snapClock": 106,
    "description": "(1:46) (Shotgun) 10-J.Daniels pass short right intended for 2-E.Egbuka INTERCEPTED by 35-J.Dean at TB 43. 35-J.Dean pushed ob at TB 3 for 40 yards (10-J.Daniels).",
    "call": "pass-sideline",
-   "wpCall": 0.5953333333333334,
-   "best": "pass-middle",
-   "wpBest": 0.5953333333333334,
+   "wpCall": 0.604,
+   "best": "pass-screen",
+   "wpBest": 0.6003333333333334,
    "cost": 0,
    "values": [
     {
-     "call": "pass-middle",
-     "wp": 0.5953333333333334
-    },
-    {
-     "call": "pass-play-action",
-     "wp": 0.592
+     "call": "pass-deep",
+     "wp": 0.604
     },
     {
      "call": "pass-screen",
-     "wp": 0.5856666666666667
+     "wp": 0.6003333333333334
     },
     {
-     "call": "pass-deep",
-     "wp": 0.5826666666666667
+     "call": "pass-middle",
+     "wp": 0.5993333333333334
+    },
+    {
+     "call": "pass-play-action",
+     "wp": 0.593
     },
     {
      "call": "pass-sideline",
-     "wp": 0.5733333333333334
+     "wp": 0.589
     },
     {
      "call": "run",
-     "wp": 0.5623333333333334
+     "wp": 0.5736666666666667
     },
     {
      "call": "spike",
-     "wp": 0.507
+     "wp": 0.5273333333333333
     },
     {
      "call": "kneel",
-     "wp": 0.49466666666666664
+     "wp": 0.5093333333333333
     }
    ],
    "reason": {
-    "text": "A pass over the middle is the best mix of yards and safety, and the clock isn't the main problem yet.",
+    "text": "A screen is the safest throw: it completes about 84% of the time and is almost never sacked or picked off, for steady yards.",
     "section": "play-model"
    },
-   "against": null,
+   "against": {
+    "text": "A deep pass completes only about 30% of the time and risks a sack or an interception; shorter throws were the better bet here.",
+    "section": "play-model"
+   },
    "aftermath": {
     "story": [
      "Tampa Bay threw an interception with 1:46 left.",
@@ -506,42 +127,42 @@
    "snapClock": 3,
    "description": "(:03) 38-C.Ryland 43 yard field goal is GOOD, Center-59-C.Kreiter, Holder-12-B.Gillikin.",
    "call": "fg",
-   "wpCall": 0.8293333333333334,
+   "wpCall": 0.8206666666666667,
    "best": "fg",
-   "wpBest": 0.8293333333333334,
+   "wpBest": 0.8206666666666667,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.8293333333333334
+     "wp": 0.8206666666666667
     },
     {
      "call": "pass-sideline",
-     "wp": 0.21466666666666667
-    },
-    {
-     "call": "pass-deep",
-     "wp": 0.195
+     "wp": 0.19666666666666666
     },
     {
      "call": "pass-play-action",
-     "wp": 0.126
+     "wp": 0.13266666666666665
+    },
+    {
+     "call": "pass-deep",
+     "wp": 0.09333333333333334
     },
     {
      "call": "pass-screen",
-     "wp": 0.050666666666666665
+     "wp": 0.05333333333333334
     },
     {
      "call": "pass-middle",
-     "wp": 0.046
+     "wp": 0.044
     },
     {
      "call": "run",
-     "wp": 0.018333333333333333
+     "wp": 0.019333333333333334
     }
    ],
    "reason": {
-    "text": "A 42-yard try is good about 84% of the time, and it wins it.",
+    "text": "A 43-yard try is good about 82% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -587,46 +208,46 @@
    "snapClock": 91,
    "description": "(1:31) (No Huddle) 14-S.Darnold pass short left intended for 15-T.Horton INTERCEPTED by 31-K.Abrams-Draine at DEN 31. 31-K.Abrams-Draine to DEN 31 for no gain (15-T.Horton).",
    "call": "pass-sideline",
-   "wpCall": 0.3923333333333333,
+   "wpCall": 0.39966666666666667,
    "best": "run",
-   "wpBest": 0.4236666666666667,
-   "cost": 0.03133333333333338,
+   "wpBest": 0.4176666666666667,
+   "cost": 0.018000000000000016,
    "values": [
     {
      "call": "run",
-     "wp": 0.4236666666666667
+     "wp": 0.4176666666666667
     },
     {
      "call": "timeout",
-     "wp": 0.41133333333333333
+     "wp": 0.4096666666666667
     },
     {
      "call": "pass-screen",
-     "wp": 0.3923333333333333
+     "wp": 0.39966666666666667
     },
     {
      "call": "pass-play-action",
-     "wp": 0.38066666666666665
+     "wp": 0.38266666666666665
     },
     {
      "call": "pass-middle",
-     "wp": 0.37833333333333335
+     "wp": 0.37566666666666665
     },
     {
      "call": "pass-sideline",
-     "wp": 0.3606666666666667
+     "wp": 0.36766666666666664
     },
     {
      "call": "pass-deep",
-     "wp": 0.3496666666666667
+     "wp": 0.3433333333333333
     },
     {
      "call": "spike",
-     "wp": 0.2693333333333333
+     "wp": 0.262
     },
     {
      "call": "fg",
-     "wp": 0.25966666666666666
+     "wp": 0.25266666666666665
     }
    ],
    "reason": {
@@ -653,108 +274,104 @@
    },
    "detail": {
     "their": {
-     "wp": 0.3975,
+     "wp": 0.399,
      "drive": [
       {
        "result": "Field goal",
-       "share": 0.675
+       "share": 0.6925
       },
       {
        "result": "Missed field goal",
-       "share": 0.187
+       "share": 0.1815
       },
       {
        "result": "Touchdown",
-       "share": 0.0995
+       "share": 0.0945
       }
      ],
-     "theyGetBall": 0.588,
-     "clockWhenTheyGetBall": 62.937594482237365,
-     "theyScore": 0.1195,
-     "keep": 0.9905,
-     "theirStart": 42.127604166666664,
-     "backAgain": 0.311,
-     "clockBackAgain": 39.90309038942479,
-     "theyFieldGoal": 0.085,
-     "theyTouchdown": 0.0345,
-     "handedOverNow": 0.0035,
-     "nowClock": 86,
-     "nowStart": 27,
+     "theyGetBall": 0.5755,
+     "clockWhenTheyGetBall": 60.72726614538085,
+     "theyScore": 0.123,
+     "keep": 0.986,
+     "theirStart": 42.60326086956522,
+     "backAgain": 0.3245,
+     "clockBackAgain": 37.76185584660159,
+     "theyFieldGoal": 0.0925,
+     "theyTouchdown": 0.0305,
+     "handedOverNow": 0.008,
+     "nowClock": 86.125,
+     "nowStart": 30,
      "byFirstDowns": [
       {
-       "share": 0.42431972789115646,
-       "back": 0.6072144288577155,
-       "clock": 49.57664099743308
+       "share": 0.4152910512597741,
+       "back": 0.6673640167364017,
+       "clock": 48.58498780912574
       },
       {
-       "share": 0.17091836734693877,
-       "back": 0.1791044776119403,
-       "clock": 36.7037037037037
+       "share": 0.19374456993918332,
+       "back": 0.2242152466367713,
+       "clock": 33.96333333333334
       },
       {
-       "share": 0.16326530612244897,
-       "back": 0.578125,
-       "clock": 36.71321321321321
+       "share": 0.16159860990443092,
+       "back": 0.6666666666666666,
+       "clock": 30.989247311827963
       },
       {
-       "share": 0.24149659863945577,
-       "back": 0.6056338028169014,
-       "clock": 25.59011627906976
+       "share": 0.22936576889661164,
+       "back": 0.5909090909090909,
+       "clock": 22.230769230769226
       }
      ]
     },
     "best": {
-     "wp": 0.42,
+     "wp": 0.411,
      "drive": [
       {
        "result": "Field goal",
-       "share": 0.6705
+       "share": 0.677
       },
       {
        "result": "Missed field goal",
-       "share": 0.158
+       "share": 0.1725
       },
       {
        "result": "Touchdown",
-       "share": 0.104
-      },
-      {
-       "result": "Fumble",
-       "share": 0.037
+       "share": 0.1035
       }
      ],
-     "theyGetBall": 0.543,
-     "clockWhenTheyGetBall": 52.878657663188065,
-     "theyScore": 0.069,
-     "keep": 0.986,
-     "theirStart": 39.67914438502674,
-     "backAgain": 0.234,
-     "clockBackAgain": 33.380223171889845,
-     "theyFieldGoal": 0.0485,
-     "theyTouchdown": 0.0205,
-     "handedOverNow": 0.012,
+     "theyGetBall": 0.523,
+     "clockWhenTheyGetBall": 51.438177182919055,
+     "theyScore": 0.0965,
+     "keep": 0.994,
+     "theirStart": 41.896358543417364,
+     "backAgain": 0.2545,
+     "clockBackAgain": 31.346430910281597,
+     "theyFieldGoal": 0.0705,
+     "theyTouchdown": 0.026,
+     "handedOverNow": 0.004,
      "nowClock": 86,
      "nowStart": 38,
      "byFirstDowns": [
       {
-       "share": 0.5451197053406999,
-       "back": 0.4577702702702703,
-       "clock": 39.425379253792535
+       "share": 0.4694072657743786,
+       "back": 0.5498981670061099,
+       "clock": 39.23827160493828
       },
       {
-       "share": 0.1685082872928177,
-       "back": 0.17486338797814208,
-       "clock": 25.375
+       "share": 0.17877629063097514,
+       "back": 0.16042780748663102,
+       "clock": 27.4
       },
       {
-       "share": 0.13720073664825047,
-       "back": 0.4966442953020134,
-       "clock": 29.42192192192192
+       "share": 0.14531548757170173,
+       "back": 0.5657894736842105,
+       "clock": 25.699612403100772
       },
       {
-       "share": 0.14917127071823205,
-       "back": 0.5617283950617284,
-       "clock": 21.411477411477414
+       "share": 0.20650095602294455,
+       "back": 0.5694444444444444,
+       "clock": 18.933604336043363
       }
      ]
     }
@@ -789,22 +406,22 @@
    "snapClock": 3,
    "description": "(:03) 15-K.Fairbairn 49 yard field goal is GOOD, Center-40-A.Brinkman, Holder-38-K.Kroeger.",
    "call": "fg",
-   "wpCall": 0.8786666666666667,
+   "wpCall": 0.8756666666666667,
    "best": "fg",
-   "wpBest": 0.8786666666666667,
+   "wpBest": 0.8756666666666667,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.8786666666666667
+     "wp": 0.8756666666666667
     },
     {
      "call": "pass-deep",
-     "wp": 0.5776666666666667
+     "wp": 0.5393333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.5126666666666667
+     "wp": 0.5123333333333333
     },
     {
      "call": "pass-screen",
@@ -828,7 +445,7 @@
     }
    ],
    "reason": {
-    "text": "A 49-yard try is good about 75% of the time, and it wins it.",
+    "text": "A 50-yard try is good about 74% of the time, and it wins it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -874,42 +491,42 @@
    "snapClock": 13,
    "description": "(:13) 4-C.McLaughlin 53 yard field goal is GOOD, Center-86-E.Deckers, Holder-9-R.Dixon.",
    "call": "fg",
-   "wpCall": 0.37066666666666664,
+   "wpCall": 0.36433333333333334,
    "best": "fg",
-   "wpBest": 0.37066666666666664,
+   "wpBest": 0.36433333333333334,
    "cost": 0,
    "values": [
     {
      "call": "fg",
-     "wp": 0.37066666666666664
-    },
-    {
-     "call": "pass-sideline",
-     "wp": 0.10633333333333334
+     "wp": 0.36433333333333334
     },
     {
      "call": "pass-deep",
-     "wp": 0.10466666666666667
+     "wp": 0.10233333333333333
+    },
+    {
+     "call": "pass-sideline",
+     "wp": 0.09733333333333333
     },
     {
      "call": "pass-play-action",
-     "wp": 0.06333333333333334
+     "wp": 0.058666666666666666
     },
     {
      "call": "pass-screen",
-     "wp": 0.028666666666666667
+     "wp": 0.02666666666666667
     },
     {
      "call": "run",
-     "wp": 0.017666666666666667
+     "wp": 0.016666666666666666
     },
     {
      "call": "pass-middle",
-     "wp": 0.014
+     "wp": 0.012
     }
    ],
    "reason": {
-    "text": "A 52-yard try is good about 73% of the time, and it ties it.",
+    "text": "A 53-yard try is good about 72% of the time, and it ties it.",
     "section": "field-goal-endgame"
    },
    "against": null,
@@ -936,7 +553,7 @@
    },
    "nflverseWp": 0.220210701227188,
    "nflverseWpa": 0.260641902685165,
-   "lowConfidence": true
+   "lowConfidence": false
   }
  ]
 }

@@ -1,6 +1,6 @@
 {
  "season": 2026,
- "generatedAt": "2026-11-10T20:27:01.061Z",
+ "generatedAt": "2026-11-10T01:10:51.447Z",
  "weeks": [
   {
    "week": 1,
@@ -12,7 +12,7 @@
   },
   {
    "week": 3,
-   "worst": 0
+   "worst": 2
   },
   {
    "week": 4,
@@ -20,11 +20,11 @@
   },
   {
    "week": 5,
-   "worst": 2
+   "worst": 3
   },
   {
    "week": 6,
-   "worst": 2
+   "worst": 0
   },
   {
    "week": 7,

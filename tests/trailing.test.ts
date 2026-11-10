@@ -14,7 +14,7 @@ describe("playsNeeded", () => {
     expect(playsNeeded({ ...base, need: "fg", yardsToGoal: 30 })).toBe(0);
   });
   it("converts a spot to a field-goal distance", () => {
-    expect(fgDistance(35)).toBe(52);
+    expect(fgDistance(35)).toBe(53);
   });
 });
 
