@@ -5,23 +5,22 @@ import type { LeadingSearch } from "@situational-football/schemas";
 import { simulateRunOut, runOutThreshold, PLAY_TYPE_IDS, PLAY_TYPES, type RunOutResult } from "./engine";
 import type { GameState } from "./sim";
 import { formatClock } from "./time";
-import { Timeline, clampTo, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
+import { Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
 import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
 import Trainer from "./Trainer";
-import TrainerToggle from "./TrainerToggle";
+import { SCORE_OPTIONS, useScoreSwitch } from "./trainerScore";
 
 const route = getRouteApi("/");
 
 const PLAY_TYPE_OPTIONS = PLAY_TYPE_IDS.map((k) => ({ value: k, label: `${PLAY_TYPES[k].label} (${PLAY_TYPES[k].duration}s)` }));
-/** The score, as the scorebug shows it: up 1 to up 16. */
-const LEAD_OPTIONS = Array.from({ length: 16 }, (_, i) => ({ value: i + 1, label: `Up ${i + 1}` }));
 
 export default function RunOutPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
   const set = (patch: Partial<LeadingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
+  const switchScore = useScoreSwitch(true);
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const gameClock = clock.seconds;
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
@@ -41,7 +40,7 @@ export default function RunOutPanel() {
   const scorebug = (
     <Scorebug
       situation={bugSituation(s)} set={set} clock={clock}
-      margin={s.lead} marginOptions={LEAD_OPTIONS} onMargin={(lead) => set({ lead })}
+      margin={s.lead} marginOptions={SCORE_OPTIONS} onMargin={(m) => switchScore(m, s, (lead) => set({ lead }))}
       settings={
         <span className="sb-setting">
           <span className="sb-setting-label">Run out with</span>
@@ -55,14 +54,13 @@ export default function RunOutPanel() {
 
   return (
     <ModeLayout
-      toggle={<TrainerToggle current="leading" situation={s} points={s.lead} />}
       intro="You're ahead and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 2:05.</Alert>
       ) : (
         <Stack gap="lg">
-          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => set({ ...sharedFromGame(g), lead: clampTo("lead", g.margin) })} />
+          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (lead) => set({ ...sharedFromGame(g), lead }))} />
           <Group justify="space-between" align="baseline">
             <Title order={2}>Can you run it out?</Title>
             <GuideLink section="running-out-the-clock">How this works</GuideLink>

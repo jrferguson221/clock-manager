@@ -4,17 +4,15 @@ import { getRouteApi } from "@tanstack/react-router";
 import { LIMITS, type LimitedField, type TrailingSearch } from "@situational-football/schemas";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
-import { clampTo, Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
+import { Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
 import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
 import Trainer from "./Trainer";
-import TrainerToggle from "./TrainerToggle";
+import { SCORE_OPTIONS, useScoreSwitch } from "./trainerScore";
 
 const route = getRouteApi("/trailing");
 
-/** The score, as the scorebug shows it, from tied to down 16. Values are your margin: 0 to -16. */
-const TRAIL_OPTIONS = Array.from({ length: 17 }, (_, i) => ({ value: -i, label: i === 0 ? "Tied" : `Down ${i}` }));
 const rangeOptions = (field: LimitedField) => {
   const { min, max } = LIMITS[field];
   return Array.from({ length: max - min + 1 }, (_, i) => ({ value: min + i, label: String(min + i) }));
@@ -26,6 +24,7 @@ export default function TrailingPanel() {
   const s = route.useSearch();
   const navigate = route.useNavigate();
   const set = (patch: Partial<TrailingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
+  const switchScore = useScoreSwitch(false);
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const gameClock = clock.seconds;
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
@@ -56,7 +55,7 @@ export default function TrailingPanel() {
   const scorebug = (
     <Scorebug
       situation={bugSituation(s)} set={set} clock={clock}
-      margin={-s.trail} marginOptions={TRAIL_OPTIONS} onMargin={(m) => set({ trail: -m })}
+      margin={-s.trail} marginOptions={SCORE_OPTIONS} onMargin={(m) => switchScore(m, s, (m) => set({ trail: -m }))}
       settings={
         <>
           <span className="sb-setting">
@@ -74,14 +73,13 @@ export default function TrailingPanel() {
 
   return (
     <ModeLayout
-      toggle={<TrainerToggle current="trailing" situation={s} points={s.trail} />}
       intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 1:45.</Alert>
       ) : (
         <Stack gap="lg">
-          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => set({ ...sharedFromGame(g), trail: clampTo("trail", -g.margin) })} cfg={cfg} />
+          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (m) => set({ ...sharedFromGame(g), trail: -m }))} cfg={cfg} />
 
           <Group justify="space-between" align="baseline">
             <Title order={2}>Rules of thumb</Title>

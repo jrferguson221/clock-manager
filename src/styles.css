@@ -712,20 +712,6 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 /* Kick or go for 2: the better try's row is tinted green. */
 .try-table tr.is-best { background: light-dark(var(--mantine-color-green-0), rgba(39, 156, 87, 0.14)); }
 
-/* ---------- The trainer's Leading / Trailing switch ---------- */
-
-.trainer-toggle {
-  margin-bottom: var(--mantine-spacing-md);
-  padding: rem(4px);
-  font-family: var(--mantine-font-family-headings);
-  background: var(--mantine-color-body);
-  box-shadow: inset 0 0 0 1px light-dark(#8f8c82, var(--mantine-color-dark-3));
-}
-.trainer-toggle .mantine-SegmentedControl-label { padding-block: rem(10px); font-size: rem(18px); letter-spacing: 0.05em; text-transform: uppercase; }
-.tt-side { font-weight: 700; }
-.tt-aim { font-weight: 600; opacity: 0.85; }
-@media (max-width: $mantine-breakpoint-xs) { .tt-aim { display: none; } }
-
 /* ---------- The trainer's call table: collapsed on a phone ---------- */
 
 .calls-toggle { display: none; }
