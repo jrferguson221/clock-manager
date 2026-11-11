@@ -70,10 +70,12 @@ it("has a longer explanation behind Read more, collapsed at first", async () => 
 });
 
 it("names other options that also beat their call by a wide margin", async () => {
-  // Week 8's top call: KC ran when a pass was best, and a timeout would also have beaten the run.
+  // Week 8: KC ran when a pass was best, and a timeout was within noise of the pass. Minnesota punted when
+  // going for it was best, and a run would also have clearly beaten the punt.
   const { html } = await renderAt("/decisions?week=8");
+  expect(html).toMatch(/About as good: Timeout \(\d+%\)\. The difference is within the model/);
   expect(html).toContain("Also better than their call:");
-  expect(html).toMatch(/<strong>Timeout<\/strong> \(\d+%, \d+ points better\): The clock was running with 0:48 left. A timeout saves the 13 seconds/);
+  expect(html).toMatch(/<strong>Run<\/strong> \(\d+%, \d+ points? better\): A run gains steady yards/);
 });
 
 it("has what happened after the call behind its own Read more, collapsed at first", async () => {
