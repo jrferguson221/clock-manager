@@ -935,6 +935,10 @@ nav[aria-label="Guide sections"] .mantine-List-item {
   &:focus-visible { outline: 2px solid var(--mantine-color-blue-7); outline-offset: 2px; }
   .play-art { border: 1px solid light-dark(rgba(26, 32, 48, 0.1), rgba(230, 234, 237, 0.1)); }
 }
+.your-call-tag {
+  font-family: var(--mantine-font-family-headings); letter-spacing: 0.06em; text-transform: uppercase;
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+}
 .concept-name {
   font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: rem(17px);
   letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.1;
