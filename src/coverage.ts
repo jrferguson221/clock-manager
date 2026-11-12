@@ -153,7 +153,7 @@ export type Assignment =
   | { kind: "man"; receiver: ReceiverId }
   | { kind: "rush" };
 
-export const COVERAGE_IDS = ["cover-0", "cover-1", "tampa-2", "cover-3", "cover-4", "cover-6"] as const;
+export const COVERAGE_IDS = ["cover-0", "cover-1", "cover-2", "2-man", "tampa-2", "cover-3", "cover-4", "palms", "cover-6"] as const;
 export type CoverageId = (typeof COVERAGE_IDS)[number];
 
 export type Shell = "zero" | "single-high" | "two-high";
@@ -188,7 +188,7 @@ export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
       "No one is underneath to help, so quick throws (slants, crossers, hitches) beat the rush before it gets home.",
       "Every defender is in man coverage, so crossing routes and rubs (one receiver running his man into another) shake them loose.",
     ],
-    look: { LC: [-21, 1], RC: [21, 1], N: [13, 1.5], FS: [-12, 6], SS: [3, 6], W: [-3, 2], M: [2.5, 2.5], ...LINEMEN },
+    look: { LC: [-21, 1], RC: [21, 1], N: [13, 1.5], FS: [-12, 6], SS: [3, 6], W: [-3.4, 3.6], M: [3.4, 3.6], ...LINEMEN },
     assignments: { LC: man("X"), RC: man("Z"), N: man("Y"), FS: man("H"), SS: man("RB"), W: { kind: "rush" }, M: { kind: "rush" }, ...RUSH },
   },
   "cover-1": {
@@ -204,6 +204,37 @@ export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
     assignments: {
       LC: man("X"), RC: man("Z"), N: man("Y"), SS: man("H"), M: man("RB"),
       FS: zone("Deep middle", [0, 20], [16, 10]), W: zone("Robber", [0, 10], [10, 5]), ...RUSH,
+    },
+  },
+  "cover-2": {
+    name: "Cover 2", shell: "two-high",
+    summary: "Two safeties split the deep field in halves, and five defenders cover underneath: the corners in the flats, three linebackers across the middle.",
+    tell: "Two safeties deep and wide, and corners about 5 yards off with outside leverage: the same look as Tampa 2. The difference comes after the snap, when the middle linebacker stays shallow.",
+    weaknesses: [
+      "The deep middle, between the two safeties: seams and posts split them.",
+      "The hole along the sideline at 15 to 20 yards, behind the squatting corner and in front of the half-field safety.",
+      "Four vertical routes against two deep defenders: someone is open deep.",
+    ],
+    look: { LC: [-20, 5], RC: [20, 5], N: [12, 4], FS: [-12, 13], SS: [12, 13], W: [-8, 5], M: [0, 5], ...LINEMEN },
+    assignments: {
+      LC: zone("Flat", [-20, 4], [11, 7]), RC: zone("Flat", [20, 4], [11, 7]),
+      FS: zone("Deep half", [-13, 22], [26, 10]), SS: zone("Deep half", [13, 22], [26, 10]),
+      W: zone("Curl", [-11, 10], [9, 7]), M: zone("Middle hook", [0, 9], [9, 7]), N: zone("Curl", [11, 10], [9, 7]), ...RUSH,
+    },
+  },
+  "2-man": {
+    name: "Cover 2 Man", shell: "two-high",
+    summary: "Two safeties split the deep field in halves, and the five defenders under them play man-to-man, trailing their receivers from underneath because they have help over the top.",
+    tell: "Two safeties deep and wide, with the corners and nickel pressed close and set to the inside of their receivers.",
+    weaknesses: [
+      "No zone defenders underneath: crossing routes run away from the trailing defenders, and rubs pick them off.",
+      "The deep middle, between the two safeties: a seam or post splits them.",
+      "Every underneath defender has his back to the quarterback, so a scramble often gains big yards.",
+    ],
+    look: { LC: [-21, 1], RC: [21, 1], N: [12.5, 1.5], FS: [-12, 13], SS: [12, 13], W: [-11, 3], M: [2, 5], ...LINEMEN },
+    assignments: {
+      LC: man("X"), RC: man("Z"), N: man("Y"), W: man("H"), M: man("RB"),
+      FS: zone("Deep half", [-13, 22], [26, 10]), SS: zone("Deep half", [13, 22], [26, 10]), ...RUSH,
     },
   },
   "tampa-2": {
@@ -239,7 +270,7 @@ export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
     },
   },
   "cover-4": {
-    name: "Cover 4", shell: "two-high",
+    name: "Cover 4 Quarters", shell: "two-high",
     summary: "Quarters: four deep defenders each take a quarter of the deep field, matching any vertical route. Only three cover underneath.",
     tell: "Two safeties at 10 to 12 yards, closer to the middle than in Cover 2, and corners 7 to 8 yards off with inside leverage.",
     weaknesses: [
@@ -252,6 +283,22 @@ export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
       LC: zone("Deep quarter", [-20, 20], [13, 10]), FS: zone("Deep quarter", [-7, 20], [13, 10]),
       SS: zone("Deep quarter", [7, 20], [13, 10]), RC: zone("Deep quarter", [20, 20], [13, 10]),
       W: zone("Curl-flat", [-14, 6], [12, 8]), M: zone("Hook", [0, 7], [12, 7]), N: zone("Curl-flat", [14, 6], [12, 8]), ...RUSH,
+    },
+  },
+  palms: {
+    name: "Cover 4 Palms", shell: "two-high",
+    summary: "A quarters variation, also called 2-Read: each corner reads the slot. If the slot runs to the flat, the corner jumps it and the safety takes the outside receiver deep; otherwise it plays like quarters. Drawn here as the slots release to the flats.",
+    tell: "The same look as Cover 4: two safeties at 10 to 12 yards and corners 7 to 8 yards off. Only the corners' first step after the snap tells them apart.",
+    weaknesses: [
+      "When a corner jumps the flat, the outside receiver's short and middle routes (curls, hitches) are open under the safety, who is backing up to stay deep.",
+      "Only three defenders underneath: crossers have room.",
+      "Like quarters, it's built to stop four verticals and outs to the flat. Don't throw there.",
+    ],
+    look: { LC: [-20, 7], RC: [20, 7], N: [12, 4], FS: [-9, 11], SS: [9, 11], W: [-8, 5], M: [0, 5], ...LINEMEN },
+    assignments: {
+      LC: zone("Flat (reads slot)", [-19, 5], [12, 7]), RC: zone("Flat (reads slot)", [19, 5], [12, 7]),
+      FS: zone("Deep outside", [-15, 21], [21, 10]), SS: zone("Deep outside", [15, 21], [21, 10]),
+      W: zone("Hook", [-7, 8], [10, 7]), M: zone("Middle hook", [0, 9], [9, 6]), N: zone("Hook", [7, 8], [10, 7]), ...RUSH,
     },
   },
   "cover-6": {
@@ -316,6 +363,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(3, "Y", "the seam away from the free safety", 20, false, "Four verticals against three deep defenders: the free safety can only take one seam, so throw the other."),
     "cover-4": m(0, "RB", "the check-down", 3, false, "Quarters is built for this: four deep defenders match four verticals, man for man. You're left throwing the check-down."),
     "cover-6": m(1, "Y", "the seam on the Cover 2 side", 18, false, "The quarters side matches the verticals; only the Cover 2 side has a seam between the half-field safety and the squatting corner."),
+    "cover-2": m(3, "H", "the seam", 20, false, "Four verticals against two deep safeties: the seams split them, and one is always open."),
+    "2-man": m(1, "H", "the seam between the safeties", 20, false, "The trailing defenders stay on the receivers' hips with safeties over the top. Only a seam splitting the two safeties has a chance."),
+    palms: m(0, "RB", "the check-down", 3, false, "Palms plays like quarters against verticals: four deep defenders match four routes, so you're left throwing the check-down."),
   },
   smash: {
     "cover-0": m(1, "X", "the hitch", 6, true, "The hitch is quick enough against the blitz, but the corner route takes too long with six rushing."),
@@ -324,6 +374,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "X", "the hitch", 6, true, "The corner bails to his deep third, which takes away the corner route but leaves the hitch open in front of him."),
     "cover-4": m(2, "X", "the hitch", 6, true, "The safety carries the corner route, but the corner is 7 yards off, so the hitch is there underneath."),
     "cover-6": m(3, "Y", "the corner route to the Cover 2 side", 18, true, "On the Cover 2 side the corner squats on the hitch, so the corner route is open behind him, the same as against Tampa 2."),
+    "cover-2": m(3, "H", "the corner route", 18, true, "The textbook answer: the corner squats on the hitch, so the corner route settles behind him and in front of the half-field safety."),
+    "2-man": m(0, "X", "the hitch", 6, true, "The trailing defenders undercut the hitch, and the corner route runs into a defender on his hip with a safety over the top."),
+    palms: m(1, "X", "the hitch", 6, true, "The slot's corner route takes the safety, and the corner stays on the outside receiver, so the hitch is tightly covered."),
   },
   flood: {
     "cover-0": m(0, "H", "the flat", 3, true, "Three routes at three depths take time, and six rushers won't give it. Only the flat is quick enough."),
@@ -332,6 +385,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(3, "Y", "the out route", 12, true, "Three receivers against two defenders on that side: the curl-flat defender can't take both the out and the flat."),
     "cover-4": m(2, "H", "the flat", 3, true, "The corner and safety carry the go and the out, so the flat route comes open against only one underneath defender."),
     "cover-6": m(2, "Y", "the out route", 12, true, "Flooded to the Cover 2 side, the out lands between the squatting corner and the half-field safety."),
+    "cover-2": m(2, "Y", "the out route", 12, true, "The corner sits in the flat and the safety stays deep, so the out at 12 lands in the hole between them."),
+    "2-man": m(1, "H", "the flat", 3, true, "Against man, three routes to one side don't outnumber anyone. Each must beat its man, and the out runs into the safety's half."),
+    palms: m(1, "Y", "the out route", 12, true, "This is what Palms is built for: the corner reads the out-breaking routes and drives on them."),
   },
   mesh: {
     "cover-0": m(3, "H", "a shallow crosser", 5, false, "The crossers rub their defenders off each other and there's no one underneath to help. The ball comes out fast."),
@@ -340,6 +396,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "H", "a shallow crosser", 5, false, "The crossers settle in the gaps between the four underneath defenders."),
     "cover-4": m(3, "H", "a shallow crosser", 5, false, "Quarters keeps four defenders deep and only three underneath, so the crossers have room to run."),
     "cover-6": m(2, "H", "a shallow crosser", 5, false, "Only three underneath defenders, but the Cover 2 side's squatting corner takes away the end of the crossers' run."),
+    "cover-2": m(1, "RB", "the back in the flat", 3, true, "Five defenders underneath crowd the crossers, and the corners sit in the flats."),
+    "2-man": m(3, "H", "a shallow crosser", 5, false, "The best answer: the crossers run their trailing defenders into each other, with no zone defenders underneath to help."),
+    palms: m(2, "H", "a shallow crosser", 5, false, "Only three defenders underneath, so the crossers have room."),
   },
   drive: {
     "cover-0": m(2, "H", "the shallow cross", 3, false, "The shallow cross is quick and runs away from its man, but the dig is too slow against six rushers."),
@@ -348,6 +407,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "Y", "the dig", 12, false, "A high-low on the hook defender: if he comes up for the shallow cross, the dig opens behind him."),
     "cover-4": m(1, "H", "the shallow cross", 3, false, "Quarters safeties drive down on in-breaking routes like the dig, so the high-low is two-against-one the wrong way."),
     "cover-6": m(1, "H", "the shallow cross", 3, false, "The quarters-side safety robs the dig and the hook defender sits on the cross."),
+    "cover-2": m(2, "Y", "the dig", 12, false, "The middle linebacker stays shallow in Cover 2, so the dig lands behind him, in front of the safeties."),
+    "2-man": m(3, "H", "the shallow cross", 4, false, "The shallow cross runs away from its trailing defender, and no one is underneath to pick it up."),
+    palms: m(1, "H", "the shallow cross", 3, false, "The safeties drive down on the dig, leaving only the shallow cross."),
   },
   "y-cross": {
     "cover-0": m(0, "RB", "the check-down", 3, false, "A 16-yard crosser takes far too long against an all-out blitz."),
@@ -356,6 +418,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(3, "Y", "the crosser", 16, true, "The post holds the free safety, and the crosser runs behind the hook defenders into the space in front of the far corner."),
     "cover-4": m(3, "Y", "the crosser", 16, true, "Quarters defenders key the receivers on their own side, so a crosser coming from the other side has no one waiting for him."),
     "cover-6": m(2, "Y", "the crosser", 16, true, "The crosser runs into the quarters side behind the linebackers, though the hook defender can wall it off."),
+    "cover-2": m(2, "Y", "the crosser", 16, true, "The crosser runs behind the linebackers and in front of the safeties, though the window is tight."),
+    "2-man": m(2, "Y", "the crosser", 16, true, "The crosser runs away from his trailing defender, but at 16 yards he runs into a half-field safety's area."),
+    palms: m(3, "Y", "the crosser", 16, true, "The deep defenders read the receivers on their own side, so a crosser from the other side has no one waiting."),
   },
   dagger: {
     "cover-0": m(1, "Y", "the seam", 20, false, "The seam can beat its man for a big play with no safety deep, but the dig behind it is too slow against six rushers."),
@@ -364,6 +429,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "Z", "the dig", 15, false, "The seam holds the free safety and pulls the hook defender, so the dig opens behind him in the middle."),
     "cover-4": m(1, "Z", "the dig", 15, false, "The quarters safety reads the seam, and the corner sits on the dig. Both routes are covered."),
     "cover-6": m(2, "Z", "the dig", 15, false, "To the Cover 2 side, the seam splits the safety and the dig opens under it; to the quarters side, it's covered."),
+    "cover-2": m(3, "Y", "the seam", 20, false, "The seam splits the two safeties up the middle; if one jumps it, the dig opens behind the linebackers."),
+    "2-man": m(2, "Y", "the seam", 20, false, "The seam splits the two safeties, the one place 2-Man has no help."),
+    palms: m(1, "Z", "the dig", 15, false, "The safety reads the seam, and the corner sits on the dig. Both routes are covered."),
   },
   stick: {
     "cover-0": m(2, "Y", "the stick route", 5, false, "Quick, and the stick route can break either way against its man."),
@@ -372,6 +440,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "Y", "the stick route", 5, false, "The curl-flat defender has to choose between the stick route and the flat, and either throw is open."),
     "cover-4": m(2, "Y", "the stick route", 5, false, "Only three underneath defenders, so the stick route settles in space."),
     "cover-6": m(2, "Y", "the stick route", 5, false, "The stick route sits in the gap between the underneath defenders."),
+    "cover-2": m(2, "H", "the flat", 2, true, "Five defenders underneath crowd the stick route, but the flat stretches the squatting corner."),
+    "2-man": m(1, "Y", "the stick route", 5, false, "The trailing defender sits right under the stick route."),
+    palms: m(2, "Y", "the stick route", 5, false, "When the corner jumps the flat, the stick route sits open in front of the backing safety."),
   },
   "slant-flat": {
     "cover-0": m(3, "X", "the slant", 6, false, "The fastest throw there is, and the slant beats press coverage inside with no one to help."),
@@ -380,6 +451,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "X", "the slant", 6, false, "The corners bail deep, so the slant has room, and the flat stretches the curl-flat defender."),
     "cover-4": m(2, "X", "the slant", 6, false, "The corners play off with inside leverage, but the slant gets inside the curl-flat defender."),
     "cover-6": m(2, "X", "the slant to the quarters side", 6, false, "On the quarters side the corner is off, so the slant has room."),
+    "cover-2": m(1, "H", "the flat", 3, true, "The corners sit in the flats and the linebackers wall off the slants."),
+    "2-man": m(1, "X", "the slant", 6, false, "The trailing defender plays inside, under the receiver, exactly where the slant goes."),
+    palms: m(2, "X", "the slant", 6, false, "When the corner jumps the flat route, the slant behind him is open under the safety."),
   },
   "curl-flat": {
     "cover-0": m(1, "H", "the flat", 3, true, "A 12-yard curl takes too long against six rushers. Only the flat comes out in time."),
@@ -388,6 +462,9 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-3": m(2, "X", "the curl", 11, false, "A high-low on the curl-flat defender: if he widens with the flat, throw the curl behind him."),
     "cover-4": m(2, "H", "the flat", 3, true, "The corners and safeties sit on the curls, so the flat is open under them."),
     "cover-6": m(2, "Z", "the curl to the Cover 2 side", 11, false, "On the Cover 2 side the corner sits in the flat, so the curl opens behind him."),
+    "cover-2": m(2, "X", "the curl", 11, false, "The corner sits in the flat, so the curl opens behind him."),
+    "2-man": m(1, "X", "the curl", 11, false, "Against man, the curl must beat its trailing defender, who sits underneath it."),
+    palms: m(3, "X", "the curl", 11, false, "Palms' weak spot: the corner jumps the flat, and the safety is backing up to stay deep, so the curl opens between them."),
   },
 };
 
@@ -423,9 +500,13 @@ export interface Rep {
 
 /** How often each coverage is called, roughly in line with NFL usage, and how that shifts with the situation. */
 function coverageWeights(s: RepSituation): Record<CoverageId, number> {
-  const w: Record<CoverageId, number> = { "cover-0": 4, "cover-1": 22, "tampa-2": 10, "cover-3": 30, "cover-4": 18, "cover-6": 16 };
-  if (s.ytg <= 20) { w["cover-0"] += 6; w["cover-1"] += 10; w["cover-4"] -= 6; }
-  if (s.down >= 3 && s.toGo >= 8) { w["cover-4"] += 8; w["cover-6"] += 6; w["tampa-2"] += 6; w["cover-0"] -= 2; }
+  const w: Record<CoverageId, number> = {
+    "cover-0": 4, "cover-1": 20, "cover-2": 8, "2-man": 5, "tampa-2": 6, "cover-3": 27, "cover-4": 13, palms: 6, "cover-6": 12,
+  };
+  if (s.ytg <= 20) { w["cover-0"] += 6; w["cover-1"] += 10; w["2-man"] += 3; w["cover-4"] -= 5; w.palms -= 3; }
+  if (s.down >= 3 && s.toGo >= 8) {
+    w["cover-4"] += 6; w["cover-6"] += 5; w["tampa-2"] += 4; w["2-man"] += 5; w.palms += 4; w["cover-0"] -= 2;
+  }
   if (s.down >= 3 && s.toGo <= 3) { w["cover-0"] += 6; w["cover-1"] += 8; }
   return w;
 }

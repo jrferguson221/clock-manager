@@ -931,6 +931,7 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 }
 .pa-drop, .pa-rush { fill: none; stroke: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); stroke-width: 0.2; stroke-dasharray: 0.5 0.35; opacity: 0.8; }
 .pa-man { fill: none; stroke: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); stroke-width: 0.2; stroke-dasharray: 0.15 0.35; stroke-linecap: round; opacity: 0.9; }
+.pa-man-ring { fill: none; stroke: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); stroke-width: 0.18; stroke-dasharray: 0.45 0.3; }
 .pa-arrowhead-def { fill: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); }
 
 /* A concept is a play card: its art on top, its name in caps under it. */

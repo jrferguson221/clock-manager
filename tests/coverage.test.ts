@@ -23,6 +23,14 @@ describe("the grades", () => {
     expect(MATCHUPS.mesh["cover-1"].grade).toBe(3);
     expect(MATCHUPS.flood["cover-3"].grade).toBe(3);
     expect(MATCHUPS["y-cross"]["cover-0"].grade).toBe(0);
+    // Cover 2: four verticals and Dagger split the safeties. 2-Man: crossers beat the trailing defenders.
+    expect(MATCHUPS["four-verts"]["cover-2"].grade).toBe(3);
+    expect(MATCHUPS.dagger["cover-2"].grade).toBe(3);
+    expect(MATCHUPS.mesh["2-man"].grade).toBe(3);
+    expect(MATCHUPS.smash["2-man"].grade).toBe(0);
+    // Palms jumps the flat, leaving the curl, and matches verticals like quarters.
+    expect(MATCHUPS["curl-flat"].palms.grade).toBe(3);
+    expect(MATCHUPS["four-verts"].palms.grade).toBe(0);
   });
 
   it("aren't changed by a neutral situation", () => {

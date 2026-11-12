@@ -121,7 +121,7 @@ function RepView({ rep, easy, onGraded, onNext, tally }: {
               label={`${cov.name}, drawn against two receivers on each side: each defender's zone, man assignment or rush in red.`}
             />
             <Text size="sm" c="dimmed" mt="xs">
-              Red ellipses are zones; dotted lines are man-to-man assignments; arrows toward the quarterback are rushers.
+              Red ellipses are zones; a red ring around a receiver means he's covered man-to-man; arrows toward the quarterback are rushers.
               C: cornerback, S: safety, N: nickel back, W and M: linebackers, E and T: linemen.
             </Text>
           </>

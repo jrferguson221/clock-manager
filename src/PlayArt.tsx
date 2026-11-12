@@ -39,6 +39,16 @@ export default function PlayArt({ concept, formation, look, coverage, read, dept
   const receivers = FORMATIONS[f];
   const routes = concept ? CONCEPTS[concept].routes : {};
   const cov = coverage ? COVERAGES[coverage] : null;
+  /**
+   * A zone's label goes at the top of its ellipse, or else the bottom or the middle, wherever no defender's
+   * letter sits on it (sizes are in yards: a label is about 0.76 wide per character).
+   */
+  const labelY = (center: Point, size: Point, text: string) => {
+    const half = text.length * 0.38;
+    const spots = [center[1] + size[1] / 2 - 1.6, center[1] - size[1] / 2 + 1.1, center[1] - 0.5];
+    const clear = (y: number) => !look || !Object.values(look).some(([dx, dy]) => Math.abs(dx - center[0]) < half + 0.5 && Math.abs(dy - y) < 1.8);
+    return top - (spots.find(clear) ?? spots[0]!);
+  };
   const yardLines = Array.from({ length: Math.floor(depth / 5) + 1 }, (_, i) => i * 5).filter((y) => y > 0 && y < depth);
 
   return (
@@ -76,7 +86,7 @@ export default function PlayArt({ concept, formation, look, coverage, read, dept
         return (
           <g key={`z${d}`} className={`pa-zone ${a.label.startsWith("Deep") ? "deep" : "under"}`}>
             <ellipse cx={c.x} cy={c.y} rx={a.size[0] / 2} ry={a.size[1] / 2} />
-            <text x={c.x} y={c.y - a.size[1] / 2 + 1.6} className="pa-zone-label">{a.label}</text>
+            <text x={c.x} y={labelY(a.at, a.size, a.label)} className="pa-zone-label">{a.label}</text>
           </g>
         );
       })}
@@ -86,7 +96,14 @@ export default function PlayArt({ concept, formation, look, coverage, read, dept
         if (a.kind === "zone") return <polyline key={`p${d}`} points={pts([start, a.at], top)} className="pa-drop" markerEnd={`url(#${id}-darrow)`} />;
         if (a.kind === "man") {
           const r = receivers[a.receiver];
-          return <polyline key={`p${d}`} points={pts([start, [r[0], r[1] + 1.4]], top)} className="pa-man" />;
+          // A dotted line to the receiver, and a dashed ring around him: pressed defenders are right on top of him.
+          const rc = at(r);
+          return (
+            <g key={`p${d}`}>
+              <polyline points={pts([start, [r[0], r[1] + 1.5]], top)} className="pa-man" />
+              <circle cx={rc.x} cy={rc.y} r={1.7} className="pa-man-ring" />
+            </g>
+          );
         }
         const toward: Point = [start[0] + (QB[0] - start[0]) * 0.45, start[1] + (QB[1] - start[1]) * 0.45];
         return <polyline key={`p${d}`} points={pts([start, toward], top)} className="pa-rush" markerEnd={`url(#${id}-darrow)`} />;
