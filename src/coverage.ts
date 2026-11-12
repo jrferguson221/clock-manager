@@ -447,8 +447,12 @@ export const FIRST_REP = 20;
 /** Share of single-high coverages shown from a two-high look. */
 export const DISGUISE_RATE = 0.3;
 
-/** The rep for a seed: the same seed always gives the same rep, so a link to one is shareable. */
-export function makeRep(seed: number): Rep {
+// The same seed always gives the same rep, so a link to one is shareable.
+/**
+ * The rep for a seed. With `disguises` off (easy mode), the defense lines up in its own coverage's look;
+ * the situation, the coverage and the options are the same either way.
+ */
+export function makeRep(seed: number, { disguises = true }: { disguises?: boolean } = {}): Rep {
   const rng = seededRng(Math.imul(seed, 2654435761) >>> 0);
   const d = Number(pick({ "1": 30, "2": 30, "3": 35, "4": 5 }, rng())) as Down;
   const toGo = d === 1 ? (rng() < 0.15 ? 1 + Math.floor(rng() * 5) : 10) : 1 + Math.floor(rng() * 12);
@@ -463,7 +467,7 @@ export function makeRep(seed: number): Rep {
   const spin = SPUN[coverage];
   const disguised = spin !== undefined && rng() < DISGUISE_RATE;
   const options = pickOptions(gradeAll(coverage, situation), rng);
-  return disguised
+  return disguised && disguises
     ? { situation, coverage, look: spin.look, shown: "cover-4", disguise: spin.note, options }
     : { situation, coverage, look: COVERAGES[coverage].look, shown: null, disguise: null, options };
 }

@@ -2,7 +2,7 @@
 // actually played and how your call grades against it in this situation.
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Badge, Button, Card, Group, List, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { Badge, Button, Card, Group, List, SegmentedControl, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import {
   CONCEPTS, COVERAGES, FIRST_REP, GRADE_LABELS, gradeAll, makeRep,
@@ -29,10 +29,11 @@ const nextSeed = (current: number) => {
 };
 
 export default function CoveragePanel() {
-  const { rep: seed = FIRST_REP } = route.useSearch();
+  const { rep: seed = FIRST_REP, mode = "hard" } = route.useSearch();
+  const easy = mode === "easy";
   const navigate = route.useNavigate();
   const [tally, setTally] = useState({ reps: 0, best: 0, points: 0 });
-  const rep = useMemo(() => makeRep(seed), [seed]);
+  const rep = useMemo(() => makeRep(seed, { disguises: !easy }), [seed, easy]);
   const s = rep.situation;
 
   const scorebug = (
@@ -42,23 +43,41 @@ export default function CoveragePanel() {
     />
   );
 
+  const toggle = (
+    <SegmentedControl
+      className="mode-toggle" fullWidth size="md" radius="md" aria-label="Difficulty"
+      value={mode}
+      data={[
+        { value: "easy", label: <><span className="mt-name">Easy</span><span className="mt-aim"> · coverage shown</span></> },
+        { value: "hard", label: <><span className="mt-name">Hard</span><span className="mt-aim"> · read the look</span></> },
+      ]}
+      // The same rep, the other way: switching mid-rep starts it over.
+      onChange={(m) => void navigate({ search: (prev) => ({ ...prev, mode: m === "easy" ? "easy" : undefined }), replace: true, resetScroll: false })}
+    />
+  );
+
   return (
     <ModeLayout
-      intro="Read the defense before the snap, then pick a pass concept. You'll see the coverage they really played, and how your call grades against it in this situation."
+      toggle={toggle}
+      intro={easy
+        ? "The coverage is named and drawn: pick the pass concept that beats it in this situation."
+        : "Read the defense before the snap, then pick a pass concept. You'll see the coverage they really played, and how your call grades against it in this situation."}
       scorebug={scorebug}
     >
       <RepView
-        key={seed} rep={rep}
+        key={`${seed}/${mode}`} rep={rep} easy={easy}
         onGraded={(g, best) => setTally((t) => ({ reps: t.reps + 1, best: t.best + (g === best ? 1 : 0), points: t.points + g }))}
-        onNext={() => void navigate({ search: { rep: nextSeed(seed) }, resetScroll: false })}
+        onNext={() => void navigate({ search: { rep: nextSeed(seed), mode: easy ? "easy" : undefined }, resetScroll: false })}
         tally={tally}
       />
     </ModeLayout>
   );
 }
 
-function RepView({ rep, onGraded, onNext, tally }: {
+function RepView({ rep, easy, onGraded, onNext, tally }: {
   rep: Rep;
+  /** Easy mode: the coverage is named and drawn before the call. */
+  easy: boolean;
   onGraded: (grade: Grade, best: Grade) => void;
   onNext: () => void;
   tally: { reps: number; best: number; points: number };
@@ -92,8 +111,21 @@ function RepView({ rep, onGraded, onNext, tally }: {
   return (
     <Stack gap="lg">
       <Card ref={diagram}>
-        <Text className="eyebrow">{picked === null ? "Pre-snap look" : "After the snap"}</Text>
-        {shown === null ? (
+        <Text className="eyebrow">{picked === null ? (easy ? "The coverage" : "Pre-snap look") : "After the snap"}</Text>
+        {shown === null && easy ? (
+          <>
+            <Title order={2} mt={4}>{cov.name}</Title>
+            <Text mt={4}>{cov.summary}</Text>
+            <PlayArt
+              formation="doubles" look={rep.look} coverage={rep.coverage} className="big"
+              label={`${cov.name}, drawn against two receivers on each side: each defender's zone, man assignment or rush in red.`}
+            />
+            <Text size="sm" c="dimmed" mt="xs">
+              Red ellipses are zones; dotted lines are man-to-man assignments; arrows toward the quarterback are rushers.
+              C: cornerback, S: safety, N: nickel back, W and M: linebackers, E and T: linemen.
+            </Text>
+          </>
+        ) : shown === null ? (
           <>
             <PlayArt formation="doubles" look={rep.look} label="The defense's alignment before the snap, against two receivers on each side." className="big" />
             <Text size="sm" c="dimmed" mt="xs">

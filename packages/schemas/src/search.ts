@@ -151,5 +151,7 @@ export const BEST_CALL_DEFAULTS: BestCallSearch = bestCallSearchSchema.parse({})
 export const coverageSearchSchema = z.object({
   /** The rep's seed. Missing: the app's first rep. */
   rep: z.catch(z.optional(z.int().check(z.minimum(1), z.maximum(999_999))), undefined),
+  /** Easy names and draws the coverage before the call, with no disguises. Missing: hard. */
+  mode: z.catch(z.optional(z.enum(["easy", "hard"])), undefined),
 });
 export type CoverageSearch = z.output<typeof coverageSearchSchema>;

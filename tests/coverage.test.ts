@@ -108,6 +108,17 @@ describe("reps", () => {
     expect(fallback).toBeLessThan(1500);
   });
 
+  it("in easy mode are never disguised, and otherwise the same rep", () => {
+    for (let seed = 1; seed <= 2000; seed++) {
+      const hard = makeRep(seed);
+      const easy = makeRep(seed, { disguises: false });
+      expect(easy.shown).toBeNull();
+      expect(easy.disguise).toBeNull();
+      expect(easy.look).toEqual(COVERAGES[easy.coverage].look);
+      expect({ ...easy, look: null, shown: null, disguise: null }).toEqual({ ...hard, look: null, shown: null, disguise: null });
+    }
+  });
+
   it("start new visitors on a plain, undisguised rep", () => {
     expect(makeRep(FIRST_REP).shown).toBeNull();
   });

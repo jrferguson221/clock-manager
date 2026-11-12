@@ -881,6 +881,19 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 
 /* ---------- Beat the coverage: play art on the whiteboard ---------- */
 
+/* Easy / Hard: a switch across the top of the page. */
+.mode-toggle {
+  margin-bottom: var(--mantine-spacing-md);
+  padding: rem(4px);
+  font-family: var(--mantine-font-family-headings);
+  background: var(--mantine-color-body);
+  box-shadow: inset 0 0 0 1px light-dark(#8f8c82, var(--mantine-color-dark-3));
+}
+.mode-toggle .mantine-SegmentedControl-label { padding-block: rem(8px); font-size: rem(17px); letter-spacing: 0.05em; text-transform: uppercase; }
+.mt-name { font-weight: 700; }
+.mt-aim { font-weight: 600; opacity: 0.85; }
+@media (max-width: $mantine-breakpoint-xs) { .mt-aim { display: none; } }
+
 .play-art { display: block; width: 100%; height: auto; }
 .play-art.big { margin-top: var(--mantine-spacing-sm); max-height: rem(460px); }
 .pa-field { fill: light-dark(#fbfbf7, #1b2228); }
