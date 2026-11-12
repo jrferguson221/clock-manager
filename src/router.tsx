@@ -6,7 +6,7 @@ import {
   createHashHistory, createRootRouteWithContext, createRoute, createRouter, lazyRouteComponent, stripSearchParams, type RouterHistory,
 } from "@tanstack/react-router";
 import {
-  bestCallSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, twoPointSearchSchema,
+  bestCallSearchSchema, coverageSearchSchema, decisionsSearchSchema, guideSearchSchema, leadingSearchSchema, scenarioSearchSchema, trailingSearchSchema, twoPointSearchSchema,
   SCENARIO_DEFAULTS, BEST_CALL_DEFAULTS, LEADING_DEFAULTS, TRAILING_DEFAULTS, TWO_POINT_DEFAULTS,
 } from "@situational-football/schemas";
 import Layout, { NotFound } from "./Layout";
@@ -65,6 +65,14 @@ const scenariosRoute = createRoute({
   component: lazyRouteComponent(() => import("./ScenarioPanel")),
 });
 
+// Beat the coverage: read a defense's pre-snap look and pick a pass concept.
+const coverageRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/coverage",
+  validateSearch: coverageSearchSchema,
+  component: lazyRouteComponent(() => import("./CoveragePanel")),
+});
+
 // Decisions of the week: real late-game calls, scored by the model. The week's file is fetched and
 // validated before the page renders; with no week in the URL, it's the latest one.
 const decisionsRoute = createRoute({
@@ -92,7 +100,7 @@ const guideRoute = createRoute({
   component: lazyRouteComponent(() => import("./Guide")),
 });
 
-const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, twoPointRoute, scenariosRoute, decisionsRoute, guideRoute]);
+const routeTree = rootRoute.addChildren([leadingRoute, trailingRoute, bestCallRoute, twoPointRoute, scenariosRoute, coverageRoute, decisionsRoute, guideRoute]);
 
 /** The app's router. Tests pass a memory history; the browser uses the URL hash. */
 export function createAppRouter(history: RouterHistory = createHashHistory(), decisions: DecisionsData = fetchedDecisions) {

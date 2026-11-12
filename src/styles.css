@@ -878,3 +878,62 @@ nav[aria-label="Guide sections"] .mantine-List-item {
   border: 1px dashed var(--mantine-color-default-border); border-radius: 2px;
   max-width: 75ch;
 }
+
+/* ---------- Beat the coverage: play art on the whiteboard ---------- */
+
+.play-art { display: block; width: 100%; height: auto; }
+.play-art.big { margin-top: var(--mantine-spacing-sm); max-height: rem(460px); }
+.pa-field { fill: light-dark(#fbfbf7, #1b2228); }
+.pa-yardline { stroke: light-dark(rgba(26, 32, 48, 0.14), rgba(230, 234, 237, 0.12)); stroke-width: 0.12; }
+.pa-hash line { stroke: light-dark(rgba(26, 32, 48, 0.18), rgba(230, 234, 237, 0.16)); stroke-width: 0.12; }
+.pa-los { stroke: light-dark(rgba(26, 32, 48, 0.45), rgba(230, 234, 237, 0.4)); stroke-width: 0.15; stroke-dasharray: 0.6 0.4; }
+.pa-player { fill: light-dark(#fffffc, #222a32); stroke: light-dark(#1a2030, #e6eaed); stroke-width: 0.22; }
+.pa-lineman { fill: light-dark(#fffffc, #222a32); stroke: light-dark(#1a2030, #e6eaed); stroke-width: 0.22; }
+.pa-route { fill: none; stroke: var(--mantine-color-blue-6); stroke-width: 0.38; stroke-linejoin: round; stroke-linecap: round; }
+.pa-arrowhead { fill: var(--mantine-color-blue-6); }
+.pa-defender {
+  font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: 2.1px; text-anchor: middle;
+  fill: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
+  paint-order: stroke; stroke: light-dark(#fbfbf7, #1b2228); stroke-width: 0.5;
+}
+.pa-zone ellipse { fill: light-dark(rgba(201, 42, 42, 0.07), rgba(255, 120, 120, 0.08)); stroke: light-dark(rgba(201, 42, 42, 0.45), rgba(255, 135, 135, 0.4)); stroke-width: 0.12; stroke-dasharray: 0.5 0.35; }
+.pa-zone.deep ellipse { fill: light-dark(rgba(201, 42, 42, 0.04), rgba(255, 120, 120, 0.05)); }
+.pa-zone-label {
+  font-family: var(--mantine-font-family-headings); font-size: 1.3px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; text-anchor: middle; fill: light-dark(rgba(165, 30, 30, 0.85), rgba(255, 160, 160, 0.85));
+}
+/* On a phone the field is small, so the defenders' letters and the zone labels grow. */
+@media (max-width: $mantine-breakpoint-sm) {
+  .play-art.big .pa-defender { font-size: 3.2px; stroke-width: 0.7; }
+  .play-art.big .pa-zone-label { font-size: 1.9px; }
+}
+.pa-drop, .pa-rush { fill: none; stroke: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); stroke-width: 0.2; stroke-dasharray: 0.5 0.35; opacity: 0.8; }
+.pa-man { fill: none; stroke: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); stroke-width: 0.2; stroke-dasharray: 0.15 0.35; stroke-linecap: round; opacity: 0.9; }
+.pa-arrowhead-def { fill: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4)); }
+
+/* A concept is a play card: its art on top, its name in caps under it. */
+.concept-card {
+  display: flex; flex-direction: column; gap: rem(4px);
+  padding: var(--mantine-spacing-xs);
+  background: var(--mantine-color-body);
+  border: 1px solid light-dark(#c9c6bb, var(--mantine-color-dark-4));
+  border-radius: 3px;
+  box-shadow: var(--mantine-shadow-xs);
+  text-align: left;
+  &:not(:disabled):hover { border-color: var(--mantine-color-blue-7); }
+  &:disabled { cursor: default; opacity: 0.85; }
+  &[data-picked] { border: 2px solid var(--mantine-color-blue-7); opacity: 1; }
+  &:focus-visible { outline: 2px solid var(--mantine-color-blue-7); outline-offset: 2px; }
+  .play-art { border: 1px solid light-dark(rgba(26, 32, 48, 0.1), rgba(230, 234, 237, 0.1)); }
+}
+.concept-name {
+  font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: rem(17px);
+  letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.1;
+}
+
+/* A risky or bad call's sheet is outlined in red. */
+.mantine-Card-root.accent-card.grade-0,
+.mantine-Card-root.accent-card.grade-1 {
+  border-color: var(--mantine-color-red-8);
+  & > .eyebrow:first-child { background: var(--mantine-color-red-8); }
+}

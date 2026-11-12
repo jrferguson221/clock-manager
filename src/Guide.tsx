@@ -17,6 +17,7 @@ import {
 } from "./sim";
 import { formatClock } from "./time";
 import { AnchorLink, GuideLink } from "./ReadMore";
+import { CONCEPT_IDS, CONCEPTS, COVERAGE_IDS, COVERAGES, GRADE_LABELS, MATCHUPS, RED_ZONE_YTG } from "./coverage";
 
 const route = getRouteApi("/guide");
 
@@ -39,6 +40,7 @@ const TITLES: Readonly<Record<GuideSection, string>> = {
   "fourth-down": "Fourth down",
   "two-point": "Kick or go for two",
   "scoring-and-kickoffs": "Extra points, two-point tries and onside kicks",
+  coverages: "Reading coverages, and the concepts that beat them",
   limitations: "What the model leaves out",
 };
 
@@ -104,6 +106,7 @@ export default function Guide() {
           <FourthDownSection />
           <TwoPointSection />
           <ScoringSection />
+          <CoveragesSection />
           <LimitationsSection />
         </Stack>
       </Grid.Col>
@@ -718,6 +721,52 @@ function ScoringSection() {
           short field.
         </List.Item>
       </List>
+    </Section>
+  );
+}
+
+function CoveragesSection() {
+  return (
+    <Section id="coverages">
+      <Text>
+        Before the snap, count the deep safeties. None deep means Cover 0, an all-out blitz. One deep in the middle
+        means a single-high coverage: Cover 1 (man-to-man) or Cover 3 (zone). Two deep means Tampa 2, Cover 4 or
+        Cover 6. Then check the corners: pressed on the receivers usually means man; 7 or 8 yards off means they're
+        dropping deep; squatting at 5 means they'll sit in the flat. Defenses disguise this, most often by showing
+        two safeties and spinning one down at the snap.
+      </Text>
+      <Accordion variant="contained" radius="md">
+        {COVERAGE_IDS.map((c) => {
+          const beaters = CONCEPT_IDS.filter((k) => MATCHUPS[k][c].grade === 3);
+          return (
+            <Accordion.Item key={c} value={c}>
+              <Accordion.Control>{COVERAGES[c].name}</Accordion.Control>
+              <Accordion.Panel>
+                <Stack gap="xs">
+                  <Text>{COVERAGES[c].summary}</Text>
+                  <Text><strong>The tell:</strong> {COVERAGES[c].tell}</Text>
+                  <Text><strong>Beat it with:</strong> {beaters.map((k) => CONCEPTS[k].name).join(", ")}.</Text>
+                  <List spacing={2} size="sm">
+                    {beaters.map((k) => <List.Item key={k}><strong>{CONCEPTS[k].name}:</strong> {MATCHUPS[k][c].why}</List.Item>)}
+                  </List>
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          );
+        })}
+      </Accordion>
+      <NumberTable
+        caption="Each concept against each coverage, before the situation"
+        head={["Concept", ...COVERAGE_IDS.map((c) => COVERAGES[c].name)]}
+        rows={CONCEPT_IDS.map((k) => [CONCEPTS[k].name, ...COVERAGE_IDS.map((c) => GRADE_LABELS[MATCHUPS[k][c].grade])])}
+      />
+      <Text>
+        The situation matters too. On 3rd or 4th down, a concept whose open throw lands short of the line to gain loses a
+        grade, and so does a slow, deep concept when you only need a yard or two. Inside the {RED_ZONE_YTG}, the end line
+        cramps concepts that stretch the field deep. Late, trailing with no timeouts left, a catch in the middle of the
+        field keeps the clock running, so concepts that throw there lose a grade. These grades are coaching rules of
+        thumb, not numbers from the model: public play-by-play doesn't record the route concept.
+      </Text>
     </Section>
   );
 }

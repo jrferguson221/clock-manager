@@ -144,3 +144,12 @@ export type BestCallSearch = z.output<typeof bestCallSearchSchema>;
 export const LEADING_DEFAULTS: LeadingSearch = leadingSearchSchema.parse({});
 export const TRAILING_DEFAULTS: TrailingSearch = trailingSearchSchema.parse({});
 export const BEST_CALL_DEFAULTS: BestCallSearch = bestCallSearchSchema.parse({});
+
+// ---------------------------------------------------------------------------
+// Beat the coverage: one rep (a situation and a coverage) per seed, so a rep can be shared.
+
+export const coverageSearchSchema = z.object({
+  /** The rep's seed. Missing: the app's first rep. */
+  rep: z.catch(z.optional(z.int().check(z.minimum(1), z.maximum(999_999))), undefined),
+});
+export type CoverageSearch = z.output<typeof coverageSearchSchema>;
