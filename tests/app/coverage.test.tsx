@@ -1,13 +1,16 @@
 import { expect, it } from "bun:test";
-import { CONCEPT_IDS, CONCEPTS } from "../../src/coverage";
+import { CONCEPT_IDS, CONCEPTS, FIRST_REP, makeRep } from "../../src/coverage";
 import { renderAt } from "./render";
 
-it("opens on the pre-snap look, with every concept's card to call", async () => {
+it("opens on the pre-snap look, with the rep's 3 or 4 concepts to call", async () => {
   const { html } = await renderAt("/coverage");
+  const rep = makeRep(FIRST_REP);
   expect(html).toContain("Beat the coverage");
   expect(html).toContain("Pre-snap look");
   expect(html).toContain("Call the play");
-  for (const k of CONCEPT_IDS) expect(html).toContain(`aria-label="Call ${CONCEPTS[k].name}"`);
+  for (const k of CONCEPT_IDS) {
+    expect(html.includes(`aria-label="Call ${CONCEPTS[k].name}"`)).toBe(rep.options.includes(k));
+  }
   // The coverage's name isn't given away before the call.
   expect(html).not.toContain("After the snap");
   expect(html).toContain("How to read coverages");

@@ -891,6 +891,15 @@ nav[aria-label="Guide sections"] .mantine-List-item {
 .pa-lineman { fill: light-dark(#fffffc, #222a32); stroke: light-dark(#1a2030, #e6eaed); stroke-width: 0.22; }
 .pa-route { fill: none; stroke: var(--mantine-color-blue-6); stroke-width: 0.38; stroke-linejoin: round; stroke-linecap: round; }
 .pa-arrowhead { fill: var(--mantine-color-blue-6); }
+.pa-route.dim { opacity: 0.45; }
+.pa-route.read { stroke: var(--mantine-color-green-6); stroke-width: 0.6; }
+.pa-arrowhead-read { fill: var(--mantine-color-green-6); }
+.pa-read-label {
+  font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: 1.7px; letter-spacing: 0.06em;
+  text-transform: uppercase; text-anchor: middle; fill: light-dark(var(--mantine-color-green-8), var(--mantine-color-green-4));
+  paint-order: stroke; stroke: light-dark(#fbfbf7, #1b2228); stroke-width: 0.5;
+}
+@media (max-width: $mantine-breakpoint-sm) { .play-art.big .pa-read-label { font-size: 2.6px; stroke-width: 0.7; } }
 .pa-defender {
   font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: 2.1px; text-anchor: middle;
   fill: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));

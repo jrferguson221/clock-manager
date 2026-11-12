@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Badge, Button, Card, Group, List, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import {
-  CONCEPT_IDS, CONCEPTS, COVERAGES, FIRST_REP, GRADE_LABELS, gradeAll, makeRep,
+  CONCEPTS, COVERAGES, FIRST_REP, GRADE_LABELS, gradeAll, makeRep,
   type ConceptId, type Grade, type Graded, type Rep,
 } from "./coverage";
 import { GameBug } from "./Scorebug";
@@ -64,7 +64,9 @@ function RepView({ rep, onGraded, onNext, tally }: {
   tally: { reps: number; best: number; points: number };
 }) {
   const [picked, setPicked] = useState<ConceptId | null>(null);
-  const graded = useMemo(() => gradeAll(rep.coverage, rep.situation), [rep]);
+  // Every concept graded, and the ones offered in this rep, best first.
+  const all = useMemo(() => gradeAll(rep.coverage, rep.situation), [rep]);
+  const graded = useMemo(() => all.filter((g) => rep.options.includes(g.concept)), [all, rep]);
   const byConcept = useMemo(() => new Map(graded.map((g) => [g.concept, g])), [graded]);
   const top = graded[0]!.grade;
   const choose = (c: ConceptId) => {
@@ -90,22 +92,30 @@ function RepView({ rep, onGraded, onNext, tally }: {
           <>
             <Title order={2} mt={4}>{cov.name}</Title>
             <Text mt={4}>{cov.summary}</Text>
-            <PlayArt concept={picked} look={rep.look} coverage={rep.coverage} label={`${CONCEPTS[picked].name} against ${cov.name}: your routes in blue, the defense's drops in red.`} className="big" />
-            <Text size="sm" mt="xs"><strong>The tell:</strong> {cov.tell}</Text>
+            <PlayArt
+              concept={picked} look={rep.look} coverage={rep.coverage} read={byConcept.get(picked)!.base.read} className="big"
+              label={`${CONCEPTS[picked].name} against ${cov.name}: your routes in blue with the first read in green, the defense's drops in red.`}
+            />
+            <Text size="sm" mt="xs"><strong>1st read, in green:</strong> {byConcept.get(picked)!.base.throw}.</Text>
+            <Text className="eyebrow" mt="md">Where to attack {cov.name}</Text>
+            <List spacing={4} size="sm" mt={4}>
+              {cov.weaknesses.map((w) => <List.Item key={w}>{w}</List.Item>)}
+            </List>
+            <Text size="sm" mt="sm"><strong>The tell:</strong> {cov.tell}</Text>
             {rep.disguise !== null && <Text size="sm" mt={4}><strong>Disguised:</strong> {rep.disguise}</Text>}
           </>
         )}
       </Card>
 
-      {picked !== null && <Verdict g={byConcept.get(picked)!} rep={rep} graded={graded} />}
+      {picked !== null && <Verdict g={byConcept.get(picked)!} rep={rep} graded={graded} all={all} />}
 
       <div>
         <Group justify="space-between" align="baseline" mb="xs">
-          <Title order={2}>{picked === null ? "Call the play" : "Every concept against this coverage"}</Title>
+          <Title order={2}>{picked === null ? "Call the play" : "Your options, graded"}</Title>
           <GuideLink section="coverages">How to read coverages</GuideLink>
         </Group>
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 5 }} spacing="sm" className="concept-grid">
-          {CONCEPT_IDS.map((c) => {
+        <SimpleGrid cols={{ base: 2, sm: rep.options.length }} spacing="sm" className="concept-grid">
+          {rep.options.map((c) => {
             const g = byConcept.get(c)!;
             return (
               <UnstyledButton
@@ -144,9 +154,11 @@ function RepView({ rep, onGraded, onNext, tally }: {
   );
 }
 
-function Verdict({ g, rep, graded }: { g: Graded; rep: Rep; graded: Graded[] }) {
+function Verdict({ g, rep, graded, all }: { g: Graded; rep: Rep; graded: Graded[]; all: Graded[] }) {
   const top = graded[0]!.grade;
   const bests = graded.filter((x) => x.grade === top && x.concept !== g.concept);
+  // Better calls that weren't among the options, so the rep still teaches the textbook answer.
+  const notOffered = all.filter((x) => x.grade === all[0]!.grade && x.grade > top && !rep.options.includes(x.concept));
   const shownGrade = rep.shown !== null ? gradeAll(rep.shown, rep.situation).find((x) => x.concept === g.concept)!.grade : null;
   return (
     <Card className={`accent-card grade-${g.grade}${g.grade === top ? " best" : ""}`}>
@@ -166,10 +178,11 @@ function Verdict({ g, rep, graded }: { g: Graded; rep: Rep; graded: Graded[] }) 
       )}
       <Text size="sm" mt="xs" c="dimmed">
         {g.grade === top && bests.length === 0
-          ? "The best call here."
+          ? "The best of your options."
           : g.grade === top
-            ? `Also ${GRADE_LABELS[top].toLowerCase()}: ${bests.map((b) => CONCEPTS[b.concept].name).join(", ")}.`
-            : `${GRADE_LABELS[top]} here: ${graded.filter((x) => x.grade === top).map((b) => CONCEPTS[b.concept].name).join(", ")}.`}
+            ? `Also ${GRADE_LABELS[top].toLowerCase()} of your options: ${bests.map((b) => CONCEPTS[b.concept].name).join(", ")}.`
+            : `The best of your options: ${graded.filter((x) => x.grade === top).map((b) => CONCEPTS[b.concept].name).join(", ")} (${GRADE_LABELS[top]}).`}
+        {notOffered.length > 0 && ` Not offered, but ${GRADE_LABELS[all[0]!.grade].toLowerCase()} here: ${notOffered.map((b) => CONCEPTS[b.concept].name).join(", ")}.`}
       </Text>
     </Card>
   );

@@ -21,13 +21,15 @@ export interface PlayArtProps {
   look?: Readonly<Record<DefenderId, Point>>;
   /** The coverage to draw after the snap: zones, man assignments and rushers. */
   coverage?: CoverageId;
+  /** The first read: that route is highlighted and labeled, the others dimmed. */
+  read?: ReceiverId;
   /** Downfield yards shown. */
   depth?: number;
   label: string;
   className?: string;
 }
 
-export default function PlayArt({ concept, formation, look, coverage, depth = 27, label, className }: PlayArtProps) {
+export default function PlayArt({ concept, formation, look, coverage, read, depth = 27, label, className }: PlayArtProps) {
   const id = useId().replace(/:/g, "");
   const top = depth;
   const bottom = -7;
@@ -47,6 +49,9 @@ export default function PlayArt({ concept, formation, look, coverage, depth = 27
       <defs>
         <marker id={`${id}-arrow`} viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" className="pa-arrowhead" />
+        </marker>
+        <marker id={`${id}-rarrow`} viewBox="0 0 10 10" refX="7" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" className="pa-arrowhead-read" />
         </marker>
         <marker id={`${id}-darrow`} viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" className="pa-arrowhead-def" />
@@ -89,8 +94,22 @@ export default function PlayArt({ concept, formation, look, coverage, depth = 27
 
       {/* Routes. */}
       {(Object.entries(routes) as [ReceiverId, readonly Point[]][]).map(([r, route]) => (
-        <polyline key={`r${r}`} points={pts(route, top)} className="pa-route" markerEnd={`url(#${id}-arrow)`} />
+        r === read ? null : (
+          <polyline key={`r${r}`} points={pts(route, top)} className={read ? "pa-route dim" : "pa-route"} markerEnd={`url(#${id}-arrow)`} />
+        )
       ))}
+      {read && (() => {
+        // The first read on top, in the best call's green, labeled where the ball should arrive.
+        const route = routes[read] ?? [receivers[read], [receivers[read][0], receivers[read][1] + 3]];
+        const end = at(route[route.length - 1]!);
+        const labelY = Math.max(2.4, end.y - 1.6);
+        return (
+          <g className="pa-read">
+            <polyline points={pts(route, top)} className="pa-route read" markerEnd={`url(#${id}-rarrow)`} />
+            <text x={Math.min(Math.max(end.x, 5), X1 - X0 - 5)} y={labelY} className="pa-read-label">1st read</text>
+          </g>
+        );
+      })()}
 
       {/* The offense. */}
       {LINE.map((p, i) => {

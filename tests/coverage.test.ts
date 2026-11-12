@@ -92,6 +92,22 @@ describe("reps", () => {
     }
   });
 
+  it("offer 3 or 4 different concepts, with a good or best call and a risky or bad one", () => {
+    let fallback = 0;
+    for (let seed = 1; seed <= 3000; seed++) {
+      const r = makeRep(seed);
+      expect([3, 4]).toContain(r.options.length);
+      expect(new Set(r.options).size).toBe(r.options.length);
+      const grades = r.options.map((k) => gradeConcept(k, r.coverage, r.situation).grade);
+      const all = gradeAll(r.coverage, r.situation);
+      if (all.some((g) => g.grade >= 2)) expect(Math.max(...grades)).toBeGreaterThanOrEqual(2);
+      if (all.some((g) => g.grade <= 1)) expect(Math.min(...grades)).toBeLessThanOrEqual(1);
+      else fallback++;
+    }
+    // Only an easy coverage in an easy situation (all good or best) offers no risky or bad call.
+    expect(fallback).toBeLessThan(1500);
+  });
+
   it("start new visitors on a plain, undisguised rep", () => {
     expect(makeRep(FIRST_REP).shown).toBeNull();
   });
@@ -102,6 +118,8 @@ it("every route starts where its receiver lines up, and every man assignment nam
     const { formation, routes } = CONCEPTS[k];
     for (const [r, pts] of Object.entries(routes)) expect(pts![0]).toEqual(FORMATIONS[formation][r as keyof typeof FORMATIONS.doubles]);
   }
+  for (const k of CONCEPT_IDS) for (const c of COVERAGE_IDS) expect(CONCEPTS[k].routes[MATCHUPS[k][c].read]).toBeDefined();
+  for (const c of COVERAGE_IDS) expect(COVERAGES[c].weaknesses.length).toBeGreaterThan(0);
   for (const c of COVERAGE_IDS) for (const d of DEFENDER_IDS) {
     const a = COVERAGES[c].assignments[d];
     if (a.kind === "man") expect(Object.keys(FORMATIONS.doubles)).toContain(a.receiver);
