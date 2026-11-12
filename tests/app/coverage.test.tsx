@@ -2,8 +2,8 @@ import { expect, it } from "bun:test";
 import { CONCEPT_IDS, CONCEPTS, COVERAGES, FIRST_REP, makeRep } from "../../src/coverage";
 import { renderAt } from "./render";
 
-it("opens on the pre-snap look, with the rep's 3 or 4 concepts to call", async () => {
-  const { html } = await renderAt("/coverage");
+it("hard mode opens on the pre-snap look, with the rep's 3 or 4 concepts to call", async () => {
+  const { html } = await renderAt("/coverage?mode=hard");
   const rep = makeRep(FIRST_REP);
   expect(html).toContain("Beat the coverage");
   expect(html).toContain("Pre-snap look");
@@ -21,7 +21,7 @@ it("opens a shared rep from the URL, and falls back to the first rep on a bad on
   expect(shared.router.matchRoutes(shared.router.state.location).at(-1)?.search).toEqual({ rep: 42, mode: undefined });
   const bad = await renderAt("/coverage?rep=abc");
   expect(bad.router.matchRoutes(bad.router.state.location).at(-1)?.search).toEqual({ rep: undefined, mode: undefined });
-  expect(bad.html).toContain("Pre-snap look");
+  expect(bad.html).toContain("The coverage");
 });
 
 it("the guide explains each coverage and grades every concept against it", async () => {
@@ -31,16 +31,16 @@ it("the guide explains each coverage and grades every concept against it", async
   expect(html).toContain("Tampa 2");
 });
 
-it("easy mode names and draws the coverage before the call; hard mode doesn't", async () => {
+it("easy mode, the default, names and draws the coverage before the call; hard mode doesn't", async () => {
   const rep = makeRep(FIRST_REP);
-  const easy = await renderAt("/coverage?mode=easy");
+  const easy = await renderAt("/coverage");
   expect(easy.html).toContain(`aria-label="${COVERAGES[rep.coverage].name}, drawn against two receivers on each side`);
   expect(easy.html).toContain("Red ellipses are zones");
   expect(easy.html).toMatch(/value="easy"[^>]*checked=""|checked=""[^>]*value="easy"/);
-  const hard = await renderAt("/coverage");
+  const hard = await renderAt("/coverage?mode=hard");
   expect(hard.html).toContain("Pre-snap look");
   expect(hard.html).not.toContain("Red ellipses are zones");
-  // An unknown mode falls back to hard.
+  // An unknown mode falls back to easy.
   const bad = await renderAt("/coverage?mode=medium");
   expect(bad.router.matchRoutes(bad.router.state.location).at(-1)?.search).toEqual({ rep: undefined, mode: undefined });
 });

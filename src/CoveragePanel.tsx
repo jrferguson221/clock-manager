@@ -29,7 +29,7 @@ const nextSeed = (current: number) => {
 };
 
 export default function CoveragePanel() {
-  const { rep: seed = FIRST_REP, mode = "hard" } = route.useSearch();
+  const { rep: seed = FIRST_REP, mode = "easy" } = route.useSearch();
   const easy = mode === "easy";
   const navigate = route.useNavigate();
   const [tally, setTally] = useState({ reps: 0, best: 0, points: 0 });
@@ -52,7 +52,7 @@ export default function CoveragePanel() {
         { value: "hard", label: <><span className="mt-name">Hard</span><span className="mt-aim"> · read the look</span></> },
       ]}
       // The same rep, the other way: switching mid-rep starts it over.
-      onChange={(m) => void navigate({ search: (prev) => ({ ...prev, mode: m === "easy" ? "easy" : undefined }), replace: true, resetScroll: false })}
+      onChange={(m) => void navigate({ search: (prev) => ({ ...prev, mode: m === "hard" ? "hard" : undefined }), replace: true, resetScroll: false })}
     />
   );
 
@@ -67,7 +67,7 @@ export default function CoveragePanel() {
       <RepView
         key={`${seed}/${mode}`} rep={rep} easy={easy}
         onGraded={(g, best) => setTally((t) => ({ reps: t.reps + 1, best: t.best + (g === best ? 1 : 0), points: t.points + g }))}
-        onNext={() => void navigate({ search: { rep: nextSeed(seed), mode: easy ? "easy" : undefined }, resetScroll: false })}
+        onNext={() => void navigate({ search: { rep: nextSeed(seed), mode: easy ? undefined : "hard" }, resetScroll: false })}
         tally={tally}
       />
     </ModeLayout>
