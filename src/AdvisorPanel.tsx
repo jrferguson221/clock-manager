@@ -3,11 +3,12 @@
 import { useMemo } from "react";
 import { Alert, Card, List, Stack, Text } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import { LIMITS, type BestCallSearch } from "@situational-football/schemas";
+import type { BestCallSearch } from "@situational-football/schemas";
 import { noGainCalls, evaluateCalls, recommend, DEFAULT_SIM, PLAY_CALLS, type GameState } from "./sim";
 import { useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout } from "./SituationForm";
-import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
+import Scorebug, { bugSituation } from "./Scorebug";
+import HurryUpSetting from "./HurryUpSetting";
 import { CallTable, WinMeter, tempoNote } from "./Trainer";
 import { GuideLink, ReasonText } from "./ReadMore";
 
@@ -19,10 +20,6 @@ const MARGINS = Array.from({ length: 33 }, (_, i) => {
   return { value: m, label: m > 0 ? `Up ${m}` : m < 0 ? `Down ${-m}` : "Tied" };
 });
 const pct = (x: number) => `${Math.round(x * 100)}%`;
-const HURRY_OPTIONS = Array.from({ length: LIMITS.hurryUp.max - LIMITS.hurryUp.min + 1 }, (_, i) => {
-  const n = LIMITS.hurryUp.min + i;
-  return { value: n, label: `${n}s` };
-});
 
 export default function AdvisorPanel() {
   const s = route.useSearch();
@@ -51,12 +48,6 @@ export default function AdvisorPanel() {
     <Scorebug
       situation={bugSituation(s)} set={set} clock={clock}
       margin={s.margin} marginOptions={MARGINS} onMargin={(margin) => set({ margin })}
-      settings={
-        <span className="sb-setting">
-          <BugSelect label="Hurry-up time in seconds" value={s.hurryUp} options={HURRY_OPTIONS} onChange={(hurryUp) => set({ hurryUp })}>{s.hurryUp}s</BugSelect>
-          <span className="sb-setting-label">hurry-up</span>
-        </span>
-      }
     />
   );
 
@@ -102,6 +93,7 @@ export default function AdvisorPanel() {
             follow rule-of-thumb play-calling, using the same model as the trainer.{" "}
             <GuideLink section="win-probability">How win probability works</GuideLink>
           </Text>
+          <HurryUpSetting value={s.hurryUp} onChange={(hurryUp) => set({ hurryUp })} />
         </Stack>
       )}
     </ModeLayout>

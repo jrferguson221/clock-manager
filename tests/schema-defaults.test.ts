@@ -6,7 +6,6 @@ import { DEFAULT_SIM } from "../src/sim";
 import { PLAY_TYPES } from "../src/engine";
 
 it("search-param defaults match the engines' defaults", () => {
-  expect(TRAILING_DEFAULTS.ypp).toBe(DEFAULT_ASSUMPTIONS.yardsPerPlay);
   expect(TRAILING_DEFAULTS.hurryUp).toBe(DEFAULT_ASSUMPTIONS.hurryUp);
   expect(BEST_CALL_DEFAULTS.hurryUp).toBe(DEFAULT_SIM.hurryUp);
 });

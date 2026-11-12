@@ -110,7 +110,7 @@ Both modes use NFL rules: a 40-second play clock and a two-minute warning, with 
 
 **Trailing-mode rules of thumb**
 - Plays take 6 seconds, a no-huddle snap after an in-bounds play takes 18 seconds (you can change this in the app), and a spike takes about 10 seconds (13 and 10 under 1:00; see the tempo note above).
-- The offense gains 7 yards a play by default (you can change this in the app), and moves the chains without running out of downs.
+- The offense gains 6 yards a play (what teams behind or tied in the last two minutes average), and moves the chains without running out of downs.
 - Field-goal range is the opponent's 35, a 53-yard try. When you need a field goal, one timeout is held back for the kick.
 - A typical drive has half its plays stop the clock (incompletions or out of bounds).
 - The advice says to stop the clock when the typical budget leaves less than one spare play. It spikes on 1st or 2nd down to save the last timeout, and never spikes on 4th down.

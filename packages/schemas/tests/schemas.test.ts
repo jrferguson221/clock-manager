@@ -39,7 +39,7 @@ describe("search params", () => {
     });
     expect(TRAILING_DEFAULTS).toEqual({
       clock: "1:45", running: true, timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 25,
-      trail: 3, ypp: 7, hurryUp: 18,
+      trail: 3, hurryUp: 18,
     });
     expect(BEST_CALL_DEFAULTS).toEqual({
       clock: "1:45", running: true, timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 25,

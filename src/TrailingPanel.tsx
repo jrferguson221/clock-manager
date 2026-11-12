@@ -1,24 +1,19 @@
 import { useMemo } from "react";
 import { Accordion, Alert, Badge, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
-import { LIMITS, type LimitedField, type TrailingSearch } from "@situational-football/schemas";
+import type { TrailingSearch } from "@situational-football/schemas";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
 import { DEFAULT_SIM, type GameState } from "./sim";
 import { Timeline, useClockField, useDebouncedByKey, yardsToGoalFrom } from "./fields";
 import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
-import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
+import Scorebug, { bugSituation } from "./Scorebug";
+import HurryUpSetting from "./HurryUpSetting";
 import Trainer from "./Trainer";
 import { SCORE_OPTIONS, useScoreSwitch } from "./trainerScore";
 
 const route = getRouteApi("/trailing");
 
-const rangeOptions = (field: LimitedField) => {
-  const { min, max } = LIMITS[field];
-  return Array.from({ length: max - min + 1 }, (_, i) => ({ value: min + i, label: String(min + i) }));
-};
-const YPP_OPTIONS = rangeOptions("yardsPerPlay");
-const HURRY_OPTIONS = rangeOptions("hurryUp");
 
 export default function TrailingPanel() {
   const s = route.useSearch();
@@ -30,12 +25,13 @@ export default function TrailingPanel() {
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
   // A field goal ties or wins when you're down 3 or less.
   const need = s.trail <= 3 ? "fg" : "td";
-  const { ypp: yardsPerPlay, hurryUp } = s;
+  const { hurryUp } = s;
+  const { yardsPerPlay } = DEFAULT_ASSUMPTIONS;
 
   const analysis = useMemo(() => {
     if (gameClock == null) return null;
     const sit: DriveSituation = { gameClock, clockRunning: s.running, timeouts: s.timeouts, down: s.down, yardsToGoal, need };
-    const a = { ...DEFAULT_ASSUMPTIONS, yardsPerPlay, hurryUp };
+    const a = { ...DEFAULT_ASSUMPTIONS, hurryUp };
     return {
       advice: adviseNextCall(sit, a),
       needed: playsNeeded(sit, a),
@@ -43,7 +39,7 @@ export default function TrailingPanel() {
       typical: driveBudget(sit, "typical", a).plays,
       best: driveBudget(sit, "stops-clock", a).plays,
     };
-  }, [gameClock, s.running, s.timeouts, s.down, yardsToGoal, need, yardsPerPlay, hurryUp]);
+  }, [gameClock, s.running, s.timeouts, s.down, yardsToGoal, need, hurryUp]);
 
   const game: GameState | null = gameClock == null ? null : {
     clock: gameClock, running: s.running, poss: "you", down: s.down, toGo: Math.min(s.toGo, yardsToGoal), ytg: yardsToGoal,
@@ -56,18 +52,6 @@ export default function TrailingPanel() {
     <Scorebug
       situation={bugSituation(s)} set={set} clock={clock}
       margin={-s.trail} marginOptions={SCORE_OPTIONS} onMargin={(m) => switchScore(m, s, (m) => set({ trail: -m }))}
-      settings={
-        <>
-          <span className="sb-setting">
-            <BugSelect label="Yards per play" value={yardsPerPlay} options={YPP_OPTIONS} onChange={(ypp) => set({ ypp })}>{yardsPerPlay}</BugSelect>
-            <span className="sb-setting-label">yards a play</span>
-          </span>
-          <span className="sb-setting">
-            <BugSelect label="Hurry-up time in seconds" value={hurryUp} options={HURRY_OPTIONS} onChange={(n) => set({ hurryUp: n })}>{hurryUp}s</BugSelect>
-            <span className="sb-setting-label">hurry-up</span>
-          </span>
-        </>
-      }
     />
   );
 
@@ -136,8 +120,10 @@ export default function TrailingPanel() {
           <Text size="xs" c="dimmed">
             The rules of thumb use NFL rules, {DEFAULT_ASSUMPTIONS.playDuration}-second plays, a spike about{" "}
             {DEFAULT_ASSUMPTIONS.spikeLineup} seconds after an in-bounds play, first downs as you go, and no penalties or
-            10-second runoffs.
+            10-second runoffs. Yards per play is what teams behind or tied in the last two minutes averaged per run or
+            pass in 2025-26 games.
           </Text>
+          <HurryUpSetting value={hurryUp} onChange={(n) => set({ hurryUp: n })} />
         </Stack>
       )}
     </ModeLayout>

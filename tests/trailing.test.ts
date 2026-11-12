@@ -6,11 +6,11 @@ const base: DriveSituation = {
 };
 
 describe("playsNeeded", () => {
-  it("counts plays to the end zone at 7 yards a play", () => {
-    expect(playsNeeded(base)).toBe(11); // 75 / 7 = 10.7
+  it("counts plays to the end zone at 6 yards a play", () => {
+    expect(playsNeeded(base)).toBe(13); // 75 / 6 = 12.5
   });
   it("counts plays to field-goal range, 0 once inside it", () => {
-    expect(playsNeeded({ ...base, need: "fg" })).toBe(6); // 40 yards to the 35
+    expect(playsNeeded({ ...base, need: "fg" })).toBe(7); // 40 yards to the 35
     expect(playsNeeded({ ...base, need: "fg", yardsToGoal: 30 })).toBe(0);
   });
   it("converts a spot to a field-goal distance", () => {

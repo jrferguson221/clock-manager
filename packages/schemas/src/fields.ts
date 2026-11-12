@@ -10,7 +10,6 @@ export const LIMITS = {
   lead: { min: 1, max: 16 },
   trail: { min: 0, max: 16 },
   margin: { min: -16, max: 16 },
-  yardsPerPlay: { min: 1, max: 30 },
   hurryUp: { min: 5, max: 40 },
   /** Scenarios: yards a sack loses. */
   sackYards: { min: 1, max: 20 },

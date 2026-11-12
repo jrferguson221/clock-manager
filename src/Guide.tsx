@@ -335,7 +335,7 @@ function ClockRulesSection() {
         </List.Item>
         <List.Item>
           <strong>A team that's behind hurries.</strong> The app assumes a no-huddle snap about {DEFAULT_SIM.hurryUp} seconds
-          after an in-bounds play ends (you can change this in Trailing and Best call), {DEFAULT_SIM.spikeLineup} seconds to
+          after an in-bounds play ends (you can change this at the bottom of Trailing and Best call), {DEFAULT_SIM.spikeLineup} seconds to
           line up and spike, {DEFAULT_SIM.fgRush} to rush the field-goal unit on, and never less than {MIN_SNAP}.
         </List.Item>
       </List>
@@ -473,8 +473,9 @@ function DriveBudgetSection() {
       <List spacing={4}>
         <List.Item>
           <strong>Plays you need:</strong> the yards to the end zone, or to field-goal range (the opponent's {a.fgRange},
-          a {fgDistance(a.fgRange)}-yard try), divided by your yards per play ({a.yardsPerPlay} by default). It's a typical
-          count, not a minimum: any play can score.
+          a {fgDistance(a.fgRange)}-yard try), divided by {a.yardsPerPlay} yards a play: what teams behind or tied in the last
+          two minutes averaged per run or pass in 2025-26, counting incompletions and sacks. It's a typical count, not a
+          minimum: any play can score.
         </List.Item>
         <List.Item>
           <strong>Plays you can run before 0:00</strong>, three ways: if every play ends in bounds (the worst case), if
@@ -483,7 +484,7 @@ function DriveBudgetSection() {
           have one.
         </List.Item>
         <List.Item>
-          <strong>The advice:</strong> hurry and save timeouts while the typical case leaves a spare play; stop the clock
+          <strong>The advice:</strong> hurry and save timeouts while the typical case has time for the plays you need; stop the clock
           once it doesn't; let the two-minute warning stop it when it's about to; spike on early downs to save a last
           timeout; and when you need a field goal, keep one timeout for the kick.
         </List.Item>

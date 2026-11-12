@@ -31,7 +31,6 @@ const situationShape = (d: {
 });
 
 const DEFAULT_HURRY_UP = 18;
-const DEFAULT_YARDS_PER_PLAY = 7;
 const DEFAULT_PLAY_TYPE: PlayType = "kneel";
 
 export const leadingSearchSchema = z.object({
@@ -46,8 +45,6 @@ export const trailingSearchSchema = z.object({
   ...situationShape({ clock: "1:45", timeouts: 2, oppTimeouts: 3, down: 1, toGo: 10, side: "own", yardLine: 25 }),
   /** Points you trail by; 0 is tied. */
   trail: int("trail", 3),
-  /** Average yards a play, for the rules of thumb. */
-  ypp: int("yardsPerPlay", DEFAULT_YARDS_PER_PLAY),
   /** Seconds from an in-bounds play to a no-huddle snap. */
   hurryUp: int("hurryUp", DEFAULT_HURRY_UP),
 });

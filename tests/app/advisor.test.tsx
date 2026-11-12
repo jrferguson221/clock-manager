@@ -29,6 +29,6 @@ it("edits the situation in the scorebug, with the hurry-up in the strip under it
   expect(picked(html, "Score")).toBe("Down 7");
   expect(picked(html, "Down")).toBe("3rd");
   expect(picked(html, "Ball on")).toBe("Opp 20");
-  expect(picked(html, "Hurry-up time in seconds")).toBe("18s");
+  expect(picked(html, "Hurry-up time in seconds")).toBe("18 seconds");
   expect(html).toContain('aria-label="Field position: ball on their 20');
 });

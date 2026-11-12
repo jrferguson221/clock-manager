@@ -28,7 +28,10 @@ export interface DriveAssumptions {
   hurryUp: number;
   /** Seconds from the end of an in-bounds play to a spike. */
   spikeLineup: number;
-  /** Average yards gained per play. */
+  /**
+   * Average yards gained per play. 6: in 2025-26 play-by-play, teams behind or tied by 8 or less in the last
+   * 2:00 of the 4th gained 5.7 yards per run or pass (1,318 plays; incompletions and sacks count).
+   */
   yardsPerPlay: number;
   /** Yards from the goal line you're willing to kick from (35 = a 53-yard try). */
   fgRange: number;
@@ -40,7 +43,7 @@ export const DEFAULT_ASSUMPTIONS: DriveAssumptions = Object.freeze({
   playDuration: 6,
   hurryUp: 18,
   spikeLineup: 10,
-  yardsPerPlay: 7,
+  yardsPerPlay: 6,
   fgRange: 35,
   stopShare: 0.5,
 });
@@ -160,7 +163,7 @@ export function adviseNextCall(
   s: DriveSituation,
   a: DriveAssumptions = DEFAULT_ASSUMPTIONS,
   rules: Rules = NFL_RULES,
-  slack = 1,
+  slack = 0,
 ): Advice {
   const warnAt = rules.twoMinuteWarning;
   const warningUsed = s.warningUsed ?? (warnAt == null || s.gameClock <= warnAt);
