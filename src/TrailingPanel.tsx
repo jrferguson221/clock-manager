@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Accordion, Alert, Badge, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { Accordion, Alert, Badge, Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { TrailingSearch } from "@situational-football/schemas";
 import { adviseNextCall, driveBudget, fgDistance, playsNeeded, DEFAULT_ASSUMPTIONS, type DriveSituation } from "./trailing";
@@ -10,7 +10,7 @@ import { GuideLink } from "./ReadMore";
 import Scorebug, { bugSituation } from "./Scorebug";
 import HurryUpSetting from "./HurryUpSetting";
 import Trainer from "./Trainer";
-import { SCORE_OPTIONS, useScoreSwitch } from "./trainerScore";
+import { SCORE_OPTIONS, randomSituation, useScoreSwitch } from "./trainerScore";
 
 const route = getRouteApi("/trailing");
 
@@ -20,6 +20,13 @@ export default function TrailingPanel() {
   const navigate = route.useNavigate();
   const set = (patch: Partial<TrailingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   const switchScore = useScoreSwitch(false);
+  // A new random situation starts the trainer over, so the last situation's plays don't carry into it.
+  const [deal, setDeal] = useState(0);
+  const randomize = () => {
+    const { situation, margin } = randomSituation();
+    setDeal((d) => d + 1);
+    switchScore(margin, situation, (m) => set({ ...situation, trail: -m }));
+  };
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const gameClock = clock.seconds;
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
@@ -57,13 +64,14 @@ export default function TrailingPanel() {
 
   return (
     <ModeLayout
+      actions={<Button variant="light" onClick={randomize} className="random-situation">Random situation</Button>}
       intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 1:45.</Alert>
       ) : (
         <Stack gap="lg">
-          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (m) => set({ ...sharedFromGame(g), trail: -m }))} cfg={cfg} />
+          <Trainer key={deal} game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (m) => set({ ...sharedFromGame(g), trail: -m }))} cfg={cfg} />
 
           <Group justify="space-between" align="baseline">
             <Title order={2}>Rules of thumb</Title>

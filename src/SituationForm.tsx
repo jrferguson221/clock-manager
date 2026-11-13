@@ -1,7 +1,7 @@
 // What every mode's page shares: the situation fields in the URL, and the page layout around the scorebug.
 
 import type { ReactNode } from "react";
-import { Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import type { BestCallSearch, LeadingSearch, TrailingSearch } from "@situational-football/schemas";
 import type { GameState } from "./sim";
 import { formatClock } from "./time";
@@ -25,8 +25,10 @@ export function sharedFromGame(g: GameState): SharedSituation {
  * A mode's page: an optional switch or picker, its intro, then the situation as a scorebug (edited in
  * place) over full-width results. Nothing moves while you edit.
  */
-export function ModeLayout({ intro, scorebug, toggle, children }: {
+export function ModeLayout({ intro, scorebug, toggle, actions, children }: {
   intro: string;
+  /** Buttons beside the intro, e.g. a random situation. */
+  actions?: ReactNode;
   scorebug: ReactNode;
   /** A switch or picker above everything else. */
   toggle?: ReactNode;
@@ -35,7 +37,14 @@ export function ModeLayout({ intro, scorebug, toggle, children }: {
   return (
     <>
       {toggle}
-      <Text c="dimmed" mb="md">{intro}</Text>
+      {actions ? (
+        <Group justify="space-between" align="center" gap="sm" mb="md" className="mode-intro">
+          <Text c="dimmed" style={{ flex: "1 1 18rem" }}>{intro}</Text>
+          {actions}
+        </Group>
+      ) : (
+        <Text c="dimmed" mb="md">{intro}</Text>
+      )}
       <Stack gap="lg">
         {scorebug}
         <section className="results" aria-live="polite" aria-label="Results">{children}</section>

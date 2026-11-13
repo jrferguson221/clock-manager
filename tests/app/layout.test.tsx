@@ -23,3 +23,10 @@ it("one trainer tab covers both leading and trailing, picked by the score", asyn
   expect(html).not.toContain('aria-label="Are you leading or trailing?"');
   expect(html).toContain("behind or tied");
 });
+
+it("both trainer pages have a random-situation button", async () => {
+  for (const path of ["/", "/trailing"]) {
+    const { html } = await renderAt(`${path}?clock=0:00`);
+    expect(html).toContain("Random situation");
+  }
+});

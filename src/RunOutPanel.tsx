@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Alert, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { Alert, Button, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { getRouteApi } from "@tanstack/react-router";
 import type { LeadingSearch } from "@situational-football/schemas";
 import { simulateRunOut, runOutThreshold, PLAY_TYPE_IDS, PLAY_TYPES, type RunOutResult } from "./engine";
@@ -10,7 +10,7 @@ import { ModeLayout, sharedFromGame } from "./SituationForm";
 import { GuideLink } from "./ReadMore";
 import Scorebug, { BugSelect, bugSituation } from "./Scorebug";
 import Trainer from "./Trainer";
-import { SCORE_OPTIONS, useScoreSwitch } from "./trainerScore";
+import { SCORE_OPTIONS, randomSituation, useScoreSwitch } from "./trainerScore";
 
 const route = getRouteApi("/");
 
@@ -21,6 +21,13 @@ export default function RunOutPanel() {
   const navigate = route.useNavigate();
   const set = (patch: Partial<LeadingSearch>) => void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true, resetScroll: false });
   const switchScore = useScoreSwitch(true);
+  // A new random situation starts the trainer over, so the last situation's plays don't carry into it.
+  const [deal, setDeal] = useState(0);
+  const randomize = () => {
+    const { situation, margin } = randomSituation();
+    setDeal((d) => d + 1);
+    switchScore(margin, situation, (lead) => set({ ...situation, lead }));
+  };
   const clock = useClockField(s.clock, (c) => set({ clock: c }));
   const gameClock = clock.seconds;
   const yardsToGoal = yardsToGoalFrom(s.side, s.yardLine);
@@ -54,13 +61,14 @@ export default function RunOutPanel() {
 
   return (
     <ModeLayout
+      actions={<Button variant="light" onClick={randomize} className="random-situation">Random situation</Button>}
       intro="You're ahead and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
         <Alert color="gray">Enter the clock as M:SS, for example 2:05.</Alert>
       ) : (
         <Stack gap="lg">
-          <Trainer game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (lead) => set({ ...sharedFromGame(g), lead }))} />
+          <Trainer key={deal} game={sim.value} pending={sim.pending} onChange={(g) => switchScore(g.margin, sharedFromGame(g), (lead) => set({ ...sharedFromGame(g), lead }))} />
           <Group justify="space-between" align="baseline">
             <Title order={2}>Can you run it out?</Title>
             <GuideLink section="running-out-the-clock">How this works</GuideLink>

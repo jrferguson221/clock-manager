@@ -32,3 +32,29 @@ export function useScoreSwitch(onLeadingPage: boolean) {
     else void navigate({ to: "/trailing", search: { ...shared(situation), trail: -m }, resetScroll: false });
   };
 }
+
+/** The random situation's bounds: late in the game, within one score. */
+export const RANDOM_BOUNDS = { minClock: 60, maxClock: 300, maxMargin: 8 } as const;
+
+/**
+ * A random late-game situation for the trainer, within one score: the clock between 1:00 and 5:00, the score
+ * from down 8 to up 8, any down, distance and spot, and any timeouts. `r` returns numbers in [0, 1).
+ */
+export function randomSituation(r: () => number = Math.random): { situation: SharedSituation; margin: number } {
+  const int = (lo: number, hi: number) => lo + Math.floor(r() * (hi - lo + 1));
+  const { minClock, maxClock, maxMargin } = RANDOM_BOUNDS;
+  const clock = int(minClock, maxClock);
+  // Downs weighted the way they come up: 1st down most often, 4th rarely.
+  const x = r();
+  const down = x < 0.4 ? 1 : x < 0.7 ? 2 : x < 0.92 ? 3 : 4;
+  const ytg = int(5, 95);
+  const toGo = Math.min(ytg, down === 1 ? (r() < 0.85 ? 10 : int(1, 9)) : int(1, 15));
+  const spot = ytg >= 50 ? { side: "own" as const, yardLine: 100 - ytg } : { side: "opp" as const, yardLine: ytg };
+  return {
+    margin: int(-maxMargin, maxMargin),
+    situation: {
+      clock: `${Math.floor(clock / 60)}:${String(clock % 60).padStart(2, "0")}`,
+      running: r() < 0.6, timeouts: int(0, 3), oppTimeouts: int(0, 3), down, toGo, ...spot,
+    },
+  };
+}
