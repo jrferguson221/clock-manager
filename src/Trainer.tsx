@@ -48,6 +48,15 @@ export function playFlash(before: GameState, after: GameState, text: string, dri
   };
 }
 
+/**
+ * Each call's color family on its button: every pass shares one, and each other kind of call has its own.
+ * Timeout is yellow and spike is red.
+ */
+export const CALL_KIND: Readonly<Record<PlayCall, "pass" | "run" | "timeout" | "spike" | "kneel" | "fg" | "punt">> = {
+  "pass-screen": "pass", "pass-sideline": "pass", "pass-middle": "pass", "pass-play-action": "pass", "pass-deep": "pass",
+  run: "run", timeout: "timeout", spike: "spike", kneel: "kneel", fg: "fg", punt: "punt",
+};
+
 /** Call buttons in the order the schema lists the calls. */
 const CALL_ORDER: readonly PlayCall[] = PLAY_CALL_IDS;
 
@@ -165,7 +174,7 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
           <SimpleGrid cols={{ base: 2, xs: 3 }} spacing="xs" aria-busy={pending}>
             {CALL_ORDER.map((c) => (
               <Button
-                key={c} variant="default" size="md" className="call-button"
+                key={c} variant="default" size="md" className="call-button" data-kind={CALL_KIND[c]}
                 disabled={pending || !available.includes(c)} onClick={() => call(c)}
               >
                 {PLAY_CALLS[c]}

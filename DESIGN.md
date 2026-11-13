@@ -21,6 +21,8 @@ tabs, headings and big figures. Tabular figures everywhere (`body { font-variant
 - Big verdicts get a highlighter stroke (a pulled-up underline; below the letters at night).
 - Progress tracks are scales with a tick every 10%; call-value rows are split by dashed rules.
 - Calls you can't make are crossed off: dashed border, hatch, strikethrough.
+- Call buttons are color-coded by kind: every pass blue, run green, timeout yellow, spike red, kneel purple,
+  field goal orange, punt cyan (a full outline and a light tint, the label in ink).
 - The scorebug stays the broadcast "TV" in slate, with your plate and end zone in marker blue and a dashed
   route from the ball to the line to gain.
 - Guide sections and contents are numbered 01-16 in reading order.

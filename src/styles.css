@@ -286,6 +286,40 @@ p, li { text-wrap: pretty; }
   & .mantine-Button-label { white-space: normal; }
 }
 
+/* Each kind of call in its own marker: passes blue, the run green, timeout yellow, spike red, kneel purple,
+   field goal orange, punt cyan. A full outline and a light tint; the label stays in ink for contrast. */
+.call-button[data-kind] {
+  --call: var(--mantine-color-blue-7);
+  border: 2px solid var(--call);
+  background: color-mix(in srgb, var(--call) 14%, var(--mantine-color-body));
+  color: var(--mantine-color-text);
+  &:not(:disabled):hover {
+    border-color: var(--call);
+    background: color-mix(in srgb, var(--call) 26%, var(--mantine-color-body));
+  }
+  &[data-kind="run"] { --call: var(--mantine-color-green-7); }
+  &[data-kind="timeout"] { --call: light-dark(var(--mantine-color-yellow-6), var(--mantine-color-yellow-4)); }
+  &[data-kind="spike"] { --call: var(--mantine-color-red-7); }
+  &[data-kind="kneel"] { --call: var(--mantine-color-grape-7); }
+  &[data-kind="fg"] { --call: var(--mantine-color-orange-7); }
+  &[data-kind="punt"] { --call: var(--mantine-color-cyan-7); }
+  @mixin dark {
+    --call: var(--mantine-color-blue-4);
+    &[data-kind="run"] { --call: var(--mantine-color-green-5); }
+    &[data-kind="spike"] { --call: var(--mantine-color-red-5); }
+    &[data-kind="kneel"] { --call: var(--mantine-color-grape-4); }
+    &[data-kind="fg"] { --call: var(--mantine-color-orange-5); }
+    &[data-kind="punt"] { --call: var(--mantine-color-cyan-5); }
+  }
+  /* A call you can't make is still crossed off, in its own color's dashes. */
+  &:disabled {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--call) 45%, transparent);
+    background: repeating-linear-gradient(135deg, transparent 0 6px, light-dark(rgba(26, 32, 48, 0.07), rgba(230, 234, 237, 0.06)) 6px 7px);
+    color: var(--mantine-color-dimmed);
+  }
+}
+
 .is-pending { opacity: 0.6; transition: opacity 0.15s; }
 
 .stats { margin: 0; }
