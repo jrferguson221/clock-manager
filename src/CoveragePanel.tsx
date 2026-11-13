@@ -117,7 +117,7 @@ function RepView({ rep, easy, onGraded, onNext, tally }: {
             <Title order={2} mt={4}>{cov.name}</Title>
             <Text mt={4}>{cov.summary}</Text>
             <PlayArt
-              formation="doubles" look={rep.look} coverage={rep.coverage} className="big"
+              formation="doubles" look={rep.look} coverage={rep.coverage} assignments={rep.assignments} className="big"
               label={`${cov.name}, drawn against two receivers on each side: each defender's zone, man assignment or rush in red.`}
             />
             <Text size="sm" c="dimmed" mt="xs">
@@ -138,7 +138,7 @@ function RepView({ rep, easy, onGraded, onNext, tally }: {
             <Title order={2} mt={4}>{cov.name}</Title>
             <Text mt={4}>{cov.summary}</Text>
             <PlayArt
-              concept={shown} look={rep.look} coverage={rep.coverage} read={byConcept.get(shown)!.base.read} className="big"
+              concept={shown} look={rep.look} coverage={rep.coverage} assignments={rep.assignments} read={byConcept.get(shown)!.base.read} className="big"
               label={`${CONCEPTS[shown].name} against ${cov.name}: the routes in blue with the first read in green, the defense's drops in red.`}
             />
             <Text size="sm" mt="xs">

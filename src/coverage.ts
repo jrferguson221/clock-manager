@@ -17,12 +17,13 @@ export type Point = readonly [x: number, y: number];
 
 export type ReceiverId = "X" | "H" | "Y" | "Z" | "RB";
 
-/** Where each eligible receiver lines up. The QB is in the shotgun, 5 yards deep. */
+/**
+ * Where each eligible receiver lines up. The QB is in the shotgun, 5 yards deep. Every concept runs from two
+ * receivers on each side, the alignment the defense is drawn against, so every defender's job stays on his
+ * own side of the field.
+ */
 export const FORMATIONS = {
-  /** Two receivers on each side. */
   doubles: { X: [-21, 0], H: [-13, -1], Y: [13, -1], Z: [21, 0], RB: [2, -5] },
-  /** Three receivers to the right, one to the left. */
-  trips: { X: [-21, 0], H: [8, -1], Y: [14, -1], Z: [21, 0], RB: [-2, -5] },
 } as const satisfies Record<string, Record<ReceiverId, Point>>;
 export type FormationId = keyof typeof FORMATIONS;
 
@@ -69,11 +70,12 @@ export const CONCEPTS: Readonly<Record<ConceptId, Concept>> = {
     },
   },
   flood: {
-    name: "Flood", formation: "trips", vertical: false,
-    idea: "Three routes to one side at three depths (go, out at 12, flat): more receivers than that side has defenders.",
+    name: "Flood", formation: "doubles", vertical: false,
+    idea: "Three routes to one side at three depths (a go, an out at 12, and the back in the flat): more receivers than that side has defenders.",
     routes: {
-      Z: from("trips", "Z", [21, 26]), Y: from("trips", "Y", [14, 10], [22, 13]),
-      H: from("trips", "H", [12, 2], [20, 3]), X: from("trips", "X", [-21, 12], [-12, 13]),
+      Z: from("doubles", "Z", [21, 26]), Y: from("doubles", "Y", [13, 10], [21, 13]),
+      RB: from("doubles", "RB", [9, -2], [19, 2]), X: from("doubles", "X", [-21, 12], [-12, 13]),
+      H: from("doubles", "H", [-13, 6], [-14, 5]),
     },
   },
   mesh: {
@@ -113,11 +115,12 @@ export const CONCEPTS: Readonly<Record<ConceptId, Concept>> = {
     },
   },
   stick: {
-    name: "Stick", formation: "trips", vertical: false,
-    idea: "A stick route that sits at 5 yards, a flat route under it and a go to clear: quick, and a stretch on the flat defender.",
+    name: "Stick", formation: "doubles", vertical: false,
+    idea: "A stick route that sits at 5 yards, the back in the flat under it and a go to clear: quick, and a stretch on the flat defender.",
     routes: {
-      Y: from("trips", "Y", [14, 5], [13, 5]), H: from("trips", "H", [13, 2], [20, 2]),
-      Z: from("trips", "Z", [21, 25]), X: from("trips", "X", [-21, 2], [-15, 7]),
+      Y: from("doubles", "Y", [13, 5], [12, 5]), RB: from("doubles", "RB", [9, -2], [19, 1]),
+      Z: from("doubles", "Z", [21, 25]), X: from("doubles", "X", [-21, 2], [-15, 7]),
+      H: from("doubles", "H", [-13, 6], [-14, 5]),
     },
   },
   "slant-flat": {
@@ -147,11 +150,12 @@ export const CONCEPTS: Readonly<Record<ConceptId, Concept>> = {
     },
   },
   snag: {
-    name: "Snag", formation: "trips", vertical: false,
-    idea: "A corner route, a snag route that sits at 5 inside it, and a flat: a triangle that stretches the flat defender.",
+    name: "Snag", formation: "doubles", vertical: false,
+    idea: "A corner route, a snag route that sits at 5 inside it, and the back in the flat: a triangle that stretches the flat defender.",
     routes: {
-      Z: from("trips", "Z", [21, 5], [18, 6]), Y: from("trips", "Y", [14, 8], [22, 16]),
-      H: from("trips", "H", [13, 1], [20, 2]), X: from("trips", "X", [-21, 2], [-15, 7]),
+      Z: from("doubles", "Z", [21, 5], [18, 6]), Y: from("doubles", "Y", [13, 8], [21, 16]),
+      RB: from("doubles", "RB", [9, -2], [19, 1]), X: from("doubles", "X", [-21, 2], [-15, 7]),
+      H: from("doubles", "H", [-13, 6], [-14, 5]),
     },
   },
   "post-wheel": {
@@ -222,7 +226,7 @@ const RUSH = { DL1: { kind: "rush" }, DL2: { kind: "rush" }, DL3: { kind: "rush"
 const zone = (label: string, at: Point, size: Point): Assignment => ({ kind: "zone", label, at, size });
 const man = (receiver: ReceiverId): Assignment => ({ kind: "man", receiver });
 
-/** Coverage against the doubles formation; trips shifts the nickel and a safety toward the three receivers. */
+/** Each coverage, drawn against two receivers on each side. */
 export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
   "cover-0": {
     name: "Cover 0", shell: "zero",
@@ -368,14 +372,28 @@ export const COVERAGES: Readonly<Record<CoverageId, Coverage>> = {
  * Disguises: a single-high coverage shown from a two-high look, with a safety spinning down at the snap.
  * The look is Cover 4's alignment, with the corners where the real coverage wants them.
  */
-const SPUN: Partial<Record<CoverageId, { look: Readonly<Record<DefenderId, Point>>; note: string }>> = {
+const SPUN: Partial<Record<CoverageId, {
+  look: Readonly<Record<DefenderId, Point>>;
+  /** Each defender's job from that look: the same coverage, played by whoever lined up on that side. */
+  assignments: Readonly<Record<DefenderId, Assignment>>;
+  note: string;
+}>> = {
   "cover-3": {
     look: { ...COVERAGES["cover-4"].look, LC: [-21, 8], RC: [21, 8] },
-    note: "They showed two safeties high, then spun at the snap: one safety rotated down to the curl-flat and the other ran to the deep middle. The corners' depth (7 to 8 yards, outside leverage) was the hint.",
+    assignments: {
+      LC: zone("Deep third", [-18, 21], [17, 10]), RC: zone("Deep third", [18, 21], [17, 10]), FS: zone("Deep third", [0, 21], [17, 10]),
+      SS: zone("Curl-flat", [17, 7], [12, 8]), N: zone("Hook", [6, 8], [10, 7]),
+      M: zone("Hook", [-6, 8], [10, 7]), W: zone("Curl-flat", [-17, 7], [12, 8]), ...RUSH,
+    },
+    note: "They showed two safeties high, then spun at the snap: the right safety rotated down to the curl-flat on his side and the left one ran to the deep middle, with the linebackers and nickel sliding into the hook zones. The corners' depth (7 to 8 yards, outside leverage) was the hint.",
   },
   "cover-1": {
     look: { ...COVERAGES["cover-4"].look, LC: [-21, 1], RC: [21, 1] },
-    note: "They showed two safeties high, then one dropped down to cover the slot man-to-man. Pressed corners behind a two-high look often mean man coverage is coming.",
+    assignments: {
+      LC: man("X"), RC: man("Z"), N: man("Y"), W: man("H"), M: man("RB"),
+      FS: zone("Deep middle", [0, 20], [16, 10]), SS: zone("Robber", [0, 10], [10, 5]), ...RUSH,
+    },
+    note: "They showed two safeties high, then the right safety dropped into the middle as the robber and the left one ran to the deep middle, with man coverage underneath. Pressed corners behind a two-high look often mean man coverage is coming.",
   },
 };
 
@@ -424,14 +442,14 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     palms: m(1, "X", "the hitch", 6, true, "The slot's corner route takes the safety, and the corner stays on the outside receiver, so the hitch is tightly covered."),
   },
   flood: {
-    "cover-0": m(0, "H", "the flat", 3, true, "Three routes at three depths take time, and six rushers won't give it. Only the flat is quick enough."),
+    "cover-0": m(0, "RB", "the back in the flat", 3, true, "Three routes at three depths take time, and six rushers won't give it. Only the flat is quick enough."),
     "cover-1": m(1, "Y", "the out route", 12, true, "Against man, flooding a zone means nothing: every route has a defender on it, so the out has to win on its own."),
     "tampa-2": m(2, "Y", "the out route", 12, true, "The corner sits in the flat and the half-field safety stays deep, so the out at 12 lands in the hole between them."),
     "cover-3": m(3, "Y", "the out route", 12, true, "Three receivers against two defenders on that side: the curl-flat defender can't take both the out and the flat."),
-    "cover-4": m(2, "H", "the flat", 3, true, "The corner and safety carry the go and the out, so the flat route comes open against only one underneath defender."),
+    "cover-4": m(2, "RB", "the back in the flat", 3, true, "The corner and safety carry the go and the out, so the flat route comes open against only one underneath defender."),
     "cover-6": m(2, "Y", "the out route", 12, true, "Flooded to the Cover 2 side, the out lands between the squatting corner and the half-field safety."),
     "cover-2": m(2, "Y", "the out route", 12, true, "The corner sits in the flat and the safety stays deep, so the out at 12 lands in the hole between them."),
-    "2-man": m(1, "H", "the flat", 3, true, "Against man, three routes to one side don't outnumber anyone. Each must beat its man, and the out runs into the safety's half."),
+    "2-man": m(1, "RB", "the back in the flat", 3, true, "Against man, three routes to one side don't outnumber anyone. Each must beat its man, and the out runs into the safety's half."),
     palms: m(1, "Y", "the out route", 12, true, "This is what Palms is built for: the corner reads the out-breaking routes and drives on them."),
   },
   mesh: {
@@ -481,11 +499,11 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
   stick: {
     "cover-0": m(2, "Y", "the stick route", 5, false, "Quick, and the stick route can break either way against its man."),
     "cover-1": m(1, "Y", "the stick route", 5, false, "Against man, the stick route has to beat its defender, and the robber sits right where it settles."),
-    "tampa-2": m(2, "H", "the flat", 2, true, "Five underneath defenders crowd the stick route, but the flat route stretches the squatting corner."),
+    "tampa-2": m(2, "RB", "the back in the flat", 2, true, "Five underneath defenders crowd the stick route, but the flat route stretches the squatting corner."),
     "cover-3": m(2, "Y", "the stick route", 5, false, "The curl-flat defender has to choose between the stick route and the flat, and either throw is open."),
     "cover-4": m(2, "Y", "the stick route", 5, false, "Only three underneath defenders, so the stick route settles in space."),
     "cover-6": m(2, "Y", "the stick route", 5, false, "The stick route sits in the gap between the underneath defenders."),
-    "cover-2": m(2, "H", "the flat", 2, true, "Five defenders underneath crowd the stick route, but the flat stretches the squatting corner."),
+    "cover-2": m(2, "RB", "the back in the flat", 2, true, "Five defenders underneath crowd the stick route, but the flat stretches the squatting corner."),
     "2-man": m(1, "Y", "the stick route", 5, false, "The trailing defender sits right under the stick route."),
     palms: m(2, "Y", "the stick route", 5, false, "When the corner jumps the flat, the stick route sits open in front of the backing safety."),
   },
@@ -523,13 +541,13 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-6": m(2, "Z", "the dig", 12, false, "On the Cover 2 side the dig settles behind the hook-curl defender and in front of the half-field safety."),
   },
   snag: {
-    "cover-0": m(1, "H", "the flat", 2, true, "Against man, the triangle outnumbers no one; only the flat is quick enough against six rushers."),
+    "cover-0": m(1, "RB", "the back in the flat", 2, true, "Against man, the triangle outnumbers no one; only the flat is quick enough against six rushers."),
     "cover-1": m(1, "Y", "the corner route", 16, true, "Against man, the corner route has to beat its defender on its own."),
     "cover-2": m(2, "Y", "the corner route", 16, true, "The corner squats on the flat, so the corner route opens behind him."),
     "2-man": m(1, "Z", "the snag route", 5, false, "The trailing defenders sit under the snag, and the corner route runs into a safety's half."),
     "tampa-2": m(3, "Y", "the corner route", 16, true, "The corner sits in the flat and the snag holds the hook-curl defender, so the corner route lands in the sideline hole."),
     "cover-3": m(2, "Z", "the snag route", 5, false, "The corner bails with the corner route, and the curl-flat defender can't take both the snag and the flat."),
-    "cover-4": m(2, "H", "the flat", 2, true, "The corner and safety carry the corner route, so the flat is open against only three underneath defenders."),
+    "cover-4": m(2, "RB", "the back in the flat", 2, true, "The corner and safety carry the corner route, so the flat is open against only three underneath defenders."),
     palms: m(2, "Z", "the snag route", 5, false, "When the corner jumps the flat, the snag sits open inside him."),
     "cover-6": m(3, "Y", "the corner route to the Cover 2 side", 16, true, "On the Cover 2 side the corner squats on the flat, so the corner route lands behind him."),
   },
@@ -594,6 +612,8 @@ export interface Rep {
   shown: CoverageId | null;
   /** What the disguise was, when there was one. */
   disguise: string | null;
+  /** Each defender's job after the snap, from the look the defense showed. */
+  assignments: Readonly<Record<DefenderId, Assignment>>;
   /** The 3 or 4 concepts offered: at least one good or best call, and at least one risky or bad one. */
   options: readonly ConceptId[];
 }
@@ -649,8 +669,8 @@ export function makeRep(seed: number, { disguises = true }: { disguises?: boolea
   const disguised = spin !== undefined && rng() < DISGUISE_RATE;
   const options = pickOptions(gradeAll(coverage, situation), rng);
   return disguised && disguises
-    ? { situation, coverage, look: spin.look, shown: "cover-4", disguise: spin.note, options }
-    : { situation, coverage, look: COVERAGES[coverage].look, shown: null, disguise: null, options };
+    ? { situation, coverage, look: spin.look, shown: "cover-4", disguise: spin.note, assignments: spin.assignments, options }
+    : { situation, coverage, look: COVERAGES[coverage].look, shown: null, disguise: null, assignments: COVERAGES[coverage].assignments, options };
 }
 
 /** Shuffles a copy of a list. */

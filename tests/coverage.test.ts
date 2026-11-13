@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import {
   CONCEPT_IDS, CONCEPTS, COVERAGE_IDS, COVERAGES, DEFENDER_IDS, FIRST_REP, FORMATIONS, MATCHUPS,
-  gradeAll, gradeConcept, makeRep, type RepSituation,
+  gradeAll, gradeConcept, makeRep, type Rep, type RepSituation,
 } from "../src/coverage";
 
 const midfield: RepSituation = { down: 1, toGo: 10, ytg: 50, clock: 600, running: true, margin: 0, timeouts: 3, oppTimeouts: 3 };
@@ -129,7 +129,9 @@ describe("reps", () => {
       expect(easy.shown).toBeNull();
       expect(easy.disguise).toBeNull();
       expect(easy.look).toEqual(COVERAGES[easy.coverage].look);
-      expect({ ...easy, look: null, shown: null, disguise: null }).toEqual({ ...hard, look: null, shown: null, disguise: null });
+      expect(easy.assignments).toEqual(COVERAGES[easy.coverage].assignments);
+      const same = { look: null, shown: null, disguise: null, assignments: null };
+      expect({ ...easy, ...same }).toEqual({ ...hard, ...same });
     }
   });
 
@@ -142,11 +144,27 @@ it("every route starts where its receiver lines up, and every man assignment nam
   for (const k of CONCEPT_IDS) {
     const { formation, routes } = CONCEPTS[k];
     for (const [r, pts] of Object.entries(routes)) expect(pts![0]).toEqual(FORMATIONS[formation][r as keyof typeof FORMATIONS.doubles]);
+    expect(formation).toBe("doubles");
   }
   for (const k of CONCEPT_IDS) for (const c of COVERAGE_IDS) expect(CONCEPTS[k].routes[MATCHUPS[k][c].read]).toBeDefined();
   for (const c of COVERAGE_IDS) expect(COVERAGES[c].weaknesses.length).toBeGreaterThan(0);
   for (const c of COVERAGE_IDS) for (const d of DEFENDER_IDS) {
     const a = COVERAGES[c].assignments[d];
     if (a.kind === "man") expect(Object.keys(FORMATIONS.doubles)).toContain(a.receiver);
+  }
+});
+
+it("never gives a defender a zone or a receiver on the far side of the field from where he lined up", () => {
+  // Inside 6 yards of the ball counts as the middle, where either side is fair.
+  const crossed = (look: Rep["look"], jobs: Rep["assignments"]) => DEFENDER_IDS.flatMap((d) => {
+    const a = jobs[d];
+    const from = look[d][0];
+    const to = a.kind === "zone" ? a.at[0] : a.kind === "man" ? FORMATIONS.doubles[a.receiver][0] : null;
+    return to !== null && Math.abs(from) >= 6 && Math.abs(to) >= 6 && Math.sign(from) !== Math.sign(to) ? [d] : [];
+  });
+  for (const c of COVERAGE_IDS) expect({ c, crossed: crossed(COVERAGES[c].look, COVERAGES[c].assignments) }).toEqual({ c, crossed: [] });
+  for (let seed = 1; seed <= 2000; seed++) {
+    const r = makeRep(seed);
+    expect({ seed, crossed: crossed(r.look, r.assignments) }).toEqual({ seed, crossed: [] });
   }
 });

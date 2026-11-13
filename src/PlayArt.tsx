@@ -4,7 +4,7 @@
 import { useId } from "react";
 import {
   CONCEPTS, COVERAGES, DEFENDER_IDS, DEFENDER_LABELS, FORMATIONS, LINE, QB,
-  type ConceptId, type CoverageId, type DefenderId, type FormationId, type Point, type ReceiverId,
+  type Assignment, type ConceptId, type CoverageId, type DefenderId, type FormationId, type Point, type ReceiverId,
 } from "./coverage";
 
 /** The field drawn: sideline to sideline, and from behind the quarterback to deep downfield. */
@@ -21,6 +21,8 @@ export interface PlayArtProps {
   look?: Readonly<Record<DefenderId, Point>>;
   /** The coverage to draw after the snap: zones, man assignments and rushers. */
   coverage?: CoverageId;
+  /** Each defender's job, when it differs from the coverage's usual one (a disguised look). */
+  assignments?: Readonly<Record<DefenderId, Assignment>>;
   /** The first read: that route is highlighted and labeled, the others dimmed. */
   read?: ReceiverId;
   /** Downfield yards shown. */
@@ -29,7 +31,7 @@ export interface PlayArtProps {
   className?: string;
 }
 
-export default function PlayArt({ concept, formation, look, coverage, read, depth = 27, label, className }: PlayArtProps) {
+export default function PlayArt({ concept, formation, look, coverage, assignments, read, depth = 27, label, className }: PlayArtProps) {
   const id = useId().replace(/:/g, "");
   const top = depth;
   const bottom = -7;
@@ -38,7 +40,7 @@ export default function PlayArt({ concept, formation, look, coverage, read, dept
   const f: FormationId = concept ? CONCEPTS[concept].formation : formation ?? "doubles";
   const receivers = FORMATIONS[f];
   const routes = concept ? CONCEPTS[concept].routes : {};
-  const cov = coverage ? COVERAGES[coverage] : null;
+  const cov = coverage ? { assignments: assignments ?? COVERAGES[coverage].assignments } : null;
   /**
    * A zone's label goes at the top of its ellipse, or else the bottom or the middle, wherever no defender's
    * letter sits on it (sizes are in yards: a label is about 0.76 wide per character).
