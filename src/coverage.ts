@@ -31,6 +31,7 @@ export const LINE: readonly Point[] = [[-4, 0], [-2, 0], [0, 0], [2, 0], [4, 0]]
 
 export const CONCEPT_IDS = [
   "four-verts", "smash", "flood", "mesh", "drive", "y-cross", "dagger", "stick", "slant-flat", "curl-flat",
+  "levels", "snag", "post-wheel", "mills", "spacing",
 ] as const;
 export type ConceptId = (typeof CONCEPT_IDS)[number];
 
@@ -134,6 +135,50 @@ export const CONCEPTS: Readonly<Record<ConceptId, Concept>> = {
       X: from("doubles", "X", [-21, 12], [-19, 11]), H: from("doubles", "H", [-17, 2], [-24, 3]),
       Z: from("doubles", "Z", [21, 12], [19, 11]), Y: from("doubles", "Y", [17, 2], [24, 3]),
       RB: from("doubles", "RB", [3, -2], [2, 3]),
+    },
+  },
+  levels: {
+    name: "Levels", formation: "doubles", vertical: false,
+    idea: "Two in-breaking routes on one side, at 5 and 12 yards: a high-low on the hook defender.",
+    routes: {
+      Y: from("doubles", "Y", [13, 5], [3, 5]), Z: from("doubles", "Z", [21, 12], [6, 12]),
+      X: from("doubles", "X", [-21, 24]), H: from("doubles", "H", [-13, 6], [-14, 5]),
+      RB: from("doubles", "RB", [-4, -2], [-8, 2]),
+    },
+  },
+  snag: {
+    name: "Snag", formation: "trips", vertical: false,
+    idea: "A corner route, a snag route that sits at 5 inside it, and a flat: a triangle that stretches the flat defender.",
+    routes: {
+      Z: from("trips", "Z", [21, 5], [18, 6]), Y: from("trips", "Y", [14, 8], [22, 16]),
+      H: from("trips", "H", [13, 1], [20, 2]), X: from("trips", "X", [-21, 2], [-15, 7]),
+    },
+  },
+  "post-wheel": {
+    name: "Post-Wheel", formation: "doubles", vertical: true,
+    idea: "The outside receiver runs a post and the slot wheels up the sideline behind him.",
+    routes: {
+      X: from("doubles", "X", [-21, 10], [-12, 23]), H: from("doubles", "H", [-17, 2], [-23, 7], [-23, 25]),
+      Y: from("doubles", "Y", [13, 6], [12, 5]), Z: from("doubles", "Z", [21, 12], [19, 11]),
+      RB: from("doubles", "RB", [4, -2], [5, 3]),
+    },
+  },
+  mills: {
+    name: "Mills", formation: "doubles", vertical: true,
+    idea: "A post from the outside over a dig from the slot: the dig pulls the safety down and the post runs past him.",
+    routes: {
+      Z: from("doubles", "Z", [21, 12], [12, 25]), Y: from("doubles", "Y", [13, 10], [1, 10]),
+      X: from("doubles", "X", [-21, 6], [-20, 5]), H: from("doubles", "H", [-16, 2], [-23, 3]),
+      RB: from("doubles", "RB", [4, -2], [5, 3]),
+    },
+  },
+  spacing: {
+    name: "Spacing", formation: "doubles", vertical: false,
+    idea: "Five receivers sit down about 5 yards apart across the field: quick, and someone is always between zone defenders.",
+    routes: {
+      X: from("doubles", "X", [-21, 5], [-20, 4]), H: from("doubles", "H", [-12, 5], [-10, 5]),
+      Y: from("doubles", "Y", [12, 5], [10, 5]), Z: from("doubles", "Z", [21, 5], [20, 4]),
+      RB: from("doubles", "RB", [6, -2], [8, 2]),
     },
   },
 };
@@ -394,7 +439,7 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-1": m(3, "H", "a shallow crosser", 5, false, "The classic man beater: the crossers run their defenders into each other and run away from them across the field."),
     "tampa-2": m(1, "RB", "the back in the flat", 3, true, "The linebackers drop into the crossers' path and the corners sit in the flats, so the throws underneath are crowded."),
     "cover-3": m(2, "H", "a shallow crosser", 5, false, "The crossers settle in the gaps between the four underneath defenders."),
-    "cover-4": m(3, "H", "a shallow crosser", 5, false, "Quarters keeps four defenders deep and only three underneath, so the crossers have room to run."),
+    "cover-4": m(2, "H", "a shallow crosser", 5, false, "Quarters keeps four defenders deep and only three underneath, so the crossers have room to run."),
     "cover-6": m(2, "H", "a shallow crosser", 5, false, "Only three underneath defenders, but the Cover 2 side's squatting corner takes away the end of the crossers' run."),
     "cover-2": m(1, "RB", "the back in the flat", 3, true, "Five defenders underneath crowd the crossers, and the corners sit in the flats."),
     "2-man": m(3, "H", "a shallow crosser", 5, false, "The best answer: the crossers run their trailing defenders into each other, with no zone defenders underneath to help."),
@@ -465,6 +510,61 @@ export const MATCHUPS: Readonly<Record<ConceptId, Readonly<Record<CoverageId, Ma
     "cover-2": m(2, "X", "the curl", 11, false, "The corner sits in the flat, so the curl opens behind him."),
     "2-man": m(1, "X", "the curl", 11, false, "Against man, the curl must beat its trailing defender, who sits underneath it."),
     palms: m(3, "X", "the curl", 11, false, "Palms' weak spot: the corner jumps the flat, and the safety is backing up to stay deep, so the curl opens between them."),
+  },
+  levels: {
+    "cover-0": m(2, "Y", "the shallow in", 5, false, "The in at 5 is quick and breaks away from its man, with no one inside to help."),
+    "cover-1": m(1, "Z", "the dig", 12, false, "The robber sits right where both in-breaking routes cross."),
+    "cover-2": m(2, "Z", "the dig", 12, false, "The dig settles behind the curl defenders and in front of the safeties."),
+    "2-man": m(1, "Y", "the shallow in", 5, false, "The trailing defenders sit inside their receivers, exactly where in-breaking routes go."),
+    "tampa-2": m(1, "Y", "the shallow in", 5, false, "The middle linebacker runs right through the dig's spot, leaving only the shallow in."),
+    "cover-3": m(2, "Z", "the dig", 12, false, "A high-low on the hook defender: if he takes the in at 5, the dig opens behind him."),
+    "cover-4": m(2, "Y", "the shallow in", 5, false, "The safeties drive down on the dig, but the in at 5 has room against three underneath defenders."),
+    palms: m(2, "Y", "the shallow in", 5, false, "Three underneath defenders leave room for the in at 5 under the safeties."),
+    "cover-6": m(2, "Z", "the dig", 12, false, "On the Cover 2 side the dig settles behind the hook-curl defender and in front of the half-field safety."),
+  },
+  snag: {
+    "cover-0": m(1, "H", "the flat", 2, true, "Against man, the triangle outnumbers no one; only the flat is quick enough against six rushers."),
+    "cover-1": m(1, "Y", "the corner route", 16, true, "Against man, the corner route has to beat its defender on its own."),
+    "cover-2": m(2, "Y", "the corner route", 16, true, "The corner squats on the flat, so the corner route opens behind him."),
+    "2-man": m(1, "Z", "the snag route", 5, false, "The trailing defenders sit under the snag, and the corner route runs into a safety's half."),
+    "tampa-2": m(3, "Y", "the corner route", 16, true, "The corner sits in the flat and the snag holds the hook-curl defender, so the corner route lands in the sideline hole."),
+    "cover-3": m(2, "Z", "the snag route", 5, false, "The corner bails with the corner route, and the curl-flat defender can't take both the snag and the flat."),
+    "cover-4": m(2, "H", "the flat", 2, true, "The corner and safety carry the corner route, so the flat is open against only three underneath defenders."),
+    palms: m(2, "Z", "the snag route", 5, false, "When the corner jumps the flat, the snag sits open inside him."),
+    "cover-6": m(3, "Y", "the corner route to the Cover 2 side", 16, true, "On the Cover 2 side the corner squats on the flat, so the corner route lands behind him."),
+  },
+  "post-wheel": {
+    "cover-0": m(1, "X", "the post", 20, false, "The post can beat its man with no safety deep, but both routes take too long against six rushers."),
+    "cover-1": m(3, "H", "the wheel", 18, true, "The wheel runs the slot's defender up the sideline, away from the free safety in the middle."),
+    "cover-2": m(2, "X", "the post", 20, false, "The post splits the two safeties up the middle."),
+    "2-man": m(2, "X", "the post", 20, false, "The post splits the two safeties, the one place 2-Man has no help."),
+    "tampa-2": m(2, "H", "the wheel", 18, true, "The wheel climbs past the squatting corner into the sideline hole."),
+    "cover-3": m(2, "H", "the wheel", 18, true, "The post holds the free safety and the wheel climbs past the curl-flat defender, though the corner can sink under it."),
+    "cover-4": m(1, "X", "the post", 20, false, "The safety takes the wheel and the corner sits inside on the post. Both are covered."),
+    palms: m(3, "H", "the wheel", 18, true, "Palms' killer: the corner jumps the slot's release to the flat, and the wheel turns up behind him."),
+    "cover-6": m(1, "X", "the post", 20, false, "Run to the quarters side, where the deep defenders match both routes."),
+  },
+  mills: {
+    "cover-0": m(1, "Y", "the dig", 10, false, "Both routes take too long against six rushers."),
+    "cover-1": m(1, "Y", "the dig", 10, false, "The post runs into the free safety, and the robber sits on the dig."),
+    "cover-2": m(2, "Z", "the post", 20, false, "The post splits the two safeties, and the dig holds the middle linebacker."),
+    "2-man": m(2, "Z", "the post", 20, false, "The post splits the two safeties up the middle."),
+    "tampa-2": m(1, "Y", "the dig", 10, false, "The middle linebacker drops into the middle and takes both the post and the dig away."),
+    "cover-3": m(2, "Y", "the dig", 10, false, "The post holds the free safety, and the dig opens behind the hook defender."),
+    "cover-4": m(3, "Z", "the post", 20, false, "The quarters beater: the safety drives down on the dig, and the post runs right past him."),
+    palms: m(2, "Z", "the post", 20, false, "The safety drives on the dig like in quarters, so the post can run past him."),
+    "cover-6": m(2, "Z", "the post", 20, false, "On the Cover 2 side, the post splits the half-field safety's area."),
+  },
+  spacing: {
+    "cover-0": m(2, "X", "the hitch", 5, true, "Quick: every route has to beat its man, but the ball is out before the rush arrives."),
+    "cover-1": m(1, "X", "the hitch", 5, true, "Against man, sit routes don't find gaps, they need to beat a defender, and the robber sits in the middle."),
+    "cover-2": m(1, "H", "a spot route", 5, false, "Five defenders underneath match five sit routes, so the windows are tight."),
+    "2-man": m(1, "X", "the hitch", 5, true, "The trailing defenders sit right under every short route."),
+    "tampa-2": m(1, "H", "a spot route", 5, false, "Five defenders underneath crowd the sit routes."),
+    "cover-3": m(2, "X", "the hitch", 5, true, "The corners bail, and four underneath defenders can't cover five sit routes."),
+    "cover-4": m(3, "Y", "a spot route", 5, false, "Five sit routes against three underneath defenders: someone is always open."),
+    palms: m(2, "Y", "a spot route", 5, false, "Only three defenders underneath, though the corners jump anything in the flats."),
+    "cover-6": m(2, "Y", "a spot route", 5, false, "Only three defenders underneath, so the sit routes find gaps."),
   },
 };
 

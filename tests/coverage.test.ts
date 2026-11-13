@@ -31,6 +31,12 @@ describe("the grades", () => {
     // Palms jumps the flat, leaving the curl, and matches verticals like quarters.
     expect(MATCHUPS["curl-flat"].palms.grade).toBe(3);
     expect(MATCHUPS["four-verts"].palms.grade).toBe(0);
+    // Mills beats quarters; Post-Wheel beats man and Palms; Snag hits the Tampa 2 sideline hole.
+    expect(MATCHUPS.mills["cover-4"].grade).toBe(3);
+    expect(MATCHUPS["post-wheel"]["cover-1"].grade).toBe(3);
+    expect(MATCHUPS["post-wheel"].palms.grade).toBe(3);
+    expect(MATCHUPS.snag["tampa-2"].grade).toBe(3);
+    expect(MATCHUPS.spacing["2-man"].grade).toBe(1);
   });
 
   it("aren't changed by a neutral situation", () => {

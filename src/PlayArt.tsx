@@ -119,11 +119,14 @@ export default function PlayArt({ concept, formation, look, coverage, read, dept
         // The first read on top, in the best call's green, labeled where the ball should arrive.
         const route = routes[read] ?? [receivers[read], [receivers[read][0], receivers[read][1] + 3]];
         const end = at(route[route.length - 1]!);
-        const labelY = Math.max(2.4, end.y - 1.6);
+        // Above the arrow, or beside it (toward the middle of the field) when the route runs to the top.
+        const nearTop = end.y < 5;
+        const labelX = nearTop ? end.x + (end.x < (X1 - X0) / 2 ? 5.5 : -5.5) : Math.min(Math.max(end.x, 5), X1 - X0 - 5);
+        const labelY = nearTop ? end.y + 3.2 : end.y - 1.6;
         return (
           <g className="pa-read">
             <polyline points={pts(route, top)} className="pa-route read" markerEnd={`url(#${id}-rarrow)`} />
-            <text x={Math.min(Math.max(end.x, 5), X1 - X0 - 5)} y={labelY} className="pa-read-label">1st read</text>
+            <text x={labelX} y={labelY} className="pa-read-label">1st read</text>
           </g>
         );
       })()}
