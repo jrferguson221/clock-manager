@@ -41,7 +41,7 @@ export default function ScenarioPanel() {
     clock: clock.seconds, running: false, poss: "you", down: s.down, toGo: Math.min(s.toGo, ytg), ytg,
     margin: s.margin, timeouts: { you: s.timeouts, opp: s.oppTimeouts }, over: false,
   };
-  const inputs = { scenario: s.scenario, game, sackYards: s.sackYards, gain: s.gain, extra: s.extra, seconds: s.seconds };
+  const inputs = { scenario: s.scenario, game, sackYards: s.sackYards, gain: s.gain, stay: s.stay, seconds: s.seconds };
   const sim = useDebouncedByKey(inputs, JSON.stringify(inputs));
 
   const analysis = useMemo(() => {
@@ -51,7 +51,7 @@ export default function ScenarioPanel() {
   }, [sim.value]);
 
   /** The scenario's own inputs, as pickers in the strip under the bug. */
-  const extras = (["sackYards", "gain", "extra", "seconds"] as const).flatMap((field) => {
+  const extras = (["sackYards", "gain", "stay", "seconds"] as const).flatMap((field) => {
     const label = def.fields[field];
     if (label === undefined) return [];
     return [(

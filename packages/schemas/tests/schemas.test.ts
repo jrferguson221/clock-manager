@@ -103,9 +103,9 @@ describe("scenarioSearchSchema", () => {
   });
 
   it("drops an unknown scenario or out-of-range input back to the default", () => {
-    const parsed = scenarioSearchSchema.parse({ scenario: "kicker", sackYards: 99, extra: 0, gain: 12 });
+    const parsed = scenarioSearchSchema.parse({ scenario: "kicker", sackYards: 99, stay: 99, gain: 12 });
     expect(parsed.scenario).toBe("qb-throwaway");
     expect(parsed.sackYards).toBe(SCENARIO_DEFAULTS.sackYards);
-    expect(parsed.extra).toBe(SCENARIO_DEFAULTS.extra);
+    expect(parsed.stay).toBe(SCENARIO_DEFAULTS.stay);
   });
 });

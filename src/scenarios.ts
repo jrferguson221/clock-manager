@@ -17,16 +17,16 @@ export interface ScenarioInput {
   game: GameState;
   /** QB: yards the sack loses. */
   sackYards: number;
-  /** WR: yards gained by the time he can step out of bounds. */
+  /** Ball carrier: yards he gets if he steps out of bounds. */
   gain: number;
-  /** WR: extra yards for turning upfield instead. */
-  extra: number;
+  /** Ball carrier: yards he gets if he stays in bounds. */
+  stay: number;
   /** Seconds from the snap to the end of the play. */
   seconds: number;
 }
 
 export type OptionId =
-  | "throw-away" | "sack" | "out-of-bounds" | "upfield" | "score" | "go-down" | "slide" | "stay-in-bounds" | "kneel" | "run";
+  | "throw-away" | "sack" | "out-of-bounds" | "stay-in-bounds" | "score" | "go-down" | "kneel" | "run";
 
 interface OptionDef {
   readonly id: OptionId;
@@ -42,12 +42,12 @@ interface OptionDef {
 export interface ScenarioFields {
   readonly sackYards?: string;
   readonly gain?: string;
-  readonly extra?: string;
+  readonly stay?: string;
   readonly seconds?: string;
 }
 
 interface ScenarioDef {
-  readonly role: "QB" | "WR" | "RB" | "Coach";
+  readonly role: "QB" | "Ball carrier" | "RB" | "Coach";
   readonly fields: ScenarioFields;
   readonly title: string;
   readonly question: string;
@@ -58,7 +58,7 @@ interface ScenarioDef {
   readonly caveat: Reason;
 }
 
-/** Seconds it takes to run `yards` more after the catch: about a second per 8 yards, at least one. */
+/** Seconds it takes to run `yards` more: about a second per 8 yards, at least one. */
 const runningTime = (yards: number) => Math.max(1, Math.round(yards / 8));
 
 export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
@@ -83,24 +83,24 @@ export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
       section: "clock-rules",
     },
   },
-  "wr-sideline": {
-    role: "WR",
-    fields: { gain: "Gain at the catch (yards)", extra: "Extra yards by turning upfield", seconds: "Seconds the play takes" },
-    title: "Get out of bounds or turn upfield?",
-    question: "The receiver makes the catch near the sideline. Step out of bounds now, or turn upfield for more yards and get tackled in bounds?",
+  "ball-carrier": {
+    role: "Ball carrier",
+    fields: { gain: "Yards if he steps out", stay: "Yards if he stays in bounds", seconds: "Seconds the play takes" },
+    title: "Get out of bounds, or stay in bounds?",
+    question: "The ball carrier is near the sideline: a receiver after the catch, a quarterback scrambling or a running back. Step out to stop the clock, or stay in bounds and keep it running? Set the yards each choice gets: turning upfield usually gets more, angling for the sideline can cost a few.",
     options: [
       {
-        id: "out-of-bounds", label: "Get out of bounds", call: "pass-sideline",
-        outcome: (i) => ({ yards: i.gain, seconds: i.seconds, outOfBounds: true, incomplete: false }),
+        id: "out-of-bounds", label: "Get out of bounds", call: "run",
+        outcome: (i) => ({ yards: i.gain, seconds: i.seconds + (i.gain > i.stay ? runningTime(i.gain - i.stay) : 0), outOfBounds: true, incomplete: false }),
       },
       {
-        id: "upfield", label: "Turn upfield", call: "pass-middle",
-        outcome: (i) => ({ yards: i.gain + i.extra, seconds: i.seconds + runningTime(i.extra), outOfBounds: false, incomplete: false }),
+        id: "stay-in-bounds", label: "Stay in bounds", call: "run",
+        outcome: (i) => ({ yards: i.stay, seconds: i.seconds + (i.stay > i.gain ? runningTime(i.stay - i.gain) : 0), outOfBounds: false, incomplete: false }),
       },
     ],
-    clocks: [180, 120, 90, 60, 45, 30, 20, 10],
+    clocks: [300, 180, 120, 90, 60, 45, 30, 20, 10],
     caveat: {
-      text: "Going out of bounds stops the clock until the snap in the last 2:00 of the first half and the last 5:00 of the game; earlier, it restarts when the ball is spotted. The model assumes the extra yards are there for the taking, with no fumble risk.",
+      text: "Going out of bounds stops the clock until the snap in the last 2:00 of the first half and the last 5:00 of the game; earlier, it restarts when the ball is spotted, and stepping out costs almost nothing. The model assumes both choices are safe: no fumble, and no big hit on a quarterback who doesn't slide.",
       section: "clock-rules",
     },
   },
@@ -122,48 +122,6 @@ export const SCENARIOS: Readonly<Record<ScenarioId, ScenarioDef>> = {
     clocks: [240, 180, 120, 90, 65, 45, 30, 15],
     caveat: {
       text: "Going down is a sure thing in the model: no fumble, and the offense always gets its snaps off. Real defenses sometimes let a runner score on purpose to get the ball back with time left; this is the runner's answer to that.",
-      section: "running-out-the-clock",
-    },
-  },
-  "qb-slide": {
-    role: "QB",
-    fields: { gain: "Gain if he slides (yards)", extra: "Yards given up to reach the sideline", seconds: "Seconds the play takes" },
-    title: "Slide, or get out of bounds?",
-    question: "The quarterback scrambles with room to run. Slide in bounds for the yards he has, or angle to the sideline and step out, giving up a few yards?",
-    options: [
-      {
-        id: "slide", label: "Slide in bounds", call: "run",
-        outcome: (i) => ({ yards: i.gain, seconds: i.seconds, outOfBounds: false, incomplete: false }),
-      },
-      {
-        id: "out-of-bounds", label: "Get out of bounds", call: "run",
-        outcome: (i) => ({ yards: Math.max(0, i.gain - i.extra), seconds: i.seconds + 1, outOfBounds: true, incomplete: false }),
-      },
-    ],
-    clocks: [180, 120, 90, 60, 45, 30, 20, 10],
-    caveat: {
-      text: "A sliding quarterback is down where the slide starts, and protected from big hits. Angling for the sideline exposes him to one, and to a fumble, which the model doesn't include.",
-      section: "clock-rules",
-    },
-  },
-  "rb-inbounds": {
-    role: "RB",
-    fields: { gain: "Gain if he stays in bounds (yards)", extra: "Extra yards by fighting to the sideline", seconds: "Seconds the play takes" },
-    title: "Stay in bounds, or fight for the extra yards?",
-    question: "Protecting a lead, the running back is near the sideline. Go down in bounds to keep the clock running, or fight for extra yards and step out?",
-    options: [
-      {
-        id: "stay-in-bounds", label: "Stay in bounds", call: "run",
-        outcome: (i) => ({ yards: i.gain, seconds: i.seconds, outOfBounds: false, incomplete: false }),
-      },
-      {
-        id: "out-of-bounds", label: "Get the extra yards", call: "run",
-        outcome: (i) => ({ yards: i.gain + i.extra, seconds: i.seconds + runningTime(i.extra), outOfBounds: true, incomplete: false }),
-      },
-    ],
-    clocks: [300, 240, 180, 150, 120, 90, 60, 30],
-    caveat: {
-      text: "Going out of bounds stops the clock until the snap only in the last 2:00 of the first half and the last 5:00 of the game; earlier, it restarts when the ball is spotted, and stepping out costs almost nothing.",
       section: "running-out-the-clock",
     },
   },
@@ -318,7 +276,6 @@ function explainScenario(id: ScenarioId, input: ScenarioInput, options: readonly
       section: "win-probability",
     };
   }
-  const winner = options[pick].label;
   switch (id) {
     case "qb-throwaway":
       if (pick === 0) {
@@ -334,19 +291,6 @@ function explainScenario(id: ScenarioId, input: ScenarioInput, options: readonly
           : `Take the sack: the model has it ${pts(diff)} ahead here, an unusual result when you're not ahead. See how it changes with the clock in the table below.`,
         section: ahead ? "running-out-the-clock" : "win-probability",
       };
-    case "wr-sideline":
-      if (pick === 0) {
-        return {
-          text: `Get out of bounds. Stopping the clock with ${clock} left is worth more than ${input.extra} more yards with it running: ${pts(diff)}.${g.timeouts.you > 0 ? "" : " With no timeouts left, the sideline is the only way to stop it without spending a down on a spike."}`,
-          section: g.timeouts.you > 0 ? "clock-rules" : "spike",
-        };
-      }
-      return {
-        text: ahead
-          ? `${winner}. You're ahead: staying in bounds keeps the clock running for you, on top of the extra ${input.extra} yards (${pts(diff)}).`
-          : `${winner}. The extra ${input.extra} yards are worth more than the seconds the running clock costs (${pts(diff)}): ${g.timeouts.you > 0 ? "a timeout can stop it afterward" : "there's still time to spike it and keep going"}.`,
-        section: ahead ? "running-out-the-clock" : g.timeouts.you > 0 ? "timeouts" : "drive-budget",
-      };
     case "rb-score":
       if (pick === 1) {
         return {
@@ -360,33 +304,38 @@ function explainScenario(id: ScenarioId, input: ScenarioInput, options: readonly
           : `Score. With ${clock} left, there's too much time to run out from the 1, and the points are worth ${pts(diff)} more than the ball.`,
         section: g.margin < -3 ? "red-zone" : "running-out-the-clock",
       };
-    case "qb-slide":
-      if (pick === 1) {
+    case "ball-carrier": {
+      const more = input.stay - input.gain;
+      const outConverts = input.gain >= g.toGo;
+      const stayConverts = input.stay >= g.toGo;
+      const noTimeouts = g.timeouts.you > 0 ? "" : " With no timeouts left, the sideline is the only way to stop it without spending a down on a spike.";
+      if (pick === 0) {
+        if (ahead) {
+          return {
+            text: outConverts && !stayConverts
+              ? `Get out of bounds. The ${input.gain} yards move the chains on ${ordinalDown(g.down)} & ${g.toGo}, and a fresh set of downs burns far more clock than one stopped play gives back (${pts(diff)}).`
+              : `Get out of bounds: here the yards are worth more than the seconds a stopped clock gives back (${pts(diff)}).`,
+            section: "running-out-the-clock",
+          };
+        }
         return {
-          text: `Get out of bounds. With ${clock} left, stopping the clock is worth more than the ${input.extra} yards it costs to reach the sideline (${pts(diff)}).${g.timeouts.you > 0 ? "" : " With no timeouts, it's the only way to stop the clock without a spike."}`,
+          text: more > 0
+            ? `Get out of bounds. Stopping the clock with ${clock} left is worth more than ${more} more yards with it running: ${pts(diff)}.${noTimeouts}`
+            : `Get out of bounds. It gets as many yards or more and stops the clock with ${clock} left: ${pts(diff)}.${noTimeouts}`,
           section: g.timeouts.you > 0 ? "clock-rules" : "spike",
         };
       }
-      return {
-        text: ahead
-          ? `Slide. You're ahead: staying in bounds keeps the clock running for you, and the slide keeps him safe (${pts(diff)}).`
-          : `Slide. The extra ${input.extra} yards are worth more than the seconds the running clock costs (${pts(diff)}): ${g.timeouts.you > 0 ? "a timeout can stop it afterward" : "there's still time to spike it and keep going"}.`,
-        section: ahead ? "running-out-the-clock" : g.timeouts.you > 0 ? "timeouts" : "spike",
-      };
-    case "rb-inbounds": {
-      const stayConverts = input.gain >= g.toGo;
-      const extraConverts = input.gain + input.extra >= g.toGo;
-      if (pick === 1) {
+      if (ahead) {
         return {
-          text: extraConverts && !stayConverts
-            ? `Get the extra yards. They move the chains (${input.gain + input.extra} yards on ${ordinalDown(g.down)} & ${g.toGo}), and a fresh set of downs burns far more clock than one stopped play costs (${pts(diff)}).`
-            : `Get the extra yards: here they're worth more than the seconds a stopped clock gives back (${pts(diff)}).`,
+          text: `Stay in bounds. You're ahead: keeping the clock running with ${clock} left is worth more than ${more < 0 ? `${-more} more yards` : "stopping it"}${outConverts && !stayConverts ? ", even with a first down at stake" : ""} (${pts(diff)}). Stepping out would stop the clock for them.`,
           section: "running-out-the-clock",
         };
       }
       return {
-        text: `Stay in bounds. Keeping the clock running with ${clock} left is worth more than ${input.extra} more yards${extraConverts && !stayConverts ? ", even with a first down at stake" : ""} (${pts(diff)}). Stepping out would stop the clock for them.`,
-        section: "running-out-the-clock",
+        text: more > 0
+          ? `Stay in bounds. The extra ${more} yards are worth more than the seconds the running clock costs (${pts(diff)}): ${g.timeouts.you > 0 ? "a timeout can stop it afterward" : "there's still time to spike it and keep going"}.`
+          : `Stay in bounds: the model has it ${pts(diff)} ahead here. See how it changes with the clock in the table below.`,
+        section: g.timeouts.you > 0 ? "timeouts" : "drive-budget",
       };
     }
     case "kneel-or-run": {

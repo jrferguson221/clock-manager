@@ -10,9 +10,9 @@ The **Kick or go for 2** tab (`#/two-point`) is for the try after a touchdown. S
 
 The **Player decisions** tab (`#/scenarios`) compares choices made in the middle of a play, or right before it:
 
-- **QB:** throw it away or take the sack; on a scramble, slide in bounds or get out of bounds.
-- **WR:** get out of bounds or turn upfield.
-- **RB:** score, or go down at the 1 to keep the ball and the clock; with the lead, stay in bounds or fight for extra yards out of bounds.
+- **QB:** throw it away or take the sack.
+- **Ball carrier:** near the sideline, get out of bounds or stay in bounds. It covers a receiver after the catch, a quarterback scrambling and a running back: set the yards each choice gets, more for turning upfield or fewer for angling to the sideline.
+- **RB:** score, or go down at the 1 to keep the ball and the clock.
 - **Coach:** kneel, or run it. The run's result is left to chance, since the decision comes before the snap.
 
 Each option fixes how the play ends, and the rest of the game is simulated 3,000 times, on the same random numbers for both options. The page gives a verdict with the reason, each option's win probability and the situation after the play. A "Where the answer flips" table shows the same choice at other clock times, and a note gives the exact clock at which the answer changes, e.g. "With 0:19 or less left, get out of bounds instead". Each scenario starts from a preset situation, set on the scorebug (the clock reads "At the snap"), with the scenario's own inputs, such as yards lost on a sack, in the strip under it. Every input is in the URL.

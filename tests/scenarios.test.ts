@@ -8,8 +8,8 @@ const seconds = (clock: string) => {
   return Number(m) * 60 + Number(s);
 };
 
-/** A preset's situation as the analysis takes it, with optional changes. */
-function presetInput(id: ScenarioId, patch: Partial<GameState> = {}): ScenarioInput {
+/** A preset's situation as the analysis takes it, with optional changes to the game and the play. */
+function presetInput(id: ScenarioId, patch: Partial<GameState> = {}, play: Partial<Omit<ScenarioInput, "game">> = {}): ScenarioInput {
   const p = SCENARIO_PRESETS[id];
   const ytg = p.side === "own" ? 100 - p.yardLine : p.yardLine;
   return {
@@ -17,7 +17,7 @@ function presetInput(id: ScenarioId, patch: Partial<GameState> = {}): ScenarioIn
       clock: seconds(p.clock), running: false, poss: "you", down: p.down, toGo: Math.min(p.toGo, ytg), ytg, margin: p.margin,
       timeouts: { you: p.timeouts, opp: p.oppTimeouts }, over: false, ...patch,
     },
-    sackYards: p.sackYards, gain: p.gain, extra: p.extra, seconds: p.seconds,
+    sackYards: p.sackYards, gain: p.gain, stay: p.stay, seconds: p.seconds, ...play,
   };
 }
 
@@ -29,11 +29,12 @@ describe("scenarios", () => {
     expect(a.reason.section).toBe("clock-rules");
   });
 
-  it("WR: at 0:15 with no timeouts get out of bounds; at 0:24 there's time to turn upfield, spike and kick", () => {
-    const late = analyzeScenario("wr-sideline", presetInput("wr-sideline"), 1000, 200);
+  it("ball carrier after a catch: at 0:15 with no timeouts get out; at 0:24 there's time to turn upfield, spike and kick", () => {
+    // 12 yards stepping out, 18 turning upfield.
+    const late = analyzeScenario("ball-carrier", presetInput("ball-carrier"), 1000, 200);
     expect(late.better).toBe(0);
     expect(late.options[0].id).toBe("out-of-bounds");
-    const earlier = analyzeScenario("wr-sideline", presetInput("wr-sideline", { clock: 24 }), 1000, 200);
+    const earlier = analyzeScenario("ball-carrier", presetInput("ball-carrier", { clock: 24 }), 1000, 200);
     expect(earlier.better).toBe(1);
     expect(earlier.flipNote).toMatch(/or less left, get out of bounds instead/);
   });
@@ -45,16 +46,20 @@ describe("scenarios", () => {
     expect(behind.options[behind.better ?? 1].id).toBe("score");
   });
 
-  it("QB scramble: with 0:40 left and no timeouts, get out of bounds", () => {
-    const late = analyzeScenario("qb-slide", presetInput("qb-slide"), 1000, 200);
+  it("ball carrier on a scramble: with 0:40 left and no timeouts, give up 3 yards to get out of bounds", () => {
+    const scramble = presetInput("ball-carrier", { clock: 40, down: 2 }, { gain: 6, stay: 9, seconds: 6 });
+    const late = analyzeScenario("ball-carrier", scramble, 1000, 200);
     expect(late.options[late.better ?? 0].id).toBe("out-of-bounds");
   });
 
-  it("RB with the lead: inside two minutes stay in bounds, unless the extra yards move the chains", () => {
-    const classic = analyzeScenario("rb-inbounds", presetInput("rb-inbounds"), 1000, 200);
+  it("ball carrier with the lead: inside two minutes stay in bounds, unless stepping out moves the chains", () => {
+    // Up 1 with 1:15 left at your 35; the opponent has a timeout. 4 yards in bounds, 7 fighting out of bounds.
+    const lead = { clock: 75, margin: 1, down: 2 as const, toGo: 10, ytg: 65, timeouts: { you: 2, opp: 1 } };
+    const run = { gain: 7, stay: 4 };
+    const classic = analyzeScenario("ball-carrier", presetInput("ball-carrier", lead, run), 1000, 200);
     expect(classic.options[classic.better ?? 1].id).toBe("stay-in-bounds");
     // 3rd & 6: 4 yards in bounds leaves 4th down; 7 yards out of bounds is a first down.
-    const chains = analyzeScenario("rb-inbounds", presetInput("rb-inbounds", { down: 3, toGo: 6, clock: 150, margin: 4 }), 1000, 200);
+    const chains = analyzeScenario("ball-carrier", presetInput("ball-carrier", { ...lead, down: 3, toGo: 6, clock: 150, margin: 4 }, run), 1000, 200);
     expect(chains.options[chains.better ?? 0].id).toBe("out-of-bounds");
     expect(chains.reason.text).toContain("move the chains");
   });

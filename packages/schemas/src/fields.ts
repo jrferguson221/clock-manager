@@ -13,10 +13,10 @@ export const LIMITS = {
   hurryUp: { min: 5, max: 40 },
   /** Scenarios: yards a sack loses. */
   sackYards: { min: 1, max: 20 },
-  /** Scenarios: yards gained by the time the receiver can step out of bounds. */
+  /** Scenarios: yards the ball carrier gets if he steps out of bounds. */
   gain: { min: 0, max: 60 },
-  /** Scenarios: extra yards for turning upfield instead. */
-  extra: { min: 1, max: 30 },
+  /** Scenarios: yards the ball carrier gets if he stays in bounds. */
+  stay: { min: 0, max: 60 },
   /** Scenarios: seconds from the snap to the end of the play. */
   seconds: { min: 2, max: 12 },
 } as const satisfies Record<string, { readonly min: number; readonly max: number }>;
