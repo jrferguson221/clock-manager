@@ -132,11 +132,25 @@ function fgPlay(g: GameState): boolean {
  * Seconds from the end of the last play to the snap when the clock is running, for a call: a leading team
  * drains the play clock, a trailing one hurries, a spike or a kick takes its own setup time.
  */
-export function snapDelay(g: GameState, call: PlayCall, cfg: SimConfig = DEFAULT_SIM): number {
-  return preSnapBurn(g, call, cfg);
+export function snapDelay(g: GameState, call: PlayCall, cfg: SimConfig = DEFAULT_SIM, tempo: Tempo = "auto"): number {
+  return preSnapBurn(g, call, cfg, tempo);
 }
 
-function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig): number {
+/**
+ * The pace of the next snap with the clock running. "auto" is the model's own choice (below); "hurry" snaps
+ * as fast as the offense can line up; "drain" lets the play clock run down and snaps with 1 second left.
+ * The trainer lets you pick it for the snap you're calling. The plays after it go back to "auto".
+ */
+export type Tempo = "auto" | "hurry" | "drain";
+export const TEMPOS: readonly Tempo[] = ["auto", "hurry", "drain"];
+
+function preSnapBurn(g: GameState, call: PlayCall, cfg: SimConfig, tempo: Tempo = "auto"): number {
+  if (tempo === "drain") return BURN;
+  if (tempo === "hurry") {
+    if (call === "fg" || call === "punt") return cfg.fgRush;
+    if (call === "spike") return cfg.spikeLineup;
+    return g.clock <= LATE_HURRY_WINDOW ? Math.min(cfg.hurryUp, LATE_HURRY_UP) : cfg.hurryUp;
+  }
   // A kneel is for running out the clock, so it always lets the play clock run, ahead or tied.
   if (marginFor(g, g.poss) > 0 || call === "kneel") return BURN;
   if (call === "fg" || call === "punt") return cfg.fgRush;
@@ -205,8 +219,10 @@ export function availableCalls(g: GameState): readonly PlayCall[] {
   if (g.timeouts[g.poss] > 0) calls.push("timeout");
   calls.push("run", "pass-screen", "pass-sideline", "pass-middle", "pass-play-action", "pass-deep");
   if (g.down <= 3) calls.push("spike");
-  // Kneeling gives up a down and time, which only helps a team that's ahead, or tied and settling for overtime.
-  if (marginFor(g, g.poss) >= 0) calls.push("kneel");
+  // Kneeling gives up a down and a yard. It helps a team that's ahead, one that's tied and settling for
+  // overtime, and one in field-goal range that only needs the kick, draining the clock without a fumble.
+  const m = marginFor(g, g.poss);
+  if (m >= 0 || (m >= -3 && g.ytg <= FG_MAX_YTG)) calls.push("kneel");
   if (g.ytg <= FG_MAX_YTG) calls.push("fg");
   // Punts only on 4th down: teams don't quick-kick late in games.
   if (g.ytg >= PUNT_MIN_YTG && g.down === 4) calls.push("punt");
@@ -641,7 +657,9 @@ function kickoff(scored: GameState, clock: number, text: string, r: Rng): { stat
  * Apply one decision by the team with the ball: the pre-snap clock, the play, the clock after it,
  * a defensive timeout if the defense wants one, and any change of possession.
  */
-export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFAULT_SIM, forced?: PlayOutcome): StepResult {
+export function step(
+  g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFAULT_SIM, forced?: PlayOutcome, tempo: Tempo = "auto",
+): StepResult {
   if (g.over) throw new RangeError("the game is over");
   const team = g.poss;
   const def = other(team);
@@ -650,12 +668,26 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
     if (g.timeouts[team] === 0) throw new RangeError("no timeouts left");
     const timeouts = { ...g.timeouts, [team]: g.timeouts[team] - 1 };
     const wasted = g.running ? "" : " (the clock was already stopped)";
-    // At the kick, a team that only needs the field goal lets the clock run down before taking its last
-    // stop, so the kick ends the game rather than handing the other team a few seconds.
-    const clock = g.running && fgPlay(g) && g.clock <= kickFloor(g, cfg) ? Math.min(g.clock, FG_TIMEOUT_AT) : g.clock;
+    let clock = g.clock;
+    let note = "";
+    if (g.running && tempo === "drain") {
+      // Let the play clock run down to 1 before calling it, or stop at 0:03 if that comes first, leaving
+      // time for a field goal. The two-minute warning stops the clock on its own first.
+      const drained = g.clock - BURN;
+      if (g.clock > WARNING && drained <= WARNING) {
+        clock = WARNING;
+        note = " after the two-minute warning";
+      } else {
+        clock = Math.max(drained, Math.min(g.clock, FG_TIMEOUT_AT));
+      }
+    } else if (g.running && tempo === "auto" && fgPlay(g) && g.clock <= kickFloor(g, cfg)) {
+      // At the kick, a team that only needs the field goal lets the clock run down before taking its last
+      // stop, so the kick ends the game rather than handing the other team a few seconds.
+      clock = Math.min(g.clock, FG_TIMEOUT_AT);
+    }
     return {
       state: { ...g, clock, running: false, timeouts },
-      text: `${who(team)} call timeout at ${formatClock(clock)}${wasted}, ${timeouts[team]} left.`,
+      text: `${who(team)} call timeout at ${formatClock(clock)}${note}${wasted}, ${timeouts[team]} left.`,
     };
   }
 
@@ -663,7 +695,7 @@ export function step(g: GameState, call: PlayCall, r: Rng, cfg: SimConfig = DEFA
   let t = g.clock;
   const notes: string[] = [];
   if (g.running) {
-    const after = t - preSnapBurn(g, call, cfg);
+    const after = t - preSnapBurn(g, call, cfg, tempo);
     if (t > WARNING && after <= WARNING) {
       t = WARNING;
       notes.push("Two-minute warning before the snap.");
@@ -879,6 +911,25 @@ export type CallValues = NonEmpty<ScoredCall>;
  * Your win probability for each call available now, followed by the policy afterward.
  * Every call is scored on the same random streams, so differences between calls are less noisy.
  */
+/**
+ * Your win probability with one call at a tempo you pick for its snap, on the same random streams as
+ * `evaluateCalls`, so it compares directly with the values there. A timeout looks ahead to the best play
+ * after it, as there.
+ */
+export function scoreCallAtTempo(g: GameState, call: PlayCall, tempo: Tempo, n = 500, cfg: SimConfig = DEFAULT_SIM): number {
+  if (call === "timeout") {
+    const after = step(g, "timeout", streamFor(0), cfg, undefined, tempo).state;
+    if (g.running) return bestScored(scoreCalls(after, availableCalls(after).filter((c) => c !== "timeout"), n, cfg)).wp;
+    return wpOf(evaluateCalls(g, n, cfg), "timeout");
+  }
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const r = streamFor(i);
+    sum += playOut(step(g, call, r, cfg, undefined, tempo).state, r, cfg);
+  }
+  return sum / n;
+}
+
 export function evaluateCalls(g: GameState, n = 500, cfg: SimConfig = DEFAULT_SIM): CallValues {
   return scoreCalls(g, availableCalls(g), n, cfg);
 }
@@ -1078,7 +1129,7 @@ export function whyNot(g: GameState, call: PlayCall): Reason | null {
   if (call === "timeout" && !g.running)
     return reason("A timeout gains nothing with the clock already stopped, and spends one you may need later.", "timeouts");
   if (call === "spike" && !g.running) return reason("A spike gains nothing with the clock already stopped, and throws away a down.", "spike");
-  if (call === "kneel" && m <= 0) return reason("Kneeling gives up a down and time you need.", "clock-rules");
+  if (call === "kneel" && m <= 0 && !fgPlay(g)) return reason("Kneeling gives up a down and time you need.", "clock-rules");
   if (call === "pass-deep" && m <= 0) {
     const coverage = coverageFor(g, g.clock);
     const odds = passOdds(coverage, "pass-deep", g.ytg);

@@ -28,3 +28,13 @@ it("shows the situation as a scorebug you edit in place, with the hurry-up setti
   expect(html).toMatch(/aria-pressed="true"[^>]*aria-label="Their timeout 1"/);
   expect(html).toMatch(/aria-pressed="false"[^>]*aria-label="Their timeout 2"/);
 });
+
+it("in field-goal range with the clock running, offers a kneel and a tempo switch for the next snap", async () => {
+  const { html } = await renderAt("/trailing?clock=1:30&trail=2&side=opp&yardLine=20");
+  expect(html).toContain('aria-label="Tempo of the next snap"');
+  for (const label of ["Auto", "Hurry up", "Drain the clock"]) expect(html).toContain(`>${label}<`);
+  expect(html).toMatch(/<button[^>]*data-kind="kneel"(?![^>]*disabled)[^>]*>/);
+  // With the clock stopped, there's no pace to choose.
+  const stopped = await renderAt("/trailing?clock=1:30&trail=2&side=opp&yardLine=20&running=false");
+  expect(stopped.html).not.toContain('aria-label="Tempo of the next snap"');
+});

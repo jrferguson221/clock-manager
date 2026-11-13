@@ -2,10 +2,10 @@
 // explanation after each call of what the best decision would have been.
 
 import { useEffect, useId, useMemo, useState } from "react";
-import { Alert, Badge, Button, Card, Group, List, Progress, SimpleGrid, Stack, Table, Text } from "@mantine/core";
+import { Alert, Badge, Button, Card, Group, List, Progress, SegmentedControl, SimpleGrid, Stack, Table, Text } from "@mantine/core";
 import { noGainCalls,
-  availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
-  DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig,
+  availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, scoreCallAtTempo, seededRng, step, winProbability, wpOf,
+  DEFAULT_SIM, PLAY_CALLS, type CallValues, type Explanation, type GameState, type PlayCall, type SimConfig, type Tempo,
 } from "./sim";
 import { PLAY_CALL_IDS } from "@situational-football/schemas";
 import { ReasonText } from "./ReadMore";
@@ -57,6 +57,20 @@ export const CALL_KIND: Readonly<Record<PlayCall, "pass" | "run" | "timeout" | "
   run: "run", timeout: "timeout", spike: "spike", kneel: "kneel", fg: "fg", punt: "punt",
 };
 
+/** The tempo choices, as the switch above the call buttons shows them. */
+const TEMPO_OPTIONS: { value: Tempo; label: string }[] = [
+  { value: "auto", label: "Auto" },
+  { value: "hurry", label: "Hurry up" },
+  { value: "drain", label: "Drain the clock" },
+];
+
+/** What each tempo does to the next snap, under the switch. */
+const TEMPO_NOTES: Readonly<Record<Tempo, string>> = {
+  auto: "The model picks: drain the play clock when you're ahead or only need a field goal in range, otherwise hurry.",
+  hurry: "Snap as fast as you can line up. A timeout stops the clock right now.",
+  drain: "Let the play clock run down and snap with 1 second left. A timeout comes with 1 second on the play clock, or at 0:03 if that's first.",
+};
+
 /** Call buttons in the order the schema lists the calls. */
 const CALL_ORDER: readonly PlayCall[] = PLAY_CALL_IDS;
 
@@ -83,6 +97,8 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
   cfg?: SimConfig;
 }) {
   const [entries, setEntries] = useState<Entry[]>([]);
+  // The pace of the next snap while the clock runs. It stays as set from play to play.
+  const [tempo, setTempo] = useState<Tempo>("auto");
   const last = entries.at(-1);
   const ended = last !== undefined && (last.driveEnded !== null || last.after.over) ? last : null;
   const current = ended ? ended.after : game;
@@ -102,10 +118,16 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
 
   function call(c: PlayCall) {
     if (!values || pending) return;
-    const res = step(game, c, seededRng((Math.random() * 2 ** 32) >>> 0), cfg);
+    // The pace only matters with the clock running. Your call is graded at the pace you chose; the other
+    // calls keep the model's own.
+    const pace: Tempo = game.running ? tempo : "auto";
+    const mine = pace === "auto" ? null : scoreCallAtTempo(game, c, pace, 500, cfg);
+    const swap = (v: CallValues[number]) => (mine !== null && v.call === c ? { ...v, wp: mine } : v);
+    const graded: CallValues = [swap(values[0]), ...values.slice(1).map(swap)];
+    const res = step(game, c, seededRng((Math.random() * 2 ** 32) >>> 0), cfg, undefined, pace);
     const entry: Entry = {
-      before: game, after: res.state, call: c, text: res.text, values,
-      explanation: explain(game, c, values, cfg), driveEnded: res.driveEnded ?? null,
+      before: game, after: res.state, call: c, text: res.text, values: graded,
+      explanation: explain(game, c, graded, cfg), driveEnded: res.driveEnded ?? null,
     };
     setEntries([...entries, entry]);
     setFinish(null);
@@ -171,6 +193,15 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
       ) : (
         <Card>
           <Text className="eyebrow" mb="xs">Call the play</Text>
+          {game.running && (
+            <div className="tempo">
+              <SegmentedControl
+                size="sm" fullWidth value={tempo} onChange={(v) => setTempo(v as Tempo)} data={TEMPO_OPTIONS}
+                aria-label="Tempo of the next snap"
+              />
+              <Text size="xs" c="dimmed" mt={4} mb="xs">{TEMPO_NOTES[tempo]}</Text>
+            </div>
+          )}
           <SimpleGrid cols={{ base: 2, xs: 3 }} spacing="xs" aria-busy={pending}>
             {CALL_ORDER.map((c) => (
               <Button
@@ -181,7 +212,8 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
               </Button>
             ))}
           </SimpleGrid>
-          <Text size="xs" c="dimmed" mt="sm">{tempoNote(game, cfg)}</Text>
+          {/* With the clock running, the tempo switch above says what the next snap does. */}
+          {!game.running && <Text size="xs" c="dimmed" mt="sm">{tempoNote(game, cfg)}</Text>}
         </Card>
       )}
 
