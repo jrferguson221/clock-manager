@@ -64,7 +64,7 @@ export default function TrailingPanel() {
 
   return (
     <ModeLayout
-      actions={<Button variant="light" onClick={randomize} className="random-situation">Random situation</Button>}
+      actions={<Button variant="light" onClick={randomize} className="random-situation">New Drive</Button>}
       intro="You're behind or tied and have the ball. Call each play and see how it changes your chances." scorebug={scorebug}
     >
       {analysis == null || sim.value == null ? (
