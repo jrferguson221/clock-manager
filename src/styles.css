@@ -964,3 +964,41 @@ nav[aria-label="Guide sections"] .mantine-List-item {
   border-color: var(--mantine-color-red-8);
   & > .eyebrow:first-child { background: var(--mantine-color-red-8); }
 }
+
+/* ---------- The trainer: a play's result, flashed just under the scorebug ---------- */
+
+.scorebug { scroll-margin-top: var(--mantine-spacing-sm); }
+
+.trainer { position: relative; }
+.play-flash {
+  position: absolute; z-index: 30; top: rem(6px); left: 50%; transform: translateX(-50%);
+  width: min(rem(560px), calc(100vw - 2 * var(--mantine-spacing-sm)));
+  padding: rem(12px) rem(18px);
+  border-radius: 3px;
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-color-blue-7);
+  box-shadow: var(--mantine-shadow-lg);
+  text-align: center;
+  cursor: pointer;
+  animation: play-flash 2600ms ease both;
+  &.good { border-color: var(--mantine-color-green-7); }
+  &.bad { border-color: var(--mantine-color-red-8); }
+}
+.play-flash-head {
+  font-family: var(--mantine-font-family-headings); font-weight: 700; font-size: rem(26px); line-height: 1.15;
+  text-transform: uppercase; letter-spacing: 0.03em;
+  .good & { color: light-dark(var(--mantine-color-green-8), var(--mantine-color-green-4)); }
+  .bad & { color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-4)); }
+}
+.play-flash-detail { margin-top: rem(2px); font-size: rem(15px); color: var(--mantine-color-dimmed); }
+
+/* In with a pop, a hold, then out. */
+@keyframes play-flash {
+  0% { opacity: 0; transform: translate(-50%, -8px) scale(0.96); }
+  8% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -4px) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play-flash { animation: none; }
+}

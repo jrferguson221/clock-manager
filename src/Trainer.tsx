@@ -1,7 +1,7 @@
 // Play-calling trainer shared by both modes: win probability, the call buttons, and an
 // explanation after each call of what the best decision would have been.
 
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, Group, List, Progress, SimpleGrid, Stack, Table, Text } from "@mantine/core";
 import { noGainCalls,
   availableCalls, bestScored, biggestSwing, evaluateCalls, explain, playOut, ranked, seededRng, step, winProbability, wpOf,
@@ -20,6 +20,32 @@ interface Entry {
   explanation: Explanation;
   /** Set when this call ended the drive, e.g. "Touchdown". */
   driveEnded: string | null;
+}
+
+/** How long a play's result stays on screen, in milliseconds. */
+export const FLASH_MS = 2600;
+
+type FlashTone = "good" | "bad" | "neutral";
+
+/**
+ * A play's result for the flash: the play in a headline ("Pass to the sideline: +5, in bounds") with the
+ * rest of the text under it, colored by how it went for you.
+ */
+export function playFlash(before: GameState, after: GameState, text: string, driveEnded: string | null): { headline: string; detail: string; tone: FlashTone } {
+  const cut = text.indexOf(". ");
+  const first = (cut < 0 ? text : text.slice(0, cut)).replace(/ at \d+:\d\d$/, "").replace(/\.$/, "");
+  const detail = cut < 0 ? "" : text.slice(cut + 2);
+  if (driveEnded !== null) {
+    const good = driveEnded === "Touchdown" || driveEnded === "Field goal";
+    return { headline: driveEnded, detail: text, tone: good ? "good" : "bad" };
+  }
+  const firstDown = after.down === 1 && (before.down !== 1 || after.ytg < before.ytg - before.toGo + 1) && after.ytg < before.ytg;
+  const lost = /incomplete|sacked|intercepted|fumble|: -\d/.test(first);
+  return {
+    headline: firstDown ? `${first}. First down!` : first,
+    detail: firstDown ? detail.replace(/^First down\. /, "") : detail,
+    tone: firstDown ? "good" : lost ? "bad" : "neutral",
+  };
 }
 
 /** Call buttons in the order the schema lists the calls. */
@@ -55,6 +81,13 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
   const prevWp = last ? bestScored(last.values).wp : null;
   const available = availableCalls(game);
   const [finish, setFinish] = useState<{ lines: string[]; result: number } | null>(null);
+  // The last play's result, flashed on screen for a moment.
+  const [flash, setFlash] = useState<(ReturnType<typeof playFlash> & { id: number }) | null>(null);
+  useEffect(() => {
+    if (flash === null) return;
+    const t = setTimeout(() => setFlash(null), FLASH_MS);
+    return () => clearTimeout(t);
+  }, [flash]);
   const gameOver = ended != null && (ended.after.over || finish != null);
   const finalResult = finish?.result ?? wp;
 
@@ -68,6 +101,10 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
     setEntries([...entries, entry]);
     setFinish(null);
     if (!res.driveEnded && !res.state.over) onChange(res.state);
+    setFlash({ id: entries.length + 1, ...playFlash(game, res.state, res.text, res.driveEnded ?? null) });
+    // Back up to the scorebug, to see the new situation.
+    const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    document.querySelector("section.scorebug")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   }
 
   function undo() {
@@ -90,7 +127,17 @@ export default function Trainer({ game, pending = false, onChange, cfg = DEFAULT
   }
 
   return (
-    <Stack component="section" gap="md" aria-label="Play caller">
+    <Stack component="section" gap="md" aria-label="Play caller" className="trainer">
+      {/* Over the top of the trainer, just under the scorebug the page scrolls back to. */}
+      {flash && (
+        <div
+          key={`flash-${flash.id}`} className={`play-flash ${flash.tone}`} role="status" aria-live="polite"
+          onClick={() => setFlash(null)}
+        >
+          <div className="play-flash-head">{flash.headline}</div>
+          {flash.detail && <div className="play-flash-detail">{flash.detail}</div>}
+        </div>
+      )}
       <WinMeter wp={wp} prev={prevWp} />
 
       {last && <Explainer key={entries.length} entry={last} />}
