@@ -191,8 +191,9 @@ function WinProbabilitySection() {
         <List.Item>
           <strong>After your call, both teams play by rules of thumb</strong>: the leading team kneels when that ends the
           game and runs otherwise; a team that only needs a field goal drains the clock and kicks; a trailing team throws,
-          stops the clock with timeouts and spikes, throws at the end zone from {END_ZONE_SHOT_CLOCK} seconds when it needs
-          a touchdown and is in reach, and heaves it on the last play; a tied team deep in its own end kneels with{" "}
+          stops the clock with timeouts and spikes, goes for the end zone from {END_ZONE_SHOT_CLOCK} seconds when it needs
+          a touchdown and is in reach (running from the 1 or 2, throwing over the middle inside the 10, play-action to the
+          16, and at the end zone beyond that), and heaves it on the last play; a tied team deep in its own end kneels with{" "}
           {TIED_KNEEL_CLOCK} seconds or less, and punts on 4th down, to play for overtime. Real coaches can do better or worse,
           so the numbers describe sound, not perfect, play.
         </List.Item>

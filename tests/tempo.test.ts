@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { availableCalls, evaluateCalls, scoreCallAtTempo, seededRng, step, wpOf, type GameState } from "../src/sim";
+import { availableCalls, evaluateCalls, policy, scoreCallAtTempo, seededRng, step, wpOf, type GameState } from "../src/sim";
 
 // Down 2 at the opponent's 20, 1:30 left and the clock running: a field goal wins.
 const inRange: GameState = { clock: 90, running: true, poss: "you", down: 1, toGo: 10, ytg: 20, margin: -2, timeouts: { you: 2, opp: 1 }, over: false };
@@ -46,5 +46,28 @@ describe("tempo", () => {
     const drain = scoreCallAtTempo(inRange, "run", "drain", 400);
     const hurry = scoreCallAtTempo(inRange, "run", "hurry", 400);
     expect(drain).toBeGreaterThan(hurry);
+  });
+});
+
+describe("needing a touchdown at the goal line late", () => {
+  // Down 7 with 1:01 left, 2nd & 1 at the opponent's 5, your three timeouts against none of theirs.
+  const atTheFive: GameState = { clock: 61, running: true, poss: "you", down: 2, toGo: 1, ytg: 5, margin: -7, timeouts: { you: 3, opp: 0 }, over: false };
+
+  it("doesn't call timeout: scoring right away would only leave them time to answer", () => {
+    const values = evaluateCalls(atTheFive, 1500);
+    const best = [...values].sort((a, b) => b.wp - a.wp)[0]!;
+    expect(best.call).not.toBe("timeout");
+    expect(wpOf(values, "run")).toBeGreaterThan(wpOf(values, "timeout"));
+  });
+
+  it("plays the goal line instead of throwing at the end zone every down", () => {
+    const at = (ytg: number, timeouts: number, clock = 17): GameState =>
+      ({ ...atTheFive, clock, running: false, down: 1, toGo: ytg, ytg, timeouts: { you: timeouts, opp: 0 } });
+    expect(policy(at(1, 2))).toBe("run");
+    expect(policy(at(2, 1))).toBe("run");
+    expect(policy(at(2, 0))).toBe("pass-middle");
+    expect(policy(at(8, 2))).toBe("pass-middle");
+    expect(policy(at(14, 2))).toBe("pass-play-action");
+    expect(policy(at(25, 2))).toBe("pass-deep");
   });
 });
